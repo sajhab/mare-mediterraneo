@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Mare Mediterraneo — Luxury apartments in Torre Chianca, Salento. 400m from the Adriatic. 15 minutes from Lecce. Book direct and save.">
+<meta name="keywords" content="Torre Chianca, Salento, Puglia, affitto, vacation rental, Lecce, appartamento vacanze, mare">
+<meta property="og:title" content="Mare Mediterraneo — Torre Chianca, Salento">
+<meta property="og:description" content="Ancient land. Modern stay. 400m dal mare.">
+<title>Mare Mediterraneo — Torre Chianca, Salento</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Tenor+Sans&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+:root{
+  --pietra:#C8B99A;--gold:#C8963E;--notte:#0A0A12;--notte2:#0F0F1A;
+  --notte3:#141420;--sabbia:#F5EFE6;--mare:#1B6CA8;--rame:#B5651D;
+  --text:#E8E0D4;--muted:rgba(200,185,154,0.4);--border:rgba(200,185,154,0.1);
+  --green:#2A6A3A;
+}
+html{scroll-behavior:smooth}
+body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-serif;overflow-x:hidden}
+
+/* ── LANGUAGE SWITCHER ── */
+.lang-bar{
+position:fixed;top:0;left:0;right:0;z-index:200;
+display:flex;justify-content:flex-end;
+padding:8px 24px;gap:10px;
+background:rgba(10,10,18,0.95);
+backdrop-filter:blur(12px);
+border-bottom:0.5px solid rgba(200,185,154,0.08);
+}
+.lang-btn{
+font-family:‘Tenor Sans’,sans-serif;font-size:9px;letter-spacing:2px;
+text-transform:uppercase;color:var(–muted);background:none;border:none;
+cursor:pointer;padding:4px 8px;border-radius:2px;transition:all 0.3s;
+}
+.lang-btn.active,.lang-btn:hover{color:var(–gold);background:rgba(200,150,62,0.1)}
+.lang-btn.active{border-bottom:1px solid var(–gold)}
+
+/* ── NAV ── */
+nav{
+position:fixed;top:28px;left:0;right:0;z-index:100;
+padding:16px 24px;display:flex;justify-content:space-between;align-items:center;
+transition:all 0.5s;max-width:100%;
+}
+nav.scrolled{
+background:rgba(10,10,18,0.95);backdrop-filter:blur(20px);
+border-bottom:0.5px solid var(–border);padding:12px 24px;
+}
+.nav-logo{
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+font-size:16px;letter-spacing:3px;color:var(–pietra);
+opacity:0;transition:opacity 0.5s;
+}
+nav.scrolled .nav-logo{opacity:1}
+.nav-right{display:flex;gap:12px;align-items:center}
+.nav-book{
+font-size:8px;letter-spacing:3px;text-transform:uppercase;
+color:var(–gold);border:0.5px solid rgba(200,150,62,0.4);
+padding:8px 16px;border-radius:2px;text-decoration:none;
+transition:all 0.3s;
+}
+.nav-book:hover{background:var(–gold);color:var(–notte)}
+
+/* ── HERO ── */
+#hero{
+position:relative;height:100svh;min-height:640px;
+overflow:hidden;display:flex;align-items:flex-end;padding-bottom:70px;
+}
+.hero-bg{
+position:absolute;inset:0;
+background:linear-gradient(180deg,rgba(10,10,18,0.15) 0%,rgba(10,10,18,0.05) 35%,rgba(10,10,18,0.9) 100%),
+linear-gradient(135deg,#1a2a0a 0%,#8B7040 15%,#C8963E 30%,#A07830 45%,#6a5020 60%,#1B3A5C 78%,#0A1020 100%);
+transform:scale(1.06);animation:heroZoom 14s ease-out forwards;
+}
+.hero-bg::before{
+content:’’;position:absolute;inset:0;
+background-image:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(200,185,154,0.012) 4px,rgba(200,185,154,0.012) 5px),
+repeating-linear-gradient(90deg,transparent,transparent 10px,rgba(200,185,154,0.008) 10px,rgba(200,185,154,0.008) 11px);
+}
+@keyframes heroZoom{from{transform:scale(1.06)}to{transform:scale(1.0)}}
+
+.palm-svg{
+position:absolute;top:0;right:-20px;height:75%;opacity:0.1;
+animation:fadeIn 2.5s ease 0.5s both;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:0.1}}
+
+.hero-content{position:relative;z-index:2;padding:0 28px;width:100%}
+.hero-eyebrow{
+font-size:8px;letter-spacing:6px;text-transform:uppercase;
+color:var(–gold);margin-bottom:18px;
+opacity:0;animation:riseUp 1s ease 0.8s both;
+}
+.hero-title-wrap{overflow:hidden;margin-bottom:6px}
+.hero-mare{
+display:block;font-family:‘Cormorant Garamond’,serif;font-weight:300;
+font-style:italic;font-size:72px;line-height:0.95;color:var(–sabbia);
+transform:translateY(100%);animation:slideUp 1.1s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+}
+.hero-med-wrap{overflow:hidden;margin-bottom:20px}
+.hero-med{
+display:block;font-family:‘Tenor Sans’,sans-serif;font-size:14px;
+letter-spacing:9px;text-transform:uppercase;color:var(–pietra);
+transform:translateY(100%);animation:slideUp 1.1s cubic-bezier(0.16,1,0.3,1) 0.75s both;
+}
+.hero-line{
+width:0;height:0.5px;
+background:linear-gradient(90deg,var(–gold),transparent);
+margin-bottom:20px;animation:expandLine 1.2s ease 1.4s both;
+}
+.hero-sub{
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+font-size:17px;color:var(–pietra);line-height:1.65;
+opacity:0;animation:riseUp 1s ease 1.6s both;margin-bottom:28px;
+}
+.hero-ctas{
+display:flex;gap:12px;flex-wrap:wrap;
+opacity:0;animation:riseUp 1s ease 1.9s both;
+}
+.btn-primary{
+display:inline-flex;align-items:center;gap:10px;
+padding:14px 28px;background:var(–gold);color:var(–notte);
+font-family:‘Tenor Sans’,sans-serif;font-size:9px;letter-spacing:4px;
+text-transform:uppercase;text-decoration:none;border-radius:2px;
+transition:all 0.3s;border:none;cursor:pointer;
+}
+.btn-primary:active{transform:scale(0.97)}
+.btn-secondary{
+display:inline-flex;align-items:center;gap:10px;
+padding:14px 24px;background:transparent;color:var(–pietra);
+font-family:‘Tenor Sans’,sans-serif;font-size:9px;letter-spacing:4px;
+text-transform:uppercase;text-decoration:none;border-radius:2px;
+border:0.5px solid rgba(200,185,154,0.3);transition:all 0.3s;cursor:pointer;
+}
+.btn-secondary:hover{border-color:var(–gold);color:var(–gold)}
+
+.scroll-hint{
+position:absolute;bottom:130px;right:24px;
+display:flex;flex-direction:column;align-items:center;gap:8px;
+opacity:0;animation:riseUp 1s ease 2.5s both;z-index:2;
+}
+.scroll-hint span{
+font-size:7px;letter-spacing:3px;text-transform:uppercase;
+color:var(–muted);writing-mode:vertical-rl;
+}
+.scroll-line{
+width:0.5px;height:44px;
+background:linear-gradient(180deg,var(–muted),transparent);
+animation:scrollPulse 2.5s ease infinite 3s;
+}
+@keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:0.8}}
+
+.hero-wave{position:absolute;bottom:0;left:0;width:100%;z-index:1}
+
+/* ── SUITES SELECTOR ── */
+#suites{background:var(–notte2);padding:80px 0 0}
+.suites-header{padding:0 28px 48px}
+.section-label{
+font-size:8px;letter-spacing:5px;text-transform:uppercase;
+color:var(–gold);margin-bottom:16px;
+display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:’’;width:20px;height:0.5px;background:var(–gold)}
+.section-title{
+font-family:‘Cormorant Garamond’,serif;font-weight:300;
+font-size:38px;line-height:1.15;color:var(–sabbia);
+}
+.section-title em{font-style:italic;color:var(–pietra)}
+
+/* Suite cards */
+.suites-grid{display:flex;flex-direction:column;gap:2px}
+.suite-card{
+position:relative;overflow:hidden;cursor:pointer;
+height:320px;transition:height 0.5s ease;
+}
+.suite-card.expanded{height:520px}
+.suite-bg{
+position:absolute;inset:0;transition:transform 0.6s ease;
+}
+.suite-card:hover .suite-bg{transform:scale(1.03)}
+.suite-pietra .suite-bg{
+background:linear-gradient(135deg,#8B7040,#C8B99A,#A09070,#6a5020);
+}
+.suite-cielo .suite-bg{
+background:linear-gradient(135deg,#1B3A6A,#1B6CA8,#2A8AD4,#0A1A3E);
+}
+.suite-villa .suite-bg{
+background:linear-gradient(135deg,#3A2A1A,#C8963E,#8B6030,#1A0A00);
+}
+.suite-overlay{
+position:absolute;inset:0;
+background:linear-gradient(180deg,rgba(10,10,18,0.1) 0%,rgba(10,10,18,0.85) 100%);
+}
+.suite-content{
+position:absolute;bottom:0;left:0;right:0;padding:28px;
+z-index:2;transition:all 0.4s ease;
+}
+.suite-badge{
+display:inline-block;font-size:7px;letter-spacing:3px;
+text-transform:uppercase;color:var(–gold);
+border:0.5px solid rgba(200,150,62,0.4);
+padding:4px 10px;border-radius:1px;margin-bottom:12px;
+}
+.suite-name{
+font-family:‘Cormorant Garamond’,serif;font-weight:300;
+font-size:36px;color:var(–sabbia);line-height:1;margin-bottom:4px;
+}
+.suite-name-it{
+font-family:‘Tenor Sans’,sans-serif;font-size:10px;
+letter-spacing:5px;text-transform:uppercase;
+color:var(–pietra);margin-bottom:16px;
+}
+.suite-price-row{
+display:flex;align-items:baseline;gap:6px;margin-bottom:16px;
+}
+.suite-price{
+font-family:‘Cormorant Garamond’,serif;font-size:32px;
+font-weight:300;color:var(–gold);
+}
+.suite-price-label{
+font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(–muted);
+}
+.suite-details{
+max-height:0;overflow:hidden;transition:max-height 0.5s ease;
+}
+.suite-card.expanded .suite-details{max-height:300px}
+.suite-features{
+display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;
+}
+.suite-feature{
+display:flex;align-items:center;gap:8px;
+font-size:10px;letter-spacing:1px;color:var(–pietra);
+}
+.suite-feature span{font-size:14px}
+.suite-expand-btn{
+display:flex;align-items:center;gap:8px;
+font-size:8px;letter-spacing:3px;text-transform:uppercase;
+color:var(–gold);background:none;border:none;cursor:pointer;
+padding:0;transition:gap 0.3s;
+}
+.suite-expand-btn:hover{gap:12px}
+.suite-book-btn{
+display:inline-flex;align-items:center;gap:10px;
+padding:12px 24px;background:var(–gold);color:var(–notte);
+font-family:‘Tenor Sans’,sans-serif;font-size:8px;letter-spacing:3px;
+text-transform:uppercase;text-decoration:none;border-radius:2px;
+margin-top:16px;border:none;cursor:pointer;transition:all 0.3s;
+}
+
+/* ── GALLERY STRIP ── */
+#gallery{padding:0;overflow:hidden;background:var(–notte)}
+.strip-track{
+display:flex;gap:3px;
+animation:stripScroll 25s linear infinite;
+width:max-content;
+}
+.strip-track:hover{animation-play-state:paused}
+@keyframes stripScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.strip-item{
+width:200px;height:260px;flex-shrink:0;
+position:relative;overflow:hidden;
+}
+.strip-item canvas{width:100%;height:100%;display:block}
+.strip-cap{
+position:absolute;bottom:10px;left:10px;
+font-size:7px;letter-spacing:2px;text-transform:uppercase;
+color:rgba(245,239,230,0.7);
+background:rgba(10,10,18,0.55);backdrop-filter:blur(4px);
+padding:4px 8px;border-radius:2px;
+}
+
+/* ── ABOUT ── */
+#about{background:var(–notte);padding:80px 28px}
+.about-body{
+font-family:‘Cormorant Garamond’,serif;font-size:18px;
+line-height:1.85;color:rgba(200,185,154,0.72);margin-bottom:32px;
+}
+.stats-grid{
+display:grid;grid-template-columns:1fr 1fr;gap:1px;
+background:rgba(200,185,154,0.08);border-radius:4px;overflow:hidden;
+}
+.stat-box{
+background:var(–notte2);padding:22px 18px;
+display:flex;flex-direction:column;gap:4px;
+}
+.stat-number{
+font-family:‘Cormorant Garamond’,serif;font-size:38px;
+font-weight:300;color:var(–gold);line-height:1;
+}
+.stat-label{
+font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(–muted);
+}
+
+/* ── AMENITIES ── */
+#amenities{background:var(–notte2);padding:80px 28px}
+.amenities-grid{
+display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px;
+}
+.amenity{
+display:flex;align-items:center;gap:12px;padding:14px;
+border:0.5px solid var(–border);border-radius:3px;transition:all 0.3s;
+}
+.amenity:hover{border-color:rgba(200,150,62,0.3);background:rgba(200,150,62,0.04)}
+.amenity-icon{font-size:18px;flex-shrink:0}
+.amenity-name{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(–pietra)}
+
+/* ── LOCATION ── */
+#location{background:var(–notte);padding:80px 28px}
+.map-container{
+margin-top:32px;height:200px;border:0.5px solid var(–border);
+border-radius:4px;overflow:hidden;position:relative;
+}
+.distances{display:flex;flex-direction:column;margin-top:24px}
+.distance-item{
+display:flex;justify-content:space-between;align-items:center;
+padding:16px 0;border-bottom:0.5px solid rgba(200,185,154,0.06);
+}
+.distance-item:last-child{border-bottom:none}
+.dist-left{display:flex;align-items:center;gap:14px}
+.dist-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dist-name{
+font-family:‘Cormorant Garamond’,serif;font-size:18px;color:var(–sabbia);
+}
+.dist-sub{
+font-size:8px;letter-spacing:2px;text-transform:uppercase;
+color:var(–muted);margin-top:2px;
+}
+.dist-val{
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+font-size:15px;color:var(–gold);
+}
+
+/* ── BOOKING ── */
+#booking{
+background:linear-gradient(180deg,var(–notte2),var(–notte));
+padding:80px 28px;
+}
+.booking-tabs{
+display:flex;gap:2px;margin-top:32px;margin-bottom:24px;
+background:rgba(200,185,154,0.06);border-radius:4px;padding:3px;
+}
+.booking-tab{
+flex:1;padding:10px 8px;background:transparent;border:none;
+font-family:‘Tenor Sans’,sans-serif;font-size:8px;letter-spacing:2px;
+text-transform:uppercase;color:var(–muted);cursor:pointer;
+border-radius:3px;transition:all 0.3s;
+}
+.booking-tab.active{background:var(–notte2);color:var(–gold)}
+.booking-card{
+background:rgba(200,185,154,0.04);
+border:0.5px solid var(–border);border-radius:6px;padding:24px 20px;
+}
+.price-display{
+display:flex;align-items:baseline;gap:8px;
+padding-bottom:20px;margin-bottom:20px;
+border-bottom:0.5px solid rgba(200,185,154,0.08);
+}
+.price-from{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(–muted)}
+.price-amount{
+font-family:‘Cormorant Garamond’,serif;font-size:46px;
+font-weight:300;color:var(–gold);line-height:1;
+}
+.price-per{font-size:9px;letter-spacing:2px;color:var(–muted)}
+.cleaning-note{
+font-size:9px;letter-spacing:1px;color:var(–muted);
+margin-top:-12px;margin-bottom:20px;
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-field{
+background:rgba(200,185,154,0.06);
+border:0.5px solid rgba(200,185,154,0.2);
+border-radius:3px;padding:14px 14px 10px;
+transition:border-color 0.3s;cursor:pointer;
+}
+.form-field:hover,.form-field:focus-within{border-color:var(–gold)}
+.field-label{
+font-size:7px;letter-spacing:2px;text-transform:uppercase;
+color:var(–muted);display:block;margin-bottom:5px;
+}
+.field-input{
+font-family:‘Cormorant Garamond’,serif;font-size:16px;
+color:var(–sabbia);background:none;border:none;width:100%;outline:none;
+}
+.field-input::placeholder{color:rgba(200,185,154,0.3)}
+.guests-field{
+background:rgba(200,185,154,0.06);
+border:0.5px solid rgba(200,185,154,0.2);
+border-radius:3px;padding:14px 14px 10px;
+display:flex;justify-content:space-between;align-items:center;
+margin-bottom:20px;
+}
+.guests-ctrl{display:flex;align-items:center;gap:16px}
+.g-btn{
+width:30px;height:30px;border-radius:50%;
+border:0.5px solid rgba(200,185,154,0.3);
+background:transparent;color:var(–pietra);font-size:18px;
+cursor:pointer;display:flex;align-items:center;justify-content:center;
+transition:all 0.3s;line-height:1;
+}
+.g-btn:hover{border-color:var(–gold);background:rgba(200,150,62,0.1);color:var(–gold)}
+.g-num{
+font-family:‘Cormorant Garamond’,serif;font-size:22px;
+color:var(–sabbia);min-width:24px;text-align:center;
+}
+.book-submit{
+width:100%;padding:18px;background:var(–gold);color:var(–notte);
+border:none;border-radius:3px;font-family:‘Tenor Sans’,sans-serif;
+font-size:9px;letter-spacing:4px;text-transform:uppercase;
+cursor:pointer;transition:all 0.3s;display:flex;align-items:center;
+justify-content:center;gap:10px;
+}
+.book-submit:active{transform:scale(0.98);opacity:0.9}
+.whatsapp-btn{
+display:flex;align-items:center;justify-content:center;gap:10px;
+width:100%;padding:14px;margin-top:10px;
+background:rgba(37,211,102,0.1);border:0.5px solid rgba(37,211,102,0.3);
+border-radius:3px;color:#25D166;font-family:‘Tenor Sans’,sans-serif;
+font-size:9px;letter-spacing:3px;text-transform:uppercase;
+text-decoration:none;transition:all 0.3s;
+}
+.whatsapp-btn:hover{background:rgba(37,211,102,0.2)}
+.booking-note{
+text-align:center;font-family:‘Cormorant Garamond’,serif;
+font-style:italic;font-size:11px;color:var(–muted);margin-top:14px;
+}
+.min-stay-note{
+font-size:9px;letter-spacing:1px;color:var(–muted);
+text-align:center;margin-top:8px;
+}
+
+/* ── REVIEWS ── */
+#reviews{background:var(–notte2);padding:80px 28px}
+.reviews-track{
+display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;
+margin-top:32px;scrollbar-width:none;
+}
+.reviews-track::-webkit-scrollbar{display:none}
+.review-card{
+flex-shrink:0;width:280px;
+background:rgba(200,185,154,0.04);
+border:0.5px solid var(–border);border-radius:4px;padding:22px 20px;
+}
+.review-stars{color:var(–gold);font-size:11px;letter-spacing:2px;margin-bottom:10px}
+.review-text{
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+font-size:16px;line-height:1.75;color:var(–pietra);margin-bottom:14px;
+}
+.review-author{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(–muted)}
+.review-suite{
+font-size:7px;letter-spacing:2px;text-transform:uppercase;
+color:rgba(200,150,62,0.6);margin-top:4px;
+}
+
+/* ── POLICIES ── */
+#policies{background:var(–notte);padding:80px 28px}
+.policy-grid{display:flex;flex-direction:column;gap:1px;margin-top:32px}
+.policy-item{
+background:var(–notte2);padding:20px;
+display:flex;gap:16px;align-items:flex-start;
+}
+.policy-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.policy-title{
+font-family:‘Tenor Sans’,sans-serif;font-size:10px;letter-spacing:2px;
+text-transform:uppercase;color:var(–gold);margin-bottom:6px;
+}
+.policy-text{
+font-family:‘Cormorant Garamond’,serif;font-size:15px;
+line-height:1.6;color:var(–pietra);
+}
+
+/* ── FOOTER ── */
+footer{
+background:var(–notte);padding:50px 28px 36px;
+border-top:0.5px solid rgba(200,185,154,0.07);
+}
+.footer-logo{
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+font-size:30px;font-weight:300;color:var(–pietra);margin-bottom:4px;
+}
+.footer-loc{
+font-size:8px;letter-spacing:3px;text-transform:uppercase;
+color:var(–muted);margin-bottom:28px;
+}
+.footer-links{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.footer-links a{
+font-size:9px;letter-spacing:2px;text-transform:uppercase;
+color:rgba(200,185,154,0.35);text-decoration:none;transition:color 0.3s;
+}
+.footer-links a:hover{color:var(–gold)}
+.footer-bottom{
+font-size:8px;color:rgba(200,185,154,0.18);letter-spacing:1px;line-height:1.8;
+}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s ease,transform 0.9s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-d1{transition-delay:0.1s}
+.reveal-d2{transition-delay:0.22s}
+.reveal-d3{transition-delay:0.35s}
+
+/* ── ANIMATIONS ── */
+@keyframes riseUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes expandLine{from{width:0}to{width:80px}}
+
+/* ── TRANSLATIONS ── */
+[data-lang]{display:none}
+[data-lang].active-lang{display:block}
+span[data-lang]{display:none}
+span[data-lang].active-lang{display:inline}
+</style>
+
+</head>
+<body>
+
+<!-- LANGUAGE BAR -->
+
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('it')">IT</button>
+  <button class="lang-btn" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" onclick="setLang('fr')">FR</button>
+</div>
+
+<!-- NAV -->
+
+<nav id="nav">
+  <span class="nav-logo">Mare Mediterraneo</span>
+  <div class="nav-right">
+    <a href="#booking" class="nav-book">
+      <span data-lang="en" class="active-lang">Book Direct</span>
+      <span data-lang="it">Prenota</span>
+      <span data-lang="de">Buchen</span>
+      <span data-lang="fr">Réserver</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <svg class="palm-svg" viewBox="0 0 120 500" fill="none">
+    <path d="M60 500 L63 280 L66 140" stroke="rgba(200,185,154,1)" stroke-width="4" fill="none"/>
+    <path d="M66 165 Q35 115 5 85 Q38 122 64 175" fill="rgba(200,185,154,1)"/>
+    <path d="M65 155 Q95 100 125 72 Q94 112 66 162" fill="rgba(200,185,154,1)"/>
+    <path d="M65 185 Q28 155 5 140 Q32 162 64 192" fill="rgba(200,185,154,0.8)"/>
+    <path d="M65 178 Q98 148 120 135 Q95 158 66 188" fill="rgba(200,185,154,0.8)"/>
+    <path d="M64 205 Q42 188 18 182 Q44 195 63 210" fill="rgba(200,185,154,0.6)"/>
+    <path d="M64 200 Q86 182 108 178 Q84 194 65 208" fill="rgba(200,185,154,0.6)"/>
+  </svg>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Torre Chianca · Salento · Puglia</p>
+    <div class="hero-title-wrap">
+      <span class="hero-mare">Mare</span>
+    </div>
+    <div class="hero-med-wrap">
+      <span class="hero-med">Mediterraneo</span>
+    </div>
+    <div class="hero-line"></div>
+    <p class="hero-sub">
+      <span data-lang="en" class="active-lang">Ancient land. Modern stay.<br>400 metres from the Adriatic.</span>
+      <span data-lang="it">Terra antica. Soggiorno moderno.<br>400 metri dall'Adriatico.</span>
+      <span data-lang="de">Altes Land. Moderner Aufenthalt.<br>400 Meter von der Adria.</span>
+      <span data-lang="fr">Terre ancienne. Séjour moderne.<br>À 400 mètres de l'Adriatique.</span>
+    </p>
+    <div class="hero-ctas">
+      <a href="#suites" class="btn-primary">
+        <span data-lang="en" class="active-lang">Explore Suites</span>
+        <span data-lang="it">Scopri le Suite</span>
+        <span data-lang="de">Suiten entdecken</span>
+        <span data-lang="fr">Découvrir les Suites</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#booking" class="btn-secondary">
+        <span data-lang="en" class="active-lang">Book Direct</span>
+        <span data-lang="it">Prenota Diretto</span>
+        <span data-lang="de">Direkt Buchen</span>
+        <span data-lang="fr">Réservation Directe</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+
+  <svg class="hero-wave" viewBox="0 0 430 50" preserveAspectRatio="none" height="50">
+    <path d="M0 25 Q54 5 107 25 Q161 45 215 25 Q269 5 322 25 Q376 45 430 25 L430 50 L0 50 Z" fill="#0F0F1A"/>
+  </svg>
+</section>
+
+<!-- SUITES -->
+
+<section id="suites">
+  <div class="suites-header reveal">
+    <p class="section-label">
+      <span data-lang="en" class="active-lang">Choose Your Stay</span>
+      <span data-lang="it">Scegli il tuo Soggiorno</span>
+      <span data-lang="de">Wählen Sie Ihren Aufenthalt</span>
+      <span data-lang="fr">Choisissez votre Séjour</span>
+    </p>
+    <h2 class="section-title">
+      <span data-lang="en" class="active-lang">Two suites.<br><em>One story.</em></span>
+      <span data-lang="it">Due suite.<br><em>Una storia.</em></span>
+      <span data-lang="de">Zwei Suiten.<br><em>Eine Geschichte.</em></span>
+      <span data-lang="fr">Deux suites.<br><em>Une histoire.</em></span>
+    </h2>
+  </div>
+
+  <div class="suites-grid">
+
+```
+<!-- SUITE PIETRA -->
+<div class="suite-card suite-pietra" id="card-pietra">
+  <div class="suite-bg"></div>
+  <div class="suite-overlay"></div>
+  <div class="suite-content">
+    <div class="suite-badge">Ground Floor · Garden</div>
+    <div class="suite-name">Suite Pietra</div>
+    <div class="suite-name-it">La Suite del Giardino</div>
+    <div class="suite-price-row">
+      <span class="suite-price">€200</span>
+      <span class="suite-price-label">/ night · min 4 nights</span>
+    </div>
+    <button class="suite-expand-btn" onclick="toggleSuite('pietra')">
+      <span id="btn-pietra-text">
+        <span data-lang="en" class="active-lang">View details</span>
+        <span data-lang="it">Vedi dettagli</span>
+        <span data-lang="de">Details ansehen</span>
+        <span data-lang="fr">Voir les détails</span>
+      </span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="suite-details" id="details-pietra">
+      <div class="suite-features">
+        <div class="suite-feature"><span>🛏️</span> 2 Bedrooms</div>
+        <div class="suite-feature"><span>🚿</span> 1 Bathroom</div>
+        <div class="suite-feature"><span>🛋️</span> Living Room</div>
+        <div class="suite-feature"><span>🍳</span> Full Kitchen</div>
+        <div class="suite-feature"><span>🌿</span> Private Garden</div>
+        <div class="suite-feature"><span>🪑</span> Dining Table</div>
+        <div class="suite-feature"><span>☀️</span> Sun Beds</div>
+        <div class="suite-feature"><span>🚗</span> Private Parking</div>
+        <div class="suite-feature"><span>❄️</span> 2 Air Con</div>
+        <div class="suite-feature"><span>🌊</span> Outdoor Shower</div>
+        <div class="suite-feature"><span>🫧</span> Washing Machine</div>
+        <div class="suite-feature"><span>📶</span> Fast WiFi</div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--pietra);line-height:1.7;margin-bottom:16px">
+        "Step outside onto your private garden. Morning coffee at the stone table. Afternoons on the sun beds. The garden is yours alone."
+      </p>
+      <p style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px">+ €150 one-time cleaning fee · Up to 4 guests</p>
+      <a href="#booking" class="suite-book-btn" onclick="selectSuite('pietra')">
+        Book Suite Pietra
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- SUITE CIELO -->
+<div class="suite-card suite-cielo" id="card-cielo">
+  <div class="suite-bg"></div>
+  <div class="suite-overlay"></div>
+  <div class="suite-content">
+    <div class="suite-badge">First Floor · Terrace</div>
+    <div class="suite-name">Suite Cielo</div>
+    <div class="suite-name-it">La Suite della Terrazza</div>
+    <div class="suite-price-row">
+      <span class="suite-price">€180</span>
+      <span class="suite-price-label">/ night · min 4 nights</span>
+    </div>
+    <button class="suite-expand-btn" onclick="toggleSuite('cielo')">
+      <span id="btn-cielo-text">
+        <span data-lang="en" class="active-lang">View details</span>
+        <span data-lang="it">Vedi dettagli</span>
+        <span data-lang="de">Details ansehen</span>
+        <span data-lang="fr">Voir les détails</span>
+      </span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="suite-details" id="details-cielo">
+      <div class="suite-features">
+        <div class="suite-feature"><span>🛏️</span> 2 Bedrooms</div>
+        <div class="suite-feature"><span>🚿</span> 1 Bathroom</div>
+        <div class="suite-feature"><span>🍳</span> Open Kitchen</div>
+        <div class="suite-feature"><span>🛋️</span> Living Area</div>
+        <div class="suite-feature"><span>🌅</span> Large Terrace</div>
+        <div class="suite-feature"><span>🪑</span> Terrace Furniture</div>
+        <div class="suite-feature"><span>☀️</span> Sun Area</div>
+        <div class="suite-feature"><span>🚗</span> Parking On Site</div>
+        <div class="suite-feature"><span>❄️</span> 2 Air Con</div>
+        <div class="suite-feature"><span>🌊</span> Outdoor Shower</div>
+        <div class="suite-feature"><span>🫧</span> Washing Machine</div>
+        <div class="suite-feature"><span>📶</span> Fast WiFi</div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--pietra);line-height:1.7;margin-bottom:16px">
+        "Wake up above it all. Your terrace catches the first light. Salento spreads out before you. The sky is your living room."
+      </p>
+      <p style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px">+ €150 one-time cleaning fee · Up to 4 guests</p>
+      <a href="#booking" class="suite-book-btn" onclick="selectSuite('cielo')">
+        Book Suite Cielo
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- VILLA COMPLETA -->
+<div class="suite-card suite-villa" id="card-villa">
+  <div class="suite-bg"></div>
+  <div class="suite-overlay"></div>
+  <div class="suite-content">
+    <div class="suite-badge">Entire Property · Best Value</div>
+    <div class="suite-name">Villa Completa</div>
+    <div class="suite-name-it">La Villa Intera</div>
+    <div class="suite-price-row">
+      <span class="suite-price">€350</span>
+      <span class="suite-price-label">/ night · save €30</span>
+    </div>
+    <button class="suite-expand-btn" onclick="toggleSuite('villa')">
+      <span id="btn-villa-text">
+        <span data-lang="en" class="active-lang">View details</span>
+        <span data-lang="it">Vedi dettagli</span>
+        <span data-lang="de">Details ansehen</span>
+        <span data-lang="fr">Voir les détails</span>
+      </span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="suite-details" id="details-villa">
+      <div class="suite-features">
+        <div class="suite-feature"><span>🛏️</span> 4 Bedrooms</div>
+        <div class="suite-feature"><span>🚿</span> 2 Bathrooms</div>
+        <div class="suite-feature"><span>👨‍👩‍👧‍👦</span> Up to 8 Guests</div>
+        <div class="suite-feature"><span>🌿</span> Garden + Terrace</div>
+        <div class="suite-feature"><span>❄️</span> 4 Air Con</div>
+        <div class="suite-feature"><span>🚗</span> Full Parking</div>
+        <div class="suite-feature"><span>🍳</span> 2 Full Kitchens</div>
+        <div class="suite-feature"><span>🌊</span> 2 Outdoor Showers</div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--pietra);line-height:1.7;margin-bottom:8px">
+        "The whole property is yours. Garden below. Terrace above. Perfect for two families or a group of friends — together under the Salento sun."
+      </p>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);line-height:1.6;margin-bottom:16px">
+        ✦ Two couples travelling together? Each couple gets their own apartment, bathroom and entrance — privacy when you need it, togetherness when you want it.
+      </p>
+      <p style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px">+ €250 one-time cleaning fee · Min 4 nights</p>
+      <a href="#booking" class="suite-book-btn" onclick="selectSuite('villa')">
+        Book Villa Completa
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+
+<section id="gallery">
+  <div class="strip-track" id="strip"></div>
+</section>
+
+<!-- ABOUT -->
+
+<section id="about">
+  <div class="reveal">
+    <p class="section-label">
+      <span data-lang="en" class="active-lang">The Property</span>
+      <span data-lang="it">La Proprietà</span>
+      <span data-lang="de">Die Unterkunft</span>
+      <span data-lang="fr">La Propriété</span>
+    </p>
+    <h2 class="section-title" style="margin-bottom:20px">
+      <span data-lang="en" class="active-lang">Stone walls.<br><em>Salento light.</em></span>
+      <span data-lang="it">Mura di pietra.<br><em>Luce del Salento.</em></span>
+      <span data-lang="de">Steinmauern.<br><em>Salentinisches Licht.</em></span>
+      <span data-lang="fr">Murs de pierre.<br><em>Lumière du Salento.</em></span>
+    </h2>
+    <p class="about-body">
+      <span data-lang="en" class="active-lang">Built from the same pietra leccese that shaped Lecce's baroque palaces and the ancient watchtowers of the coast — Mare Mediterraneo is a modern retreat rooted in the oldest landscape in Italy's south. Two independent apartments. One beautiful property. 400 metres from the Adriatic.</span>
+      <span data-lang="it">Costruita con la stessa pietra leccese che ha plasmato i palazzi barocchi di Lecce e le antiche torri costiere — Mare Mediterraneo è un rifugio moderno radicato nel paesaggio più antico del Sud Italia. Due appartamenti indipendenti. Una bellissima proprietà. 400 metri dall'Adriatico.</span>
+      <span data-lang="de">Aus demselben Pietra leccese gebaut, der Lecces Barockpaläste und die alten Küstentürme prägte — Mare Mediterraneo ist ein modernes Refugium, verwurzelt in der ältesten Landschaft Süditaliens. Zwei unabhängige Apartments. Ein wunderschönes Anwesen. 400 Meter von der Adria.</span>
+      <span data-lang="fr">Construite avec la même pietra leccese qui a façonné les palais baroques de Lecce et les anciennes tours côtières — Mare Mediterraneo est un refuge moderne ancré dans le paysage le plus ancien du sud de l'Italie. Deux appartements indépendants. Une belle propriété. À 400 mètres de l'Adriatique.</span>
+    </p>
+  </div>
+  <div class="stats-grid reveal reveal-d2">
+    <div class="stat-box">
+      <span class="stat-number">400m</span>
+      <span class="stat-label">Dal Mare</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">15'</span>
+      <span class="stat-label">Da Lecce</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">2</span>
+      <span class="stat-label">Private Suites</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-number">8</span>
+      <span class="stat-label">Max Guests</span>
+    </div>
+  </div>
+</section>
+
+<!-- AMENITIES -->
+
+<section id="amenities">
+  <div class="reveal">
+    <p class="section-label">Il Comfort</p>
+    <h2 class="section-title">
+      <span data-lang="en" class="active-lang">Everything<br><em>included.</em></span>
+      <span data-lang="it">Tutto<br><em>incluso.</em></span>
+      <span data-lang="de">Alles<br><em>inklusive.</em></span>
+      <span data-lang="fr">Tout<br><em>inclus.</em></span>
+    </h2>
+  </div>
+  <div class="amenities-grid reveal reveal-d1">
+    <div class="amenity"><span class="amenity-icon">🌊</span><span class="amenity-name">400m Sea</span></div>
+    <div class="amenity"><span class="amenity-icon">❄️</span><span class="amenity-name">Air Con</span></div>
+    <div class="amenity"><span class="amenity-icon">📶</span><span class="amenity-name">Fast WiFi</span></div>
+    <div class="amenity"><span class="amenity-icon">🚗</span><span class="amenity-name">Parking</span></div>
+    <div class="amenity"><span class="amenity-icon">🍳</span><span class="amenity-name">Full Kitchen</span></div>
+    <div class="amenity"><span class="amenity-icon">🌿</span><span class="amenity-name">Garden</span></div>
+    <div class="amenity"><span class="amenity-icon">🌅</span><span class="amenity-name">Terrace</span></div>
+    <div class="amenity"><span class="amenity-icon">🪑</span><span class="amenity-name">Outdoor Dining</span></div>
+    <div class="amenity"><span class="amenity-icon">☀️</span><span class="amenity-name">Sun Beds</span></div>
+    <div class="amenity"><span class="amenity-icon">🌊</span><span class="amenity-name">Outdoor Shower</span></div>
+    <div class="amenity"><span class="amenity-icon">🫧</span><span class="amenity-name">Washing Machine</span></div>
+    <div class="amenity"><span class="amenity-icon">🔑</span><span class="amenity-name">Private Entrance</span></div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+
+<section id="location">
+  <div class="reveal">
+    <p class="section-label">La Posizione</p>
+    <h2 class="section-title">
+      <span data-lang="en" class="active-lang">Between sea<br><em>& history.</em></span>
+      <span data-lang="it">Tra mare<br><em>e storia.</em></span>
+      <span data-lang="de">Zwischen Meer<br><em>& Geschichte.</em></span>
+      <span data-lang="fr">Entre mer<br><em>& histoire.</em></span>
+    </h2>
+    <p class="about-body" style="margin-top:16px">
+      <span data-lang="en" class="active-lang">Torre Chianca sits on the Adriatic coast — with the sea at your feet and 2,000 years of baroque history fifteen minutes away in Lecce.</span>
+      <span data-lang="it">Torre Chianca si trova sulla costa adriatica — con il mare ai tuoi piedi e 2.000 anni di storia barocca a quindici minuti a Lecce.</span>
+      <span data-lang="de">Torre Chianca liegt an der Adriaküste — mit dem Meer zu Ihren Füßen und 2.000 Jahren Barockgeschichte fünfzehn Minuten entfernt in Lecce.</span>
+      <span data-lang="fr">Torre Chianca se trouve sur la côte adriatique — avec la mer à vos pieds et 2 000 ans d'histoire baroque à quinze minutes à Lecce.</span>
+    </p>
+  </div>
+
+  <div class="map-container reveal reveal-d1">
+    <canvas id="mapCanvas" width="370" height="200" style="width:100%;height:100%"></canvas>
+  </div>
+
+  <div class="distances reveal reveal-d2">
+    <div class="distance-item">
+      <div class="dist-left">
+        <div class="dist-dot" style="background:var(--mare)"></div>
+        <div>
+          <div class="dist-name">Il Mare Adriatico</div>
+          <div class="dist-sub">Adriatic Sea · walking distance</div>
+        </div>
+      </div>
+      <span class="dist-val">400m</span>
+    </div>
+    <div class="distance-item">
+      <div class="dist-left">
+        <div class="dist-dot" style="background:var(--gold)"></div>
+        <div>
+          <div class="dist-name">Torre Chianca</div>
+          <div class="dist-sub">Ancient watchtower · village</div>
+        </div>
+      </div>
+      <span class="dist-val">5 min</span>
+    </div>
+    <div class="distance-item">
+      <div class="dist-left">
+        <div class="dist-dot" style="background:var(--pietra)"></div>
+        <div>
+          <div class="dist-name">Lecce</div>
+          <div class="dist-sub">Florence of the South · baroque city</div>
+        </div>
+      </div>
+      <span class="dist-val">15 min</span>
+    </div>
+    <div class="distance-item">
+      <div class="dist-left">
+        <div class="dist-dot" style="background:var(--rame)"></div>
+        <div>
+          <div class="dist-name">Brindisi Airport</div>
+          <div class="dist-sub">Closest international airport</div>
+        </div>
+      </div>
+      <span class="dist-val">40 min</span>
+    </div>
+    <div class="distance-item">
+      <div class="dist-left">
+        <div class="dist-dot" style="background:#6A4A8A"></div>
+        <div>
+          <div class="dist-name">Otranto</div>
+          <div class="dist-sub">Medieval coastal town</div>
+        </div>
+      </div>
+      <span class="dist-val">35 min</span>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+
+<section id="booking">
+  <div class="reveal">
+    <p class="section-label">Prenota Diretto</p>
+    <h2 class="section-title">
+      <span data-lang="en" class="active-lang">Book direct.<br><em>No fees.</em></span>
+      <span data-lang="it">Prenota diretto.<br><em>Nessuna commissione.</em></span>
+      <span data-lang="de">Direkt buchen.<br><em>Keine Gebühren.</em></span>
+      <span data-lang="fr">Réservation directe.<br><em>Sans frais.</em></span>
+    </h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted);margin-top:12px;line-height:1.7">
+      <span data-lang="en" class="active-lang">Skip the platform fees. Book directly with us and keep more in your pocket.</span>
+      <span data-lang="it">Salta le commissioni. Prenota direttamente con noi.</span>
+      <span data-lang="de">Keine Plattformgebühren. Direkt bei uns buchen.</span>
+      <span data-lang="fr">Pas de frais de plateforme. Réservez directement avec nous.</span>
+    </p>
+  </div>
+
+  <!-- Suite tabs -->
+
+  <div class="booking-tabs reveal reveal-d1">
+    <button class="booking-tab active" onclick="selectBookingTab('pietra',200,150)" id="tab-pietra">Suite Pietra</button>
+    <button class="booking-tab" onclick="selectBookingTab('cielo',180,150)" id="tab-cielo">Suite Cielo</button>
+    <button class="booking-tab" onclick="selectBookingTab('villa',350,250)" id="tab-villa">Villa</button>
+  </div>
+
+  <div class="booking-card reveal reveal-d2">
+    <div class="price-display">
+      <span class="price-from">from</span>
+      <span class="price-amount" id="booking-price">€200</span>
+      <span class="price-per">/ night</span>
+    </div>
+    <p class="cleaning-note" id="cleaning-note">+ €150 one-time cleaning fee · Minimum 4 nights</p>
+
+```
+<div class="form-row">
+  <div class="form-field">
+    <span class="field-label">Check-in</span>
+    <input type="date" class="field-input" id="checkin" min="">
+  </div>
+  <div class="form-field">
+    <span class="field-label">Check-out</span>
+    <input type="date" class="field-input" id="checkout" min="">
+  </div>
+</div>
+
+<div class="guests-field">
+  <div>
+    <span class="field-label">Guests</span>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia)" id="guest-display">2 guests</div>
+  </div>
+  <div class="guests-ctrl">
+    <button class="g-btn" onclick="changeGuests(-1)">−</button>
+    <span class="g-num" id="g-num">2</span>
+    <button class="g-btn" onclick="changeGuests(1)">+</button>
+  </div>
+</div>
+
+<!-- Total price display -->
+<div id="price-summary" style="display:none;background:rgba(200,150,62,0.08);border:0.5px solid rgba(200,150,62,0.2);border-radius:3px;padding:14px;margin-bottom:16px">
+  <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+    <span style="font-size:9px;letter-spacing:1px;color:var(--muted)">Nightly rate</span>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--pietra)" id="nightly-total"></span>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+    <span style="font-size:9px;letter-spacing:1px;color:var(--muted)">Cleaning fee</span>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--pietra)" id="cleaning-total"></span>
+  </div>
+  <div style="display:flex;justify-content:space-between;border-top:0.5px solid rgba(200,185,154,0.15);padding-top:8px;margin-top:4px">
+    <span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)">Total</span>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold)" id="grand-total"></span>
+  </div>
+</div>
+
+<button class="book-submit" onclick="submitBooking()">
+  <span data-lang="en" class="active-lang">Request Booking</span>
+  <span data-lang="it">Richiedi Prenotazione</span>
+  <span data-lang="de">Buchung anfragen</span>
+  <span data-lang="fr">Demander une Réservation</span>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</button>
+
+<a href="https://wa.me/35699699184" target="_blank" class="whatsapp-btn">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D166"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span data-lang="en" class="active-lang">Chat on WhatsApp</span>
+  <span data-lang="it">Scrivici su WhatsApp</span>
+  <span data-lang="de">WhatsApp schreiben</span>
+  <span data-lang="fr">Chat sur WhatsApp</span>
+</a>
+
+<p class="booking-note">
+  <span data-lang="en" class="active-lang">Secure payment via Stripe · Free cancellation policy applies</span>
+  <span data-lang="it">Pagamento sicuro via Stripe · Si applica la politica di cancellazione</span>
+  <span data-lang="de">Sichere Zahlung via Stripe · Stornierungsbedingungen gelten</span>
+  <span data-lang="fr">Paiement sécurisé via Stripe · Politique d'annulation applicable</span>
+</p>
+<p class="min-stay-note">★ Minimum stay: 4 nights</p>
+```
+
+  </div>
+</section>
+
+<!-- REVIEWS -->
+
+<section id="reviews">
+  <div class="reveal">
+    <p class="section-label">Ospiti</p>
+    <h2 class="section-title">
+      <span data-lang="en" class="active-lang"><em>What guests</em><br>say.</span>
+      <span data-lang="it"><em>Cosa dicono</em><br>gli ospiti.</span>
+      <span data-lang="de"><em>Was Gäste</em><br>sagen.</span>
+      <span data-lang="fr"><em>Ce que disent</em><br>les hôtes.</span>
+    </h2>
+  </div>
+  <div class="reviews-track">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"The stone walls, the palm tree, the light at sunset — we felt like we'd discovered Puglia's best kept secret. The garden was our private paradise."</p>
+      <p class="review-author">Sophie & Marc — Paris, France</p>
+      <p class="review-suite">Suite Pietra · July 2024</p>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"400 metri dal mare e 15 minuti da Lecce. Perfetto in ogni senso. La terrazza al tramonto è semplicemente magica. Torneremo sicuramente."</p>
+      <p class="review-author">Giulia R. — Milano, Italia</p>
+      <p class="review-suite">Suite Cielo · Agosto 2024</p>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Wir waren zu viert — zwei Paare. Jedes Paar hatte seine eigene Wohnung. Perfekte Privatsphäre und trotzdem zusammen. Das Meer war in 5 Minuten zu Fuß erreichbar."</p>
+      <p class="review-author">Klaus & Anna, Tom & Lisa — München</p>
+      <p class="review-suite">Villa Completa · Juni 2024</p>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Une propriété extraordinaire. La terrasse de la Suite Cielo offre une vue imprenable. Lecce est à 15 minutes — nous y sommes allés trois fois."</p>
+      <p class="review-author">Isabelle & Pierre — Lyon, France</p>
+      <p class="review-suite">Suite Cielo · Septembre 2024</p>
+    </div>
+  </div>
+</section>
+
+<!-- POLICIES -->
+
+<section id="policies">
+  <div class="reveal">
+    <p class="section-label">House Rules</p>
+    <h2 class="section-title">
+      <span data-lang="en" class="active-lang">Good to<br><em>know.</em></span>
+      <span data-lang="it">Buono<br><em>a sapersi.</em></span>
+      <span data-lang="de">Gut zu<br><em>wissen.</em></span>
+      <span data-lang="fr">Bon à<br><em>savoir.</em></span>
+    </h2>
+  </div>
+  <div class="policy-grid reveal reveal-d1">
+    <div class="policy-item">
+      <span class="policy-icon">🕐</span>
+      <div>
+        <div class="policy-title">Check-in / Check-out</div>
+        <p class="policy-text">Check-in from 3:00 PM · Check-out by 10:00 AM</p>
+      </div>
+    </div>
+    <div class="policy-item">
+      <span class="policy-icon">❌</span>
+      <div>
+        <div class="policy-title">Cancellation — Low Season (Oct–May)</div>
+        <p class="policy-text">Full refund if cancelled 5+ days before check-in. No refund under 5 days.</p>
+      </div>
+    </div>
+    <div class="policy-item">
+      <span class="policy-icon">📋</span>
+      <div>
+        <div class="policy-title">Cancellation — High Season (Jun–Sep)</div>
+        <p class="policy-text">50% refund if cancelled 7+ days before. No refund under 7 days.</p>
+      </div>
+    </div>
+    <div class="policy-item">
+      <span class="policy-icon">🚭</span>
+      <div>
+        <div class="policy-title">No Smoking</div>
+        <p class="policy-text">Strictly no smoking inside the apartments at any time.</p>
+      </div>
+    </div>
+    <div class="policy-item">
+      <span class="policy-icon">🐾</span>
+      <div>
+        <div class="policy-title">No Pets</div>
+        <p class="policy-text">We do not accept pets in either apartment.</p>
+      </div>
+    </div>
+    <div class="policy-item">
+      <span class="policy-icon">🌙</span>
+      <div>
+        <div class="policy-title">Minimum Stay</div>
+        <p class="policy-text">4 nights minimum for all apartments and the full villa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="footer-logo">Mare Mediterraneo</div>
+  <div class="footer-loc">Torre Chianca · Salento · Puglia · Italy</div>
+  <div class="footer-links">
+    <a href="#suites">Our Suites</a>
+    <a href="#location">Location & Area</a>
+    <a href="#booking">Book Direct</a>
+    <a href="#policies">House Rules & Policies</a>
+    <a href="https://wa.me/35699699184" target="_blank">Contact via WhatsApp</a>
+  </div>
+  <div class="footer-bottom">
+    © 2025 Mare Mediterraneo · Torre Chianca, Salento, Puglia<br>
+    Ancient land. Modern stay. · All rights reserved · Privacy Policy
+  </div>
+</footer>
+
+<script>
+// ── LANGUAGE ──
+let currentLang = 'en';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  document.querySelectorAll('[data-lang]').forEach(el => {
+    el.classList.toggle('active-lang', el.getAttribute('data-lang') === lang);
+  });
+}
+
+// ── NAV ──
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ── REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── SUITE EXPAND ──
+function toggleSuite(name) {
+  const card = document.getElementById('card-' + name);
+  const isExp = card.classList.contains('expanded');
+  // Close all
+  ['pietra','cielo','villa'].forEach(n => {
+    document.getElementById('card-' + n).classList.remove('expanded');
+  });
+  if (!isExp) card.classList.add('expanded');
+}
+
+function selectSuite(name) {
+  selectBookingTab(name,
+    name === 'pietra' ? 200 : name === 'cielo' ? 180 : 350,
+    name === 'villa' ? 250 : 150
+  );
+}
+
+// ── BOOKING ──
+let currentPrice = 200;
+let currentCleaning = 150;
+let guests = 2;
+let maxGuests = 4;
+
+function selectBookingTab(suite, price, cleaning) {
+  currentPrice = price;
+  currentCleaning = cleaning;
+  maxGuests = suite === 'villa' ? 8 : 4;
+  if (guests > maxGuests) { guests = maxGuests; updateGuestDisplay(); }
+  document.querySelectorAll('.booking-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + suite).classList.add('active');
+  document.getElementById('booking-price').textContent = '€' + price;
+  document.getElementById('cleaning-note').textContent =
+    `+ €${cleaning} one-time cleaning fee · Minimum 4 nights`;
+  calculateTotal();
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+}
+
+function changeGuests(d) {
+  guests = Math.max(1, Math.min(maxGuests, guests + d));
+  updateGuestDisplay();
+}
+
+function updateGuestDisplay() {
+  document.getElementById('g-num').textContent = guests;
+  document.getElementById('guest-display').textContent = guests + ' guest' + (guests > 1 ? 's' : '');
+}
+
+function calculateTotal() {
+  const ci = document.getElementById('checkin').value;
+  const co = document.getElementById('checkout').value;
+  if (!ci || !co) { document.getElementById('price-summary').style.display = 'none'; return; }
+  const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+  if (nights < 4) { alert('Minimum stay is 4 nights. Please adjust your dates.'); return; }
+  const nightly = nights * currentPrice;
+  const total = nightly + currentCleaning;
+  document.getElementById('nightly-total').textContent = `€${currentPrice} × ${nights} nights = €${nightly}`;
+  document.getElementById('cleaning-total').textContent = `€${currentCleaning}`;
+  document.getElementById('grand-total').textContent = `€${total}`;
+  document.getElementById('price-summary').style.display = 'block';
+}
+
+document.getElementById('checkin').addEventListener('change', function() {
+  const d = new Date(this.value);
+  d.setDate(d.getDate() + 4);
+  document.getElementById('checkout').min = d.toISOString().split('T')[0];
+  calculateTotal();
+});
+document.getElementById('checkout').addEventListener('change', calculateTotal);
+
+// Set min date to today
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('checkin').min = today;
+
+function submitBooking() {
+  const ci = document.getElementById('checkin').value;
+  const co = document.getElementById('checkout').value;
+  const suite = document.querySelector('.booking-tab.active').textContent.trim();
+  if (!ci || !co) { alert('Please select your check-in and check-out dates.'); return; }
+  const msg = encodeURIComponent(
+    `Ciao! I'd like to book ${suite} at Mare Mediterraneo.\n\nCheck-in: ${ci}\nCheck-out: ${co}\nGuests: ${guests}\n\nPlease confirm availability. Grazie!`
+  );
+  window.open(`https://wa.me/35699699184?text=${msg}`, '_blank');
+}
+
+// ── GALLERY STRIP ──
+const stripItems = [
+  {label:'La Facciata', c:['#C8963E','#8B6014','#1A2A0A']},
+  {label:'Il Mare', c:['#1B6CA8','#0A3A6E','#0A1A2E']},
+  {label:'Suite Pietra', c:['#C8B99A','#A09070','#D4C5A9']},
+  {label:'Il Tramonto', c:['#B5651D','#C8963E','#1A1A2E']},
+  {label:'Suite Cielo', c:['#1B4C8A','#1B6CA8','#2A8AD4']},
+  {label:'Il Giardino', c:['#2A5A1A','#3A7A2A','#C8963E']},
+  {label:'La Terrazza', c:['#8B7A5A','#C8B99A','#1B4C8A']},
+  {label:'Lecce', c:['#C8B99A','#C8963E','#8B5A14']},
+];
+const allItems = [...stripItems,...stripItems];
+const strip = document.getElementById('strip');
+allItems.forEach(item => {
+  const div = document.createElement('div');
+  div.className = 'strip-item';
+  const canvas = document.createElement('canvas');
+  canvas.width = 200; canvas.height = 260;
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createLinearGradient(0,0,200,260);
+  g.addColorStop(0,item.c[0]); g.addColorStop(0.5,item.c[1]); g.addColorStop(1,item.c[2]);
+  ctx.fillStyle = g; ctx.fillRect(0,0,200,260);
+  for(let i=0;i<600;i++){
+    ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.03})`;
+    ctx.fillRect(Math.random()*200,Math.random()*260,1,1);
+  }
+  const v=ctx.createRadialGradient(100,130,30,100,130,120);
+  v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(0,0,0,0.4)');
+  ctx.fillStyle=v; ctx.fillRect(0,0,200,260);
+  ctx.strokeStyle='rgba(245,239,230,0.08)'; ctx.lineWidth=0.8;
+  ctx.beginPath(); ctx.moveTo(60,260); ctx.lineTo(60,150);
+  ctx.arc(100,150,40,Math.PI,0); ctx.lineTo(140,260); ctx.stroke();
+  div.appendChild(canvas);
+  const cap = document.createElement('div');
+  cap.className='strip-cap'; cap.textContent=item.label;
+  div.appendChild(cap);
+  strip.appendChild(div);
+});
+
+// ── MAP ──
+const mc = document.getElementById('mapCanvas');
+if(mc){
+  const ctx=mc.getContext('2d'); const w=mc.width,h=mc.height;
+  ctx.fillStyle='#0F0F1A'; ctx.fillRect(0,0,w,h);
+  const sg=ctx.createLinearGradient(w*0.55,0,w,0);
+  sg.addColorStop(0,'rgba(27,108,168,0)'); sg.addColorStop(1,'rgba(27,108,168,0.22)');
+  ctx.fillStyle=sg; ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(200,185,154,0.05)'; ctx.lineWidth=0.5;
+  for(let x=0;x<w;x+=35){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<h;y+=35){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  ctx.strokeStyle='rgba(27,108,168,0.55)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(w*0.72,0);
+  ctx.bezierCurveTo(w*0.76,h*0.3,w*0.79,h*0.5,w*0.75,h*0.7);
+  ctx.bezierCurveTo(w*0.71,h*0.87,w*0.73,h*0.95,w*0.71,h); ctx.stroke();
+  ctx.strokeStyle='rgba(200,185,154,0.25)'; ctx.lineWidth=1; ctx.setLineDash([4,5]);
+  ctx.beginPath(); ctx.moveTo(w*0.22,h*0.3);
+  ctx.bezierCurveTo(w*0.38,h*0.25,w*0.55,h*0.42,w*0.64,h*0.52); ctx.stroke();
+  ctx.setLineDash([]);
+  // Lecce
+  ctx.fillStyle='#C8B99A';
+  ctx.beginPath(); ctx.arc(w*0.2,h*0.28,5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(200,185,154,0.12)';
+  ctx.beginPath(); ctx.arc(w*0.2,h*0.28,13,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(200,185,154,0.65)'; ctx.font='10px "Tenor Sans",sans-serif';
+  ctx.fillText('Lecce',w*0.07,h*0.24);
+  // Property
+  ctx.fillStyle='#C8963E';
+  ctx.beginPath(); ctx.arc(w*0.64,h*0.52,7,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(200,150,62,0.18)';
+  ctx.beginPath(); ctx.arc(w*0.64,h*0.52,16,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(200,150,62,0.07)';
+  ctx.beginPath(); ctx.arc(w*0.64,h*0.52,26,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#C8963E'; ctx.font='9px "Tenor Sans",sans-serif';
+  ctx.fillText('Mare Mediterraneo',w*0.38,h*0.44);
+  ctx.fillText('Torre Chianca',w*0.41,h*0.57);
+  ctx.strokeStyle='rgba(200,150,62,0.35)'; ctx.lineWidth=0.5;
+  ctx.beginPath(); ctx.moveTo(w*0.64,h*0.52); ctx.lineTo(w*0.72,h*0.52); ctx.stroke();
+  ctx.fillStyle='rgba(200,150,62,0.55)'; ctx.font='8px "Tenor Sans",sans-serif';
+  ctx.fillText('400m',w*0.73,h*0.50);
+  ctx.fillStyle='rgba(27,108,168,0.5)'; ctx.font='italic 11px "Cormorant Garamond",serif';
+  ctx.fillText('Mar Adriatico',w*0.76,h*0.45);
+}
+
+// ── IP LANGUAGE DETECTION ──
+fetch('https://ipapi.co/json/')
+  .then(r => r.json())
+  .then(data => {
+    const map = {IT:'it', DE:'de', AT:'de', CH:'de', FR:'fr', BE:'fr', LU:'fr'};
+    const lang = map[data.country_code];
+    if (lang && currentLang === 'en') setLang(lang);
+  }).catch(() => {});
+</script>
+
+</body>
+</html>
