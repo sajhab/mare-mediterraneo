@@ -1108,6 +1108,27 @@ document.getElementById('newCheckin').addEventListener('change', function() {
 document.getElementById('blockFrom').addEventListener('change', function() {
   document.getElementById('blockTo').min = addDays(this.value, 1);
 });
+
+// ── EXPOSE FUNCTIONS GLOBALLY ──
+window.doLogin = doLogin;
+window.logout = logout;
+window.showTab = showTab;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.toggleSuite = toggleSuite;
+window.selectSuite = selectSuite;
+window.changeMonth = changeMonth;
+window.saveBooking = saveBooking;
+window.saveBlock = saveBlock;
+window.deleteBooking = deleteBooking;
+window.selTab = selTab;
+window.chg = chg;
+window.submitBook = submitBook;
+window.saveSettings = saveSettings;
+window.saveIcal = saveIcal;
+window.saveContact = saveContact;
+window.saveTokiSettings = saveTokiSettings;
+window.saveGithubToken = saveGithubToken;
 </script>
 </body>
 </html>
