@@ -525,7 +525,7 @@ function getToken() {
   return localStorage.getItem('mm_github_token') || '';
 }
 
-function saveGithubToken() {
+async function saveGithubToken() {
   const token = document.getElementById('githubToken').value.trim();
   if (!token) { showToast('Please enter a token'); return; }
   localStorage.setItem('mm_github_token', token);
@@ -619,12 +619,12 @@ let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
 // ── LOGIN ──
-function doLogin() {
+async function doLogin() {
   const pass = document.getElementById('loginPass').value;
   if (pass === ADMIN_PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    loadData().then(() => renderDashboard());
+    (async () => { await loadData(); renderDashboard(); })();
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
@@ -791,7 +791,7 @@ function getDateStatus(suite, dateStr) {
 }
 
 // ── SAVE BOOKING ──
-function saveBooking() {
+async function saveBooking() {
   const suite = document.getElementById('newSuite').value;
   const source = document.getElementById('newSource').value;
   const checkin = document.getElementById('newCheckin').value;
@@ -828,7 +828,7 @@ function saveBooking() {
 }
 
 // ── SAVE BLOCK ──
-function saveBlock() {
+async function saveBlock() {
   const suite = document.getElementById('blockSuite').value;
   const from = document.getElementById('blockFrom').value;
   const to = document.getElementById('blockTo').value;
@@ -844,7 +844,7 @@ function saveBlock() {
 }
 
 // ── DELETE BOOKING ──
-function deleteBooking(suiteKey, bookingId) {
+async function deleteBooking(suiteKey, bookingId) {
   if (!confirm('Delete this booking?')) return;
   data.suites[suiteKey].bookings = data.suites[suiteKey].bookings.filter(b => b.id !== bookingId);
   // Also remove linked villa bookings
@@ -1027,7 +1027,7 @@ function renderAllBookings() {
 }
 
 // ── SAVE SETTINGS ──
-async function saveSettings() {
+async async function saveSettings() {
   const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
   const settings = {
     ...saved,
@@ -1051,7 +1051,7 @@ async function saveSettings() {
   await Promise.all([saveData(false), saveSettingsToGithub(settings)]);
 }
 
-async function saveIcal() {
+async async function saveIcal() {
   const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
   const settings = {
     ...saved,
@@ -1069,7 +1069,7 @@ async function saveIcal() {
   await saveSettingsToGithub(settings);
 }
 
-async function saveContact() {
+async async function saveContact() {
   const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
   const settings = {
     ...saved,
@@ -1081,7 +1081,7 @@ async function saveContact() {
   await saveSettingsToGithub(settings);
 }
 
-async function saveTokiSettings() {
+async async function saveTokiSettings() {
   const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
   const settings = {
     ...saved,
