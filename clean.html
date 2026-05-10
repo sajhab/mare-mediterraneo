@@ -146,12 +146,13 @@ const CLEANER_NAME = 'Daniela';
 
 let data = null;
 
-async function doLogin() {
+function doLogin() {
   const pass = document.getElementById('loginPass').value;
   if (pass === CLEANER_PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    await renderAll();
+    loadData();
+    renderAll();
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
@@ -163,22 +164,12 @@ function logout() {
   document.getElementById('app').style.display = 'none';
 }
 
-async function loadData() {
-  // Try GitHub first for real-time data
-  try {
-    const res = await fetch(
-      'https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t=' + Date.now()
-    );
-    if (res.ok) {
-      data = await res.json();
-      localStorage.setItem('mm_availability', JSON.stringify(data));
-      return;
-    }
-  } catch(e) {}
-
-  // Fall back to localStorage
+function loadData() {
+  // Load from localStorage (shared with admin panel on same domain)
   const saved = localStorage.getItem('mm_availability');
-  if (saved) { try { data = JSON.parse(saved); } catch(e) { data = null; } }
+  if (saved) {
+    try { data = JSON.parse(saved); } catch(e) { data = null; }
+  }
 }
 
 function dateStr(d) { return d.toISOString().split('T')[0]; }
@@ -236,8 +227,8 @@ function getSuiteStatus(suiteKey) {
   return {status:'clean', info:'Available — No action needed', sub:''};
 }
 
-async function renderAll() {
-  await loadData();
+function renderAll() {
+  loadData();
 
   // Header
   const now = new Date();
