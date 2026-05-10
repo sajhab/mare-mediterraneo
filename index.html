@@ -47,23 +47,27 @@ nav.scrolled .nav-logo{opacity:1}
 .nav-book:hover{background:var(--gold);color:var(--notte)}
 
 /* ── HERO ── */
-#hero{position:relative;height:133vw;min-height:500px;max-height:850px;overflow:hidden;
-  display:flex;align-items:flex-end;padding-bottom:36px;margin-top:72px}
+#hero{position:relative;height:100svh;min-height:600px;overflow:hidden;
+  display:flex;align-items:flex-end;padding-bottom:40px;margin-top:0}
 .hero-bg{position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,10,18,0.0) 0%,rgba(10,10,18,0.0) 45%,rgba(10,10,18,0.92) 100%),
+  background:linear-gradient(180deg,rgba(10,10,18,0.35) 0%,rgba(10,10,18,0.0) 30%,rgba(10,10,18,0.0) 55%,rgba(10,10,18,0.95) 100%),
   url('hero-mobile.jpg') center top/cover no-repeat}
 @media(min-width:768px){
-  #hero{height:52vw;min-height:420px;max-height:700px}
-  .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.1) 0%,rgba(10,10,18,0.05) 50%,rgba(10,10,18,0.88) 100%),url('hero.jpg') center 40%/cover no-repeat}
+  #hero{height:100svh}
+  .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.2) 0%,rgba(10,10,18,0.0) 35%,rgba(10,10,18,0.0) 55%,rgba(10,10,18,0.92) 100%),url('hero.jpg') center 40%/cover no-repeat}
 }
 .hero-content{position:relative;z-index:2;padding:0 20px;width:100%}
-.hero-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.hero-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--sabbia);
+  margin-bottom:10px;text-shadow:0 1px 8px rgba(0,0,0,1);
+  background:rgba(10,10,18,0.35);display:inline-block;padding:4px 10px;border-radius:2px}
 .hero-mare{display:block;font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
-  font-size:52px;line-height:1;color:var(--sabbia);text-shadow:0 2px 20px rgba(0,0,0,0.9)}
+  font-size:52px;line-height:1;color:var(--sabbia);text-shadow:0 2px 30px rgba(0,0,0,1),0 0 60px rgba(0,0,0,0.8)}
 .hero-med{display:block;font-family:'Tenor Sans',sans-serif;font-size:11px;letter-spacing:8px;
-  text-transform:uppercase;color:var(--pietra);text-shadow:0 2px 10px rgba(0,0,0,1);margin-top:4px;margin-bottom:14px}
+  text-transform:uppercase;color:var(--pietra);text-shadow:0 2px 12px rgba(0,0,0,1),0 0 40px rgba(0,0,0,0.9);
+  margin-top:4px;margin-bottom:14px}
 .hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;
-  color:var(--sabbia);line-height:1.6;margin-bottom:18px;text-shadow:0 2px 16px rgba(0,0,0,0.95)}
+  color:var(--sabbia);line-height:1.6;margin-bottom:18px;
+  text-shadow:0 2px 20px rgba(0,0,0,1),0 0 40px rgba(0,0,0,0.9)}
 .hero-ctas{display:flex;gap:10px;flex-wrap:wrap}
 .btn-gold{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;
   background:var(--gold);color:var(--notte);font-family:'Tenor Sans',sans-serif;
@@ -75,7 +79,7 @@ nav.scrolled .nav-logo{opacity:1}
   border-radius:2px;border:1px solid rgba(200,185,154,0.4);cursor:pointer}
 
 /* ── SUITES ── */
-#suites{background:var(--notte2);padding:48px 0 0}
+#suites{background:var(--notte2);padding:60px 0 0}
 .suites-header{padding:0 20px 32px}
 .sec-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);
   margin-bottom:12px;display:flex;align-items:center;gap:10px}
@@ -359,10 +363,10 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <span class="hero-mare">Mare</span>
     <span class="hero-med">Mediterraneo</span>
     <p class="hero-sub">
-      <span data-lang="en" class="al">Ancient land. Modern stay.<br>400 metres from the Adriatic.</span>
-      <span data-lang="it">Terra antica. Soggiorno moderno.<br>400 metri dall'Adriatico.</span>
-      <span data-lang="de">Altes Land. Moderner Aufenthalt.<br>400 Meter von der Adria.</span>
-      <span data-lang="fr">Terre ancienne. Séjour moderne.<br>À 400 mètres de l'Adriatique.</span>
+      <span data-lang="en" class="al">Ancient land. Modern stay.<br>400 metres from the sea.</span>
+      <span data-lang="it">Terra antica. Soggiorno moderno.<br>400 metri dal mare.</span>
+      <span data-lang="de">Altes Land. Moderner Aufenthalt.<br>400 Meter vom Meer.</span>
+      <span data-lang="fr">Terre ancienne. Séjour moderne.<br>À 400 mètres de la mer.</span>
     </p>
     <div class="hero-ctas">
       <a href="#suites" class="btn-gold">
@@ -589,10 +593,10 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       <span data-lang="fr">Murs de pierre.<br><em>Lumière du Salento.</em></span>
     </h2>
     <p class="about-body">
-      <span data-lang="en" class="al">Built from the same pietra leccese that shaped Lecce's baroque palaces and the ancient watchtowers of the coast — Mare Mediterraneo is a modern retreat rooted in the oldest landscape in Italy's south. Two independent apartments. One beautiful property. 400 metres from the Adriatic.</span>
-      <span data-lang="it">Costruita con la stessa pietra leccese che ha plasmato i palazzi barocchi di Lecce — Mare Mediterraneo è un rifugio moderno. Due appartamenti indipendenti. 400 metri dall'Adriatico.</span>
-      <span data-lang="de">Aus demselben Pietra leccese gebaut — Mare Mediterraneo ist ein modernes Refugium. Zwei unabhängige Apartments. 400 Meter von der Adria.</span>
-      <span data-lang="fr">Construite avec la même pietra leccese — Mare Mediterraneo est un refuge moderne. Deux appartements indépendants. À 400 mètres de l'Adriatique.</span>
+      <span data-lang="en" class="al">Built from the same pietra leccese that shaped Lecce's baroque palaces and the ancient watchtowers of the coast — Mare Mediterraneo is a modern retreat rooted in the oldest landscape in Italy's south. Two independent apartments. One beautiful property. 400 metres from the sea.</span>
+      <span data-lang="it">Costruita con la stessa pietra leccese che ha plasmato i palazzi barocchi di Lecce — Mare Mediterraneo è un rifugio moderno. Due appartamenti indipendenti. 400 metri dal mare.</span>
+      <span data-lang="de">Aus demselben Pietra leccese gebaut — Mare Mediterraneo ist ein modernes Refugium. Zwei unabhängige Apartments. 400 Meter vom Meer.</span>
+      <span data-lang="fr">Construite avec la même pietra leccese — Mare Mediterraneo est un refuge moderne. Deux appartements indépendants. À 400 mètres de la mer.</span>
     </p>
   </div>
   <div class="stats reveal rd2">
