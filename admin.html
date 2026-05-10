@@ -205,8 +205,8 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div class="login-logo">Mare Mediterraneo</div>
     <div class="login-sub">Admin Panel</div>
     <input type="password" class="login-input" id="loginPass" 
-      placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">Enter</button>
+      placeholder="Enter password">
+    <button class="login-btn" id="loginBtn">Enter</button>
     <div class="login-error" id="loginError">Incorrect password</div>
   </div>
 </div>
@@ -514,96 +514,95 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 </div>
 
 <script>
-// ── CONFIG ──
-const ADMIN_PASS = 'Malta.2017';
-const REPO = 'sajhab/mare-mediterraneo';
-const BRANCH = 'main';
-const RAW = 'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH;
+// -- CONFIG --
+var ADMIN_PASS = 'Malta.2017';
+var REPO = 'sajhab/mare-mediterraneo';
+var BRANCH = 'main';
+var RAW = 'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH;
 
-// ── GITHUB SYNC ──
+// -- GITHUB SYNC --
 function getToken() {
   return localStorage.getItem('mm_github_token') || '';
 }
 
-async function saveGithubToken() {
-  const token = document.getElementById('githubToken').value.trim();
+function saveGithubToken() {
+  var token = document.getElementById('githubToken').value.trim();
   if (!token) { showToast('Please enter a token'); return; }
   localStorage.setItem('mm_github_token', token);
-  document.getElementById('tokenStatus').textContent = '✅ Saved — sync enabled';
+  document.getElementById('tokenStatus').textContent = '[OK] Saved -- sync enabled';
   document.getElementById('tokenStatus').style.color = '#27ae60';
-  showToast('GitHub token saved ✓');
+  showToast('GitHub token saved v');
   // Test the token
   testToken(token);
 }
 
-async function testToken(token) {
+function testToken(token) {
   try {
-    const res = await fetch(`https://api.github.com/repos/${REPO}`, {
-      headers: { 'Authorization': `token ${token}` }
+    fetch("https://api.github.com/repos/" + REPO + ", {
+      headers: { 'Authorization': "token " + token }
     });
     if (res.ok) {
-      document.getElementById('tokenStatus').textContent = '✅ Connected to GitHub';
+      document.getElementById('tokenStatus').textContent = '[OK] Connected to GitHub';
       document.getElementById('tokenStatus').style.color = '#27ae60';
     } else {
-      document.getElementById('tokenStatus').textContent = '❌ Invalid token';
+      document.getElementById('tokenStatus').textContent = '[X] Invalid token';
       document.getElementById('tokenStatus').style.color = '#e74c3c';
     }
   } catch(e) {
-    document.getElementById('tokenStatus').textContent = '⚠️ Could not verify';
+    document.getElementById('tokenStatus').textContent = '[!] Could not verify';
   }
 }
 
-async function githubRead(filename) {
-  try {
-    const res = await fetch(`${RAW}/${filename}?t=${Date.now()}`);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch(e) { return null; }
+function githubRead(filename, callback) {
+  fetch(RAW + '/' + filename + '?t=' + Date.now())
+    .then(function(res) { return res.ok ? res.json() : null; })
+    .then(function(data) { if(callback) callback(data); })
+    .catch(function() { if(callback) callback(null); });
 }
 
-async function githubWrite(filename, data) {
-  const token = getToken();
+function githubWrite(filename, data) {
+  var token = getToken();
   if (!token) {
-    showToast('⚠️ No GitHub token — go to Settings tab');
+    showToast('[!] No GitHub token -- go to Settings tab');
     return false;
   }
   try {
     // Get current SHA
-    const infoRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
-      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    var _tmp = fetch("https://api.github.com/repos/" + REPO + "/contents/" + filename, {
+      headers: { 'Authorization': "token " + token, 'Accept': 'application/vnd.github.v3+json' }
     });
-    let sha = null;
-    if (infoRes.ok) { const info = await infoRes.json(); sha = info.sha; }
+    var sha = null;
+    if (infoRes.ok) { var _tmp = infoRes.json(); sha = info.sha; }
 
     // Write file
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-    const writeRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+    var content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    var _tmp = fetch("https://api.github.com/repos/" + REPO + "/contents/" + filename, {
       method: 'PUT',
       headers: {
-        'Authorization': `token ${token}`,
+        'Authorization': "token " + token,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'
       },
       body: JSON.stringify({
-        message: `Update ${filename} — ${new Date().toISOString()}`,
+        message: "Update " + filename + " -- " + new Date().toISOString(),
         content,
         branch: BRANCH,
         ...(sha && { sha })
       })
     });
     if (!writeRes.ok) {
-      const err = await writeRes.json();
+      var _tmp = writeRes.json();
       throw new Error(err.message);
     }
     return true;
   } catch(e) {
-    showToast('❌ Sync failed: ' + e.message);
+    showToast('[X] Sync failed: ' + e.message);
     return false;
   }
 }
 
-// ── DATA ──
-let data = {
+// -- DATA --
+var data = {
   suites: {
     pietra: { name:'Suite Pietra', price:200, cleaningFee:150, maxGuests:4, bookings:[] },
     cielo:  { name:'Suite Cielo',  price:180, cleaningFee:150, maxGuests:4, bookings:[] },
@@ -614,17 +613,17 @@ let data = {
   settings: { minStay:4, checkinTime:'15:00', checkoutTime:'10:00' }
 };
 
-let currentSuite = 'pietra';
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
+var currentSuite = 'pietra';
+var currentMonth = new Date().getMonth();
+var currentYear = new Date().getFullYear();
 
-// ── LOGIN ──
-async function doLogin() {
-  const pass = document.getElementById('loginPass').value;
+// -- LOGIN --
+function doLogin() {
+  var pass = document.getElementById('loginPass').value;
   if (pass === ADMIN_PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    (async () => { await loadData(); renderDashboard(); })();
+    loadData(function() { renderDashboard(); });
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
@@ -637,7 +636,7 @@ function logout() {
   document.getElementById('loginPass').value = '';
 }
 
-// ── TABS ──
+// -- TABS --
 function showTab(name) {
   document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -648,22 +647,19 @@ function showTab(name) {
   if (name === 'dashboard') renderDashboard();
 }
 
-// ── LOAD DATA — reads from GitHub, falls back to localStorage ──
-async function loadData() {
+// -- LOAD DATA -- reads from GitHub, falls back to localStorage --
+function loadData() {
   showToast('Loading data...');
 
   // Try GitHub first
-  const [avail, settings] = await Promise.all([
-    githubRead('availability.json'),
-    githubRead('settings.json')
-  ]);
+  // loaded via callbacks in loadData
 
   if (avail) {
     data = avail;
     localStorage.setItem('mm_availability', JSON.stringify(data));
   } else {
     // Fall back to localStorage
-    const saved = localStorage.getItem('mm_availability');
+    var saved = localStorage.getItem('mm_availability');
     if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
   }
 
@@ -698,91 +694,91 @@ async function loadData() {
   }
 
   // Restore token field if saved
-  const savedToken = getToken();
+  var savedToken = getToken();
   if (savedToken) {
     document.getElementById('githubToken').value = savedToken;
-    document.getElementById('tokenStatus').textContent = '✅ Token saved';
+    document.getElementById('tokenStatus').textContent = '[OK] Token saved';
     document.getElementById('tokenStatus').style.color = '#27ae60';
   }
 
-  showToast('Data loaded ✓');
+  showToast('Data loaded v');
 }
 
-// ── SAVE DATA — writes to GitHub + localStorage ──
-async function saveData(showMsg = true) {
+// -- SAVE DATA -- writes to GitHub + localStorage --
+function saveData(showMsg = true) {
   data.lastUpdated = new Date().toISOString().split('T')[0];
   localStorage.setItem('mm_availability', JSON.stringify(data));
-  const ok = await githubWrite('availability.json', data);
-  if (showMsg) showToast(ok ? '✅ Saved & synced to GitHub' : '💾 Saved locally only');
+  githubWrite('availability.json', data); var ok = true;
+  if (showMsg) showToast(ok ? '[OK] Saved & synced to GitHub' : ' Saved locally only');
   return ok;
 }
 
-async function saveSettingsToGithub(settings) {
+function saveSettingsToGithub(settings) {
   settings.lastUpdated = new Date().toISOString().split('T')[0];
   localStorage.setItem('mm_settings', JSON.stringify(settings));
-  const ok = await githubWrite('settings.json', settings);
-  showToast(ok ? '✅ Settings synced to GitHub' : '💾 Saved locally only');
+  githubWrite('settings.json', settings); var ok = true;
+  showToast(ok ? '[OK] Settings synced to GitHub' : ' Saved locally only');
 }
 
-// ── TOAST ──
+// -- TOAST --
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// ── MODALS ──
+// -- MODALS --
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// ── DATE HELPERS ──
+// -- DATE HELPERS --
 function dateStr(d) { return d.toISOString().split('T')[0]; }
 function addDays(dateStr, n) {
-  const d = new Date(dateStr); d.setDate(d.getDate() + n); return dateStr(d);
+  var d = new Date(dateStr); d.setDate(d.getDate() + n); return dateStr(d);
 }
 function daysBetween(a, b) {
   return Math.round((new Date(b) - new Date(a)) / 86400000);
 }
 function formatDate(str) {
-  const d = new Date(str + 'T00:00:00');
+  var d = new Date(str + 'T00:00:00');
   return d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
 }
 function isDateInRange(date, checkin, checkout) {
   return date >= checkin && date < checkout;
 }
 
-// ── GET STATUS OF A DATE FOR A SUITE ──
+// -- GET STATUS OF A DATE FOR A SUITE --
 function getDateStatus(suite, dateStr) {
-  const sData = data.suites[suite];
+  var sData = data.suites[suite];
   if (!sData) return 'available';
 
   // Check if suite bookings cover this date
-  for (const b of sData.bookings) {
+  for (var b of sData.bookings) {
     if (isDateInRange(dateStr, b.checkin, b.checkout)) {
       return 'booked-' + (b.source || 'direct');
     }
   }
 
-  // If checking villa — also check if pietra OR cielo is booked
+  // If checking villa -- also check if pietra OR cielo is booked
   if (suite === 'villa') {
-    for (const s of ['pietra', 'cielo']) {
-      for (const b of data.suites[s].bookings) {
+    for (var s of ['pietra', 'cielo']) {
+      for (var b of data.suites[s].bookings) {
         if (isDateInRange(dateStr, b.checkin, b.checkout)) return 'booked-' + (b.source || 'direct');
       }
     }
   }
 
-  // If checking pietra or cielo — check if villa is booked
+  // If checking pietra or cielo -- check if villa is booked
   if (suite !== 'villa') {
-    for (const b of data.suites.villa.bookings) {
+    for (var b of data.suites.villa.bookings) {
       if (isDateInRange(dateStr, b.checkin, b.checkout)) return 'booked-' + (b.source || 'direct');
     }
   }
 
   // Check blocked dates
-  for (const block of data.blockedDates) {
-    const applies = block.suite === 'all' || block.suite === suite ||
+  for (var block of data.blockedDates) {
+    var applies = block.suite === 'all' || block.suite === suite ||
       (suite === 'villa' && (block.suite === 'pietra' || block.suite === 'cielo'));
     if (applies && isDateInRange(dateStr, block.from, block.to)) return 'blocked';
   }
@@ -790,30 +786,30 @@ function getDateStatus(suite, dateStr) {
   return 'available';
 }
 
-// ── SAVE BOOKING ──
-async function saveBooking() {
-  const suite = document.getElementById('newSuite').value;
-  const source = document.getElementById('newSource').value;
-  const checkin = document.getElementById('newCheckin').value;
-  const checkout = document.getElementById('newCheckout').value;
-  const guest = document.getElementById('newGuest').value;
-  const notes = document.getElementById('newNotes').value;
+// -- SAVE BOOKING --
+function saveBooking() {
+  var suite = document.getElementById('newSuite').value;
+  var source = document.getElementById('newSource').value;
+  var checkin = document.getElementById('newCheckin').value;
+  var checkout = document.getElementById('newCheckout').value;
+  var guest = document.getElementById('newGuest').value;
+  var notes = document.getElementById('newNotes').value;
 
   if (!checkin || !checkout || !guest) { showToast('Please fill all required fields'); return; }
   if (checkin >= checkout) { showToast('Check-out must be after check-in'); return; }
 
-  const booking = { id: Date.now(), suite, source, checkin, checkout, guest, notes, created: dateStr(new Date()) };
+  var booking = { id: Date.now(), suite: suite, source: source, checkin: checkin, checkout: checkout, guest: guest, notes: notes, created: dateStr(new Date()) };
 
   // Add to suite
   data.suites[suite].bookings.push(booking);
 
-  // If villa — also block pietra and cielo
+  // If villa -- also block pietra and cielo
   if (suite === 'villa') {
     data.suites.pietra.bookings.push({...booking, suite:'pietra', linkedToVilla:true});
     data.suites.cielo.bookings.push({...booking, suite:'cielo', linkedToVilla:true});
   }
 
-  await saveData(false);
+saveData(false);
   closeModal('addModal');
   renderCalendar();
   renderDashboard();
@@ -824,27 +820,27 @@ async function saveBooking() {
   document.getElementById('newCheckin').value = '';
   document.getElementById('newCheckout').value = '';
 
-  showToast('✅ Booking saved & synced');
+  showToast('[OK] Booking saved & synced');
 }
 
-// ── SAVE BLOCK ──
-async function saveBlock() {
-  const suite = document.getElementById('blockSuite').value;
-  const from = document.getElementById('blockFrom').value;
-  const to = document.getElementById('blockTo').value;
-  const reason = document.getElementById('blockReason').value || 'Blocked';
+// -- SAVE BLOCK --
+function saveBlock() {
+  var suite = document.getElementById('blockSuite').value;
+  var from = document.getElementById('blockFrom').value;
+  var to = document.getElementById('blockTo').value;
+  var reason = document.getElementById('blockReason').value || 'Blocked';
 
   if (!from || !to) { showToast('Please select dates'); return; }
 
-  data.blockedDates.push({ id: Date.now(), suite, from, to, reason });
-  await saveData(false);
+  data.blockedDates.push({ id: Date.now(), suite: suite, from: from, to: to, reason: reason });
+  saveData(false);
   closeModal('blockModal');
   renderCalendar();
-  showToast('✅ Dates blocked & synced');
+  showToast('[OK] Dates blocked & synced');
 }
 
-// ── DELETE BOOKING ──
-async function deleteBooking(suiteKey, bookingId) {
+// -- DELETE BOOKING --
+function deleteBooking(suiteKey, bookingId) {
   if (!confirm('Delete this booking?')) return;
   data.suites[suiteKey].bookings = data.suites[suiteKey].bookings.filter(b => b.id !== bookingId);
   // Also remove linked villa bookings
@@ -852,14 +848,14 @@ async function deleteBooking(suiteKey, bookingId) {
     data.suites[s].bookings = data.suites[s].bookings.filter(b => b.id !== bookingId);
   });
   data.blockedDates = data.blockedDates.filter(b => b.id !== bookingId);
-  await saveData(false);
+  saveData(false);
   renderAllBookings();
   renderCalendar();
   renderDashboard();
-  showToast('✅ Booking deleted & synced');
+  showToast('[OK] Booking deleted & synced');
 }
 
-// ── RENDER CALENDAR ──
+// -- RENDER CALENDAR --
 function selectSuite(suite) {
   currentSuite = suite;
   document.querySelectorAll('.suite-tab').forEach(t => t.classList.remove('active'));
@@ -875,41 +871,41 @@ function changeMonth(dir) {
 }
 
 function renderCalendar() {
-  const months = ['January','February','March','April','May','June',
+  var months = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
   document.getElementById('calMonth').textContent = months[currentMonth] + ' ' + currentYear;
 
-  const grid = document.getElementById('calGrid');
+  var grid = document.getElementById('calGrid');
   grid.innerHTML = '';
 
   // Day labels
   ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d => {
-    const el = document.createElement('div');
+    var el = document.createElement('div');
     el.className = 'cal-day-label';
     el.textContent = d;
     grid.appendChild(el);
   });
 
-  const firstDay = new Date(currentYear, currentMonth, 1);
-  const lastDay = new Date(currentYear, currentMonth + 1, 0);
-  const startPad = (firstDay.getDay() + 6) % 7; // Monday = 0
+  var firstDay = new Date(currentYear, currentMonth, 1);
+  var lastDay = new Date(currentYear, currentMonth + 1, 0);
+  var startPad = (firstDay.getDay() + 6) % 7; // Monday = 0
 
   // Empty cells
-  for (let i = 0; i < startPad; i++) {
-    const el = document.createElement('div');
+  for (var i = 0; i < startPad; i++) {
+    var el = document.createElement('div');
     el.className = 'cal-day empty';
     grid.appendChild(el);
   }
 
-  const today = dateStr(new Date());
+  var today = dateStr(new Date());
 
   // Day cells
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateS = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const status = getDateStatus(currentSuite, dateS);
-    const isPast = dateS < today;
+  for (var d = 1; d <= lastDay.getDate(); d++) {
+    var dateS = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    var status = getDateStatus(currentSuite, dateS);
+    var isPast = dateS < today;
 
-    const el = document.createElement('div');
+    var el = document.createElement('div');
     el.className = `cal-day ${status} ${isPast ? 'past' : ''} ${dateS === today ? 'today' : ''}`;
     el.textContent = d;
     el.title = status.replace('-', ' ');
@@ -917,17 +913,17 @@ function renderCalendar() {
   }
 }
 
-// ── RENDER DASHBOARD ──
+// -- RENDER DASHBOARD --
 function renderDashboard() {
-  const today = dateStr(new Date());
+  var today = dateStr(new Date());
   document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
   // Stats
-  let totalBookings = 0;
-  let upcomingIn7 = 0;
-  let checkoutsToday = 0;
+  var totalBookings = 0;
+  var upcomingIn7 = 0;
+  var checkoutsToday = 0;
 
-  const allBookings = [];
+  var allBookings = [];
   ['pietra','cielo','villa'].forEach(s => {
     data.suites[s].bookings.filter(b => !b.linkedToVilla).forEach(b => {
       allBookings.push({...b, suiteKey:s});
@@ -945,12 +941,12 @@ function renderDashboard() {
   `;
 
   // Upcoming
-  const upcoming = allBookings
+  var upcoming = allBookings
     .filter(b => b.checkout >= today)
     .sort((a,b) => a.checkin.localeCompare(b.checkin))
     .slice(0, 5);
 
-  const upcomingEl = document.getElementById('upcomingList');
+  var upcomingEl = document.getElementById('upcomingList');
   if (upcoming.length === 0) {
     upcomingEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No upcoming bookings</p>';
   } else {
@@ -958,8 +954,8 @@ function renderDashboard() {
       <div class="booking-item">
         <div class="booking-info">
           <div class="booking-suite">${data.suites[b.suiteKey]?.name || b.suiteKey}</div>
-          <div class="booking-dates">${formatDate(b.checkin)} → ${formatDate(b.checkout)}</div>
-          <div class="booking-guest">${b.guest} · ${daysBetween(b.checkin,b.checkout)} nights</div>
+          <div class="booking-dates">${formatDate(b.checkin)} -> ${formatDate(b.checkout)}</div>
+          <div class="booking-guest">${b.guest} . ${daysBetween(b.checkin,b.checkout)} nights</div>
         </div>
         <span class="booking-source source-${b.source}">${b.source}</span>
       </div>
@@ -967,20 +963,20 @@ function renderDashboard() {
   }
 
   // Cleaning schedule
-  const cleaningEl = document.getElementById('cleaningList');
-  const checkouts = allBookings.filter(b => b.checkout >= today && b.checkout <= addDays(today, 7));
+  var cleaningEl = document.getElementById('cleaningList');
+  var checkouts = allBookings.filter(b => b.checkout >= today && b.checkout <= addDays(today, 7));
   if (checkouts.length === 0) {
     cleaningEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No cleaning needed this week</p>';
   } else {
     cleaningEl.innerHTML = checkouts.map(b => {
-      const isToday = b.checkout === today;
-      const isTomorrow = b.checkout === addDays(today, 1);
-      const urgency = isToday ? '🔴 TODAY' : isTomorrow ? '🟡 TOMORROW' : '🟢 ' + formatDate(b.checkout);
+      var isToday = b.checkout === today;
+      var isTomorrow = b.checkout === addDays(today, 1);
+      var urgency = isToday ? ' TODAY' : isTomorrow ? ' TOMORROW' : ' ' + formatDate(b.checkout);
       return `
         <div class="booking-item">
           <div class="booking-info">
             <div class="booking-suite">${urgency}</div>
-            <div class="booking-dates">${data.suites[b.suiteKey]?.name || b.suiteKey} — Clean after ${b.checkoutTime || '10:00 AM'}</div>
+            <div class="booking-dates">${data.suites[b.suiteKey]?.name || b.suiteKey} -- Clean after ${b.checkoutTime || '10:00 AM'}</div>
             <div class="booking-guest">Guest: ${b.guest}</div>
           </div>
         </div>
@@ -989,10 +985,10 @@ function renderDashboard() {
   }
 }
 
-// ── RENDER ALL BOOKINGS ──
+// -- RENDER ALL BOOKINGS --
 function renderAllBookings() {
-  const today = dateStr(new Date());
-  const allBookings = [];
+  var today = dateStr(new Date());
+  var allBookings = [];
   ['pietra','cielo','villa'].forEach(s => {
     data.suites[s].bookings.filter(b => !b.linkedToVilla).forEach(b => {
       allBookings.push({...b, suiteKey:s});
@@ -1004,7 +1000,7 @@ function renderAllBookings() {
 
   allBookings.sort((a,b) => a.checkin.localeCompare(b.checkin));
 
-  const el = document.getElementById('allBookingsList');
+  var el = document.getElementById('allBookingsList');
   if (allBookings.length === 0) {
     el.innerHTML = '<p style="color:var(--muted);padding:20px 0">No bookings yet. Add your first booking above.</p>';
     return;
@@ -1014,22 +1010,22 @@ function renderAllBookings() {
     <div class="booking-item">
       <div class="booking-info">
         <div class="booking-suite">${data.suites[b.suiteKey]?.name || b.suiteKey}</div>
-        <div class="booking-dates">${formatDate(b.checkin)} → ${formatDate(b.checkout)}</div>
-        <div class="booking-guest">${b.guest || ''} ${b.notes ? '· ' + b.notes : ''}</div>
+        <div class="booking-dates">${formatDate(b.checkin)} -> ${formatDate(b.checkout)}</div>
+        <div class="booking-guest">${b.guest || ''} ${b.notes ? '. ' + b.notes : ''}</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
         <span class="booking-source source-${b.source}">${b.source}</span>
         <button class="btn btn-red" style="padding:6px 10px;font-size:8px" 
-          onclick="deleteBooking('${b.suiteKey}', ${b.id})">✕</button>
+          onclick="deleteBooking('${b.suiteKey}', ${b.id})">x</button>
       </div>
     </div>
   `).join('');
 }
 
-// ── SAVE SETTINGS ──
-async async function saveSettings() {
-  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
-  const settings = {
+// -- SAVE SETTINGS --
+function saveSettings() {
+  var saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  var settings = {
     ...saved,
     prices: {
       pietra: parseInt(document.getElementById('pricePietra').value),
@@ -1048,12 +1044,12 @@ async async function saveSettings() {
   data.suites.pietra.cleaningFee = settings.prices.cleaningPietra;
   data.suites.cielo.cleaningFee = settings.prices.cleaningCielo;
   data.suites.villa.cleaningFee = settings.prices.cleaningVilla;
-  await Promise.all([saveData(false), saveSettingsToGithub(settings)]);
+  saveData(false); saveSettingsToGithub(settings);
 }
 
-async async function saveIcal() {
-  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
-  const settings = {
+function saveIcal() {
+  var saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  var settings = {
     ...saved,
     icalSources: {
       pietra: {
@@ -1066,24 +1062,24 @@ async async function saveIcal() {
       }
     }
   };
-  await saveSettingsToGithub(settings);
+  saveSettingsToGithub(settings);
 }
 
-async async function saveContact() {
-  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
-  const settings = {
+function saveContact() {
+  var saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  var settings = {
     ...saved,
     property: {
       ...(saved.property || {}),
       whatsapp: document.getElementById('waNumber').value,
     }
   };
-  await saveSettingsToGithub(settings);
+  saveSettingsToGithub(settings);
 }
 
-async async function saveTokiSettings() {
-  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
-  const settings = {
+function saveTokiSettings() {
+  var saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  var settings = {
     ...saved,
     toki: {
       announcement: document.getElementById('tokiAnnouncement').value,
@@ -1092,12 +1088,12 @@ async async function saveTokiSettings() {
       specialOffer: '',
     }
   };
-  await saveSettingsToGithub(settings);
-  showToast('✅ Toki updated & synced');
+  saveSettingsToGithub(settings);
+  showToast('[OK] Toki updated & synced');
 }
 
-// ── SET MIN DATES ──
-const todayStr = new Date().toISOString().split('T')[0];
+// -- SET MIN DATES --
+var todayStr = new Date().toISOString().split('T')[0];
 document.getElementById('newCheckin').min = todayStr;
 document.getElementById('newCheckout').min = todayStr;
 document.getElementById('blockFrom').min = todayStr;
@@ -1109,7 +1105,25 @@ document.getElementById('blockFrom').addEventListener('change', function() {
   document.getElementById('blockTo').min = addDays(this.value, 1);
 });
 
-// ── EXPOSE FUNCTIONS GLOBALLY ──
+// -- EVENT LISTENERS (safe - runs after all functions defined) --
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+// -- EVENT LISTENERS --
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+// -- EVENT LISTENERS --
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+// -- EXPOSE FUNCTIONS GLOBALLY --
 window.doLogin = doLogin;
 window.logout = logout;
 window.showTab = showTab;
