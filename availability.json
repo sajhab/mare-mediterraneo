@@ -1,0 +1,43 @@
+{
+  "lastUpdated": "2025-05-10",
+  "suites": {
+    "pietra": {
+      "name": "Suite Pietra",
+      "price": 200,
+      "cleaningFee": 150,
+      "maxGuests": 4,
+      "bookings": []
+    },
+    "cielo": {
+      "name": "Suite Cielo",
+      "price": 180,
+      "cleaningFee": 150,
+      "maxGuests": 4,
+      "bookings": []
+    },
+    "villa": {
+      "name": "Villa Completa",
+      "price": 350,
+      "cleaningFee": 250,
+      "maxGuests": 8,
+      "bookings": []
+    }
+  },
+  "blockedDates": [],
+  "icalSources": {
+    "pietra": {
+      "airbnb": "",
+      "bookingCom": ""
+    },
+    "cielo": {
+      "airbnb": "",
+      "bookingCom": ""
+    }
+  },
+  "settings": {
+    "minStay": 4,
+    "checkinTime": "15:00",
+    "checkoutTime": "10:00",
+    "currency": "EUR"
+  }
+}

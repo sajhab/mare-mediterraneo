@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cleaner — Mare Mediterraneo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+:root{--gold:#C8963E;--pietra:#C8B99A;--notte:#0A0A12;--notte2:#0F0F1A;
+  --sabbia:#F5EFE6;--text:#E8DDD0;--muted:rgba(232,221,208,0.5);--border:rgba(200,185,154,0.15);
+  --green:#27ae60;--orange:#e67e22;--red:#e74c3c;}
+body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-serif;min-height:100vh}
+
+/* LOGIN */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{width:100%;max-width:340px;background:var(--notte2);border:1px solid var(--border);
+  border-radius:8px;padding:32px 24px;text-align:center}
+.login-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--pietra);margin-bottom:4px}
+.login-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
+.login-input{width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);
+  border-radius:3px;padding:14px;font-family:'Tenor Sans',sans-serif;font-size:14px;
+  color:var(--text);margin-bottom:12px;outline:none;text-align:center;
+  letter-spacing:4px;transition:border-color 0.2s}
+.login-input:focus{border-color:var(--gold)}
+.login-btn{width:100%;padding:14px;background:var(--gold);color:var(--notte);border:none;
+  border-radius:3px;font-family:'Tenor Sans',sans-serif;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;cursor:pointer;font-weight:600}
+.login-error{color:var(--red);font-size:11px;margin-top:8px;display:none}
+
+/* APP */
+#app{display:none}
+.header{background:var(--notte2);border-bottom:1px solid var(--border);
+  padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.header-left .greeting{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:22px;color:var(--sabbia)}
+.header-left .date{font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-top:2px}
+.logout{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+  background:none;border:1px solid var(--border);padding:6px 12px;border-radius:2px;cursor:pointer}
+
+.content{padding:20px;max-width:600px;margin:0 auto}
+
+/* STATUS CARDS */
+.suite-status{border-radius:6px;overflow:hidden;margin-bottom:16px}
+.suite-status-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.suite-status-header.clean{background:rgba(39,174,96,0.15);border:1px solid rgba(39,174,96,0.3)}
+.suite-status-header.dirty{background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3)}
+.suite-status-header.occupied{background:rgba(200,150,62,0.15);border:1px solid rgba(200,150,62,0.3)}
+.suite-name-label{font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.suite-name-label.clean{color:var(--green)}
+.suite-name-label.dirty{color:var(--red)}
+.suite-name-label.occupied{color:var(--gold)}
+.suite-status-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 10px;border-radius:2px}
+.badge-clean{background:rgba(39,174,96,0.2);color:var(--green)}
+.badge-dirty{background:rgba(231,76,60,0.2);color:var(--red)}
+.badge-occupied{background:rgba(200,150,62,0.2);color:var(--gold)}
+.suite-status-body{background:var(--notte2);border:1px solid var(--border);
+  border-top:none;padding:14px 16px}
+.status-info{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia);margin-bottom:4px}
+.status-sub{font-size:10px;color:var(--muted);letter-spacing:1px}
+
+/* CHECKLIST */
+.checklist{margin-top:14px}
+.checklist-title{font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px}
+.check-item{display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:0.5px solid rgba(200,185,154,0.06);cursor:pointer}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;border-radius:3px;border:1.5px solid var(--border);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.check-item.done .check-box{background:var(--green);border-color:var(--green)}
+.check-item.done .check-box::after{content:'✓';color:white;font-size:13px}
+.check-item.done .check-text{text-decoration:line-through;opacity:0.5}
+.check-text{font-size:13px;color:var(--text)}
+
+/* WEEK SCHEDULE */
+.week-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin:28px 0 14px;display:flex;align-items:center;gap:10px}
+.week-title::before{content:'';flex:1;height:0.5px;background:rgba(200,185,154,0.15)}
+.week-item{background:var(--notte2);border:1px solid var(--border);border-radius:4px;
+  padding:14px 16px;margin-bottom:8px;display:flex;gap:16px;align-items:flex-start}
+.week-date{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;
+  color:var(--gold);line-height:1;min-width:32px;text-align:center}
+.week-day{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.week-info{flex:1}
+.week-suite{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.week-action{font-size:15px;color:var(--sabbia);font-family:'Cormorant Garamond',serif}
+.week-time{font-size:10px;color:var(--muted);margin-top:2px}
+.week-tag{display:inline-block;font-size:7px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 8px;border-radius:2px;margin-top:4px}
+.tag-checkout{background:rgba(231,76,60,0.15);color:var(--red)}
+.tag-checkin{background:rgba(39,174,96,0.15);color:var(--green)}
+.tag-clean{background:rgba(200,150,62,0.15);color:var(--gold)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:32px;color:var(--muted);
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px}
+
+/* REFRESH */
+.refresh-btn{width:100%;padding:12px;background:rgba(200,185,154,0.06);
+  border:1px solid var(--border);border-radius:3px;color:var(--muted);
+  font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;margin-bottom:20px;transition:all 0.2s}
+.refresh-btn:hover{border-color:var(--gold);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Mare Mediterraneo</div>
+    <div class="login-sub">Cleaner Portal</div>
+    <input type="password" class="login-input" id="loginPass" 
+      placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Enter</button>
+    <div class="login-error" id="loginError">Incorrect password</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <div class="greeting" id="greeting"></div>
+      <div class="date" id="headerDate"></div>
+    </div>
+    <button class="logout" onclick="logout()">Exit</button>
+  </div>
+
+  <div class="content">
+    <button class="refresh-btn" onclick="renderAll()">↻ Refresh Schedule</button>
+
+    <!-- Suite Status -->
+    <div id="suiteStatuses"></div>
+
+    <!-- This Week -->
+    <div class="week-title">This Week's Schedule</div>
+    <div id="weekSchedule"></div>
+  </div>
+</div>
+
+<script>
+const CLEANER_PASS = 'Mare2026';
+const CLEANER_NAME = 'Daniela';
+
+let data = null;
+
+function doLogin() {
+  const pass = document.getElementById('loginPass').value;
+  if (pass === CLEANER_PASS) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadData();
+    renderAll();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function loadData() {
+  // Load from localStorage (shared with admin panel on same domain)
+  const saved = localStorage.getItem('mm_availability');
+  if (saved) {
+    try { data = JSON.parse(saved); } catch(e) { data = null; }
+  }
+}
+
+function dateStr(d) { return d.toISOString().split('T')[0]; }
+function addDays(str, n) {
+  const d = new Date(str + 'T00:00:00'); d.setDate(d.getDate() + n);
+  return dateStr(d);
+}
+function formatDate(str) {
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', {weekday:'short',day:'numeric',month:'short'});
+}
+
+function getSuiteStatus(suiteKey) {
+  if (!data) return {status:'unknown', info:'No data available'};
+  const today = dateStr(new Date());
+  const tomorrow = addDays(today, 1);
+  const suite = data.suites[suiteKey];
+  if (!suite) return {status:'clean', info:'No bookings'};
+
+  for (const b of suite.bookings) {
+    // Check if occupied today
+    if (b.checkin <= today && b.checkout > today) {
+      return {
+        status: 'occupied',
+        info: `Occupied — ${b.guest}`,
+        sub: `Check-out: ${formatDate(b.checkout)} at 10:00 AM`,
+        checkout: b.checkout,
+        checkin: b.checkin,
+        guest: b.guest
+      };
+    }
+    // Check if checkout today — needs cleaning
+    if (b.checkout === today) {
+      // Find next checkin
+      const nextIn = suite.bookings.find(nb => nb.checkin >= today && nb.id !== b.id);
+      return {
+        status: 'dirty',
+        info: '🧹 CLEAN TODAY',
+        sub: nextIn ? `Next guest ${formatDate(nextIn.checkin)} at 3:00 PM` : 'No next guest yet',
+        needsCleaning: true,
+        checkoutGuest: b.guest
+      };
+    }
+    // Check if checkout tomorrow
+    if (b.checkout === tomorrow) {
+      return {
+        status: 'occupied',
+        info: `Occupied — ${b.guest}`,
+        sub: `Check-out TOMORROW at 10:00 AM — prepare to clean`,
+        checkout: b.checkout
+      };
+    }
+  }
+
+  return {status:'clean', info:'Available — No action needed', sub:''};
+}
+
+function renderAll() {
+  loadData();
+
+  // Header
+  const now = new Date();
+  const hour = now.getHours();
+  const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = `${timeGreeting}, ${CLEANER_NAME}`;
+  document.getElementById('headerDate').textContent = now.toLocaleDateString('en-GB', {
+    weekday:'long', day:'numeric', month:'long'
+  });
+
+  // Suite statuses
+  const statusEl = document.getElementById('suiteStatuses');
+  const suites = [
+    {key:'pietra', label:'Suite Pietra'},
+    {key:'cielo', label:'Suite Cielo'},
+  ];
+
+  statusEl.innerHTML = suites.map(s => {
+    const st = getSuiteStatus(s.key);
+    const checklist = st.needsCleaning ? renderChecklist(s.key) : '';
+    return `
+      <div class="suite-status">
+        <div class="suite-status-header ${st.status}">
+          <span class="suite-name-label ${st.status}">${s.label}</span>
+          <span class="suite-status-badge badge-${st.status}">
+            ${st.status === 'clean' ? '✓ Clean' : st.status === 'dirty' ? '⚠ Clean Now' : '● Occupied'}
+          </span>
+        </div>
+        <div class="suite-status-body">
+          <div class="status-info">${st.info}</div>
+          ${st.sub ? `<div class="status-sub">${st.sub}</div>` : ''}
+          ${checklist}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Week schedule
+  renderWeek();
+}
+
+function renderChecklist(suiteKey) {
+  const items = [
+    'Change all bed linen and pillowcases',
+    'Clean and sanitise bathroom',
+    'Mop all floors',
+    'Clean kitchen — hob, sink, surfaces',
+    'Wash up any dishes left',
+    'Empty all bins',
+    'Wipe down outdoor furniture',
+    'Check outdoor shower area',
+    'Restock toiletries and soap',
+    'Check AC remotes are present',
+    'Check WiFi router is on',
+    'Final walkthrough — all windows closed',
+  ];
+
+  const savedKey = 'checklist_' + suiteKey + '_' + dateStr(new Date());
+  const saved = JSON.parse(localStorage.getItem(savedKey) || '{}');
+
+  return `
+    <div class="checklist">
+      <div class="checklist-title">Cleaning Checklist</div>
+      ${items.map((item, i) => `
+        <div class="check-item ${saved[i] ? 'done' : ''}" 
+          onclick="toggleCheck('${suiteKey}', ${i}, this)" id="check-${suiteKey}-${i}">
+          <div class="check-box"></div>
+          <span class="check-text">${item}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleCheck(suiteKey, index, el) {
+  const savedKey = 'checklist_' + suiteKey + '_' + dateStr(new Date());
+  const saved = JSON.parse(localStorage.getItem(savedKey) || '{}');
+  saved[index] = !saved[index];
+  localStorage.setItem(savedKey, JSON.stringify(saved));
+  el.classList.toggle('done', saved[index]);
+}
+
+function renderWeek() {
+  if (!data) {
+    document.getElementById('weekSchedule').innerHTML = '<div class="empty">No schedule data available</div>';
+    return;
+  }
+
+  const today = new Date();
+  const events = [];
+
+  ['pietra', 'cielo', 'villa'].forEach(suiteKey => {
+    const suite = data.suites[suiteKey];
+    if (!suite) return;
+    const suiteName = suite.name;
+
+    suite.bookings.filter(b => !b.linkedToVilla).forEach(b => {
+      const checkoutDate = new Date(b.checkout + 'T00:00:00');
+      const checkinDate = new Date(b.checkin + 'T00:00:00');
+      const diffCheckout = Math.round((checkoutDate - today) / 86400000);
+      const diffCheckin = Math.round((checkinDate - today) / 86400000);
+
+      if (diffCheckout >= 0 && diffCheckout <= 7) {
+        events.push({ date: b.checkout, type: 'checkout', suite: suiteName, guest: b.guest });
+        events.push({ date: b.checkout, type: 'clean', suite: suiteName, guest: b.guest });
+      }
+      if (diffCheckin >= 0 && diffCheckin <= 7) {
+        events.push({ date: b.checkin, type: 'checkin', suite: suiteName, guest: b.guest });
+      }
+    });
+  });
+
+  events.sort((a, b) => a.date.localeCompare(b.date));
+
+  const el = document.getElementById('weekSchedule');
+
+  if (events.length === 0) {
+    el.innerHTML = '<div class="empty">No events this week — enjoy the rest! ☀️</div>';
+    return;
+  }
+
+  el.innerHTML = events.map(e => {
+    const d = new Date(e.date + 'T00:00:00');
+    const dayNum = d.getDate();
+    const dayName = d.toLocaleDateString('en-GB', {weekday:'short'});
+    const isToday = e.date === dateStr(new Date());
+    const isTomorrow = e.date === addDays(dateStr(new Date()), 1);
+    const label = isToday ? 'TODAY' : isTomorrow ? 'TOMORROW' : dayName;
+
+    const typeConfig = {
+      checkout: { tag:'tag-checkout', label:'Check-out', action: `${e.guest} checks out at 10:00 AM`, time:'10:00 AM' },
+      clean:    { tag:'tag-clean',    label:'Clean',     action: `Clean ${e.suite} after guest departure`, time:'After 10:00 AM' },
+      checkin:  { tag:'tag-checkin',  label:'Check-in',  action: `${e.guest} arrives at 3:00 PM`, time:'Ready by 3:00 PM' },
+    };
+
+    const cfg = typeConfig[e.type];
+    return `
+      <div class="week-item">
+        <div>
+          <div class="week-date">${dayNum}</div>
+          <div class="week-day">${label}</div>
+        </div>
+        <div class="week-info">
+          <div class="week-suite">${e.suite}</div>
+          <div class="week-action">${cfg.action}</div>
+          <div class="week-time">${cfg.time}</div>
+          <span class="week-tag ${cfg.tag}">${cfg.label}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+</script>
+</body>
+</html>

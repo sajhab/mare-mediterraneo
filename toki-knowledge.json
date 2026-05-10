@@ -1,0 +1,118 @@
+{
+  "property": {
+    "name": "Mare Mediterraneo",
+    "location": "Torre Chianca, Salento, Puglia, Italy",
+    "seaDistance": "400 metres walking",
+    "lecceDistance": "15 minutes by car",
+    "brindisiAirport": "40 minutes by car",
+    "bariAirport": "90 minutes by car",
+    "otrantoDistance": "35 minutes by car",
+    "gallipoliDistance": "45 minutes by car",
+    "description": "A beautiful property built from pietra leccese — the same golden limestone as Lecce's baroque palaces. Two independent apartments, one stunning property, 400 metres from the sea."
+  },
+  "suites": {
+    "pietra": {
+      "name": "Suite Pietra",
+      "floor": "Ground floor",
+      "price": 200,
+      "cleaningFee": 150,
+      "maxGuests": 4,
+      "minStay": 4,
+      "description": "Ground floor suite with private garden, outdoor dining table, sun beds and private parking.",
+      "features": [
+        "2 bedrooms",
+        "1 bathroom",
+        "Living room",
+        "Full kitchen",
+        "Private garden",
+        "Outdoor dining table",
+        "Sun beds",
+        "Private parking",
+        "2 air conditioners",
+        "Outdoor shower",
+        "Washing machine",
+        "Fast WiFi",
+        "Private entrance"
+      ]
+    },
+    "cielo": {
+      "name": "Suite Cielo",
+      "floor": "First floor",
+      "price": 180,
+      "cleaningFee": 150,
+      "maxGuests": 4,
+      "minStay": 4,
+      "description": "First floor suite with large private terrace, terrace furniture and stunning views over the Salento landscape.",
+      "features": [
+        "2 bedrooms",
+        "1 bathroom",
+        "Open kitchen and living area",
+        "Large private terrace",
+        "Terrace furniture",
+        "Sun area",
+        "Parking on site",
+        "2 air conditioners",
+        "Outdoor shower",
+        "Washing machine",
+        "Fast WiFi",
+        "Private entrance"
+      ]
+    },
+    "villa": {
+      "name": "Villa Completa",
+      "floor": "Both floors",
+      "price": 350,
+      "cleaningFee": 250,
+      "maxGuests": 8,
+      "minStay": 4,
+      "description": "The entire property — both apartments together. Perfect for large families or two couples who want their own space but to holiday together.",
+      "features": [
+        "4 bedrooms total",
+        "2 bathrooms total",
+        "Garden + Terrace",
+        "4 air conditioners",
+        "Full parking",
+        "2 full kitchens",
+        "2 outdoor showers",
+        "2 washing machines",
+        "Fast WiFi throughout",
+        "Two private entrances"
+      ]
+    }
+  },
+  "rules": {
+    "checkin": "3:00 PM",
+    "checkout": "10:00 AM",
+    "minStay": "4 nights minimum",
+    "smoking": "No smoking inside the apartments",
+    "pets": "No pets allowed",
+    "parties": "No parties or events"
+  },
+  "cancellation": {
+    "lowSeason": "October to May: Full refund if cancelled 5+ days before. No refund under 5 days.",
+    "highSeason": "June to September: 50% refund if cancelled 7+ days before. No refund under 7 days."
+  },
+  "local": {
+    "beach": "The sea is just 400 metres away — a 5 minute walk from the property",
+    "swimming": "The local beach is beautiful with clear water. Great for swimming and sunbathing.",
+    "lecce": "Lecce is 15 minutes by car — a stunning baroque city known as the Florence of the South. A must visit.",
+    "otranto": "Otranto is 35 minutes away — a beautiful medieval coastal town with a stunning castle and crystal clear water.",
+    "gallipoli": "Gallipoli is 45 minutes away — famous for its beautiful beaches and historic centre.",
+    "restaurants": "Torre Chianca has several excellent local restaurants within walking distance. Lecce has hundreds of options for all budgets.",
+    "supermarket": "There is a supermarket in Torre Chianca village, 5 minutes by car.",
+    "airport": "Brindisi airport is the closest at 40 minutes. Bari airport is 90 minutes away."
+  },
+  "booking": {
+    "howToBook": "You can check availability on our website and send a booking request via WhatsApp. We confirm within a few hours and arrange secure payment via Stripe.",
+    "payment": "Secure payment via Stripe — all major cards accepted.",
+    "directBookingAdvantage": "Booking directly with us means no platform fees — you save compared to Airbnb or Booking.com.",
+    "whatsapp": "+35699699184"
+  },
+  "personality": {
+    "name": "Toki",
+    "role": "Digital concierge for Mare Mediterraneo",
+    "tone": "Warm, helpful, knowledgeable. Mix of professional and friendly. Occasionally use Italian words naturally. Never robotic.",
+    "greeting": "Ciao! I'm Toki, your personal concierge at Mare Mediterraneo 🌊 How can I help you today?",
+    "languages": "Detect the guest's language and always respond in the same language they write in."
+  }
+}
