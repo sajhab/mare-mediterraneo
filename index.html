@@ -21,7 +21,13 @@ nav.scrolled .nav-logo{opacity:1}
 .nav-book{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:0.5px solid rgba(200,150,62,0.4);padding:8px 16px;border-radius:2px;text-decoration:none;transition:all 0.3s}
 .nav-book:hover{background:var(--gold);color:var(--notte)}
 #hero{position:relative;height:100svh;min-height:640px;overflow:hidden;display:flex;align-items:flex-end;padding-bottom:70px}
-.hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,18,0.25) 0%,rgba(10,10,18,0.1) 35%,rgba(10,10,18,0.93) 100%),url('hero.jpg') center 40%/cover no-repeat;transform:scale(1.06);animation:heroZoom 14s ease-out forwards}
+.hero-bg{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,10,18,0.25) 0%,rgba(10,10,18,0.1) 35%,rgba(10,10,18,0.93) 100%),
+  url('hero-sq.jpg') center 35%/cover no-repeat;
+  transform:scale(1.06);animation:heroZoom 14s ease-out forwards}
+@media(min-width:600px){
+  .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.25) 0%,rgba(10,10,18,0.1) 35%,rgba(10,10,18,0.93) 100%),url('hero.jpg') center 40%/cover no-repeat}
+}
 @keyframes heroZoom{from{transform:scale(1.06)}to{transform:scale(1)}}
 .hero-content{position:relative;z-index:2;padding:0 28px;width:100%}
 .hero-eyebrow{font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:0;animation:riseUp 1s ease 0.8s both}
@@ -46,8 +52,13 @@ nav.scrolled .nav-logo{opacity:1}
 .sec-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:38px;line-height:1.15;color:var(--sabbia)}
 .sec-title em{font-style:italic;color:var(--pietra)}
 .suites-grid{display:flex;flex-direction:column;gap:2px}
+@media(min-width:900px){
+  .suites-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+  #card-villa{grid-column:1/-1}
+}
 .suite-card{position:relative;overflow:hidden;cursor:pointer}
-.suite-thumb{width:100%;height:320px;object-fit:cover;display:block;transition:transform 0.6s ease}
+.suite-thumb{width:100%;height:280px;object-fit:cover;object-position:center 40%;display:block;transition:transform 0.6s ease}
+@media(min-width:600px){.suite-thumb{height:380px;object-position:center 35%}}
 .suite-card:hover .suite-thumb{transform:scale(1.03)}
 .suite-overlay{position:absolute;top:0;left:0;right:0;height:320px;background:linear-gradient(180deg,rgba(10,10,18,0.05) 0%,rgba(10,10,18,0.88) 100%)}
 .suite-info{position:absolute;bottom:0;left:0;right:0;padding:28px;z-index:2}
@@ -254,7 +265,10 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   <div class="suites-grid">
 
     <div class="suite-card" id="card-pietra">
-      <img class="suite-thumb" src="pietra-main.jpg" alt="Suite Pietra">
+      <picture>
+  <source media="(max-width:599px)" srcset="pietra-main-sq.jpg">
+  <img class="suite-thumb" src="pietra-main.jpg" alt="Suite Pietra">
+</picture>
       <div class="suite-overlay"></div>
       <div class="suite-info">
         <div class="suite-badge">Ground Floor · Garden</div>
@@ -283,9 +297,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         </div>
         <span class="photo-label">Photos</span>
         <div class="photo-grid">
-          <div class="photo-thumb" onclick="lbOpen('pietra',0)"><img src="pietra-main.jpg" alt="Living room"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',1)"><img src="pietra-table.jpg" alt="Outdoor dining"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',2)"><img src="pietra-garden.jpg" alt="Garden"></div>
+          <div class="photo-thumb" onclick="lbOpen('pietra',0)"><img src="pietra-main-sq.jpg" alt="Living room"></div>
+          <div class="photo-thumb" onclick="lbOpen('pietra',1)"><img src="pietra-table-sq.jpg" alt="Outdoor dining"></div>
+          <div class="photo-thumb" onclick="lbOpen('pietra',2)"><img src="pietra-garden-sq.jpg" alt="Garden"></div>
         </div>
         <p class="suite-note">+ €150 one-time cleaning fee · Up to 4 guests</p>
         <button class="book-suite-btn" onclick="selectSuite('pietra')">Book Suite Pietra <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -293,7 +307,10 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     </div>
 
     <div class="suite-card" id="card-cielo">
-      <img class="suite-thumb" src="cielo-main.jpg" alt="Suite Cielo">
+      <picture>
+  <source media="(max-width:599px)" srcset="cielo-main-sq.jpg">
+  <img class="suite-thumb" src="cielo-main.jpg" alt="Suite Cielo">
+</picture>
       <div class="suite-overlay"></div>
       <div class="suite-info">
         <div class="suite-badge">First Floor · Terrace</div>
@@ -322,12 +339,12 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         </div>
         <span class="photo-label">Photos</span>
         <div class="photo-grid">
-          <div class="photo-thumb" onclick="lbOpen('cielo',0)"><img src="cielo-main.jpg" alt="Kitchen living"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',1)"><img src="cielo-sunset.jpg" alt="Sunset"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',2)"><img src="cielo-terrace.jpg" alt="Terrace"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',3)"><img src="cielo-view.jpg" alt="View"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',4)"><img src="cielo-kitchen.jpg" alt="Kitchen"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',5)"><img src="cielo-bedroom.jpg" alt="Bedroom"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',0)"><img src="cielo-main-sq.jpg" alt="Kitchen living"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',1)"><img src="cielo-sunset-sq.jpg" alt="Sunset"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',2)"><img src="cielo-terrace-sq.jpg" alt="Terrace"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',3)"><img src="cielo-view-sq.jpg" alt="View"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',4)"><img src="cielo-kitchen-sq.jpg" alt="Kitchen"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',5)"><img src="cielo-bedroom-sq.jpg" alt="Bedroom"></div>
         </div>
         <p class="suite-note">+ €150 one-time cleaning fee · Up to 4 guests</p>
         <button class="book-suite-btn" onclick="selectSuite('cielo')">Book Suite Cielo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -335,7 +352,10 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     </div>
 
     <div class="suite-card" id="card-villa">
-      <img class="suite-thumb" src="pietra-garden.jpg" alt="Villa Completa">
+      <picture>
+  <source media="(max-width:599px)" srcset="pietra-garden-sq.jpg">
+  <img class="suite-thumb" src="pietra-garden.jpg" alt="Villa Completa">
+</picture>
       <div class="suite-overlay"></div>
       <div class="suite-info">
         <div class="suite-badge">Entire Property · Best Value</div>
@@ -363,9 +383,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--gold);line-height:1.6;margin:0 0 16px">✦ Two couples travelling together? Each couple gets their own apartment, bathroom and entrance.</p>
         <span class="photo-label">Photos</span>
         <div class="photo-grid">
-          <div class="photo-thumb" onclick="lbOpen('villa',0)"><img src="hero.jpg" alt="Exterior"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',1)"><img src="pietra-garden.jpg" alt="Garden"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',2)"><img src="cielo-terrace.jpg" alt="Terrace"></div>
+          <div class="photo-thumb" onclick="lbOpen('villa',0)"><img src="hero-sq.jpg" alt="Exterior"></div>
+          <div class="photo-thumb" onclick="lbOpen('villa',1)"><img src="pietra-garden-sq.jpg" alt="Garden"></div>
+          <div class="photo-thumb" onclick="lbOpen('villa',2)"><img src="cielo-terrace-sq.jpg" alt="Terrace"></div>
         </div>
         <p class="suite-note">+ €250 one-time cleaning fee · Min 4 nights</p>
         <button class="book-suite-btn" onclick="selectSuite('villa')">Book Villa Completa <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -376,22 +396,22 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 
 <section id="gallery">
   <div class="strip">
-    <div class="strip-item"><img src="hero.jpg" alt="Exterior"><div class="strip-cap">La Facciata</div></div>
-    <div class="strip-item"><img src="pietra-garden.jpg" alt="Garden"><div class="strip-cap">Il Giardino</div></div>
-    <div class="strip-item"><img src="pietra-table.jpg" alt="Dining"><div class="strip-cap">Outdoor Dining</div></div>
-    <div class="strip-item"><img src="cielo-sunset.jpg" alt="Sunset"><div class="strip-cap">Il Tramonto</div></div>
-    <div class="strip-item"><img src="cielo-terrace.jpg" alt="Terrace"><div class="strip-cap">La Terrazza</div></div>
-    <div class="strip-item"><img src="cielo-view.jpg" alt="View"><div class="strip-cap">Vista Palme</div></div>
-    <div class="strip-item"><img src="cielo-kitchen.jpg" alt="Kitchen"><div class="strip-cap">Cucina Cielo</div></div>
-    <div class="strip-item"><img src="cielo-bedroom.jpg" alt="Bedroom"><div class="strip-cap">Camera da Letto</div></div>
-    <div class="strip-item"><img src="hero.jpg" alt="Exterior"><div class="strip-cap">La Facciata</div></div>
-    <div class="strip-item"><img src="pietra-garden.jpg" alt="Garden"><div class="strip-cap">Il Giardino</div></div>
-    <div class="strip-item"><img src="pietra-table.jpg" alt="Dining"><div class="strip-cap">Outdoor Dining</div></div>
-    <div class="strip-item"><img src="cielo-sunset.jpg" alt="Sunset"><div class="strip-cap">Il Tramonto</div></div>
-    <div class="strip-item"><img src="cielo-terrace.jpg" alt="Terrace"><div class="strip-cap">La Terrazza</div></div>
-    <div class="strip-item"><img src="cielo-view.jpg" alt="View"><div class="strip-cap">Vista Palme</div></div>
-    <div class="strip-item"><img src="cielo-kitchen.jpg" alt="Kitchen"><div class="strip-cap">Cucina Cielo</div></div>
-    <div class="strip-item"><img src="cielo-bedroom.jpg" alt="Bedroom"><div class="strip-cap">Camera da Letto</div></div>
+    <div class="strip-item"><img src="hero-sq.jpg" alt="Exterior"><div class="strip-cap">La Facciata</div></div>
+    <div class="strip-item"><img src="pietra-garden-sq.jpg" alt="Garden"><div class="strip-cap">Il Giardino</div></div>
+    <div class="strip-item"><img src="pietra-table-sq.jpg" alt="Dining"><div class="strip-cap">Outdoor Dining</div></div>
+    <div class="strip-item"><img src="cielo-sunset-sq.jpg" alt="Sunset"><div class="strip-cap">Il Tramonto</div></div>
+    <div class="strip-item"><img src="cielo-terrace-sq.jpg" alt="Terrace"><div class="strip-cap">La Terrazza</div></div>
+    <div class="strip-item"><img src="cielo-view-sq.jpg" alt="View"><div class="strip-cap">Vista Palme</div></div>
+    <div class="strip-item"><img src="cielo-kitchen-sq.jpg" alt="Kitchen"><div class="strip-cap">Cucina Cielo</div></div>
+    <div class="strip-item"><img src="cielo-bedroom-sq.jpg" alt="Bedroom"><div class="strip-cap">Camera da Letto</div></div>
+    <div class="strip-item"><img src="hero-sq.jpg" alt="Exterior"><div class="strip-cap">La Facciata</div></div>
+    <div class="strip-item"><img src="pietra-garden-sq.jpg" alt="Garden"><div class="strip-cap">Il Giardino</div></div>
+    <div class="strip-item"><img src="pietra-table-sq.jpg" alt="Dining"><div class="strip-cap">Outdoor Dining</div></div>
+    <div class="strip-item"><img src="cielo-sunset-sq.jpg" alt="Sunset"><div class="strip-cap">Il Tramonto</div></div>
+    <div class="strip-item"><img src="cielo-terrace-sq.jpg" alt="Terrace"><div class="strip-cap">La Terrazza</div></div>
+    <div class="strip-item"><img src="cielo-view-sq.jpg" alt="View"><div class="strip-cap">Vista Palme</div></div>
+    <div class="strip-item"><img src="cielo-kitchen-sq.jpg" alt="Kitchen"><div class="strip-cap">Cucina Cielo</div></div>
+    <div class="strip-item"><img src="cielo-bedroom-sq.jpg" alt="Bedroom"><div class="strip-cap">Camera da Letto</div></div>
   </div>
 </section>
 
