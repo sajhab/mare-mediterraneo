@@ -514,6 +514,21 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 </div>
 
 <script>
+// -- GLOBALS --
+var data = {
+  suites: {
+    pietra: { name:'Suite Pietra', price:200, cleaningFee:150, maxGuests:4, bookings:[] },
+    cielo:  { name:'Suite Cielo',  price:180, cleaningFee:150, maxGuests:4, bookings:[] },
+    villa:  { name:'Villa Completa', price:350, cleaningFee:250, maxGuests:8, bookings:[] }
+  },
+  blockedDates: [],
+  icalSources: { pietra:{airbnb:'',bookingCom:''}, cielo:{airbnb:'',bookingCom:''} },
+  settings: { minStay:4, checkinTime:'15:00', checkoutTime:'10:00' }
+};
+var currentSuite = 'pietra';
+var currentMonth = new Date().getMonth();
+var currentYear = new Date().getFullYear();
+
 // -- CONFIG --
 var ADMIN_PASS = 'Malta.2017';
 var REPO = 'sajhab/mare-mediterraneo';
@@ -779,8 +794,8 @@ function saveBooking() {
 
   // If villa -- also block pietra and cielo
   if (suite === 'villa') {
-    data.suites.pietra.bookings.push({...booking, suite:'pietra', linkedToVilla:true});
-    data.suites.cielo.bookings.push({...booking, suite:'cielo', linkedToVilla:true});
+    var bkP = Object.assign({}, booking, {suite:'pietra', linkedToVilla:true}); data.suites.pietra.bookings.push(bkP);
+    var bkC = Object.assign({}, booking, {suite:'cielo', linkedToVilla:true}); data.suites.cielo.bookings.push(bkC);
   }
 
 saveData(false);
@@ -1091,11 +1106,38 @@ document.getElementById('loginPass').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doLogin();
 });
 
+// -- RESTORE TOKEN ON PAGE LOAD --
+(function() {
+  var saved = localStorage.getItem('mm_github_token');
+  if (saved && document.getElementById('githubToken')) {
+    document.getElementById('githubToken').value = saved;
+  }
+})();
+
 // -- EVENT LISTENERS --
 document.getElementById('loginBtn').addEventListener('click', doLogin);
 document.getElementById('loginPass').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doLogin();
 });
+
+// Restore GitHub token on every page load (survives logout)
+(function() {
+  var t = localStorage.getItem('mm_github_token');
+  var el = document.getElementById('githubToken');
+  if (t && el) {
+    el.value = t;
+    var st = document.getElementById('tokenStatus');
+    if (st) { st.textContent = 'Token saved'; st.style.color = '#27ae60'; }
+  }
+})();
+
+// -- RESTORE TOKEN ON PAGE LOAD --
+(function() {
+  var saved = localStorage.getItem('mm_github_token');
+  if (saved && document.getElementById('githubToken')) {
+    document.getElementById('githubToken').value = saved;
+  }
+})();
 
 // -- EXPOSE FUNCTIONS GLOBALLY --
 window.doLogin = doLogin;
