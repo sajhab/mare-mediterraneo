@@ -1,11 +1,19 @@
 {
   "prices": {
-    "pietra": 200,
+    "pietra": 203,
     "cielo": 180,
     "villa": 350,
     "cleaningPietra": 150,
     "cleaningCielo": 150,
-    "cleaningVilla": 250
+    "cleaningVilla": 250,
+    "minStay": 4
+  },
+  "lastUpdated": "2026-05-10",
+  "toki": {
+    "announcement": "",
+    "updates": "",
+    "localTips": "",
+    "specialOffer": ""
   },
   "property": {
     "checkin": "15:00",
@@ -15,12 +23,5 @@
     "email": "",
     "name": "Mare Mediterraneo",
     "location": "Torre Chianca, Salento, Puglia"
-  },
-  "toki": {
-    "announcement": "",
-    "updates": "",
-    "localTips": "",
-    "specialOffer": ""
-  },
-  "lastUpdated": "2025-05-10"
+  }
 }
