@@ -47,11 +47,15 @@ nav.scrolled .nav-logo{opacity:1}
 .nav-book:hover{background:var(--gold);color:var(--notte)}
 
 /* ── HERO ── */
-#hero{position:relative;height:55vw;min-height:300px;max-height:520px;overflow:hidden;
+#hero{position:relative;height:92vw;min-height:380px;max-height:600px;overflow:hidden;
   display:flex;align-items:flex-end;padding-bottom:32px;margin-top:72px}
 .hero-bg{position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,10,18,0.1) 0%,rgba(10,10,18,0.05) 50%,rgba(10,10,18,0.85) 100%),
-  url('hero.jpg') center 40%/cover no-repeat}
+  background:linear-gradient(180deg,rgba(10,10,18,0.05) 0%,rgba(10,10,18,0.0) 40%,rgba(10,10,18,0.88) 100%),
+  url('hero-mobile.jpg') center 30%/cover no-repeat}
+@media(min-width:768px){
+  #hero{height:55vw;min-height:400px;max-height:680px}
+  .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.1) 0%,rgba(10,10,18,0.05) 50%,rgba(10,10,18,0.85) 100%),url('hero.jpg') center 40%/cover no-repeat}
+}
 .hero-content{position:relative;z-index:2;padding:0 20px;width:100%}
 .hero-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
 .hero-mare{display:block;font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
