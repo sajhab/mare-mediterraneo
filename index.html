@@ -824,6 +824,11 @@ function selectSuite(n){
 // ── BOOKING ──
 let cp=200,cc=150,guests=2,maxG=4;
 function selTab(s,p,c){
+  // Use live prices if available
+  if (window.LIVE_PRICES && window.LIVE_PRICES[s]) {
+    p = window.LIVE_PRICES[s].price;
+    c = window.LIVE_PRICES[s].cleaning;
+  }
   cp=p;cc=c;maxG=s==='villa'?8:4;
   if(guests>maxG){guests=maxG;updG();}
   document.querySelectorAll('.book-tab').forEach(t=>t.classList.remove('active'));
@@ -892,8 +897,122 @@ if(mc){
 
 // ── IP LANGUAGE ──
 // Always scroll to top on load
+// ── LOAD LIVE SETTINGS & PRICES FROM GITHUB ──
+(async function() {
+  try {
+    const [sRes, aRes] = await Promise.all([
+      fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/settings.json?t='+Date.now()),
+      fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t='+Date.now())
+    ]);
+    if (sRes.ok) {
+      const s = await sRes.json();
+      if (s.prices) {
+        // Update suite card prices
+        const cards = [{key:'pietra',price:s.prices.pietra},{key:'cielo',price:s.prices.cielo},{key:'villa',price:s.prices.villa}];
+        document.querySelectorAll('.suite-price').forEach((el,i) => { if(cards[i]) el.textContent='€'+cards[i].price; });
+        // Store for booking calculator
+        window.LIVE_PRICES = {
+          pietra:{price:s.prices.pietra, cleaning:s.prices.cleaningPietra||150},
+          cielo: {price:s.prices.cielo,  cleaning:s.prices.cleaningCielo||150},
+          villa: {price:s.prices.villa,   cleaning:s.prices.cleaningVilla||250},
+        };
+        // Update booking display
+        cp = s.prices.pietra; cc = s.prices.cleaningPietra||150;
+        document.getElementById('bprice').textContent = '€'+s.prices.pietra;
+        document.getElementById('cnote').textContent = '+ €'+(s.prices.cleaningPietra||150)+' one-time cleaning fee · Minimum 4 nights';
+      }
+      if (s.toki) window.TOKI_EXTRA = s.toki;
+    }
+    if (aRes.ok) window.LIVE_AVAILABILITY = await aRes.json();
+  } catch(e) { /* use defaults */ }
+})();
+
+// ── LOAD LIVE SETTINGS & PRICES FROM GITHUB ──
+(async function() {
+  try {
+    const [sRes, aRes] = await Promise.all([
+      fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/settings.json?t='+Date.now()),
+      fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t='+Date.now())
+    ]);
+    if (sRes.ok) {
+      const s = await sRes.json();
+      if (s.prices) {
+        // Update suite card prices live
+        document.querySelectorAll('.suite-price').forEach((el,i) => {
+          const prices = [s.prices.pietra, s.prices.cielo, s.prices.villa];
+          if (prices[i]) el.textContent = '€' + prices[i];
+        });
+        // Store for booking calculator
+        window.LIVE_PRICES = {
+          pietra: { price: s.prices.pietra,  cleaning: s.prices.cleaningPietra || 150 },
+          cielo:  { price: s.prices.cielo,   cleaning: s.prices.cleaningCielo  || 150 },
+          villa:  { price: s.prices.villa,   cleaning: s.prices.cleaningVilla  || 250 },
+        };
+        // Update booking section immediately
+        cp = s.prices.pietra;
+        cc = s.prices.cleaningPietra || 150;
+        document.getElementById('bprice').textContent = '€' + s.prices.pietra;
+        document.getElementById('cnote').textContent = '+ €' + (s.prices.cleaningPietra||150) + ' one-time cleaning fee · Minimum 4 nights';
+      }
+      if (s.toki) window.TOKI_EXTRA = s.toki;
+    }
+    if (aRes.ok) window.LIVE_AVAILABILITY = await aRes.json();
+  } catch(e) { /* use hardcoded defaults */ }
+})();
+
 if('scrollRestoration' in history) history.scrollRestoration='manual';
 window.scrollTo(0,0);
+
+// ── LOAD LIVE SETTINGS FROM GITHUB ──
+(async function loadLiveSettings() {
+  try {
+    const [settingsRes, availRes] = await Promise.all([
+      fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/settings.json?t=' + Date.now()),
+      fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t=' + Date.now())
+    ]);
+
+    if (settingsRes.ok) {
+      const s = await settingsRes.json();
+
+      // Update prices on page
+      if (s.prices) {
+        // Booking section prices
+        document.querySelectorAll('[data-price-pietra]').forEach(el => el.textContent = '€' + s.prices.pietra);
+        document.querySelectorAll('[data-price-cielo]').forEach(el => el.textContent = '€' + s.prices.cielo);
+        document.querySelectorAll('[data-price-villa]').forEach(el => el.textContent = '€' + s.prices.villa);
+
+        // Suite card prices
+        const priceEls = document.querySelectorAll('.suite-price');
+        const prices = [s.prices.pietra, s.prices.cielo, s.prices.villa];
+        priceEls.forEach((el, i) => { if (prices[i]) el.textContent = '€' + prices[i]; });
+
+        // Update booking calculator defaults
+        window.LIVE_PRICES = {
+          pietra: { price: s.prices.pietra, cleaning: s.prices.cleaningPietra },
+          cielo:  { price: s.prices.cielo,  cleaning: s.prices.cleaningCielo  },
+          villa:  { price: s.prices.villa,   cleaning: s.prices.cleaningVilla  },
+        };
+
+        // Reset booking tab with live price
+        cp = s.prices.pietra;
+        cc = s.prices.cleaningPietra;
+        document.getElementById('bprice').textContent = '€' + s.prices.pietra;
+        document.getElementById('cnote').textContent = '+ €' + s.prices.cleaningPietra + ' one-time cleaning fee · Minimum 4 nights';
+      }
+
+      // Update Toki announcements
+      if (s.toki) {
+        window.TOKI_EXTRA = s.toki;
+      }
+    }
+
+    if (availRes.ok) {
+      window.LIVE_AVAILABILITY = await availRes.json();
+    }
+  } catch(e) {
+    console.log('Using default settings');
+  }
+})();
 
 fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
   const m={IT:'it',DE:'de',AT:'de',CH:'de',FR:'fr',BE:'fr'};
