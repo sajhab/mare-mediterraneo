@@ -300,6 +300,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div class="topbar-logo">Mare Mediterraneo</div>
     <div class="topbar-right">
       <span class="topbar-tag">Admin</span>
+      <span id="syncStatus" style="font-size:9px;color:#27ae60;letter-spacing:1px"></span>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
@@ -489,6 +490,26 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
       </div>
       <button class="btn btn-gold" style="margin-top:12px" onclick="saveContact()">Save Contact</button>
     </div>
+
+    <div class="card" style="border-color:rgba(200,150,62,0.3)">
+      <div class="card-title">🔑 GitHub Sync</div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6">
+        Your GitHub token lets the admin panel save bookings, prices and settings directly to your website in real time. Stored only in this browser — never shared anywhere.
+      </p>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label">GitHub Personal Access Token</label>
+        <input type="password" class="form-input" id="githubToken" 
+          placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+          value="">
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn-gold" onclick="saveGithubToken()">Save Token</button>
+        <span id="tokenStatus" style="font-size:10px;color:var(--muted)"></span>
+      </div>
+      <p style="font-size:9px;color:var(--muted);margin-top:12px;letter-spacing:0.5px">
+        To get your token: github.com → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → tick "repo" → Generate
+      </p>
+    </div>
   </div>
 </div>
 
@@ -496,7 +517,90 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 // ── CONFIG ──
 const ADMIN_PASS = 'Malta.2017';
 const REPO = 'sajhab/mare-mediterraneo';
-const GITHUB_TOKEN_KEY = 'gh_token';
+const BRANCH = 'main';
+const RAW = 'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH;
+
+// ── GITHUB SYNC ──
+function getToken() {
+  return localStorage.getItem('mm_github_token') || '';
+}
+
+function saveGithubToken() {
+  const token = document.getElementById('githubToken').value.trim();
+  if (!token) { showToast('Please enter a token'); return; }
+  localStorage.setItem('mm_github_token', token);
+  document.getElementById('tokenStatus').textContent = '✅ Saved — sync enabled';
+  document.getElementById('tokenStatus').style.color = '#27ae60';
+  showToast('GitHub token saved ✓');
+  // Test the token
+  testToken(token);
+}
+
+async function testToken(token) {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}`, {
+      headers: { 'Authorization': `token ${token}` }
+    });
+    if (res.ok) {
+      document.getElementById('tokenStatus').textContent = '✅ Connected to GitHub';
+      document.getElementById('tokenStatus').style.color = '#27ae60';
+    } else {
+      document.getElementById('tokenStatus').textContent = '❌ Invalid token';
+      document.getElementById('tokenStatus').style.color = '#e74c3c';
+    }
+  } catch(e) {
+    document.getElementById('tokenStatus').textContent = '⚠️ Could not verify';
+  }
+}
+
+async function githubRead(filename) {
+  try {
+    const res = await fetch(`${RAW}/${filename}?t=${Date.now()}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+async function githubWrite(filename, data) {
+  const token = getToken();
+  if (!token) {
+    showToast('⚠️ No GitHub token — go to Settings tab');
+    return false;
+  }
+  try {
+    // Get current SHA
+    const infoRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    let sha = null;
+    if (infoRes.ok) { const info = await infoRes.json(); sha = info.sha; }
+
+    // Write file
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const writeRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: `Update ${filename} — ${new Date().toISOString()}`,
+        content,
+        branch: BRANCH,
+        ...(sha && { sha })
+      })
+    });
+    if (!writeRes.ok) {
+      const err = await writeRes.json();
+      throw new Error(err.message);
+    }
+    return true;
+  } catch(e) {
+    showToast('❌ Sync failed: ' + e.message);
+    return false;
+  }
+}
 
 // ── DATA ──
 let data = {
@@ -520,8 +624,7 @@ function doLogin() {
   if (pass === ADMIN_PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    loadData();
-    renderDashboard();
+    loadData().then(() => renderDashboard());
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
@@ -545,17 +648,80 @@ function showTab(name) {
   if (name === 'dashboard') renderDashboard();
 }
 
-// ── LOAD DATA from localStorage (GitHub sync coming in next phase) ──
-function loadData() {
-  const saved = localStorage.getItem('mm_availability');
-  if (saved) {
-    try { data = JSON.parse(saved); } catch(e) {}
+// ── LOAD DATA — reads from GitHub, falls back to localStorage ──
+async function loadData() {
+  showToast('Loading data...');
+
+  // Try GitHub first
+  const [avail, settings] = await Promise.all([
+    githubRead('availability.json'),
+    githubRead('settings.json')
+  ]);
+
+  if (avail) {
+    data = avail;
+    localStorage.setItem('mm_availability', JSON.stringify(data));
+  } else {
+    // Fall back to localStorage
+    const saved = localStorage.getItem('mm_availability');
+    if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
   }
+
+  if (settings) {
+    // Apply settings to form fields
+    if (settings.prices) {
+      document.getElementById('pricePietra').value = settings.prices.pietra || 200;
+      document.getElementById('priceCielo').value = settings.prices.cielo || 180;
+      document.getElementById('priceVilla').value = settings.prices.villa || 350;
+      document.getElementById('cleaningPietra').value = settings.prices.cleaningPietra || 150;
+      document.getElementById('cleaningVilla').value = settings.prices.cleaningVilla || 250;
+      document.getElementById('minStay').value = settings.prices.minStay || 4;
+    }
+    if (settings.property) {
+      document.getElementById('waNumber').value = settings.property.whatsapp || '+35699699184';
+    }
+    if (settings.toki) {
+      if (document.getElementById('tokiAnnouncement'))
+        document.getElementById('tokiAnnouncement').value = settings.toki.announcement || '';
+      if (document.getElementById('tokiUpdates'))
+        document.getElementById('tokiUpdates').value = settings.toki.updates || '';
+      if (document.getElementById('tokiLocal'))
+        document.getElementById('tokiLocal').value = settings.toki.localTips || '';
+    }
+    if (settings.icalSources) {
+      document.getElementById('icalPietraAirbnb').value = settings.icalSources?.pietra?.airbnb || '';
+      document.getElementById('icalCieloAirbnb').value = settings.icalSources?.cielo?.airbnb || '';
+      document.getElementById('icalPietraBooking').value = settings.icalSources?.pietra?.bookingCom || '';
+      document.getElementById('icalCieloBooking').value = settings.icalSources?.cielo?.bookingCom || '';
+    }
+    localStorage.setItem('mm_settings', JSON.stringify(settings));
+  }
+
+  // Restore token field if saved
+  const savedToken = getToken();
+  if (savedToken) {
+    document.getElementById('githubToken').value = savedToken;
+    document.getElementById('tokenStatus').textContent = '✅ Token saved';
+    document.getElementById('tokenStatus').style.color = '#27ae60';
+  }
+
+  showToast('Data loaded ✓');
 }
 
-function saveData() {
+// ── SAVE DATA — writes to GitHub + localStorage ──
+async function saveData(showMsg = true) {
+  data.lastUpdated = new Date().toISOString().split('T')[0];
   localStorage.setItem('mm_availability', JSON.stringify(data));
-  showToast('Saved ✓');
+  const ok = await githubWrite('availability.json', data);
+  if (showMsg) showToast(ok ? '✅ Saved & synced to GitHub' : '💾 Saved locally only');
+  return ok;
+}
+
+async function saveSettingsToGithub(settings) {
+  settings.lastUpdated = new Date().toISOString().split('T')[0];
+  localStorage.setItem('mm_settings', JSON.stringify(settings));
+  const ok = await githubWrite('settings.json', settings);
+  showToast(ok ? '✅ Settings synced to GitHub' : '💾 Saved locally only');
 }
 
 // ── TOAST ──
@@ -647,7 +813,7 @@ function saveBooking() {
     data.suites.cielo.bookings.push({...booking, suite:'cielo', linkedToVilla:true});
   }
 
-  saveData();
+  await saveData(false);
   closeModal('addModal');
   renderCalendar();
   renderDashboard();
@@ -658,7 +824,7 @@ function saveBooking() {
   document.getElementById('newCheckin').value = '';
   document.getElementById('newCheckout').value = '';
 
-  showToast('Booking saved ✓');
+  showToast('✅ Booking saved & synced');
 }
 
 // ── SAVE BLOCK ──
@@ -671,10 +837,10 @@ function saveBlock() {
   if (!from || !to) { showToast('Please select dates'); return; }
 
   data.blockedDates.push({ id: Date.now(), suite, from, to, reason });
-  saveData();
+  await saveData(false);
   closeModal('blockModal');
   renderCalendar();
-  showToast('Dates blocked ✓');
+  showToast('✅ Dates blocked & synced');
 }
 
 // ── DELETE BOOKING ──
@@ -686,11 +852,11 @@ function deleteBooking(suiteKey, bookingId) {
     data.suites[s].bookings = data.suites[s].bookings.filter(b => b.id !== bookingId);
   });
   data.blockedDates = data.blockedDates.filter(b => b.id !== bookingId);
-  saveData();
+  await saveData(false);
   renderAllBookings();
   renderCalendar();
   renderDashboard();
-  showToast('Booking deleted');
+  showToast('✅ Booking deleted & synced');
 }
 
 // ── RENDER CALENDAR ──
@@ -861,39 +1027,73 @@ function renderAllBookings() {
 }
 
 // ── SAVE SETTINGS ──
-function saveSettings() {
-  data.suites.pietra.price = parseInt(document.getElementById('pricePietra').value);
-  data.suites.cielo.price = parseInt(document.getElementById('priceCielo').value);
-  data.suites.villa.price = parseInt(document.getElementById('priceVilla').value);
-  data.suites.pietra.cleaningFee = parseInt(document.getElementById('cleaningPietra').value);
-  data.suites.cielo.cleaningFee = parseInt(document.getElementById('cleaningPietra').value);
-  data.suites.villa.cleaningFee = parseInt(document.getElementById('cleaningVilla').value);
-  data.settings.minStay = parseInt(document.getElementById('minStay').value);
-  saveData();
+async function saveSettings() {
+  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  const settings = {
+    ...saved,
+    prices: {
+      pietra: parseInt(document.getElementById('pricePietra').value),
+      cielo: parseInt(document.getElementById('priceCielo').value),
+      villa: parseInt(document.getElementById('priceVilla').value),
+      cleaningPietra: parseInt(document.getElementById('cleaningPietra').value),
+      cleaningCielo: parseInt(document.getElementById('cleaningPietra').value),
+      cleaningVilla: parseInt(document.getElementById('cleaningVilla').value),
+      minStay: parseInt(document.getElementById('minStay').value),
+    }
+  };
+  // Also update availability data prices
+  data.suites.pietra.price = settings.prices.pietra;
+  data.suites.cielo.price = settings.prices.cielo;
+  data.suites.villa.price = settings.prices.villa;
+  data.suites.pietra.cleaningFee = settings.prices.cleaningPietra;
+  data.suites.cielo.cleaningFee = settings.prices.cleaningCielo;
+  data.suites.villa.cleaningFee = settings.prices.cleaningVilla;
+  await Promise.all([saveData(false), saveSettingsToGithub(settings)]);
 }
 
-function saveIcal() {
-  if (!data.icalSources) data.icalSources = {pietra:{},cielo:{}};
-  data.icalSources.pietra.airbnb = document.getElementById('icalPietraAirbnb').value;
-  data.icalSources.cielo.airbnb = document.getElementById('icalCieloAirbnb').value;
-  data.icalSources.pietra.bookingCom = document.getElementById('icalPietraBooking').value;
-  data.icalSources.cielo.bookingCom = document.getElementById('icalCieloBooking').value;
-  saveData();
+async function saveIcal() {
+  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  const settings = {
+    ...saved,
+    icalSources: {
+      pietra: {
+        airbnb: document.getElementById('icalPietraAirbnb').value,
+        bookingCom: document.getElementById('icalPietraBooking').value,
+      },
+      cielo: {
+        airbnb: document.getElementById('icalCieloAirbnb').value,
+        bookingCom: document.getElementById('icalCieloBooking').value,
+      }
+    }
+  };
+  await saveSettingsToGithub(settings);
 }
 
-function saveContact() {
-  if (!data.settings) data.settings = {};
-  data.settings.whatsapp = document.getElementById('waNumber').value;
-  saveData();
+async function saveContact() {
+  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  const settings = {
+    ...saved,
+    property: {
+      ...(saved.property || {}),
+      whatsapp: document.getElementById('waNumber').value,
+    }
+  };
+  await saveSettingsToGithub(settings);
 }
 
-function saveTokiSettings() {
-  if (!data.toki) data.toki = {};
-  data.toki.announcement = document.getElementById('tokiAnnouncement').value;
-  data.toki.updates = document.getElementById('tokiUpdates').value;
-  data.toki.local = document.getElementById('tokiLocal').value;
-  saveData();
-  showToast('Toki updated ✓');
+async function saveTokiSettings() {
+  const saved = JSON.parse(localStorage.getItem('mm_settings') || '{}');
+  const settings = {
+    ...saved,
+    toki: {
+      announcement: document.getElementById('tokiAnnouncement').value,
+      updates: document.getElementById('tokiUpdates').value,
+      localTips: document.getElementById('tokiLocal').value,
+      specialOffer: '',
+    }
+  };
+  await saveSettingsToGithub(settings);
+  showToast('✅ Toki updated & synced');
 }
 
 // ── SET MIN DATES ──
