@@ -1305,17 +1305,12 @@ IMPORTANT:
 - If you don't know something → say you'll connect them with the owner on WhatsApp.`;
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-'x-api-key': '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',
-'anthropic-version': '2023-06-01',
-'anthropic-dangerous-direct-browser-access': 'true',
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 400,
           system: systemPrompt,
-          messages: conversationHistory.slice(-8) // last 8 messages for context
+          messages: conversationHistory.slice(-8)
         })
       });
 
