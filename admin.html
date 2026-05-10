@@ -612,9 +612,17 @@ function githubWrite(filename, data) {
 function doLogin() {
   var pass = document.getElementById('loginPass').value;
   if (pass === ADMIN_PASS) {
+    // Show app immediately - don't wait for GitHub
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    loadData(function() { renderDashboard(); });
+    // Render dashboard with local data first
+    renderDashboard();
+    renderCalendar();
+    // Then load fresh data from GitHub in background
+    loadData(function() {
+      renderDashboard();
+      renderCalendar();
+    });
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
@@ -640,16 +648,27 @@ function showTab(name) {
 
 // -- LOAD DATA -- reads from GitHub, falls back to localStorage --
 function loadData(callback) {
+  // Step 1: Load from localStorage immediately
   var savedAvail = localStorage.getItem('mm_availability');
   if (savedAvail) { try { data = JSON.parse(savedAvail); } catch(e) {} }
+  var savedSettings = localStorage.getItem('mm_settings');
+  if (savedSettings) { try { applySettings(JSON.parse(savedSettings)); } catch(e) {} }
+
+  // Step 2: Restore token
   var savedToken = getToken();
-  if (savedToken && document.getElementById('githubToken')) {
-    document.getElementById('githubToken').value = savedToken;
+  if (savedToken) {
+    var el = document.getElementById('githubToken');
+    if (el) el.value = savedToken;
     var st = document.getElementById('tokenStatus');
     if (st) { st.textContent = 'Token saved'; st.style.color = '#27ae60'; }
   }
+
+  // Step 3: Try to refresh from GitHub (non-blocking)
   githubRead('availability.json', function(avail) {
-    if (avail) { data = avail; localStorage.setItem('mm_availability', JSON.stringify(data)); }
+    if (avail) {
+      data = avail;
+      localStorage.setItem('mm_availability', JSON.stringify(data));
+    }
     githubRead('settings.json', function(settings) {
       if (settings) {
         var existingStr = localStorage.getItem('mm_settings');
