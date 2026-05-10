@@ -537,20 +537,19 @@ function saveGithubToken() {
 }
 
 function testToken(token) {
-  try {
-    fetch("https://api.github.com/repos/" + REPO + ", {
-      headers: { 'Authorization': "token " + token }
-    });
-    if (res.ok) {
-      document.getElementById('tokenStatus').textContent = '[OK] Connected to GitHub';
+  fetch('https://api.github.com/repos/' + REPO, {
+    headers: { 'Authorization': 'token ' + token }
+  }).then(function(r) {
+    if (r.ok) {
+      document.getElementById('tokenStatus').textContent = 'Connected to GitHub';
       document.getElementById('tokenStatus').style.color = '#27ae60';
     } else {
-      document.getElementById('tokenStatus').textContent = '[X] Invalid token';
+      document.getElementById('tokenStatus').textContent = 'Invalid token';
       document.getElementById('tokenStatus').style.color = '#e74c3c';
     }
-  } catch(e) {
-    document.getElementById('tokenStatus').textContent = '[!] Could not verify';
-  }
+  }).catch(function() {
+    document.getElementById('tokenStatus').textContent = 'Could not verify';
+  });
 }
 
 function githubRead(filename, callback) {
