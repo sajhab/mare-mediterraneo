@@ -1,4 +1,11 @@
 {
+  "toki": {
+    "announcement": "",
+    "updates": "no beach towels but we offer towels for your stay but you cannot use it on the beach.\nIn torre chianca we have bar simone which is a perfect place for fresh breakfast. It's 10 min by walk. \n",
+    "localTips": "",
+    "specialOffer": ""
+  },
+  "lastUpdated": "2026-05-10",
   "prices": {
     "pietra": 200,
     "cielo": 180,
@@ -6,13 +13,6 @@
     "cleaningPietra": 150,
     "cleaningCielo": 150,
     "cleaningVilla": 250
-  },
-  "lastUpdated": "2026-05-10",
-  "toki": {
-    "announcement": "",
-    "updates": "no beach towels but we offer towels for your stay but you cannot use it on the beach.\nIn torre chianca we have bar simone which is a perfect place for fresh breakfast. It's 10 min by walk. \n",
-    "localTips": "",
-    "specialOffer": ""
   },
   "property": {
     "checkin": "15:00",
@@ -22,5 +22,15 @@
     "email": "",
     "name": "Mare Mediterraneo",
     "location": "Torre Chianca, Salento, Puglia"
+  },
+  "icalSources": {
+    "pietra": {
+      "airbnb": "",
+      "bookingCom": ""
+    },
+    "cielo": {
+      "airbnb": "",
+      "bookingCom": ""
+    }
   }
 }
