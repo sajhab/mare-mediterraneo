@@ -561,62 +561,39 @@ function githubRead(filename, callback) {
 
 function githubWrite(filename, data) {
   var token = getToken();
-  if (!token) {
-    showToast('[!] No GitHub token -- go to Settings tab');
-    return false;
-  }
-  try {
-    // Get current SHA
-    var _tmp = fetch("https://api.github.com/repos/" + REPO + "/contents/" + filename, {
-      headers: { 'Authorization': "token " + token, 'Accept': 'application/vnd.github.v3+json' }
-    });
-    var sha = null;
-    if (infoRes.ok) { var _tmp = infoRes.json(); sha = info.sha; }
-
-    // Write file
-    var content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-    var _tmp = fetch("https://api.github.com/repos/" + REPO + "/contents/" + filename, {
-      method: 'PUT',
-      headers: {
-        'Authorization': "token " + token,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json'
-      },
-      body: JSON.stringify({
-        message: "Update " + filename + " -- " + new Date().toISOString(),
-        content,
-        branch: BRANCH,
-        ...(sha && { sha })
-      })
-    });
-    if (!writeRes.ok) {
-      var _tmp = writeRes.json();
-      throw new Error(err.message);
-    }
-    return true;
-  } catch(e) {
-    showToast('[X] Sync failed: ' + e.message);
-    return false;
-  }
+  if (!token) { showToast('No GitHub token - go to Settings tab'); return; }
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  var apiUrl = 'https://api.github.com/repos/' + REPO + '/contents/' + filename;
+  var hdrs = {
+    'Authorization': 'token ' + token,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+  // Step 1: get current SHA
+  fetch(apiUrl, { headers: hdrs })
+    .then(function(r) { return r.ok ? r.json() : {}; })
+    .then(function(info) {
+      var body = {
+        message: 'Update ' + filename + ' - ' + new Date().toISOString(),
+        content: content,
+        branch: BRANCH
+      };
+      if (info.sha) body.sha = info.sha;
+      // Step 2: write file
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: hdrs,
+        body: JSON.stringify(body)
+      });
+    })
+    .then(function(r) {
+      if (r.ok) { showToast('Saved & synced to GitHub'); }
+      else { showToast('Sync failed - check token'); }
+    })
+    .catch(function(e) { showToast('Sync error: ' + e.message); });
 }
 
-// -- DATA --
-var data = {
-  suites: {
-    pietra: { name:'Suite Pietra', price:200, cleaningFee:150, maxGuests:4, bookings:[] },
-    cielo:  { name:'Suite Cielo',  price:180, cleaningFee:150, maxGuests:4, bookings:[] },
-    villa:  { name:'Villa Completa', price:350, cleaningFee:250, maxGuests:8, bookings:[] }
-  },
-  blockedDates: [],
-  icalSources: { pietra:{airbnb:'',bookingCom:''}, cielo:{airbnb:'',bookingCom:''} },
-  settings: { minStay:4, checkinTime:'15:00', checkoutTime:'10:00' }
-};
 
-var currentSuite = 'pietra';
-var currentMonth = new Date().getMonth();
-var currentYear = new Date().getFullYear();
-
-// -- LOGIN --
 function doLogin() {
   var pass = document.getElementById('loginPass').value;
   if (pass === ADMIN_PASS) {
@@ -704,22 +681,20 @@ function loadData() {
 }
 
 // -- SAVE DATA -- writes to GitHub + localStorage --
-function saveData(showMsg = true) {
+function saveData(showMsg) {
   data.lastUpdated = new Date().toISOString().split('T')[0];
   localStorage.setItem('mm_availability', JSON.stringify(data));
-  githubWrite('availability.json', data); var ok = true;
-  if (showMsg) showToast(ok ? '[OK] Saved & synced to GitHub' : ' Saved locally only');
-  return ok;
+  githubWrite('availability.json', data);
 }
+
 
 function saveSettingsToGithub(settings) {
   settings.lastUpdated = new Date().toISOString().split('T')[0];
   localStorage.setItem('mm_settings', JSON.stringify(settings));
-  githubWrite('settings.json', settings); var ok = true;
-  showToast(ok ? '[OK] Settings synced to GitHub' : ' Saved locally only');
+  githubWrite('settings.json', settings);
 }
 
-// -- TOAST --
+
 function showToast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg;
