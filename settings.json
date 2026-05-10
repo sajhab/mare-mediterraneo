@@ -1,17 +1,16 @@
 {
   "prices": {
-    "pietra": 203,
+    "pietra": 200,
     "cielo": 180,
     "villa": 350,
     "cleaningPietra": 150,
     "cleaningCielo": 150,
-    "cleaningVilla": 250,
-    "minStay": 4
+    "cleaningVilla": 250
   },
   "lastUpdated": "2026-05-10",
   "toki": {
     "announcement": "",
-    "updates": "",
+    "updates": "no beach towels but we offer towels for your stay but you cannot use it on the beach.\n",
     "localTips": "",
     "specialOffer": ""
   },
