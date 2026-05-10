@@ -1,12 +1,22 @@
 {
-  "lastUpdated": "2025-05-10",
   "suites": {
     "pietra": {
       "name": "Suite Pietra",
       "price": 200,
       "cleaningFee": 150,
       "maxGuests": 4,
-      "bookings": []
+      "bookings": [
+        {
+          "id": 1778445309950,
+          "suite": "pietra",
+          "source": "direct",
+          "checkin": "2026-05-17",
+          "checkout": "2026-05-24",
+          "guest": "Sajad",
+          "notes": "",
+          "created": "2026-05-10"
+        }
+      ]
     },
     "cielo": {
       "name": "Suite Cielo",
@@ -37,7 +47,7 @@
   "settings": {
     "minStay": 4,
     "checkinTime": "15:00",
-    "checkoutTime": "10:00",
-    "currency": "EUR"
-  }
+    "checkoutTime": "10:00"
+  },
+  "lastUpdated": "2026-05-10"
 }
