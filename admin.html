@@ -325,7 +325,8 @@ function sbHeaders() {
 }
 
 function sbGet(table, params) {
-  var url = SB_URL + '/rest/v1/' + table + '?order=checkin.asc';
+  var orderCol = table === 'settings' ? 'key' : table === 'blocked_dates' ? 'from_date' : 'checkin';
+  var url = SB_URL + '/rest/v1/' + table + '?order=' + orderCol + '.asc';
   if (params) url += '&' + params;
   return fetch(url, {headers: sbHeaders()})
     .then(function(r) { return r.json(); });
