@@ -6,7 +6,18 @@
       "price": 200,
       "cleaningFee": 150,
       "maxGuests": 4,
-      "bookings": []
+      "bookings": [
+        {
+          "id": 1778500378350,
+          "suite": "pietra",
+          "source": "airbnb",
+          "checkin": "2026-05-17",
+          "checkout": "2026-05-23",
+          "guest": "Sajad",
+          "notes": "",
+          "created": "2026-05-11"
+        }
+      ]
     },
     "cielo": {
       "name": "Suite Cielo",
