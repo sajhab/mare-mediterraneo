@@ -7,14 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--gold:#C8963E;--pietra:#C8B99A;--notte:#0A0A12;--notte2:#0F0F1A;--sabbia:#F5EFE6;--text:#E8DDD0;--muted:rgba(232,221,208,0.5);--border:rgba(200,185,154,0.15);--green:#27ae60;--orange:#e67e22;--red:#e74c3c}
+:root{--gold:#C8963E;--pietra:#C8B99A;--notte:#0A0A12;--notte2:#0F0F1A;--sabbia:#F5EFE6;--text:#E8DDD0;--muted:rgba(232,221,208,0.5);--border:rgba(200,185,154,0.15);--green:#27ae60;--red:#e74c3c}
 body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-serif;min-height:100vh}
 #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
 .login-box{width:100%;max-width:340px;background:var(--notte2);border:1px solid var(--border);border-radius:8px;padding:32px 24px;text-align:center}
 .login-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--pietra);margin-bottom:4px}
-.login-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
+.login-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
 .lang-row{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
-.lang-pill{padding:5px 14px;border-radius:20px;border:1px solid var(--border);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif;transition:all 0.2s}
+.lang-pill{padding:5px 14px;border-radius:20px;border:1px solid var(--border);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif}
 .lang-pill.active{background:var(--gold);color:var(--notte);border-color:var(--gold)}
 .login-input{width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;padding:14px;font-family:'Tenor Sans',sans-serif;font-size:18px;color:var(--text);margin-bottom:12px;outline:none;text-align:center;letter-spacing:4px}
 .login-btn{width:100%;padding:14px;background:var(--gold);color:var(--notte);border:none;border-radius:3px;font-family:'Tenor Sans',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:600}
@@ -24,49 +24,48 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .greeting{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:var(--sabbia)}
 .header-date{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:2px}
 .header-right{display:flex;gap:10px;align-items:center}
-.lang-btn-sm{padding:4px 10px;border-radius:20px;border:1px solid var(--border);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif}
-.lang-btn-sm.active{background:var(--gold);color:var(--notte);border-color:var(--gold)}
+.lang-sm{padding:4px 10px;border-radius:20px;border:1px solid var(--border);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif}
+.lang-sm.active{background:var(--gold);color:var(--notte);border-color:var(--gold)}
 .exit-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:6px 12px;border-radius:2px;cursor:pointer}
 .content{padding:20px;max-width:600px;margin:0 auto}
 .refresh-btn{width:100%;padding:12px;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:20px}
-.section-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
-.section-title::after{content:'';flex:1;height:0.5px;background:rgba(200,185,154,0.15)}
+.sec-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+.sec-title::after{content:'';flex:1;height:0.5px;background:rgba(200,185,154,0.15)}
 .suite-card{border-radius:6px;overflow:hidden;margin-bottom:12px}
-.suite-card-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
-.suite-card-header.clean{background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.25)}
-.suite-card-header.dirty{background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.25)}
-.suite-card-header.occupied{background:rgba(200,150,62,0.12);border:1px solid rgba(200,150,62,0.25)}
-.suite-label{font-size:10px;letter-spacing:3px;text-transform:uppercase}
-.suite-label.clean{color:var(--green)}
-.suite-label.dirty{color:var(--red)}
-.suite-label.occupied{color:var(--gold)}
-.suite-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:2px}
-.badge-clean{background:rgba(39,174,96,0.2);color:var(--green)}
-.badge-dirty{background:rgba(231,76,60,0.2);color:var(--red)}
-.badge-occupied{background:rgba(200,150,62,0.2);color:var(--gold)}
-.suite-card-body{background:var(--notte2);border:1px solid var(--border);border-top:none;padding:14px 16px}
-.suite-info-main{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia);margin-bottom:4px}
-.suite-info-sub{font-size:10px;color:var(--muted);letter-spacing:0.5px}
-.checklist{margin-top:14px}
-.checklist-title{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.check-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(200,185,154,0.06);cursor:pointer}
-.check-item:last-child{border-bottom:none}
-.check-box{width:22px;height:22px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.2s}
-.check-item.done .check-box{background:var(--green);border-color:var(--green);color:white}
-.check-item.done .check-text{text-decoration:line-through;opacity:0.5}
-.check-text{font-size:13px;color:var(--text)}
-.week-item{background:var(--notte2);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:8px;display:flex;gap:16px;align-items:flex-start}
-.week-day-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gold);line-height:1;min-width:32px;text-align:center}
-.week-day-name{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.week-suite{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.week-action{font-size:15px;color:var(--sabbia);font-family:'Cormorant Garamond',serif}
-.week-time{font-size:10px;color:var(--muted);margin-top:2px}
-.week-tag{display:inline-block;font-size:7px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:4px}
-.tag-checkout{background:rgba(231,76,60,0.15);color:var(--red)}
-.tag-checkin{background:rgba(39,174,96,0.15);color:var(--green)}
-.tag-clean{background:rgba(200,150,62,0.15);color:var(--gold)}
+.s-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.s-head.clean{background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.25)}
+.s-head.dirty{background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.25)}
+.s-head.occupied{background:rgba(200,150,62,0.12);border:1px solid rgba(200,150,62,0.25)}
+.s-label{font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.s-label.clean{color:var(--green)}
+.s-label.dirty{color:var(--red)}
+.s-label.occupied{color:var(--gold)}
+.s-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:2px}
+.b-clean{background:rgba(39,174,96,0.2);color:var(--green)}
+.b-dirty{background:rgba(231,76,60,0.2);color:var(--red)}
+.b-occupied{background:rgba(200,150,62,0.2);color:var(--gold)}
+.s-body{background:var(--notte2);border:1px solid var(--border);border-top:none;padding:14px 16px}
+.s-main{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia);margin-bottom:4px}
+.s-sub{font-size:10px;color:var(--muted)}
+.cl-title{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin:14px 0 10px}
+.cl-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(200,185,154,0.06);cursor:pointer}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:22px;height:22px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.cl-item.done .cl-box{background:var(--green);border-color:var(--green);color:white}
+.cl-item.done .cl-txt{text-decoration:line-through;opacity:0.5}
+.cl-txt{font-size:13px;color:var(--text)}
+.wk-item{background:var(--notte2);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:8px;display:flex;gap:16px}
+.wk-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gold);line-height:1;min-width:32px;text-align:center}
+.wk-day{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.wk-suite{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.wk-action{font-size:15px;color:var(--sabbia);font-family:'Cormorant Garamond',serif}
+.wk-time{font-size:10px;color:var(--muted);margin-top:2px}
+.wk-tag{display:inline-block;font-size:7px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:4px}
+.t-out{background:rgba(231,76,60,0.15);color:var(--red)}
+.t-in{background:rgba(39,174,96,0.15);color:var(--green)}
+.t-cl{background:rgba(200,150,62,0.15);color:var(--gold)}
 .empty{text-align:center;padding:32px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px}
-.loading{text-align:center;padding:20px;color:var(--muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.loading{text-align:center;padding:20px;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -74,10 +73,10 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">Mare Mediterraneo</div>
-    <div class="login-sub" id="loginSubText">Cleaner Portal</div>
+    <div class="login-sub" id="lSub">Portale Pulizie</div>
     <div class="lang-row">
-      <button class="lang-pill active" id="loginLangIt" onclick="setLoginLang('it')">IT</button>
-      <button class="lang-pill" id="loginLangEn" onclick="setLoginLang('en')">EN</button>
+      <button class="lang-pill active" id="lLangIt">IT</button>
+      <button class="lang-pill" id="lLangEn">EN</button>
     </div>
     <input type="password" class="login-input" id="loginPass" placeholder="••••••••">
     <button class="login-btn" id="loginBtn">Entra</button>
@@ -89,24 +88,18 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
   <div class="header">
     <div>
       <div class="greeting" id="greeting"></div>
-      <div class="header-date" id="headerDate"></div>
+      <div class="header-date" id="hDate"></div>
     </div>
     <div class="header-right">
-      <button class="lang-btn-sm active" id="appLangIt" onclick="setAppLang('it')">IT</button>
-      <button class="lang-btn-sm" id="appLangEn" onclick="setAppLang('en')">EN</button>
+      <button class="lang-sm active" id="aLangIt">IT</button>
+      <button class="lang-sm" id="aLangEn">EN</button>
       <button class="exit-btn" id="exitBtn">Esci</button>
     </div>
   </div>
-
   <div class="content">
     <button class="refresh-btn" id="refreshBtn">Aggiorna</button>
-<div id="debugBox" style="background:rgba(200,150,62,0.08);border:1px solid rgba(200,150,62,0.2);border-radius:4px;padding:12px;margin-bottom:16px;font-size:10px;color:var(--muted);display:none">
-  <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Debug Info</div>
-  <div id="debugText"></div>
-</div>
-<button class="refresh-btn" id="debugBtn" style="margin-bottom:8px">Show Debug Info</button>
     <div id="suiteStatuses"></div>
-    <div class="section-title" id="weekTitle">Questa Settimana</div>
+    <div class="sec-title" id="weekTitle">Questa Settimana</div>
     <div id="weekSchedule"></div>
   </div>
 </div>
@@ -114,308 +107,222 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 <script>
 var PASS = 'Mare2026';
 var CLEANER = 'Daniela';
-
+var SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
 var lang = 'it';
+var bookings = [];
+var blockedDates = [];
 
-
-var T = {
+var TXT = {
   it: {
-    loginSub: 'Portale Pulizie',
-    loginBtn: 'Entra',
-    loginError: 'Password errata',
-    refreshBtn: 'Aggiorna',
-    weekTitle: 'Questa Settimana',
-    exit: 'Esci',
-    greetMorning: 'Buongiorno',
-    greetAfternoon: 'Buon pomeriggio',
-    greetEvening: 'Buonasera',
-    occupied: 'Occupata',
-    clean: 'Pulita',
-    needsCleaning: 'Da Pulire',
-    occupiedBadge: 'Occupata',
-    cleanBadge: 'Pulita',
-    dirtyBadge: 'Da Pulire',
-    noAction: 'Nessuna azione necessaria',
-    checkoutTomorrow: 'Check-out DOMANI alle 10:00 - Prepararsi a pulire',
-    cleanToday: 'PULIRE OGGI dopo le 10:00',
-    nextGuest: 'Prossimo ospite',
-    noNextGuest: 'Nessun prossimo ospite',
-    noWeek: 'Nessun evento questa settimana - Buon riposo!',
-    checkoutLabel: 'Check-out',
-    checkinLabel: 'Check-in',
-    cleanLabel: 'Pulire',
-    today: 'OGGI',
-    tomorrow: 'DOMANI',
-    checklistTitle: 'Lista Pulizie',
-    checklist: [
-      'Cambiare lenzuola e federe',
-      'Pulire e igienizzare il bagno',
-      'Lavare i pavimenti',
-      'Pulire cucina - piano cottura, lavello, superfici',
-      'Lavare i piatti rimasti',
-      'Svuotare tutti i cestini',
-      'Pulire i mobili del giardino/terrazza',
-      'Controllare la doccia esterna',
-      'Ricaricare i prodotti da bagno',
-      'Controllare i telecomandi del clima',
-      'Controllare che il WiFi funzioni',
-      'Controllo finale - chiudere tutte le finestre'
-    ]
+    sub:'Portale Pulizie', btn:'Entra', err:'Password errata',
+    refresh:'Aggiorna', week:'Questa Settimana', exit:'Esci',
+    gm:'Buongiorno', ga:'Buon pomeriggio', ge:'Buonasera',
+    occupied:'Occupata', clean:'Pulita', dirty:'Da Pulire',
+    noAction:'Nessuna azione necessaria',
+    checkTomorrow:'Check-out DOMANI alle 10:00 - Prepararsi a pulire',
+    cleanToday:'PULIRE OGGI dopo le 10:00',
+    nextGuest:'Prossimo ospite', noNext:'Nessun prossimo ospite',
+    noWeek:'Nessun evento questa settimana - Buon riposo!',
+    tout:'Check-out', tin:'Check-in', tcl:'Pulire',
+    today:'OGGI', tomorrow:'DOMANI',
+    clTitle:'Lista Pulizie',
+    cl:['Cambiare lenzuola e federe','Pulire e igienizzare il bagno','Lavare i pavimenti','Pulire cucina - piano cottura, lavello, superfici','Lavare i piatti rimasti','Svuotare tutti i cestini','Pulire i mobili del giardino/terrazza','Controllare la doccia esterna','Ricaricare i prodotti da bagno','Controllare i telecomandi del clima','Controllare che il WiFi funzioni','Controllo finale - chiudere tutte le finestre']
   },
   en: {
-    loginSub: 'Cleaner Portal',
-    loginBtn: 'Enter',
-    loginError: 'Incorrect password',
-    refreshBtn: 'Refresh',
-    weekTitle: 'This Week',
-    exit: 'Exit',
-    greetMorning: 'Good morning',
-    greetAfternoon: 'Good afternoon',
-    greetEvening: 'Good evening',
-    occupied: 'Occupied',
-    clean: 'Clean',
-    needsCleaning: 'Needs Cleaning',
-    occupiedBadge: 'Occupied',
-    cleanBadge: 'Clean',
-    dirtyBadge: 'Clean Now',
-    noAction: 'Available - No action needed',
-    checkoutTomorrow: 'Check-out TOMORROW at 10:00 - Prepare to clean',
-    cleanToday: 'CLEAN TODAY after 10:00',
-    nextGuest: 'Next guest',
-    noNextGuest: 'No next guest yet',
-    noWeek: 'No events this week - Enjoy the rest!',
-    checkoutLabel: 'Check-out',
-    checkinLabel: 'Check-in',
-    cleanLabel: 'Clean',
-    today: 'TODAY',
-    tomorrow: 'TOMORROW',
-    checklistTitle: 'Cleaning Checklist',
-    checklist: [
-      'Change all bed linen and pillowcases',
-      'Clean and sanitise bathroom',
-      'Mop all floors',
-      'Clean kitchen - hob, sink, surfaces',
-      'Wash up any dishes',
-      'Empty all bins',
-      'Wipe down garden/terrace furniture',
-      'Check outdoor shower area',
-      'Restock toiletries and soap',
-      'Check AC remotes are present',
-      'Check WiFi router is on',
-      'Final walkthrough - all windows closed'
-    ]
+    sub:'Cleaner Portal', btn:'Enter', err:'Incorrect password',
+    refresh:'Refresh', week:'This Week', exit:'Exit',
+    gm:'Good morning', ga:'Good afternoon', ge:'Good evening',
+    occupied:'Occupied', clean:'Clean', dirty:'Clean Now',
+    noAction:'Available - No action needed',
+    checkTomorrow:'Check-out TOMORROW at 10:00 - Prepare to clean',
+    cleanToday:'CLEAN TODAY after 10:00',
+    nextGuest:'Next guest', noNext:'No next guest yet',
+    noWeek:'No events this week - Enjoy the rest!',
+    tout:'Check-out', tin:'Check-in', tcl:'Clean',
+    today:'TODAY', tomorrow:'TOMORROW',
+    clTitle:'Cleaning Checklist',
+    cl:['Change all bed linen and pillowcases','Clean and sanitise bathroom','Mop all floors','Clean kitchen - hob, sink, surfaces','Wash up any dishes','Empty all bins','Wipe down garden/terrace furniture','Check outdoor shower area','Restock toiletries and soap','Check AC remotes are present','Check WiFi router is on','Final walkthrough - all windows closed']
   }
 };
 
-function t(key) { return T[lang][key] || T['en'][key] || key; }
+function tx(k) { return (TXT[lang] && TXT[lang][k]) ? TXT[lang][k] : (TXT['en'][k] || k); }
 
 function dStr(d) { return d.toISOString().split('T')[0]; }
-function addDays(s, n) {
-  var d = new Date(s + 'T00:00:00');
-  d.setDate(d.getDate() + n);
-  return dStr(d);
-}
-function fmtDate(s) {
-  var d = new Date(s + 'T00:00:00');
-  return d.toLocaleDateString(lang === 'it' ? 'it-IT' : 'en-GB', {weekday:'short', day:'numeric', month:'short'});
+function addDays(s, n) { var d = new Date(s+'T00:00:00'); d.setDate(d.getDate()+n); return dStr(d); }
+function fmtDate(s) { return new Date(s+'T00:00:00').toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'short',day:'numeric',month:'short'}); }
+
+function setLang(l, isLogin) {
+  lang = l;
+  if (isLogin) {
+    document.getElementById('lLangIt').classList.toggle('active', l==='it');
+    document.getElementById('lLangEn').classList.toggle('active', l==='en');
+    document.getElementById('lSub').textContent = tx('sub');
+    document.getElementById('loginBtn').textContent = tx('btn');
+    document.getElementById('loginError').textContent = tx('err');
+  } else {
+    document.getElementById('aLangIt').classList.toggle('active', l==='it');
+    document.getElementById('aLangEn').classList.toggle('active', l==='en');
+    document.getElementById('exitBtn').textContent = tx('exit');
+    document.getElementById('refreshBtn').textContent = tx('refresh');
+    document.getElementById('weekTitle').textContent = tx('week');
+    renderAll();
+  }
 }
 
-function setLoginLang(l) {
-  lang = l;
-  document.getElementById('loginLangIt').classList.toggle('active', l === 'it');
-  document.getElementById('loginLangEn').classList.toggle('active', l === 'en');
-  document.getElementById('loginSubText').textContent = t('loginSub');
-  document.getElementById('loginBtn').textContent = t('loginBtn');
-  document.getElementById('loginError').textContent = t('loginError');
-}
-
-function setAppLang(l) {
-  lang = l;
-  document.getElementById('appLangIt').classList.toggle('active', l === 'it');
-  document.getElementById('appLangEn').classList.toggle('active', l === 'en');
-  document.getElementById('exitBtn').textContent = t('exit');
-  document.getElementById('refreshBtn').textContent = t('refreshBtn');
-  document.getElementById('weekTitle').textContent = t('weekTitle');
-  renderAll();
+function sbFetch(table, order) {
+  var hdrs = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+  return fetch(SB_URL+'/rest/v1/'+table+'?apikey='+SB_KEY+'&order='+order+'.asc', {headers:hdrs})
+    .then(function(r) { return r.json(); })
+    .then(function(d) { return Array.isArray(d) ? d : []; })
+    .catch(function() { return []; });
 }
 
 function loadData(callback) {
-  // Load from localStorage first
-  var saved = localStorage.getItem('mm_avail');
-  if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
-
-  // Fetch fresh from GitHub
-  fetch(RAW + '/availability.json?t=' + Date.now())
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(fresh) {
-      if (fresh) {
-        data = fresh;
-        localStorage.setItem('mm_avail', JSON.stringify(data));
-      }
-      if (callback) callback();
+  sbFetch('bookings', 'checkin')
+    .then(function(rows) {
+      bookings = rows;
+      return sbFetch('blocked_dates', 'from_date');
     })
-    .catch(function() {
+    .then(function(rows) {
+      blockedDates = rows;
       if (callback) callback();
     });
 }
 
-function getSuiteStatus(suiteKey) {
+function getSuiteStatus(suite) {
   var today = dStr(new Date());
   var tomorrow = addDays(today, 1);
-  var suiteBookings = bookings.filter(function(b) { return b.suite === suiteKey; });
-  var i, b, nextIn;
-
-  for (i = 0; i < suiteBookings.length; i++) {
-    b = suiteBookings[i];
+  var sb = bookings.filter(function(b) { return b.suite === suite; });
+  var i, b, nextIn, j;
+  for (i = 0; i < sb.length; i++) {
+    b = sb[i];
     if (b.checkout === today) {
       nextIn = null;
-      for (var j = 0; j < suiteBookings.length; j++) {
-        if (suiteBookings[j].checkin >= today && suiteBookings[j].id !== b.id) {
-          if (!nextIn || suiteBookings[j].checkin < nextIn.checkin) nextIn = suiteBookings[j];
+      for (j = 0; j < sb.length; j++) {
+        if (sb[j].checkin >= today && sb[j].id !== b.id) {
+          if (!nextIn || sb[j].checkin < nextIn.checkin) nextIn = sb[j];
         }
       }
-      return {
-        status: 'dirty',
-        main: t('cleanToday'),
-        sub: nextIn ? t('nextGuest') + ': ' + fmtDate(nextIn.checkin) + ' - 15:00' : t('noNextGuest'),
-        needsCleaning: true
-      };
+      return {st:'dirty', main:tx('cleanToday'), sub: nextIn ? tx('nextGuest')+': '+fmtDate(nextIn.checkin)+' 15:00' : tx('noNext'), cl:true};
     }
     if (b.checkout === tomorrow && b.checkin <= today) {
-      return {status:'occupied', main:b.guest||t('occupied'), sub:t('checkoutTomorrow'), checkout:b.checkout};
+      return {st:'occupied', main:b.guest||tx('occupied'), sub:tx('checkTomorrow')};
     }
     if (b.checkin <= today && b.checkout > today) {
-      return {status:'occupied', main:b.guest||t('occupied'), sub:'Check-out: ' + fmtDate(b.checkout) + ' - 10:00', checkout:b.checkout};
+      return {st:'occupied', main:b.guest||tx('occupied'), sub:'Check-out: '+fmtDate(b.checkout)+' 10:00'};
     }
   }
-  return {status:'clean', main:t('noAction'), sub:''};
+  return {st:'clean', main:tx('noAction'), sub:''};
 }
 
-function buildChecklist(suiteKey) {
-  var items = t('checklist');
-  var savedKey = 'checklist_' + suiteKey + '_' + dStr(new Date());
-  var savedStr = localStorage.getItem(savedKey);
-  var saved = savedStr ? JSON.parse(savedStr) : {};
-  var html = '<div class="checklist"><div class="checklist-title">' + t('checklistTitle') + '</div>';
+function buildChecklist(suite) {
+  var items = tx('cl');
+  var key = 'cl_'+suite+'_'+dStr(new Date());
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(key)||'{}'); } catch(e) {}
+  var h = '<div class="cl-title">'+tx('clTitle')+'</div>';
   for (var i = 0; i < items.length; i++) {
-    var done = saved[i] ? 'done' : '';
-    var check = saved[i] ? 'v' : '';
-    html += '<div class="check-item ' + done + '" data-suite="' + suiteKey + '" data-idx="' + i + '" onclick="toggleCheck(this)">' +
-      '<div class="check-box">' + check + '</div>' +
-      '<span class="check-text">' + items[i] + '</span></div>';
+    h += '<div class="cl-item'+(saved[i]?' done':'')+'" data-suite="'+suite+'" data-i="'+i+'">';
+    h += '<div class="cl-box">'+(saved[i]?'v':'')+'</div>';
+    h += '<span class="cl-txt">'+items[i]+'</span></div>';
   }
-  html += '</div>';
-  return html;
-}
-
-function toggleCheck(el) {
-  var suiteKey = el.getAttribute('data-suite');
-  var idx = parseInt(el.getAttribute('data-idx'));
-  var savedKey = 'checklist_' + suiteKey + '_' + dStr(new Date());
-  var savedStr = localStorage.getItem(savedKey);
-  var saved = savedStr ? JSON.parse(savedStr) : {};
-  saved[idx] = !saved[idx];
-  localStorage.setItem(savedKey, JSON.stringify(saved));
-  el.classList.toggle('done', saved[idx]);
-  var box = el.querySelector('.check-box');
-  box.textContent = saved[idx] ? 'v' : '';
+  return h;
 }
 
 function renderSuites() {
-  var suites = [
-    {key:'pietra', label:'Suite Pietra'},
-    {key:'cielo', label:'Suite Cielo'}
-  ];
-  var html = '<div class="section-title">' + (lang === 'it' ? 'Stato Appartamenti' : 'Suite Status') + '</div>';
+  var suites = [{k:'pietra',n:'Suite Pietra'},{k:'cielo',n:'Suite Cielo'}];
+  var h = '<div class="sec-title">'+(lang==='it'?'Stato Appartamenti':'Suite Status')+'</div>';
   for (var i = 0; i < suites.length; i++) {
     var s = suites[i];
-    var st = getSuiteStatus(s.key);
-    var badgeText = st.status === 'clean' ? t('cleanBadge') : st.status === 'dirty' ? t('dirtyBadge') : t('occupiedBadge');
-    html += '<div class="suite-card">';
-    html += '<div class="suite-card-header ' + st.status + '">';
-    html += '<span class="suite-label ' + st.status + '">' + s.label + '</span>';
-    html += '<span class="suite-badge badge-' + st.status + '">' + badgeText + '</span>';
-    html += '</div>';
-    html += '<div class="suite-card-body">';
-    html += '<div class="suite-info-main">' + st.main + '</div>';
-    if (st.sub) html += '<div class="suite-info-sub">' + st.sub + '</div>';
-    if (st.needsCleaning) html += buildChecklist(s.key);
-    html += '</div></div>';
+    var st = getSuiteStatus(s.k);
+    var badge = st.st==='clean' ? tx('clean') : st.st==='dirty' ? tx('dirty') : tx('occupied');
+    h += '<div class="suite-card">';
+    h += '<div class="s-head '+st.st+'"><span class="s-label '+st.st+'">'+s.n+'</span>';
+    h += '<span class="s-badge b-'+st.st+'">'+badge+'</span></div>';
+    h += '<div class="s-body"><div class="s-main">'+st.main+'</div>';
+    if (st.sub) h += '<div class="s-sub">'+st.sub+'</div>';
+    if (st.cl) h += buildChecklist(s.k);
+    h += '</div></div>';
   }
-  document.getElementById('suiteStatuses').innerHTML = html;
+  document.getElementById('suiteStatuses').innerHTML = h;
+
+  // Attach checklist click handlers
+  var items = document.querySelectorAll('.cl-item');
+  for (var j = 0; j < items.length; j++) {
+    items[j].addEventListener('click', function() {
+      var suite = this.getAttribute('data-suite');
+      var idx = parseInt(this.getAttribute('data-i'));
+      var key = 'cl_'+suite+'_'+dStr(new Date());
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key)||'{}'); } catch(e) {}
+      saved[idx] = !saved[idx];
+      localStorage.setItem(key, JSON.stringify(saved));
+      this.classList.toggle('done', saved[idx]);
+      this.querySelector('.cl-box').textContent = saved[idx] ? 'v' : '';
+    });
+  }
 }
 
 function renderWeek() {
-  if (!data || !data.suites) {
-    document.getElementById('weekSchedule').innerHTML = '<div class="empty">' + t('noWeek') + '</div>';
-    return;
-  }
   var today = dStr(new Date());
   var weekEnd = addDays(today, 7);
   var events = [];
-  var SUITE_NAMES = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
+  var NAMES = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
   var i, b;
 
   for (i = 0; i < bookings.length; i++) {
     b = bookings[i];
-    var sName = SUITE_NAMES[b.suite] || b.suite;
     if (b.linked_to_villa) continue;
-    if (true) {
-      if (b.checkout >= today && b.checkout <= weekEnd) {
-        events.push({date:b.checkout, type:'checkout', suite:sName, guest:b.guest||''});
-        events.push({date:b.checkout, type:'clean', suite:sName, guest:b.guest||''});
-      }
-      if (b.checkin >= today && b.checkin <= weekEnd) {
-        events.push({date:b.checkin, type:'checkin', suite:sName, guest:b.guest||''});
-      }
+    var sn = NAMES[b.suite] || b.suite;
+    if (b.checkout >= today && b.checkout <= weekEnd) {
+      events.push({date:b.checkout, type:'out', suite:sn, guest:b.guest||''});
+      events.push({date:b.checkout, type:'cl', suite:sn, guest:b.guest||''});
+    }
+    if (b.checkin >= today && b.checkin <= weekEnd) {
+      events.push({date:b.checkin, type:'in', suite:sn, guest:b.guest||''});
+    }
   }
 
-  events.sort(function(a, b) { return a.date > b.date ? 1 : -1; });
+  events.sort(function(a,b) { return a.date > b.date ? 1 : -1; });
 
   if (events.length === 0) {
-    document.getElementById('weekSchedule').innerHTML = '<div class="empty">' + t('noWeek') + '</div>';
+    document.getElementById('weekSchedule').innerHTML = '<div class="empty">'+tx('noWeek')+'</div>';
     return;
   }
 
-  var html = '';
+  var h = '';
   for (i = 0; i < events.length; i++) {
     var e = events[i];
-    var d = new Date(e.date + 'T00:00:00');
-    var dayNum = d.getDate();
-    var dayName = e.date === today ? t('today') : e.date === addDays(today, 1) ? t('tomorrow') : d.toLocaleDateString(lang === 'it' ? 'it-IT' : 'en-GB', {weekday:'short'});
-    var tagClass = e.type === 'checkout' ? 'tag-checkout' : e.type === 'checkin' ? 'tag-checkin' : 'tag-clean';
-    var tagLabel = e.type === 'checkout' ? t('checkoutLabel') : e.type === 'checkin' ? t('checkinLabel') : t('cleanLabel');
+    var d = new Date(e.date+'T00:00:00');
+    var num = d.getDate();
+    var dayName = e.date===today ? tx('today') : e.date===addDays(today,1) ? tx('tomorrow') : d.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'short'});
+    var tagCls = e.type==='out' ? 't-out' : e.type==='in' ? 't-in' : 't-cl';
+    var tagLbl = e.type==='out' ? tx('tout') : e.type==='in' ? tx('tin') : tx('tcl');
     var action, time;
-    if (e.type === 'checkout') {
-      action = (lang === 'it' ? e.guest + ' lascia alle 10:00' : e.guest + ' checks out at 10:00 AM');
+    if (e.type==='out') {
+      action = lang==='it' ? e.guest+' lascia alle 10:00' : e.guest+' checks out at 10:00';
       time = '10:00';
-    } else if (e.type === 'checkin') {
-      action = (lang === 'it' ? e.guest + ' arriva alle 15:00' : e.guest + ' arrives at 3:00 PM');
-      time = lang === 'it' ? 'Pronto entro le 15:00' : 'Ready by 3:00 PM';
+    } else if (e.type==='in') {
+      action = lang==='it' ? e.guest+' arriva alle 15:00' : e.guest+' arrives at 15:00';
+      time = lang==='it' ? 'Pronto entro le 15:00' : 'Ready by 15:00';
     } else {
-      action = (lang === 'it' ? 'Pulire ' + e.suite + ' dopo la partenza' : 'Clean ' + e.suite + ' after departure');
-      time = lang === 'it' ? 'Dopo le 10:00' : 'After 10:00 AM';
+      action = lang==='it' ? 'Pulire '+e.suite+' dopo la partenza' : 'Clean '+e.suite+' after departure';
+      time = lang==='it' ? 'Dopo le 10:00' : 'After 10:00';
     }
-    html += '<div class="week-item">';
-    html += '<div><div class="week-day-num">' + dayNum + '</div><div class="week-day-name">' + dayName + '</div></div>';
-    html += '<div><div class="week-suite">' + e.suite + '</div>';
-    html += '<div class="week-action">' + action + '</div>';
-    html += '<div class="week-time">' + time + '</div>';
-    html += '<span class="week-tag ' + tagClass + '">' + tagLabel + '</span></div>';
-    html += '</div>';
+    h += '<div class="wk-item"><div><div class="wk-num">'+num+'</div><div class="wk-day">'+dayName+'</div></div>';
+    h += '<div><div class="wk-suite">'+e.suite+'</div><div class="wk-action">'+action+'</div>';
+    h += '<div class="wk-time">'+time+'</div><span class="wk-tag '+tagCls+'">'+tagLbl+'</span></div></div>';
   }
-  document.getElementById('weekSchedule').innerHTML = html;
+  document.getElementById('weekSchedule').innerHTML = h;
 }
 
 function renderHeader() {
   var now = new Date();
-  var hour = now.getHours();
-  var greet = hour < 12 ? t('greetMorning') : hour < 17 ? t('greetAfternoon') : t('greetEvening');
-  document.getElementById('greeting').textContent = greet + ', ' + CLEANER + '!';
-  document.getElementById('headerDate').textContent = now.toLocaleDateString(lang === 'it' ? 'it-IT' : 'en-GB', {weekday:'long', day:'numeric', month:'long'});
-  document.getElementById('exitBtn').textContent = t('exit');
-  document.getElementById('refreshBtn').textContent = t('refreshBtn');
-  document.getElementById('weekTitle').textContent = t('weekTitle');
+  var h = now.getHours();
+  var gr = h<12 ? tx('gm') : h<17 ? tx('ga') : tx('ge');
+  document.getElementById('greeting').textContent = gr+', '+CLEANER+'!';
+  document.getElementById('hDate').textContent = now.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'long',day:'numeric',month:'long'});
 }
 
 function renderAll() {
@@ -424,19 +331,18 @@ function renderAll() {
   renderWeek();
 }
 
-// EVENT LISTENERS
+// LOGIN
 document.getElementById('loginBtn').addEventListener('click', function() {
   var pass = document.getElementById('loginPass').value;
   if (pass === PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    document.getElementById('suiteStatuses').innerHTML = '<div class="loading">Caricamento...</div>';
-    document.getElementById('weekSchedule').innerHTML = '';
     renderHeader();
+    document.getElementById('suiteStatuses').innerHTML = '<div class="loading">'+(lang==='it'?'Caricamento...':'Loading...')+'</div>';
     loadData(function() { renderAll(); });
   } else {
     document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginError').textContent = t('loginError');
+    document.getElementById('loginError').textContent = tx('err');
     document.getElementById('loginPass').value = '';
   }
 });
@@ -451,60 +357,15 @@ document.getElementById('exitBtn').addEventListener('click', function() {
   document.getElementById('loginPass').value = '';
 });
 
-document.getElementById('debugBtn').addEventListener('click', function() {
-  var box = document.getElementById('debugBox');
-  var txt = document.getElementById('debugText');
-  box.style.display = box.style.display === 'none' ? 'block' : 'none';
-  var info = '';
-  // Check localStorage
-  var saved = localStorage.getItem('mm_avail');
-  if (saved) {
-    try {
-      var d = JSON.parse(saved);
-      info += 'LocalStorage: OK<br>';
-      info += 'Pietra bookings: ' + (d.suites && d.suites.pietra ? d.suites.pietra.bookings.length : 'N/A') + '<br>';
-      info += 'Cielo bookings: ' + (d.suites && d.suites.cielo ? d.suites.cielo.bookings.length : 'N/A') + '<br>';
-      info += 'Villa bookings: ' + (d.suites && d.suites.villa ? d.suites.villa.bookings.length : 'N/A') + '<br>';
-      if (d.suites && d.suites.pietra && d.suites.pietra.bookings.length > 0) {
-        var b = d.suites.pietra.bookings[0];
-        info += 'First Pietra booking: ' + b.checkin + ' to ' + b.checkout + ' - ' + b.guest + '<br>';
-      }
-      if (d.suites && d.suites.cielo && d.suites.cielo.bookings.length > 0) {
-        var b2 = d.suites.cielo.bookings[0];
-        info += 'First Cielo booking: ' + b2.checkin + ' to ' + b2.checkout + ' - ' + b2.guest + '<br>';
-      }
-    } catch(e) { info += 'LocalStorage parse error: ' + e.message + '<br>'; }
-  } else { info += 'LocalStorage: EMPTY<br>'; }
-  // Check in-memory data
-  info += 'In-memory data: ' + (data ? 'loaded' : 'NULL') + '<br>';
-  if (data && data.suites) {
-    info += 'Memory Pietra: ' + data.suites.pietra.bookings.length + ' bookings<br>';
-    info += 'Memory Cielo: ' + data.suites.cielo.bookings.length + ' bookings<br>';
-  }
-  // Test GitHub fetch
-  info += 'Testing GitHub fetch...<br>';
-  txt.innerHTML = info;
-  fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t=' + Date.now())
-    .then(function(r) {
-      txt.innerHTML += 'GitHub status: ' + r.status + '<br>';
-      return r.json();
-    })
-    .then(function(d) {
-      txt.innerHTML += 'GitHub Pietra bookings: ' + (d.suites && d.suites.pietra ? d.suites.pietra.bookings.length : 'N/A') + '<br>';
-      txt.innerHTML += 'GitHub Cielo bookings: ' + (d.suites && d.suites.cielo ? d.suites.cielo.bookings.length : 'N/A') + '<br>';
-      txt.innerHTML += 'GitHub last updated: ' + (d.lastUpdated || 'unknown') + '<br>';
-      if (d.suites && d.suites.pietra && d.suites.pietra.bookings.length > 0) {
-        var b = d.suites.pietra.bookings[0];
-        txt.innerHTML += 'GitHub first Pietra: ' + b.checkin + ' to ' + b.checkout + '<br>';
-      }
-    })
-    .catch(function(e) { txt.innerHTML += 'GitHub fetch error: ' + e.message + '<br>'; });
-});
-
 document.getElementById('refreshBtn').addEventListener('click', function() {
-  document.getElementById('suiteStatuses').innerHTML = '<div class="loading">Aggiornamento...</div>';
+  document.getElementById('suiteStatuses').innerHTML = '<div class="loading">'+(lang==='it'?'Aggiornamento...':'Refreshing...')+'</div>';
   loadData(function() { renderAll(); });
 });
+
+document.getElementById('lLangIt').addEventListener('click', function() { setLang('it', true); });
+document.getElementById('lLangEn').addEventListener('click', function() { setLang('en', true); });
+document.getElementById('aLangIt').addEventListener('click', function() { setLang('it', false); });
+document.getElementById('aLangEn').addEventListener('click', function() { setLang('en', false); });
 </script>
 </body>
 </html>
