@@ -19,6 +19,9 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 #app{display:none}
 .topbar{background:var(--notte2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
 .topbar-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--pietra)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#27ae60;display:inline-block}
+.sync-label{font-size:9px;color:var(--muted);letter-spacing:1px}
 .logout-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:6px 12px;border-radius:2px;cursor:pointer}
 .tabs{display:flex;background:var(--notte2);border-bottom:1px solid var(--border);overflow-x:auto}
 .tab-btn{padding:14px 20px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-left:none;border-right:none;border-top:none;font-family:'Tenor Sans',sans-serif}
@@ -78,10 +81,6 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--notte2);border:1px solid var(--gold);color:var(--sabbia);padding:12px 24px;border-radius:4px;font-size:12px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .toast.show{opacity:1}
-.setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid rgba(200,185,154,0.06)}
-.setting-row:last-child{border-bottom:none}
-.setting-label{font-size:11px;color:var(--text)}
-.setting-sub{font-size:9px;color:var(--muted);margin-top:2px}
 @media(min-width:600px){.stats-row{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
@@ -95,13 +94,23 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div class="modal-title">Add Booking</div>
     <div class="form-grid">
       <div class="form-group"><label class="form-label">Suite</label>
-        <select class="form-select" id="newSuite"><option value="pietra">Suite Pietra</option><option value="cielo">Suite Cielo</option><option value="villa">Villa Completa</option></select></div>
+        <select class="form-select" id="newSuite">
+          <option value="pietra">Suite Pietra</option>
+          <option value="cielo">Suite Cielo</option>
+          <option value="villa">Villa Completa</option>
+        </select>
+      </div>
       <div class="form-group"><label class="form-label">Source</label>
-        <select class="form-select" id="newSource"><option value="direct">Direct</option><option value="airbnb">Airbnb</option><option value="booking">Booking.com</option></select></div>
+        <select class="form-select" id="newSource">
+          <option value="direct">Direct</option>
+          <option value="airbnb">Airbnb</option>
+          <option value="booking">Booking.com</option>
+        </select>
+      </div>
       <div class="form-group"><label class="form-label">Check-in</label><input type="date" class="form-input" id="newCheckin"></div>
       <div class="form-group"><label class="form-label">Check-out</label><input type="date" class="form-input" id="newCheckout"></div>
       <div class="form-group full"><label class="form-label">Guest Name</label><input type="text" class="form-input" id="newGuest" placeholder="e.g. Sophie Martin"></div>
-      <div class="form-group full"><label class="form-label">Notes (optional)</label><textarea class="form-textarea" id="newNotes" placeholder="Any notes..."></textarea></div>
+      <div class="form-group full"><label class="form-label">Notes (optional)</label><textarea class="form-textarea" id="newNotes"></textarea></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" id="cancelAddBtn">Cancel</button>
@@ -116,10 +125,15 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div class="modal-title">Block Dates</div>
     <div class="form-grid">
       <div class="form-group full"><label class="form-label">Suite</label>
-        <select class="form-select" id="blockSuite"><option value="all">All Suites</option><option value="pietra">Suite Pietra only</option><option value="cielo">Suite Cielo only</option></select></div>
+        <select class="form-select" id="blockSuite">
+          <option value="all">All Suites</option>
+          <option value="pietra">Suite Pietra only</option>
+          <option value="cielo">Suite Cielo only</option>
+        </select>
+      </div>
       <div class="form-group"><label class="form-label">From</label><input type="date" class="form-input" id="blockFrom"></div>
       <div class="form-group"><label class="form-label">To</label><input type="date" class="form-input" id="blockTo"></div>
-      <div class="form-group full"><label class="form-label">Reason</label><input type="text" class="form-input" id="blockReason" placeholder="e.g. Maintenance, Personal use..."></div>
+      <div class="form-group full"><label class="form-label">Reason</label><input type="text" class="form-input" id="blockReason" placeholder="e.g. Maintenance"></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" id="cancelBlockBtn">Cancel</button>
@@ -139,11 +153,15 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-logo">Mare Mediterraneo</div>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <div class="topbar-right">
+      <span class="sync-dot" id="syncDot"></span>
+      <span class="sync-label" id="syncLabel">Live</span>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
   </div>
   <div class="tabs">
     <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
@@ -158,7 +176,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div id="panel-dashboard" class="tab-panel active">
       <div class="sec-title">Dashboard</div>
       <div class="sec-sub" id="todayDate"></div>
-      <div class="stats-row" id="statsRow"></div>
+      <div class="stats-row" id="statsRow"><div style="color:var(--muted);font-size:12px;padding:20px">Loading...</div></div>
       <div class="card"><div class="card-title">Upcoming Bookings</div><div id="upcomingList"></div></div>
       <div class="card"><div class="card-title">Cleaning This Week</div><div id="cleaningList"></div></div>
     </div>
@@ -208,15 +226,15 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         <div class="card-title">Update Toki Knowledge</div>
         <div class="form-group" style="margin-bottom:12px">
           <label class="form-label">Announcement / Special Offer</label>
-          <textarea class="form-textarea" id="tokiAnnouncement" placeholder="e.g. Last minute discount this week - 10% off"></textarea>
+          <textarea class="form-textarea" id="tokiAnnouncement" placeholder="e.g. Last minute 10% off this week"></textarea>
         </div>
         <div class="form-group" style="margin-bottom:12px">
           <label class="form-label">Property Updates</label>
-          <textarea class="form-textarea" id="tokiUpdates" placeholder="e.g. New coffee machine. Beach towels available on request."></textarea>
+          <textarea class="form-textarea" id="tokiUpdates" placeholder="e.g. Beach towels now available"></textarea>
         </div>
         <div class="form-group" style="margin-bottom:16px">
           <label class="form-label">Local Tips</label>
-          <textarea class="form-textarea" id="tokiLocal" placeholder="e.g. Best restaurant: Trattoria del Mare on Via Roma"></textarea>
+          <textarea class="form-textarea" id="tokiLocal" placeholder="e.g. Best restaurant: Trattoria del Mare"></textarea>
         </div>
         <button class="btn btn-gold" id="saveTokiBtn">Save Toki Settings</button>
       </div>
@@ -234,7 +252,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
           <div class="form-group"><label class="form-label">Villa Completa / night</label><input type="number" class="form-input" id="priceVilla" value="350"></div>
           <div class="form-group"><label class="form-label">Cleaning Pietra/Cielo</label><input type="number" class="form-input" id="cleaningPietra" value="150"></div>
           <div class="form-group"><label class="form-label">Cleaning Villa</label><input type="number" class="form-input" id="cleaningVilla" value="250"></div>
-          <div class="form-group"><label class="form-label">Minimum stay (nights)</label><input type="number" class="form-input" id="minStay" value="4"></div>
+          <div class="form-group"><label class="form-label">Min stay (nights)</label><input type="number" class="form-input" id="minStay" value="4"></div>
         </div>
         <button class="btn btn-gold" id="savePricingBtn" style="margin-top:16px">Save Pricing</button>
       </div>
@@ -242,7 +260,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         <div class="card-title">iCal Links</div>
         <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb - Suite Pietra</label><input type="text" class="form-input" id="icalPietraAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
         <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb - Suite Cielo</label><input type="text" class="form-input" id="icalCieloAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
-        <div class="form-group" style="margin-bottom:10px"><label class="form-label">Booking.com - Suite Pietra</label><input type="text" class="form-input" id="icalPietraBooking" placeholder="https://ical.booking.com/..."></div>
+        <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com - Suite Pietra</label><input type="text" class="form-input" id="icalPietraBooking" placeholder="https://ical.booking.com/..."></div>
         <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com - Suite Cielo</label><input type="text" class="form-input" id="icalCieloBooking" placeholder="https://ical.booking.com/..."></div>
         <button class="btn btn-gold" id="saveIcalBtn">Save iCal Links</button>
       </div>
@@ -251,234 +269,194 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         <div class="form-group" style="margin-bottom:12px"><label class="form-label">WhatsApp Number</label><input type="text" class="form-input" id="waNumber" value="+35699699184"></div>
         <button class="btn btn-gold" id="saveContactBtn">Save Contact</button>
       </div>
-      <div class="card" style="border-color:rgba(200,150,62,0.3)">
-        <div class="card-title">GitHub Sync</div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Paste your GitHub token to enable real-time sync. Stored only in this browser.</p>
-        <div class="form-group" style="margin-bottom:12px"><label class="form-label">GitHub Personal Access Token</label><input type="password" class="form-input" id="githubToken" placeholder="ghp_xxxxxxxxxxxx"></div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <button class="btn btn-gold" id="saveTokenBtn">Save Token</button>
-          <span id="tokenStatus" style="font-size:10px;color:var(--muted)"></span>
-        </div>
-      </div>
     </div>
   </div>
 </div>
 
 <script>
 var PASS = 'Malta.2017';
-var REPO = 'sajhab/mare-mediterraneo';
-var BRANCH = 'main';
-var RAW = 'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH;
+var SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
 
-var data = {
-  suites: {
-    pietra: {name:'Suite Pietra', price:200, cleaningFee:150, maxGuests:4, bookings:[]},
-    cielo:  {name:'Suite Cielo',  price:180, cleaningFee:150, maxGuests:4, bookings:[]},
-    villa:  {name:'Villa Completa', price:350, cleaningFee:250, maxGuests:8, bookings:[]}
-  },
-  blockedDates: [],
-  settings: {minStay:4, checkinTime:'15:00', checkoutTime:'10:00'}
-};
-
+var bookings = [];
+var blockedDates = [];
+var prices = {pietra:200, cielo:180, villa:350, cleaningPietra:150, cleaningCielo:150, cleaningVilla:250, minStay:4};
 var currentSuite = 'pietra';
 var currentMonth = new Date().getMonth();
 var currentYear = new Date().getFullYear();
 
-function getToken() { return localStorage.getItem('mm_gh_token') || ''; }
+// SUITE NAMES
+var SUITES = {
+  pietra: 'Suite Pietra',
+  cielo: 'Suite Cielo',
+  villa: 'Villa Completa'
+};
 
+// HELPERS
+function dStr(d) { return d.toISOString().split('T')[0]; }
+function addDays(s, n) {
+  var d = new Date(s + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return dStr(d);
+}
+function fmtDate(s) {
+  return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+}
+function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 function showToast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 2500);
 }
-
-function dStr(d) { return d.toISOString().split('T')[0]; }
-
-function addDays(s, n) {
-  var d = new Date(s + 'T00:00:00');
-  d.setDate(d.getDate() + n);
-  return dStr(d);
+function setSyncStatus(ok) {
+  document.getElementById('syncDot').style.background = ok ? '#27ae60' : '#e74c3c';
+  document.getElementById('syncLabel').textContent = ok ? 'Live' : 'Offline';
 }
 
-function fmtDate(s) {
-  var d = new Date(s + 'T00:00:00');
-  return d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+// SUPABASE API
+function sbHeaders() {
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
 }
 
-function daysBetween(a, b) {
-  return Math.round((new Date(b) - new Date(a)) / 86400000);
+function sbGet(table, params) {
+  var url = SB_URL + '/rest/v1/' + table + '?order=checkin.asc';
+  if (params) url += '&' + params;
+  return fetch(url, {headers: sbHeaders()})
+    .then(function(r) { return r.json(); });
 }
 
-function inRange(date, ci, co) { return date >= ci && date < co; }
+function sbInsert(table, obj) {
+  return fetch(SB_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: sbHeaders(),
+    body: JSON.stringify(obj)
+  }).then(function(r) { return r.json(); });
+}
 
-function getStatus(suite, date) {
-  var s = data.suites[suite];
-  var i, b, block, applies;
-  if (!s) return 'available';
-  for (i = 0; i < s.bookings.length; i++) {
-    b = s.bookings[i];
-    if (inRange(date, b.checkin, b.checkout)) return 'booked-' + (b.source || 'direct');
-  }
-  if (suite === 'villa') {
-    var others = ['pietra', 'cielo'];
-    for (var oi = 0; oi < others.length; oi++) {
-      var ob = data.suites[others[oi]].bookings;
-      for (i = 0; i < ob.length; i++) {
-        if (inRange(date, ob[i].checkin, ob[i].checkout)) return 'booked-' + (ob[i].source || 'direct');
+function sbDelete(table, id) {
+  return fetch(SB_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+    method: 'DELETE',
+    headers: sbHeaders()
+  });
+}
+
+function sbUpsert(table, obj) {
+  return fetch(SB_URL + '/rest/v1/' + table + '?on_conflict=key', {
+    method: 'POST',
+    headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates'}),
+    body: JSON.stringify(obj)
+  });
+}
+
+// LOAD ALL DATA
+function loadAll(callback) {
+  sbGet('bookings')
+    .then(function(data) {
+      bookings = data || [];
+      return sbGet('blocked_dates');
+    })
+    .then(function(data) {
+      blockedDates = data || [];
+      return sbGet('settings');
+    })
+    .then(function(data) {
+      if (data) {
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].key === 'prices') {
+            var p = data[i].value;
+            document.getElementById('pricePietra').value = p.pietra || 200;
+            document.getElementById('priceCielo').value = p.cielo || 180;
+            document.getElementById('priceVilla').value = p.villa || 350;
+            document.getElementById('cleaningPietra').value = p.cleaningPietra || 150;
+            document.getElementById('cleaningVilla').value = p.cleaningVilla || 250;
+            document.getElementById('minStay').value = p.minStay || 4;
+            prices = p;
+          }
+          if (data[i].key === 'toki') {
+            var tk = data[i].value;
+            document.getElementById('tokiAnnouncement').value = tk.announcement || '';
+            document.getElementById('tokiUpdates').value = tk.updates || '';
+            document.getElementById('tokiLocal').value = tk.localTips || '';
+          }
+          if (data[i].key === 'property') {
+            var pr = data[i].value;
+            document.getElementById('waNumber').value = pr.whatsapp || '+35699699184';
+          }
+        }
       }
-    }
-  } else {
-    for (i = 0; i < data.suites.villa.bookings.length; i++) {
-      b = data.suites.villa.bookings[i];
-      if (inRange(date, b.checkin, b.checkout)) return 'booked-' + (b.source || 'direct');
+      setSyncStatus(true);
+      if (callback) callback();
+    })
+    .catch(function(e) {
+      setSyncStatus(false);
+      showToast('Connection error: ' + e.message);
+      if (callback) callback();
+    });
+}
+
+// GET DATE STATUS FOR CALENDAR
+function getStatus(suite, date) {
+  var i, b;
+  for (i = 0; i < bookings.length; i++) {
+    b = bookings[i];
+    if ((b.suite === suite || (suite === 'villa' && (b.suite === 'pietra' || b.suite === 'cielo')) || (suite !== 'villa' && b.suite === 'villa')) && date >= b.checkin && date < b.checkout) {
+      return 'booked-' + (b.source || 'direct');
     }
   }
-  for (i = 0; i < data.blockedDates.length; i++) {
-    block = data.blockedDates[i];
-    applies = block.suite === 'all' || block.suite === suite;
-    if (applies && inRange(date, block.from, block.to)) return 'blocked';
+  for (i = 0; i < blockedDates.length; i++) {
+    b = blockedDates[i];
+    var applies = b.suite === 'all' || b.suite === suite || (suite === 'villa' && (b.suite === 'pietra' || b.suite === 'cielo'));
+    if (applies && date >= b.from_date && date < b.to_date) return 'blocked';
   }
   return 'available';
 }
 
-function githubRead(file, cb) {
-  fetch(RAW + '/' + file + '?t=' + Date.now())
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(d) { cb(d); })
-    .catch(function() { cb(null); });
-}
-
-function githubWrite(file, obj) {
-  var token = getToken();
-  if (!token) { showToast('No GitHub token - go to Settings'); return; }
-  var content = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
-  var url = 'https://api.github.com/repos/' + REPO + '/contents/' + file;
-  var hdrs = {'Authorization':'token ' + token, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json'};
-  fetch(url, {headers: hdrs})
-    .then(function(r) { return r.ok ? r.json() : {}; })
-    .then(function(info) {
-      var body = {message:'Update ' + file, content:content, branch:BRANCH};
-      if (info.sha) body.sha = info.sha;
-      return fetch(url, {method:'PUT', headers:hdrs, body:JSON.stringify(body)});
-    })
-    .then(function(r) { showToast(r.ok ? 'Saved & synced' : 'Sync failed'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-function saveAvailability() {
-  localStorage.setItem('mm_avail', JSON.stringify(data));
-  githubWrite('availability.json', data);
-}
-
-function loadSettings(s) {
-  if (!s) return;
-  var saved = {};
-  try { saved = JSON.parse(localStorage.getItem('mm_settings') || '{}'); } catch(e) {}
-  if (s.prices) {
-    saved.prices = s.prices;
-    document.getElementById('pricePietra').value = s.prices.pietra || 200;
-    document.getElementById('priceCielo').value = s.prices.cielo || 180;
-    document.getElementById('priceVilla').value = s.prices.villa || 350;
-    document.getElementById('cleaningPietra').value = s.prices.cleaningPietra || 150;
-    document.getElementById('cleaningVilla').value = s.prices.cleaningVilla || 250;
-    document.getElementById('minStay').value = s.prices.minStay || 4;
-  }
-  if (s.toki) {
-    saved.toki = s.toki;
-    document.getElementById('tokiAnnouncement').value = s.toki.announcement || '';
-    document.getElementById('tokiUpdates').value = s.toki.updates || '';
-    document.getElementById('tokiLocal').value = s.toki.localTips || '';
-  }
-  if (s.property) {
-    saved.property = s.property;
-    document.getElementById('waNumber').value = s.property.whatsapp || '+35699699184';
-  }
-  if (s.icalSources) {
-    saved.icalSources = s.icalSources;
-    document.getElementById('icalPietraAirbnb').value = (s.icalSources.pietra || {}).airbnb || '';
-    document.getElementById('icalCieloAirbnb').value = (s.icalSources.cielo || {}).airbnb || '';
-    document.getElementById('icalPietraBooking').value = (s.icalSources.pietra || {}).bookingCom || '';
-    document.getElementById('icalCieloBooking').value = (s.icalSources.cielo || {}).bookingCom || '';
-  }
-  localStorage.setItem('mm_settings', JSON.stringify(saved));
-}
-
-function loadData() {
-  var savedAvail = localStorage.getItem('mm_avail');
-  if (savedAvail) { try { data = JSON.parse(savedAvail); } catch(e) {} }
-  var savedSettings = localStorage.getItem('mm_settings');
-  if (savedSettings) { try { loadSettings(JSON.parse(savedSettings)); } catch(e) {} }
-  var token = getToken();
-  if (token) {
-    var el = document.getElementById('githubToken');
-    if (el) el.value = token;
-    var st = document.getElementById('tokenStatus');
-    if (st) { st.textContent = 'Token saved'; st.style.color = '#27ae60'; }
-  }
-  githubRead('availability.json', function(avail) {
-    if (avail) { data = avail; localStorage.setItem('mm_avail', JSON.stringify(data)); }
-    githubRead('settings.json', function(settings) {
-      if (settings) loadSettings(settings);
-      renderDashboard();
-      renderCalendar();
-    });
-  });
-}
-
+// RENDER DASHBOARD
 function renderDashboard() {
   var today = dStr(new Date());
   document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  var total = 0, arriving = 0, checkouts = 0;
-  var allB = [];
-  var suites = ['pietra', 'cielo', 'villa'];
-  var i, b, s;
-  for (i = 0; i < suites.length; i++) {
-    s = suites[i];
-    var bookings = data.suites[s].bookings;
-    for (var j = 0; j < bookings.length; j++) {
-      b = bookings[j];
-      if (b.linkedToVilla) continue;
-      allB.push({suite:s, suiteName:data.suites[s].name, checkin:b.checkin, checkout:b.checkout, guest:b.guest, source:b.source, id:b.id});
-      if (b.checkout > today) total++;
-      if (b.checkin > today && b.checkin <= addDays(today, 7)) arriving++;
-      if (b.checkout === today) checkouts++;
-    }
+  var total = 0, arriving = 0, checkouts = 0, i, b;
+  for (i = 0; i < bookings.length; i++) {
+    b = bookings[i];
+    if (b.linked_to_villa) continue;
+    if (b.checkout > today) total++;
+    if (b.checkin > today && b.checkin <= addDays(today, 7)) arriving++;
+    if (b.checkout === today) checkouts++;
   }
   document.getElementById('statsRow').innerHTML =
     '<div class="stat-card"><div class="stat-num">' + total + '</div><div class="stat-label">Active Bookings</div></div>' +
     '<div class="stat-card"><div class="stat-num">' + arriving + '</div><div class="stat-label">Arriving This Week</div></div>' +
     '<div class="stat-card"><div class="stat-num">' + checkouts + '</div><div class="stat-label">Check-outs Today</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + data.blockedDates.length + '</div><div class="stat-label">Blocked Periods</div></div>';
-  allB.sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; });
-  var upcoming = [];
-  for (i = 0; i < allB.length; i++) { if (allB[i].checkout >= today) upcoming.push(allB[i]); }
-  upcoming = upcoming.slice(0, 5);
+    '<div class="stat-card"><div class="stat-num">' + blockedDates.length + '</div><div class="stat-label">Blocked Periods</div></div>';
+
+  var upcoming = bookings.filter(function(b) { return b.checkout >= today && !b.linked_to_villa; })
+    .sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; }).slice(0, 5);
   var upEl = document.getElementById('upcomingList');
   if (upcoming.length === 0) { upEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No upcoming bookings</p>'; }
   else {
-    var html = '';
-    for (i = 0; i < upcoming.length; i++) {
-      b = upcoming[i];
-      html += '<div class="booking-item"><div><div class="booking-suite">' + b.suiteName + '</div><div class="booking-dates">' + fmtDate(b.checkin) + ' to ' + fmtDate(b.checkout) + '</div><div class="booking-guest">' + b.guest + ' - ' + daysBetween(b.checkin, b.checkout) + ' nights</div></div><span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span></div>';
-    }
-    upEl.innerHTML = html;
+    upEl.innerHTML = upcoming.map(function(b) {
+      return '<div class="booking-item"><div><div class="booking-suite">' + (SUITES[b.suite]||b.suite) + '</div><div class="booking-dates">' + fmtDate(b.checkin) + ' to ' + fmtDate(b.checkout) + '</div><div class="booking-guest">' + b.guest + ' - ' + daysBetween(b.checkin, b.checkout) + ' nights</div></div><span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span></div>';
+    }).join('');
   }
-  var cleanEl = document.getElementById('cleaningList');
-  var cleaning = [];
-  for (i = 0; i < allB.length; i++) { if (allB[i].checkout >= today && allB[i].checkout <= addDays(today, 7)) cleaning.push(allB[i]); }
-  if (cleaning.length === 0) { cleanEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No cleaning needed this week</p>'; }
+
+  var cleaning = bookings.filter(function(b) { return b.checkout >= today && b.checkout <= addDays(today, 7) && !b.linked_to_villa; });
+  var clEl = document.getElementById('cleaningList');
+  if (cleaning.length === 0) { clEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No cleaning needed this week</p>'; }
   else {
-    var ch = '';
-    for (i = 0; i < cleaning.length; i++) {
-      b = cleaning[i];
+    clEl.innerHTML = cleaning.map(function(b) {
       var urgency = b.checkout === today ? 'TODAY' : b.checkout === addDays(today, 1) ? 'TOMORROW' : fmtDate(b.checkout);
-      ch += '<div class="booking-item"><div><div class="booking-suite">' + urgency + '</div><div class="booking-dates">' + b.suiteName + ' - clean after 10:00 AM</div><div class="booking-guest">Guest: ' + b.guest + '</div></div></div>';
-    }
-    cleanEl.innerHTML = ch;
+      return '<div class="booking-item"><div><div class="booking-suite">' + urgency + '</div><div class="booking-dates">' + (SUITES[b.suite]||b.suite) + ' - clean after 10:00 AM</div><div class="booking-guest">Guest: ' + b.guest + '</div></div></div>';
+    }).join('');
   }
 }
 
+// RENDER CALENDAR
 function renderCalendar() {
   var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('calMonth').textContent = months[currentMonth] + ' ' + currentYear;
@@ -496,50 +474,33 @@ function renderCalendar() {
   var lastDay = new Date(currentYear, currentMonth + 1, 0);
   var startPad = (firstDay.getDay() + 6) % 7;
   for (i = 0; i < startPad; i++) {
-    el = document.createElement('div');
-    el.className = 'cal-day';
-    grid.appendChild(el);
+    el = document.createElement('div'); el.className = 'cal-day'; grid.appendChild(el);
   }
   var today = dStr(new Date());
   for (var d = 1; d <= lastDay.getDate(); d++) {
-    var month = currentMonth + 1;
-    var dateS = currentYear + '-' + (month < 10 ? '0' : '') + month + '-' + (d < 10 ? '0' : '') + d;
+    var m = currentMonth + 1;
+    var dateS = currentYear + '-' + (m < 10 ? '0' : '') + m + '-' + (d < 10 ? '0' : '') + d;
     var status = getStatus(currentSuite, dateS);
-    var isPast = dateS < today;
     el = document.createElement('div');
-    el.className = 'cal-day ' + status + (isPast ? ' past' : '') + (dateS === today ? ' today' : '');
+    el.className = 'cal-day ' + status + (dateS < today ? ' past' : '') + (dateS === today ? ' today' : '');
     el.textContent = d;
     grid.appendChild(el);
   }
 }
 
+// RENDER ALL BOOKINGS
 function renderAllBookings() {
-  var today = dStr(new Date());
-  var allB = [];
-  var suites = ['pietra', 'cielo', 'villa'];
-  var i, b, s;
-  for (i = 0; i < suites.length; i++) {
-    s = suites[i];
-    for (var j = 0; j < data.suites[s].bookings.length; j++) {
-      b = data.suites[s].bookings[j];
-      if (!b.linkedToVilla) allB.push({suite:s, suiteName:data.suites[s].name, checkin:b.checkin, checkout:b.checkout, guest:b.guest||'', notes:b.notes||'', source:b.source||'direct', id:b.id});
-    }
-  }
-  for (i = 0; i < data.blockedDates.length; i++) {
-    b = data.blockedDates[i];
-    allB.push({suite:b.suite, suiteName:b.suite, checkin:b.from, checkout:b.to, guest:b.reason||'Blocked', notes:'', source:'blocked', id:b.id});
-  }
-  allB.sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; });
   var el = document.getElementById('allBookingsList');
-  if (allB.length === 0) { el.innerHTML = '<p style="color:var(--muted);padding:20px 0">No bookings yet.</p>'; return; }
-  var html = '';
-  for (i = 0; i < allB.length; i++) {
-    b = allB[i];
-    html += '<div class="booking-item"><div><div class="booking-suite">' + b.suiteName + '</div><div class="booking-dates">' + fmtDate(b.checkin) + ' to ' + fmtDate(b.checkout) + '</div><div class="booking-guest">' + b.guest + (b.notes ? ' - ' + b.notes : '') + '</div></div><div style="display:flex;gap:8px;align-items:center"><span class="booking-source source-' + b.source + '">' + b.source + '</span><button class="btn btn-red" onclick="deleteBooking(\'' + b.suite + '\',' + b.id + ')">X</button></div></div>';
-  }
-  el.innerHTML = html;
+  var all = bookings.filter(function(b) { return !b.linked_to_villa; })
+    .concat(blockedDates.map(function(b) { return {id:b.id, suite:b.suite, checkin:b.from_date, checkout:b.to_date, guest:b.reason||'Blocked', source:'blocked', isBlock:true}; }))
+    .sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; });
+  if (all.length === 0) { el.innerHTML = '<p style="color:var(--muted);padding:20px 0">No bookings yet.</p>'; return; }
+  el.innerHTML = all.map(function(b) {
+    return '<div class="booking-item"><div><div class="booking-suite">' + (SUITES[b.suite]||b.suite) + '</div><div class="booking-dates">' + fmtDate(b.checkin) + ' to ' + fmtDate(b.checkout) + '</div><div class="booking-guest">' + (b.guest||'') + (b.notes ? ' - ' + b.notes : '') + '</div></div><div style="display:flex;gap:8px;align-items:center"><span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span><button class="btn btn-red" onclick="deleteEntry(' + b.id + ',\'' + (b.isBlock ? 'block' : 'booking') + '\')">X</button></div></div>';
+  }).join('');
 }
 
+// SAVE BOOKING
 function saveBooking() {
   var suite = document.getElementById('newSuite').value;
   var source = document.getElementById('newSource').value;
@@ -549,54 +510,67 @@ function saveBooking() {
   var notes = document.getElementById('newNotes').value;
   if (!checkin || !checkout || !guest) { showToast('Please fill all fields'); return; }
   if (checkin >= checkout) { showToast('Check-out must be after check-in'); return; }
-  var booking = {id:Date.now(), suite:suite, source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, created:dStr(new Date())};
-  data.suites[suite].bookings.push(booking);
+
+  var id = Date.now();
+  var rows = [{id:id, suite:suite, source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, linked_to_villa:false}];
+
+  // If villa - also add linked rows for pietra and cielo
   if (suite === 'villa') {
-    data.suites.pietra.bookings.push({id:booking.id, suite:'pietra', source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, created:booking.created, linkedToVilla:true});
-    data.suites.cielo.bookings.push({id:booking.id, suite:'cielo', source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, created:booking.created, linkedToVilla:true});
+    rows.push({id:id+1, suite:'pietra', source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, linked_to_villa:true});
+    rows.push({id:id+2, suite:'cielo',  source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, linked_to_villa:true});
   }
-  saveAvailability();
-  document.getElementById('addModal').classList.remove('open');
-  document.getElementById('newGuest').value = '';
-  document.getElementById('newNotes').value = '';
-  document.getElementById('newCheckin').value = '';
-  document.getElementById('newCheckout').value = '';
-  renderCalendar();
-  renderDashboard();
-  showToast('Booking saved');
+
+  sbInsert('bookings', rows)
+    .then(function() {
+      document.getElementById('addModal').classList.remove('open');
+      document.getElementById('newGuest').value = '';
+      document.getElementById('newNotes').value = '';
+      document.getElementById('newCheckin').value = '';
+      document.getElementById('newCheckout').value = '';
+      return loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
+    })
+    .then(function() { showToast('Booking saved'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
+// SAVE BLOCK
 function saveBlock() {
   var suite = document.getElementById('blockSuite').value;
   var from = document.getElementById('blockFrom').value;
   var to = document.getElementById('blockTo').value;
   var reason = document.getElementById('blockReason').value || 'Blocked';
   if (!from || !to) { showToast('Please select dates'); return; }
-  data.blockedDates.push({id:Date.now(), suite:suite, from:from, to:to, reason:reason});
-  saveAvailability();
-  document.getElementById('blockModal').classList.remove('open');
-  renderCalendar();
-  showToast('Dates blocked');
+
+  sbInsert('blocked_dates', {id:Date.now(), suite:suite, from_date:from, to_date:to, reason:reason})
+    .then(function() {
+      document.getElementById('blockModal').classList.remove('open');
+      return loadAll(function() { renderCalendar(); renderDashboard(); });
+    })
+    .then(function() { showToast('Dates blocked'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
-function deleteBooking(suiteKey, id) {
-  if (!confirm('Delete this booking?')) return;
-  var suites = ['pietra', 'cielo', 'villa'];
-  for (var i = 0; i < suites.length; i++) {
-    data.suites[suites[i]].bookings = data.suites[suites[i]].bookings.filter(function(b) { return b.id !== id; });
-  }
-  data.blockedDates = data.blockedDates.filter(function(b) { return b.id !== id; });
-  saveAvailability();
-  renderAllBookings();
-  renderCalendar();
-  renderDashboard();
-  showToast('Deleted');
+// DELETE
+function deleteEntry(id, type) {
+  if (!confirm('Delete this entry?')) return;
+  var table = type === 'block' ? 'blocked_dates' : 'bookings';
+  sbDelete(table, id)
+    .then(function() {
+      // Also delete linked villa rows
+      if (type === 'booking') {
+        return sbDelete('bookings', id + 1).then(function() { return sbDelete('bookings', id + 2); });
+      }
+    })
+    .then(function() {
+      return loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
+    })
+    .then(function() { showToast('Deleted'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
-function saveSettings() {
-  var savedStr = localStorage.getItem('mm_settings');
-  var saved = savedStr ? JSON.parse(savedStr) : {};
-  saved.prices = {
+// SAVE SETTINGS
+function savePricing() {
+  var p = {
     pietra: parseInt(document.getElementById('pricePietra').value),
     cielo: parseInt(document.getElementById('priceCielo').value),
     villa: parseInt(document.getElementById('priceVilla').value),
@@ -605,60 +579,39 @@ function saveSettings() {
     cleaningVilla: parseInt(document.getElementById('cleaningVilla').value),
     minStay: parseInt(document.getElementById('minStay').value)
   };
-  localStorage.setItem('mm_settings', JSON.stringify(saved));
-  githubWrite('settings.json', saved);
-  showToast('Pricing saved');
+  prices = p;
+  sbUpsert('settings', {key:'prices', value:p})
+    .then(function() { showToast('Pricing saved'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
 function saveIcal() {
-  var savedStr = localStorage.getItem('mm_settings');
-  var saved = savedStr ? JSON.parse(savedStr) : {};
-  saved.icalSources = {
+  var v = {
     pietra: {airbnb:document.getElementById('icalPietraAirbnb').value, bookingCom:document.getElementById('icalPietraBooking').value},
     cielo:  {airbnb:document.getElementById('icalCieloAirbnb').value,  bookingCom:document.getElementById('icalCieloBooking').value}
   };
-  localStorage.setItem('mm_settings', JSON.stringify(saved));
-  githubWrite('settings.json', saved);
-  showToast('iCal links saved');
+  sbUpsert('settings', {key:'ical', value:v})
+    .then(function() { showToast('iCal links saved'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
 function saveContact() {
-  var savedStr = localStorage.getItem('mm_settings');
-  var saved = savedStr ? JSON.parse(savedStr) : {};
-  if (!saved.property) saved.property = {};
-  saved.property.whatsapp = document.getElementById('waNumber').value;
-  localStorage.setItem('mm_settings', JSON.stringify(saved));
-  githubWrite('settings.json', saved);
-  showToast('Contact saved');
+  var v = {whatsapp: document.getElementById('waNumber').value};
+  sbUpsert('settings', {key:'property', value:v})
+    .then(function() { showToast('Contact saved'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
 function saveToki() {
-  var savedStr = localStorage.getItem('mm_settings');
-  var saved = savedStr ? JSON.parse(savedStr) : {};
-  saved.toki = {
+  var v = {
     announcement: document.getElementById('tokiAnnouncement').value,
     updates: document.getElementById('tokiUpdates').value,
     localTips: document.getElementById('tokiLocal').value,
     specialOffer: ''
   };
-  localStorage.setItem('mm_settings', JSON.stringify(saved));
-  githubWrite('settings.json', saved);
-  showToast('Toki settings saved');
-}
-
-function saveToken() {
-  var token = document.getElementById('githubToken').value.trim();
-  if (!token) { showToast('Please enter a token'); return; }
-  localStorage.setItem('mm_gh_token', token);
-  document.getElementById('tokenStatus').textContent = 'Saved - testing...';
-  document.getElementById('tokenStatus').style.color = '#27ae60';
-  fetch('https://api.github.com/repos/' + REPO, {headers:{'Authorization':'token ' + token}})
-    .then(function(r) {
-      document.getElementById('tokenStatus').textContent = r.ok ? 'Connected to GitHub' : 'Invalid token';
-      document.getElementById('tokenStatus').style.color = r.ok ? '#27ae60' : '#e74c3c';
-    })
-    .catch(function() { document.getElementById('tokenStatus').textContent = 'Could not verify'; });
-  showToast('Token saved');
+  sbUpsert('settings', {key:'toki', value:v})
+    .then(function() { showToast('Toki settings saved'); })
+    .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
 // EVENT LISTENERS
@@ -667,24 +620,22 @@ document.getElementById('loginBtn').addEventListener('click', function() {
   if (pass === PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    loadData();
+    loadAll(function() { renderDashboard(); });
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
   }
 });
-
 document.getElementById('loginPass').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') document.getElementById('loginBtn').click();
 });
-
 document.getElementById('logoutBtn').addEventListener('click', function() {
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginPass').value = '';
 });
 
-// Tab buttons
+// Tabs
 var tabBtns = document.querySelectorAll('.tab-btn');
 for (var ti = 0; ti < tabBtns.length; ti++) {
   tabBtns[ti].addEventListener('click', function() {
@@ -714,14 +665,10 @@ for (var si = 0; si < suiteTabs.length; si++) {
 
 // Calendar nav
 document.getElementById('prevMonth').addEventListener('click', function() {
-  currentMonth--;
-  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-  renderCalendar();
+  currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar();
 });
 document.getElementById('nextMonth').addEventListener('click', function() {
-  currentMonth++;
-  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-  renderCalendar();
+  currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar();
 });
 
 // Modals
@@ -732,13 +679,10 @@ document.getElementById('cancelAddBtn').addEventListener('click', function() { d
 document.getElementById('cancelBlockBtn').addEventListener('click', function() { document.getElementById('blockModal').classList.remove('open'); });
 document.getElementById('saveBookingBtn').addEventListener('click', saveBooking);
 document.getElementById('saveBlockBtn').addEventListener('click', saveBlock);
-
-// Settings
-document.getElementById('savePricingBtn').addEventListener('click', saveSettings);
+document.getElementById('savePricingBtn').addEventListener('click', savePricing);
 document.getElementById('saveIcalBtn').addEventListener('click', saveIcal);
 document.getElementById('saveContactBtn').addEventListener('click', saveContact);
 document.getElementById('saveTokiBtn').addEventListener('click', saveToki);
-document.getElementById('saveTokenBtn').addEventListener('click', saveToken);
 
 // Date constraints
 var todayStr = dStr(new Date());
@@ -750,17 +694,6 @@ document.getElementById('newCheckin').addEventListener('change', function() {
 document.getElementById('blockFrom').addEventListener('change', function() {
   document.getElementById('blockTo').min = addDays(this.value, 1);
 });
-
-// Restore token on page load
-(function() {
-  var t = localStorage.getItem('mm_gh_token');
-  if (t) {
-    var el = document.getElementById('githubToken');
-    if (el) el.value = t;
-    var st = document.getElementById('tokenStatus');
-    if (st) { st.textContent = 'Token saved'; st.style.color = '#27ae60'; }
-  }
-})();
 </script>
 </body>
 </html>
