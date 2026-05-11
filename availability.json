@@ -18,12 +18,12 @@
           "created": "2026-05-11"
         },
         {
-          "id": 1778499896177,
+          "id": 1778500000867,
           "suite": "pietra",
-          "source": "airbnb",
+          "source": "direct",
           "checkin": "2026-05-31",
-          "checkout": "2026-06-07",
-          "guest": "Sofie",
+          "checkout": "2026-06-14",
+          "guest": "Martin",
           "notes": "",
           "created": "2026-05-11",
           "linkedToVilla": true
@@ -37,12 +37,12 @@
       "maxGuests": 4,
       "bookings": [
         {
-          "id": 1778499896177,
+          "id": 1778500000867,
           "suite": "cielo",
-          "source": "airbnb",
+          "source": "direct",
           "checkin": "2026-05-31",
-          "checkout": "2026-06-07",
-          "guest": "Sofie",
+          "checkout": "2026-06-14",
+          "guest": "Martin",
           "notes": "",
           "created": "2026-05-11",
           "linkedToVilla": true
@@ -56,12 +56,12 @@
       "maxGuests": 8,
       "bookings": [
         {
-          "id": 1778499896177,
+          "id": 1778500000867,
           "suite": "villa",
-          "source": "airbnb",
+          "source": "direct",
           "checkin": "2026-05-31",
-          "checkout": "2026-06-07",
-          "guest": "Sofie",
+          "checkout": "2026-06-14",
+          "guest": "Martin",
           "notes": "",
           "created": "2026-05-11"
         }
