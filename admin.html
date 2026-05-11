@@ -176,6 +176,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div id="panel-dashboard" class="tab-panel active">
       <div class="sec-title">Dashboard</div>
       <div class="sec-sub" id="todayDate"></div>
+      <div id="dbTestResult" style="background:rgba(200,150,62,0.08);border:1px solid rgba(200,150,62,0.2);border-radius:4px;padding:12px;margin-bottom:16px;font-size:11px;color:var(--muted);display:none"></div>
       <div class="stats-row" id="statsRow"><div style="color:var(--muted);font-size:12px;padding:20px">Loading...</div></div>
       <div class="card"><div class="card-title">Upcoming Bookings</div><div id="upcomingList"></div></div>
       <div class="card"><div class="card-title">Cleaning This Week</div><div id="cleaningList"></div></div>
@@ -326,14 +327,14 @@ function sbHeaders() {
 
 function sbGet(table, params) {
   var orderCol = table === 'settings' ? 'key' : table === 'blocked_dates' ? 'from_date' : 'checkin';
-  var url = SB_URL + '/rest/v1/' + table + '?order=' + orderCol + '.asc';
+  var url = SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY + '&order=' + orderCol + '.asc';
   if (params) url += '&' + params;
   return fetch(url, {headers: sbHeaders()})
     .then(function(r) { return r.json(); });
 }
 
 function sbInsert(table, obj) {
-  return fetch(SB_URL + '/rest/v1/' + table, {
+  return fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY, {
     method: 'POST',
     headers: sbHeaders(),
     body: JSON.stringify(obj)
@@ -341,16 +342,16 @@ function sbInsert(table, obj) {
 }
 
 function sbDelete(table, id) {
-  return fetch(SB_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+  return fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY + '&id=eq.' + id, {
     method: 'DELETE',
     headers: sbHeaders()
   });
 }
 
 function sbUpsert(table, obj) {
-  return fetch(SB_URL + '/rest/v1/' + table + '?on_conflict=key', {
+  return fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY + '&on_conflict=key', {
     method: 'POST',
-    headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates'}),
+    headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates,return=representation'}),
     body: JSON.stringify(obj)
   });
 }
@@ -615,13 +616,43 @@ function saveToki() {
     .catch(function(e) { showToast('Error: ' + e.message); });
 }
 
+function testConnection(callback) {
+  var box = document.getElementById('dbTestResult');
+  box.style.display = 'block';
+  box.textContent = 'Connecting to database...';
+  fetch(SB_URL + '/rest/v1/bookings?apikey=' + SB_KEY + '&limit=1', {headers: sbHeaders()})
+    .then(function(r) {
+      if (r.ok) {
+        box.textContent = 'Database connected (' + r.status + ')';
+        box.style.borderColor = 'rgba(39,174,96,0.3)';
+        box.style.color = '#27ae60';
+        setTimeout(function() { box.style.display = 'none'; }, 3000);
+      } else {
+        r.text().then(function(txt) {
+          box.textContent = 'DB Error ' + r.status + ': ' + txt.substring(0, 200);
+          box.style.borderColor = 'rgba(231,76,60,0.3)';
+          box.style.color = '#e74c3c';
+        });
+      }
+      if (callback) callback();
+    })
+    .catch(function(e) {
+      box.textContent = 'Connection failed: ' + e.message;
+      box.style.borderColor = 'rgba(231,76,60,0.3)';
+      box.style.color = '#e74c3c';
+      if (callback) callback();
+    });
+}
+
 // EVENT LISTENERS
 document.getElementById('loginBtn').addEventListener('click', function() {
   var pass = document.getElementById('loginPass').value;
   if (pass === PASS) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    loadAll(function() { renderDashboard(); });
+    testConnection(function() {
+      loadAll(function() { renderDashboard(); });
+    });
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
