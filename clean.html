@@ -407,7 +407,7 @@ function renderWeek() {
   document.getElementById('weekSchedule').innerHTML = html;
 }
 
-function renderAll() {
+function renderHeader() {
   var now = new Date();
   var hour = now.getHours();
   var greet = hour < 12 ? t('greetMorning') : hour < 17 ? t('greetAfternoon') : t('greetEvening');
@@ -416,6 +416,10 @@ function renderAll() {
   document.getElementById('exitBtn').textContent = t('exit');
   document.getElementById('refreshBtn').textContent = t('refreshBtn');
   document.getElementById('weekTitle').textContent = t('weekTitle');
+}
+
+function renderAll() {
+  renderHeader();
   renderSuites();
   renderWeek();
 }
@@ -427,6 +431,8 @@ document.getElementById('loginBtn').addEventListener('click', function() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     document.getElementById('suiteStatuses').innerHTML = '<div class="loading">Caricamento...</div>';
+    document.getElementById('weekSchedule').innerHTML = '';
+    renderHeader();
     loadData(function() { renderAll(); });
   } else {
     document.getElementById('loginError').style.display = 'block';
