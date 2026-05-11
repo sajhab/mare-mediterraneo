@@ -6,7 +6,19 @@
       "price": 200,
       "cleaningFee": 150,
       "maxGuests": 4,
-      "bookings": []
+      "bookings": [
+        {
+          "id": 1778496789917,
+          "suite": "pietra",
+          "source": "booking",
+          "checkin": "2026-05-25",
+          "checkout": "2026-06-01",
+          "guest": "Martin",
+          "notes": "",
+          "created": "2026-05-11",
+          "linkedToVilla": true
+        }
+      ]
     },
     "cielo": {
       "name": "Suite Cielo",
@@ -23,6 +35,17 @@
           "guest": "Jan ",
           "notes": "",
           "created": "2026-05-10"
+        },
+        {
+          "id": 1778496789917,
+          "suite": "cielo",
+          "source": "booking",
+          "checkin": "2026-05-25",
+          "checkout": "2026-06-01",
+          "guest": "Martin",
+          "notes": "",
+          "created": "2026-05-11",
+          "linkedToVilla": true
         }
       ]
     },
@@ -31,7 +54,18 @@
       "price": 350,
       "cleaningFee": 250,
       "maxGuests": 8,
-      "bookings": []
+      "bookings": [
+        {
+          "id": 1778496789917,
+          "suite": "villa",
+          "source": "booking",
+          "checkin": "2026-05-25",
+          "checkout": "2026-06-01",
+          "guest": "Martin",
+          "notes": "",
+          "created": "2026-05-11"
+        }
+      ]
     }
   },
   "blockedDates": [],
