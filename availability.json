@@ -24,7 +24,18 @@
       "price": 180,
       "cleaningFee": 150,
       "maxGuests": 4,
-      "bookings": []
+      "bookings": [
+        {
+          "id": 1778499749416,
+          "suite": "cielo",
+          "source": "airbnb",
+          "checkin": "2026-05-24",
+          "checkout": "2026-05-31",
+          "guest": "Martin",
+          "notes": "",
+          "created": "2026-05-11"
+        }
+      ]
     },
     "villa": {
       "name": "Villa Completa",
