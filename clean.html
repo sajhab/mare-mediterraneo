@@ -114,9 +114,9 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 <script>
 var PASS = 'Mare2026';
 var CLEANER = 'Daniela';
-var RAW = 'https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main';
+
 var lang = 'it';
-var data = null;
+
 
 var T = {
   it: {
@@ -260,22 +260,18 @@ function loadData(callback) {
 }
 
 function getSuiteStatus(suiteKey) {
-  if (!data || !data.suites || !data.suites[suiteKey]) {
-    return {status:'clean', main:t('noAction'), sub:''};
-  }
   var today = dStr(new Date());
   var tomorrow = addDays(today, 1);
-  var bookings = data.suites[suiteKey].bookings || [];
+  var suiteBookings = bookings.filter(function(b) { return b.suite === suiteKey; });
   var i, b, nextIn;
 
-  for (i = 0; i < bookings.length; i++) {
-    b = bookings[i];
-    // Checkout today - needs cleaning
+  for (i = 0; i < suiteBookings.length; i++) {
+    b = suiteBookings[i];
     if (b.checkout === today) {
       nextIn = null;
-      for (var j = 0; j < bookings.length; j++) {
-        if (bookings[j].checkin >= today && bookings[j].id !== b.id) {
-          if (!nextIn || bookings[j].checkin < nextIn.checkin) nextIn = bookings[j];
+      for (var j = 0; j < suiteBookings.length; j++) {
+        if (suiteBookings[j].checkin >= today && suiteBookings[j].id !== b.id) {
+          if (!nextIn || suiteBookings[j].checkin < nextIn.checkin) nextIn = suiteBookings[j];
         }
       }
       return {
@@ -285,23 +281,11 @@ function getSuiteStatus(suiteKey) {
         needsCleaning: true
       };
     }
-    // Checkout tomorrow - occupied, prepare
     if (b.checkout === tomorrow && b.checkin <= today) {
-      return {
-        status: 'occupied',
-        main: b.guest || t('occupied'),
-        sub: t('checkoutTomorrow'),
-        checkout: b.checkout
-      };
+      return {status:'occupied', main:b.guest||t('occupied'), sub:t('checkoutTomorrow'), checkout:b.checkout};
     }
-    // Currently occupied
     if (b.checkin <= today && b.checkout > today) {
-      return {
-        status: 'occupied',
-        main: b.guest || t('occupied'),
-        sub: 'Check-out: ' + fmtDate(b.checkout) + ' - 10:00',
-        checkout: b.checkout
-      };
+      return {status:'occupied', main:b.guest||t('occupied'), sub:'Check-out: ' + fmtDate(b.checkout) + ' - 10:00', checkout:b.checkout};
     }
   }
   return {status:'clean', main:t('noAction'), sub:''};
@@ -369,16 +353,14 @@ function renderWeek() {
   var today = dStr(new Date());
   var weekEnd = addDays(today, 7);
   var events = [];
-  var suites = ['pietra', 'cielo', 'villa'];
-  var i, j, b, s;
+  var SUITE_NAMES = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
+  var i, b;
 
-  for (i = 0; i < suites.length; i++) {
-    s = suites[i];
-    var bookings = (data.suites[s] && data.suites[s].bookings) ? data.suites[s].bookings : [];
-    var sName = (data.suites[s] && data.suites[s].name) ? data.suites[s].name : s;
-    for (j = 0; j < bookings.length; j++) {
-      b = bookings[j];
-      if (b.linkedToVilla) continue;
+  for (i = 0; i < bookings.length; i++) {
+    b = bookings[i];
+    var sName = SUITE_NAMES[b.suite] || b.suite;
+    if (b.linked_to_villa) continue;
+    if (true) {
       if (b.checkout >= today && b.checkout <= weekEnd) {
         events.push({date:b.checkout, type:'checkout', suite:sName, guest:b.guest||''});
         events.push({date:b.checkout, type:'clean', suite:sName, guest:b.guest||''});
@@ -386,7 +368,6 @@ function renderWeek() {
       if (b.checkin >= today && b.checkin <= weekEnd) {
         events.push({date:b.checkin, type:'checkin', suite:sName, guest:b.guest||''});
       }
-    }
   }
 
   events.sort(function(a, b) { return a.date > b.date ? 1 : -1; });
