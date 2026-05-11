@@ -6,66 +6,21 @@
       "price": 200,
       "cleaningFee": 150,
       "maxGuests": 4,
-      "bookings": [
-        {
-          "id": 1778499672810,
-          "suite": "pietra",
-          "source": "direct",
-          "checkin": "2026-05-17",
-          "checkout": "2026-05-24",
-          "guest": "Sajad",
-          "notes": "",
-          "created": "2026-05-11"
-        },
-        {
-          "id": 1778500000867,
-          "suite": "pietra",
-          "source": "direct",
-          "checkin": "2026-05-31",
-          "checkout": "2026-06-14",
-          "guest": "Martin",
-          "notes": "",
-          "created": "2026-05-11",
-          "linkedToVilla": true
-        }
-      ]
+      "bookings": []
     },
     "cielo": {
       "name": "Suite Cielo",
       "price": 180,
       "cleaningFee": 150,
       "maxGuests": 4,
-      "bookings": [
-        {
-          "id": 1778500000867,
-          "suite": "cielo",
-          "source": "direct",
-          "checkin": "2026-05-31",
-          "checkout": "2026-06-14",
-          "guest": "Martin",
-          "notes": "",
-          "created": "2026-05-11",
-          "linkedToVilla": true
-        }
-      ]
+      "bookings": []
     },
     "villa": {
       "name": "Villa Completa",
       "price": 350,
       "cleaningFee": 250,
       "maxGuests": 8,
-      "bookings": [
-        {
-          "id": 1778500000867,
-          "suite": "villa",
-          "source": "direct",
-          "checkin": "2026-05-31",
-          "checkout": "2026-06-14",
-          "guest": "Martin",
-          "notes": "",
-          "created": "2026-05-11"
-        }
-      ]
+      "bookings": []
     }
   },
   "blockedDates": [],
