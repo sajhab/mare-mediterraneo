@@ -100,6 +100,11 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 
   <div class="content">
     <button class="refresh-btn" id="refreshBtn">Aggiorna</button>
+<div id="debugBox" style="background:rgba(200,150,62,0.08);border:1px solid rgba(200,150,62,0.2);border-radius:4px;padding:12px;margin-bottom:16px;font-size:10px;color:var(--muted);display:none">
+  <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Debug Info</div>
+  <div id="debugText"></div>
+</div>
+<button class="refresh-btn" id="debugBtn" style="margin-bottom:8px">Show Debug Info</button>
     <div id="suiteStatuses"></div>
     <div class="section-title" id="weekTitle">Questa Settimana</div>
     <div id="weekSchedule"></div>
@@ -457,6 +462,56 @@ document.getElementById('exitBtn').addEventListener('click', function() {
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginPass').value = '';
+});
+
+document.getElementById('debugBtn').addEventListener('click', function() {
+  var box = document.getElementById('debugBox');
+  var txt = document.getElementById('debugText');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  var info = '';
+  // Check localStorage
+  var saved = localStorage.getItem('mm_avail');
+  if (saved) {
+    try {
+      var d = JSON.parse(saved);
+      info += 'LocalStorage: OK<br>';
+      info += 'Pietra bookings: ' + (d.suites && d.suites.pietra ? d.suites.pietra.bookings.length : 'N/A') + '<br>';
+      info += 'Cielo bookings: ' + (d.suites && d.suites.cielo ? d.suites.cielo.bookings.length : 'N/A') + '<br>';
+      info += 'Villa bookings: ' + (d.suites && d.suites.villa ? d.suites.villa.bookings.length : 'N/A') + '<br>';
+      if (d.suites && d.suites.pietra && d.suites.pietra.bookings.length > 0) {
+        var b = d.suites.pietra.bookings[0];
+        info += 'First Pietra booking: ' + b.checkin + ' to ' + b.checkout + ' - ' + b.guest + '<br>';
+      }
+      if (d.suites && d.suites.cielo && d.suites.cielo.bookings.length > 0) {
+        var b2 = d.suites.cielo.bookings[0];
+        info += 'First Cielo booking: ' + b2.checkin + ' to ' + b2.checkout + ' - ' + b2.guest + '<br>';
+      }
+    } catch(e) { info += 'LocalStorage parse error: ' + e.message + '<br>'; }
+  } else { info += 'LocalStorage: EMPTY<br>'; }
+  // Check in-memory data
+  info += 'In-memory data: ' + (data ? 'loaded' : 'NULL') + '<br>';
+  if (data && data.suites) {
+    info += 'Memory Pietra: ' + data.suites.pietra.bookings.length + ' bookings<br>';
+    info += 'Memory Cielo: ' + data.suites.cielo.bookings.length + ' bookings<br>';
+  }
+  // Test GitHub fetch
+  info += 'Testing GitHub fetch...<br>';
+  txt.innerHTML = info;
+  fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t=' + Date.now())
+    .then(function(r) {
+      txt.innerHTML += 'GitHub status: ' + r.status + '<br>';
+      return r.json();
+    })
+    .then(function(d) {
+      txt.innerHTML += 'GitHub Pietra bookings: ' + (d.suites && d.suites.pietra ? d.suites.pietra.bookings.length : 'N/A') + '<br>';
+      txt.innerHTML += 'GitHub Cielo bookings: ' + (d.suites && d.suites.cielo ? d.suites.cielo.bookings.length : 'N/A') + '<br>';
+      txt.innerHTML += 'GitHub last updated: ' + (d.lastUpdated || 'unknown') + '<br>';
+      if (d.suites && d.suites.pietra && d.suites.pietra.bookings.length > 0) {
+        var b = d.suites.pietra.bookings[0];
+        txt.innerHTML += 'GitHub first Pietra: ' + b.checkin + ' to ' + b.checkout + '<br>';
+      }
+    })
+    .catch(function(e) { txt.innerHTML += 'GitHub fetch error: ' + e.message + '<br>'; });
 });
 
 document.getElementById('refreshBtn').addEventListener('click', function() {
