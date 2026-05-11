@@ -357,37 +357,36 @@ function sbUpsert(table, obj) {
 // LOAD ALL DATA
 function loadAll(callback) {
   sbGet('bookings')
-    .then(function(data) {
-      bookings = data || [];
+    .then(function(result) {
+      bookings = Array.isArray(result) ? result : [];
       return sbGet('blocked_dates');
     })
-    .then(function(data) {
-      blockedDates = data || [];
+    .then(function(result) {
+      blockedDates = Array.isArray(result) ? result : [];
       return sbGet('settings');
     })
-    .then(function(data) {
-      if (data) {
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].key === 'prices') {
-            var p = data[i].value;
-            document.getElementById('pricePietra').value = p.pietra || 200;
-            document.getElementById('priceCielo').value = p.cielo || 180;
-            document.getElementById('priceVilla').value = p.villa || 350;
-            document.getElementById('cleaningPietra').value = p.cleaningPietra || 150;
-            document.getElementById('cleaningVilla').value = p.cleaningVilla || 250;
-            document.getElementById('minStay').value = p.minStay || 4;
-            prices = p;
-          }
-          if (data[i].key === 'toki') {
-            var tk = data[i].value;
-            document.getElementById('tokiAnnouncement').value = tk.announcement || '';
-            document.getElementById('tokiUpdates').value = tk.updates || '';
-            document.getElementById('tokiLocal').value = tk.localTips || '';
-          }
-          if (data[i].key === 'property') {
-            var pr = data[i].value;
-            document.getElementById('waNumber').value = pr.whatsapp || '+35699699184';
-          }
+    .then(function(result) {
+      var settingsArr = Array.isArray(result) ? result : [];
+      for (var i = 0; i < settingsArr.length; i++) {
+        var row = settingsArr[i];
+        if (!row || !row.key) continue;
+        if (row.key === 'prices' && row.value) {
+          var p = row.value;
+          document.getElementById('pricePietra').value = p.pietra || 200;
+          document.getElementById('priceCielo').value = p.cielo || 180;
+          document.getElementById('priceVilla').value = p.villa || 350;
+          document.getElementById('cleaningPietra').value = p.cleaningPietra || 150;
+          document.getElementById('cleaningVilla').value = p.cleaningVilla || 250;
+          document.getElementById('minStay').value = p.minStay || 4;
+          prices = p;
+        }
+        if (row.key === 'toki' && row.value) {
+          document.getElementById('tokiAnnouncement').value = row.value.announcement || '';
+          document.getElementById('tokiUpdates').value = row.value.updates || '';
+          document.getElementById('tokiLocal').value = row.value.localTips || '';
+        }
+        if (row.key === 'property' && row.value) {
+          document.getElementById('waNumber').value = row.value.whatsapp || '+35699699184';
         }
       }
       setSyncStatus(true);
@@ -395,7 +394,8 @@ function loadAll(callback) {
     })
     .catch(function(e) {
       setSyncStatus(false);
-      showToast('Connection error: ' + e.message);
+      showToast('Connection error - check console');
+      console.error('Supabase error:', e);
       if (callback) callback();
     });
 }
