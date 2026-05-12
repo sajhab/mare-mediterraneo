@@ -447,7 +447,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       <span data-lang="fr">Terre ancienne. Séjour moderne.<br>À 400 mètres de la mer.</span>
     </p>
     <div class="hero-ctas">
-      <a href="#suites" class="btn-gold">
+      <a href="#explore" class="btn-gold">
         <span data-lang="en" class="al">Explore</span>
         <span data-lang="it">Scopri</span>
         <span data-lang="de">Entdecken</span>
@@ -1834,20 +1834,14 @@ IMPORTANT:
 
 <!-- EXPLORE MAP SCRIPT -->
 <script>
-(function(){
-  var mmLang = document.documentElement.lang || 'en';
+var mmLang = 'en';
 
-  // Watch for language changes from the existing site's setLang
-  var origSetLang = window.setLang;
-  Object.defineProperty(window, 'setLang', {
-    set: function(fn) { origSetLang = fn; },
-    get: function() {
-      return function(l) {
-        mmLang = l;
-        if (origSetLang) origSetLang(l);
-      };
-    }
-  });
+// Sync language with existing site
+var _origSetLang = window.setLang;
+window.setLang = function(l) {
+  mmLang = l;
+  if (_origSetLang) _origSetLang(l);
+};
 
   var D = {
     'torre-chianca':{
@@ -1933,15 +1927,14 @@ IMPORTANT:
   card.addEventListener('touchmove', function(e){ if(e.touches[0].clientY-ty>70) mmClose(); }, {passive:true});
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') mmClose(); });
 
-  // Sync with existing site language on click
+  // Sync with existing site language buttons
   var langBtns = document.querySelectorAll('.lang-btn');
   for (var k=0;k<langBtns.length;k++) {
     langBtns[k].addEventListener('click', function(){
-      var l = this.getAttribute('data-lang') || this.textContent.trim().toLowerCase();
+      var l = this.textContent.trim().toLowerCase();
       if (l && l.length === 2) mmLang = l;
     });
   }
-})();
 </script>
 
 </body>
