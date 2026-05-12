@@ -453,11 +453,11 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <span data-lang="de">Entdecken</span>
         <span data-lang="fr">Découvrir</span>
       </a>
-      <a href="#booking" class="btn-outline">
-        <span data-lang="en" class="al">Book Direct</span>
-        <span data-lang="it">Prenota</span>
-        <span data-lang="de">Buchen</span>
-        <span data-lang="fr">Réserver</span>
+      <a href="#suites" class="btn-outline">
+        <span data-lang="en" class="al">Our Property</span>
+        <span data-lang="it">La Nostra Casa</span>
+        <span data-lang="de">Unsere Unterkunft</span>
+        <span data-lang="fr">Notre Propriété</span>
       </a>
     </div>
   </div>
@@ -1892,7 +1892,7 @@ window.setLang = function(l) {
     document.getElementById('expTitle').textContent = loc.name;
     document.getElementById('expDesc').textContent = loc.desc[l] || loc.desc.en;
     var imgEl = document.getElementById('expImg');
-    imgEl.innerHTML = '<img src="images/picture-' + loc.photo + '.jpg" alt="' + loc.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';"/><span class="exp-emoji" style="display:none;font-size:58px;position:relative;z-index:2;">' + loc.emoji + '</span>';
+    imgEl.innerHTML = '<img src="picture-' + loc.photo + '.jpg" alt="' + loc.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';"/><span class="exp-emoji" style="display:none;font-size:58px;position:relative;z-index:2;">' + loc.emoji + '</span>';
     var highlights = loc.hl[l] || loc.hl.en;
     document.getElementById('expHl').innerHTML = highlights.map(function(h){ return '<div class="exp-hl-item">'+h+'</div>'; }).join('');
     document.getElementById('expOverlay').classList.add('open');
