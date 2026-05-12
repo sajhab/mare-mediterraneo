@@ -196,6 +196,78 @@ nav.scrolled .nav-logo{opacity:1}
 .am-icon{font-size:18px;flex-shrink:0}
 .am-name{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text)}
 
+/* ── EXPLORE MAP ── */
+#explore{background:var(--notte);padding:60px 0 50px}
+#explore .sec-label{padding:0 20px;margin-bottom:12px}
+#explore .sec-title{padding:0 20px;margin-bottom:8px}
+.explore-sub{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;
+  color:var(--muted);line-height:1.6;padding:0 20px;margin-bottom:24px;max-width:340px}
+.map-tabs{display:flex;gap:6px;padding:0 20px 22px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.map-tabs::-webkit-scrollbar{display:none}
+.map-tab{flex-shrink:0;padding:7px 12px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-family:'Tenor Sans',sans-serif;
+  font-size:9px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;
+  border-radius:2px;transition:all 0.25s;white-space:nowrap}
+.map-tab:hover,.map-tab.active{background:rgba(200,150,62,0.12);border-color:rgba(200,150,62,0.5);color:var(--gold)}
+.map-svg-wrap{padding:0 16px}
+#salento-svg{width:100%;height:auto;display:block;border:1px solid var(--border);
+  border-radius:4px;box-shadow:0 0 50px rgba(200,150,62,0.06)}
+.pin-grp{cursor:pointer}
+.pin-ring{animation:mmPulse 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.pin-grp:hover .pin-ring{animation:mmPulseFast 1s ease-in-out infinite}
+@keyframes mmPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.45)}}
+@keyframes mmPulseFast{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.55)}}
+.ml{font-family:'Tenor Sans',sans-serif;font-size:5.5px;fill:rgba(240,232,216,0.5);letter-spacing:0.04em;pointer-events:none}
+.ml-g{fill:#E8B86D;font-size:6px}
+.ml-r{fill:#E8534A;font-size:6.5px}
+.ml-b{fill:#5BC4D8;font-size:5.5px}
+.ml-ap{fill:rgba(126,184,212,0.9)}
+.wn{font-family:'Cormorant Garamond',serif;font-size:7.5px;font-style:italic;
+  fill:rgba(100,160,200,0.32);letter-spacing:0.16em;pointer-events:none}
+.map-legend-row{padding:16px 20px 0;display:flex;flex-wrap:wrap;gap:12px 18px}
+.map-leg-item{display:flex;align-items:center;gap:7px;font-size:9px;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.map-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* Explore card overlay */
+.exp-overlay{display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(5,5,10,0.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center}
+.exp-overlay.open{display:flex;animation:mmFadeIn 0.22s ease}
+@keyframes mmFadeIn{from{opacity:0}to{opacity:1}}
+.exp-card{width:100%;max-width:480px;background:rgba(10,10,18,0.98);
+  border:1px solid var(--border);border-bottom:none;
+  border-radius:16px 16px 0 0;overflow:hidden;
+  animation:mmSlideUp 0.32s cubic-bezier(0.22,1,0.36,1);
+  max-height:88vh;display:flex;flex-direction:column}
+@keyframes mmSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.exp-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;flex-shrink:0}
+.exp-img{width:100%;height:200px;display:flex;align-items:center;justify-content:center;
+  font-size:58px;background:linear-gradient(160deg,#0D1B2E,#1A2535,#0A0A12);
+  position:relative;flex-shrink:0;overflow:hidden}
+.exp-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.exp-img::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,10,18,0.97) 0%,transparent 45%);
+  pointer-events:none;z-index:1}
+.exp-emoji{position:relative;z-index:2}
+.exp-body{padding:18px 22px 32px;overflow-y:auto;flex:1}
+.exp-cat{font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);
+  border:1px solid rgba(200,150,62,0.3);padding:3px 8px;border-radius:2px}
+.exp-dist{font-size:10px;color:var(--muted);letter-spacing:0.1em}
+.exp-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;
+  color:var(--sabbia);margin:10px 0;line-height:1.15}
+.exp-desc{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;
+  color:var(--muted);line-height:1.7;margin-bottom:18px}
+.exp-hl{display:flex;flex-direction:column;gap:8px}
+.exp-hl-item{display:flex;align-items:center;gap:10px;font-size:11px;
+  letter-spacing:0.07em;color:var(--muted)}
+.exp-hl-item::before{content:'';width:16px;height:1px;background:var(--gold);flex-shrink:0}
+.exp-close{position:absolute;top:16px;right:16px;width:34px;height:34px;
+  background:rgba(10,10,18,0.85);border:1px solid var(--border);border-radius:50%;
+  color:var(--text);font-size:14px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;z-index:10;transition:all 0.2s}
+.exp-close:hover{background:rgba(200,150,62,0.15);border-color:var(--gold);color:var(--gold)}
+.exp-card-wrap{position:relative;width:100%;max-width:480px}
+
 /* ── LOCATION ── */
 #location{background:var(--notte);padding:60px 20px}
 .map-box{margin-top:24px;height:180px;border:1px solid var(--border);border-radius:4px;overflow:hidden}
@@ -390,6 +462,290 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     </div>
   </div>
 </section>
+
+<!-- EXPLORE MAP -->
+<section id="explore">
+  <div class="reveal">
+    <p class="sec-label">
+      <span data-lang="en" class="al">Explore the Region</span>
+      <span data-lang="it">Esplora la Regione</span>
+      <span data-lang="de">Die Region Entdecken</span>
+      <span data-lang="fr">Explorer la Région</span>
+    </p>
+    <h2 class="sec-title">
+      <span data-lang="en" class="al">Your gateway to<br><em>Salento</em></span>
+      <span data-lang="it">Il tuo portale verso<br><em>Salento</em></span>
+      <span data-lang="de">Ihr Tor zum<br><em>Salento</em></span>
+      <span data-lang="fr">Votre porte vers<br><em>Salento</em></span>
+    </h2>
+    <p class="explore-sub">
+      <span data-lang="en" class="al">From Torre Chianca, the treasures of Puglia unfold. Sun-bleached cities, mythic caves, crystal water — all within reach.</span>
+      <span data-lang="it">Da Torre Chianca, i tesori della Puglia si svelano. Città assolate, grotte leggendarie, acque cristalline — tutto a portata di mano.</span>
+      <span data-lang="de">Von Torre Chianca erschließen sich die Schätze Apuliens. Sonnengebleichte Städte, mythische Höhlen, kristallklares Wasser.</span>
+      <span data-lang="fr">Depuis Torre Chianca, les trésors des Pouilles se dévoilent. Villes ensoleillées, grottes légendaires, eaux cristallines.</span>
+    </p>
+  </div>
+
+  <!-- Category filter tabs -->
+  <div class="map-tabs">
+    <button class="map-tab active" onclick="mmFilter('all',this)">
+      <span data-lang="en" class="al">All</span><span data-lang="it">Tutti</span><span data-lang="de">Alle</span><span data-lang="fr">Tout</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('home',this)">
+      <span data-lang="en" class="al">Home</span><span data-lang="it">Casa</span><span data-lang="de">Basis</span><span data-lang="fr">Base</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('beach',this)">
+      <span data-lang="en" class="al">Our Beach</span><span data-lang="it">La Nostra Spiaggia</span><span data-lang="de">Unser Strand</span><span data-lang="fr">Notre Plage</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('city',this)">
+      <span data-lang="en" class="al">Cities</span><span data-lang="it">Città</span><span data-lang="de">Städte</span><span data-lang="fr">Villes</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('adriatic',this)">
+      <span data-lang="en" class="al">Adriatic</span><span data-lang="it">Adriatico</span><span data-lang="de">Adria</span><span data-lang="fr">Adriatique</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('ionian',this)">
+      <span data-lang="en" class="al">Ionian</span><span data-lang="it">Ionico</span><span data-lang="de">Ionisch</span><span data-lang="fr">Ionien</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('tip',this)">
+      <span data-lang="en" class="al">Land's End</span><span data-lang="it">Capo Sud</span><span data-lang="de">Südspitze</span><span data-lang="fr">Bout du Monde</span>
+    </button>
+    <button class="map-tab" onclick="mmFilter('airport',this)">
+      <span data-lang="en" class="al">Airports</span><span data-lang="it">Aeroporti</span><span data-lang="de">Flughäfen</span><span data-lang="fr">Aéroports</span>
+    </button>
+  </div>
+
+  <!-- SVG Map -->
+  <div class="map-svg-wrap">
+    <svg id="salento-svg" viewBox="0 0 340 570" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="mmSeaA" x1="1" y1="0" x2="0.2" y2="1"><stop offset="0%" stop-color="#091525"/><stop offset="100%" stop-color="#0C1D32"/></linearGradient>
+        <linearGradient id="mmSeaI" x1="0" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#0A1B2E"/><stop offset="100%" stop-color="#0D2138"/></linearGradient>
+        <linearGradient id="mmLand" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#1D2C3B"/><stop offset="100%" stop-color="#14202E"/></linearGradient>
+        <filter id="mmGlow"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="mmGlowH"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="mmGlowB"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="mmClip"><rect width="340" height="570"/></clipPath>
+      </defs>
+      <rect width="340" height="570" fill="url(#mmSeaA)"/>
+      <path d="M0,0 L55,0 L22,100 L6,200 L0,310 L0,570 L340,570 L340,0Z" fill="url(#mmSeaI)" opacity="0.45"/>
+      <g opacity="0.045" stroke="#7EB8D4" stroke-width="0.4" fill="none">
+        <path d="M0,95 Q170,85 340,100"/><path d="M0,185 Q170,175 340,190"/>
+        <path d="M0,275 Q170,265 340,280"/><path d="M0,365 Q170,355 340,370"/>
+        <path d="M0,455 Q170,445 340,460"/><path d="M0,540 Q170,530 340,545"/>
+      </g>
+      <g clip-path="url(#mmClip)">
+        <!-- Land mass -->
+        <path d="M60,0 L262,0 C278,10 294,24 308,46 C318,63 322,85 322,110 C322,132 318,152 314,168 C312,178 313,190 316,205 C320,222 323,242 322,262 C321,280 316,298 310,314 C306,326 305,338 308,352 C310,365 308,378 302,390 C294,405 284,418 274,432 C265,446 256,460 248,475 C238,492 226,508 212,522 C200,534 187,544 175,552 C167,558 161,564 158,570 L112,570 C109,565 103,557 95,547 C84,533 72,516 60,498 C49,481 38,462 28,442 C20,425 12,405 7,384 C3,365 1,344 3,322 C5,302 10,283 8,262 C6,242 3,220 3,198 C3,176 6,154 4,132 C2,108 5,82 13,58 C22,36 38,16 60,0Z" fill="url(#mmLand)" stroke="rgba(100,140,180,0.16)" stroke-width="0.8"/>
+        <!-- Interior -->
+        <path d="M85,0 L242,0 C265,18 298,55 310,105 C320,148 318,200 318,245 C316,290 306,330 290,368 C272,408 250,445 225,478 C205,504 180,525 162,542 L148,570 L118,570 L100,548 C78,518 54,476 34,432 C16,392 4,346 3,298 C2,250 10,202 6,156 C3,118 10,72 32,38Z" fill="rgba(255,255,255,0.014)"/>
+        <!-- Terrain -->
+        <g opacity="0.05" fill="none" stroke="#C8963E" stroke-width="0.4">
+          <ellipse cx="148" cy="105" rx="27" ry="10"/><ellipse cx="215" cy="138" rx="22" ry="8"/>
+          <ellipse cx="155" cy="215" rx="24" ry="9"/><ellipse cx="198" cy="285" rx="19" ry="7"/>
+          <ellipse cx="135" cy="350" rx="17" ry="6"/><ellipse cx="168" cy="430" rx="13" ry="5"/>
+        </g>
+        <!-- Roads -->
+        <g opacity="0.22" fill="none" stroke="rgba(200,150,62,0.4)" stroke-width="0.6" stroke-dasharray="4,3">
+          <path d="M190,25 Q224,65 236,108 Q244,138 242,168"/>
+          <path d="M242,168 Q239,200 237,235"/>
+          <path d="M237,235 Q220,272 208,312 Q195,352 180,392 Q165,432 158,472 Q150,508 148,545"/>
+          <path d="M95,295 Q132,283 168,276 Q202,270 237,265"/>
+          <path d="M28,378 Q65,368 100,362 Q135,356 162,365"/>
+        </g>
+        <!-- City name overlays -->
+        <text x="238" y="232" class="ml" fill="rgba(240,232,216,0.35)" font-size="7" letter-spacing="0.06em">LECCE</text>
+        <text x="244" y="168" class="ml" fill="rgba(240,232,216,0.28)" font-size="6">BRINDISI</text>
+        <text x="138" y="202" font-family="Cormorant Garamond,serif" font-size="10" font-style="italic" fill="rgba(200,150,62,0.1)" letter-spacing="0.18em">SALENTO</text>
+        <!-- Water labels -->
+        <text x="330" y="245" class="wn" transform="rotate(90,330,245)">ADRIATIC SEA</text>
+        <text x="14" y="435" class="wn" transform="rotate(-90,14,435)">IONIAN SEA</text>
+      </g>
+
+      <!-- ── HOME BASE: Torre Chianca — RED pin ── -->
+      <g class="pin-grp" data-mm="torre-chianca" data-cat="home" onclick="mmOpen('torre-chianca')" filter="url(#mmGlowH)">
+        <circle class="pin-ring" cx="316" cy="248" r="13" fill="none" stroke="#E8534A" stroke-width="1.3" opacity="0.55"/>
+        <circle cx="316" cy="248" r="7" fill="#E8534A" opacity="0.18"/>
+        <circle cx="316" cy="248" r="5" fill="#E8534A"/>
+        <!-- house icon -->
+        <polygon points="316,238 321,244 321,252 311,252 311,244" fill="none" stroke="rgba(10,10,18,0.9)" stroke-width="1"/>
+        <polygon points="316,235 324,243 308,243" fill="rgba(10,10,18,0.7)"/>
+        <text x="303" y="244" class="ml ml-r" text-anchor="end">Torre Chianca</text>
+        <text x="303" y="252" class="ml" text-anchor="end" fill="rgba(232,83,74,0.6)" font-size="4.5">HOME BASE</text>
+      </g>
+
+      <!-- ── BEACH: 400m ── -->
+      <g class="pin-grp" data-mm="spiaggia-torre-chianca" data-cat="beach" onclick="mmOpen('spiaggia-torre-chianca')" filter="url(#mmGlowB)">
+        <circle class="pin-ring" cx="320" cy="262" r="8" fill="none" stroke="#5BC4D8" stroke-width="1" opacity="0.65"/>
+        <circle cx="320" cy="262" r="3.5" fill="#5BC4D8"/>
+        <text x="307" y="266" class="ml ml-b" text-anchor="end">Beach 400m</text>
+      </g>
+
+      <!-- ── AIRPORTS ── -->
+      <g class="pin-grp" data-mm="brindisi-airport" data-cat="airport" onclick="mmOpen('brindisi-airport')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="242" cy="162" r="9" fill="none" stroke="#7EB8D4" stroke-width="1"/>
+        <circle cx="242" cy="162" r="3.5" fill="#7EB8D4"/>
+        <text x="250" y="160" class="ml ml-ap">Brindisi Airport ✈</text>
+        <text x="250" y="167" class="ml ml-ap" font-size="5" fill="rgba(126,184,212,0.6)">40 min</text>
+      </g>
+      <g class="pin-grp" data-mm="bari-airport" data-cat="airport" onclick="mmOpen('bari-airport')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="125" cy="18" r="9" fill="none" stroke="#7EB8D4" stroke-width="1"/>
+        <circle cx="125" cy="18" r="3.5" fill="#7EB8D4"/>
+        <text x="133" y="16" class="ml ml-ap">Bari Airport ✈</text>
+        <text x="133" y="23" class="ml ml-ap" font-size="5" fill="rgba(126,184,212,0.6)">120 min</text>
+      </g>
+
+      <!-- ── CITIES ── -->
+      <g class="pin-grp" data-mm="lecce" data-cat="city" onclick="mmOpen('lecce')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="237" cy="232" r="9" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="237" cy="232" r="3.5" fill="#C8963E"/>
+        <text x="226" y="229" class="ml ml-g" text-anchor="end">Lecce</text>
+        <text x="226" y="236" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">20 min</text>
+      </g>
+      <g class="pin-grp" data-mm="ostuni" data-cat="city" onclick="mmOpen('ostuni')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="175" cy="115" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="175" cy="115" r="3.5" fill="#C8963E"/>
+        <text x="164" y="112" class="ml ml-g" text-anchor="end">Ostuni</text>
+        <text x="164" y="119" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">55 min</text>
+      </g>
+      <g class="pin-grp" data-mm="alberobello" data-cat="city" onclick="mmOpen('alberobello')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="130" cy="82" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="130" cy="82" r="3.5" fill="#C8963E"/>
+        <text x="119" y="79" class="ml ml-g" text-anchor="end">Alberobello</text>
+        <text x="119" y="86" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">75 min</text>
+      </g>
+      <g class="pin-grp" data-mm="nardo" data-cat="city" onclick="mmOpen('nardo')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="170" cy="345" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="170" cy="345" r="3.5" fill="#C8963E"/>
+        <text x="159" y="342" class="ml ml-g" text-anchor="end">Nardò</text>
+        <text x="159" y="349" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">40 min</text>
+      </g>
+
+      <!-- ── ADRIATIC — labels on LEFT side ── -->
+      <g class="pin-grp" data-mm="polignano" data-cat="adriatic" onclick="mmOpen('polignano')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="315" cy="32" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="315" cy="32" r="3.5" fill="#C8963E"/>
+        <text x="303" y="29" class="ml ml-g" text-anchor="end">Polignano a Mare</text>
+        <text x="303" y="36" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">90 min</text>
+      </g>
+      <g class="pin-grp" data-mm="monopoli" data-cat="adriatic" onclick="mmOpen('monopoli')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="318" cy="60" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="318" cy="60" r="3.5" fill="#C8963E"/>
+        <text x="306" y="57" class="ml ml-g" text-anchor="end">Monopoli</text>
+        <text x="306" y="64" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">80 min</text>
+      </g>
+      <g class="pin-grp" data-mm="torre-orso" data-cat="adriatic" onclick="mmOpen('torre-orso')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="322" cy="278" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="322" cy="278" r="3.5" fill="#C8963E"/>
+        <text x="310" y="275" class="ml ml-g" text-anchor="end">Torre dell'Orso</text>
+        <text x="310" y="282" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">35 min</text>
+      </g>
+      <g class="pin-grp" data-mm="grotta-poesia" data-cat="adriatic" onclick="mmOpen('grotta-poesia')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="324" cy="310" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="324" cy="310" r="3.5" fill="#C8963E"/>
+        <text x="312" y="307" class="ml ml-g" text-anchor="end">Grotta della Poesia</text>
+        <text x="312" y="314" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">40 min</text>
+      </g>
+      <g class="pin-grp" data-mm="otranto" data-cat="adriatic" onclick="mmOpen('otranto')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="318" cy="352" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="318" cy="352" r="3.5" fill="#C8963E"/>
+        <text x="306" y="349" class="ml ml-g" text-anchor="end">Otranto</text>
+        <text x="306" y="356" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">50 min</text>
+      </g>
+
+      <!-- ── TIP ── -->
+      <g class="pin-grp" data-mm="leuca" data-cat="tip" onclick="mmOpen('leuca')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="178" cy="562" r="9" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="178" cy="562" r="5" fill="#C8963E" opacity="0.14"/>
+        <circle cx="178" cy="562" r="3.5" fill="#C8963E"/>
+        <text x="167" y="556" class="ml ml-g" text-anchor="end">S.M. di Leuca</text>
+        <text x="167" y="563" class="ml" text-anchor="end" fill="rgba(200,150,62,0.55)" font-size="5">80 min</text>
+      </g>
+
+      <!-- ── IONIAN — pins moved inward ── -->
+      <g class="pin-grp" data-mm="porto-cesareo" data-cat="ionian" onclick="mmOpen('porto-cesareo')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="22" cy="332" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="22" cy="332" r="3.5" fill="#C8963E"/>
+        <text x="30" y="329" class="ml ml-g">Porto Cesareo</text>
+        <text x="30" y="336" class="ml" fill="rgba(200,150,62,0.55)" font-size="5">50 min</text>
+      </g>
+      <g class="pin-grp" data-mm="punta-prosciutto" data-cat="ionian" onclick="mmOpen('punta-prosciutto')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="18" cy="362" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="18" cy="362" r="3.5" fill="#C8963E"/>
+        <text x="26" y="359" class="ml ml-g">Punta Prosciutto</text>
+        <text x="26" y="366" class="ml" fill="rgba(200,150,62,0.55)" font-size="5">60 min</text>
+      </g>
+      <g class="pin-grp" data-mm="santa-maria-bagno" data-cat="ionian" onclick="mmOpen('santa-maria-bagno')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="16" cy="393" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="16" cy="393" r="3.5" fill="#C8963E"/>
+        <text x="24" y="390" class="ml ml-g">S.M. al Bagno</text>
+        <text x="24" y="397" class="ml" fill="rgba(200,150,62,0.55)" font-size="5">35 min</text>
+      </g>
+      <g class="pin-grp" data-mm="gallipoli" data-cat="ionian" onclick="mmOpen('gallipoli')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="18" cy="425" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="18" cy="425" r="3.5" fill="#C8963E"/>
+        <text x="26" y="422" class="ml ml-g">Gallipoli</text>
+        <text x="26" y="429" class="ml" fill="rgba(200,150,62,0.55)" font-size="5">50 min</text>
+      </g>
+      <g class="pin-grp" data-mm="torre-sg" data-cat="ionian" onclick="mmOpen('torre-sg')" filter="url(#mmGlow)">
+        <circle class="pin-ring" cx="25" cy="462" r="8" fill="none" stroke="#C8963E" stroke-width="1"/>
+        <circle cx="25" cy="462" r="3.5" fill="#C8963E"/>
+        <text x="33" y="459" class="ml ml-g">Torre San Giovanni</text>
+        <text x="33" y="466" class="ml" fill="rgba(200,150,62,0.55)" font-size="5">60 min</text>
+      </g>
+
+      <!-- Compass -->
+      <g opacity="0.34" transform="translate(295,530)">
+        <circle r="11" fill="none" stroke="rgba(200,150,62,0.25)" stroke-width="0.7"/>
+        <polygon points="0,-9 1.8,-3.5 0,-5.5 -1.8,-3.5" fill="#C8963E"/>
+        <polygon points="0,9 1.8,3.5 0,5.5 -1.8,3.5" fill="rgba(240,232,216,0.2)"/>
+        <text x="0" y="-12" text-anchor="middle" fill="#C8963E" font-size="5" font-family="Tenor Sans,sans-serif" letter-spacing="0.1em">N</text>
+      </g>
+      <!-- Scale -->
+      <g opacity="0.28" transform="translate(30,556)">
+        <line x1="0" y1="0" x2="50" y2="0" stroke="rgba(200,150,62,0.6)" stroke-width="0.8"/>
+        <line x1="0" y1="-3" x2="0" y2="3" stroke="rgba(200,150,62,0.6)" stroke-width="0.8"/>
+        <line x1="50" y1="-3" x2="50" y2="3" stroke="rgba(200,150,62,0.6)" stroke-width="0.8"/>
+        <text x="25" y="-5" text-anchor="middle" fill="rgba(240,232,216,0.4)" font-size="4.8" font-family="Tenor Sans,sans-serif">~50 km</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Legend -->
+  <div class="map-legend-row">
+    <div class="map-leg-item"><div class="map-leg-dot" style="background:#E8534A;box-shadow:0 0 5px #E8534A;"></div>
+      <span data-lang="en" class="al">Home Base</span><span data-lang="it">Casa</span><span data-lang="de">Basis</span><span data-lang="fr">Base</span>
+    </div>
+    <div class="map-leg-item"><div class="map-leg-dot" style="background:#5BC4D8;box-shadow:0 0 5px #5BC4D8;"></div>
+      <span data-lang="en" class="al">Our Beach</span><span data-lang="it">La Nostra Spiaggia</span><span data-lang="de">Unser Strand</span><span data-lang="fr">Notre Plage</span>
+    </div>
+    <div class="map-leg-item"><div class="map-leg-dot" style="background:#C8963E;"></div>
+      <span data-lang="en" class="al">Destinations</span><span data-lang="it">Destinazioni</span><span data-lang="de">Ziele</span><span data-lang="fr">Destinations</span>
+    </div>
+    <div class="map-leg-item"><div class="map-leg-dot" style="background:#7EB8D4;"></div>
+      <span data-lang="en" class="al">Airports</span><span data-lang="it">Aeroporti</span><span data-lang="de">Flughäfen</span><span data-lang="fr">Aéroports</span>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE INFO CARD OVERLAY -->
+<div class="exp-overlay" id="expOverlay" onclick="mmHandleOverlay(event)">
+  <div class="exp-card-wrap">
+    <button class="exp-close" onclick="mmClose()">✕</button>
+    <div class="exp-card" id="expCard">
+      <div class="exp-handle"></div>
+      <div class="exp-img" id="expImg"></div>
+      <div class="exp-body">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span class="exp-cat" id="expCat"></span>
+          <span class="exp-dist" id="expDist"></span>
+        </div>
+        <h3 class="exp-title" id="expTitle"></h3>
+        <p class="exp-desc" id="expDesc"></p>
+        <div class="exp-hl" id="expHl"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- SUITES -->
 <section id="suites">
@@ -1473,6 +1829,118 @@ IMPORTANT:
     }
   }, 8000);
 
+})();
+</script>
+
+<!-- EXPLORE MAP SCRIPT -->
+<script>
+(function(){
+  var mmLang = document.documentElement.lang || 'en';
+
+  // Watch for language changes from the existing site's setLang
+  var origSetLang = window.setLang;
+  Object.defineProperty(window, 'setLang', {
+    set: function(fn) { origSetLang = fn; },
+    get: function() {
+      return function(l) {
+        mmLang = l;
+        if (origSetLang) origSetLang(l);
+      };
+    }
+  });
+
+  var D = {
+    'torre-chianca':{
+      photo:'torre-chianca', emoji:'🏡',
+      cat:{en:'Home Base',it:'Casa',de:'Basis',fr:'Base'},
+      dist:{en:'',it:'',de:'',fr:''},
+      name:'Torre Chianca',
+      desc:{
+        en:'Your private retreat on the Adriatic coast. Torre Chianca sits where ancient watchtowers once guarded the sea — now a place of pure stillness, golden light, and the sound of waves through open shutters.',
+        it:'Il vostro rifugio privato sulla costa adriatica. Torre Chianca sorge dove antiche torri di avvistamento custodivano il mare — oggi un luogo di quiete assoluta e luce dorata.',
+        de:'Ihr privates Refugium an der Adriaküste. Torre Chianca liegt dort, wo einst Wachttürme das Meer bewachten — heute ein Ort stiller Ruhe und goldenen Lichts.',
+        fr:'Votre retraite privée sur la côte adriatique. Torre Chianca se trouve là où d\'anciennes tours de guet veillaient sur la mer — aujourd\'hui un lieu de quiétude absolue.'
+      },
+      hl:{en:['Direct sea access','Private Adriatic terrace','Authentic Salento architecture','Quiet village atmosphere'],it:['Accesso diretto al mare','Terrazza privata Adriatico','Architettura salentina autentica','Atmosfera di villaggio'],de:['Direkter Meereszugang','Private Adriaterrasse','Authentische Architektur','Ruhige Dorfatmosphäre'],fr:['Accès direct à la mer','Terrasse privée sur l\'Adriatique','Architecture authentique','Atmosphère de village calme']}
+    },
+    'spiaggia-torre-chianca':{
+      photo:'spiaggia-torre-chianca', emoji:'🏖️',
+      cat:{en:'Our Beach',it:'La Nostra Spiaggia',de:'Unser Strand',fr:'Notre Plage'},
+      dist:{en:'400 m on foot',it:'400 m a piedi',de:'400 m zu Fuß',fr:'400 m à pied'},
+      name:'Torre Chianca Beach',
+      desc:{en:'Just a four-minute stroll from your door. Clear shallow Adriatic water, fine sand, and the unhurried calm of a coast that still belongs to the locals.',it:'A soli quattro minuti a piedi. Acque adriatiche limpide, sabbia fine e la calma di una costa ancora tutta locale.',de:'Nur vier Gehminuten entfernt. Klares seichtes Adriawasser, feiner Sand und die entspannte Ruhe einer lokalen Küste.',fr:'À quatre minutes à pied. Eaux adriatiques claires, sable fin et la tranquillité d\'un littoral encore local.'},
+      hl:{en:['400 m from the villa','Clear shallow Adriatic water','No crowds, local atmosphere','Sunrise walks on the shore'],it:['400m dalla villa','Acque chiare e poco profonde','Senza folla, atmosfera locale','Passeggiate all\'alba'],de:['400m von der Villa','Klares seichtes Wasser','Keine Massen, lokale Atmosphäre','Sonnenaufgangsspaziergänge'],fr:['400m de la villa','Eau claire et peu profonde','Pas de foule, ambiance locale','Promenades au lever du soleil']}
+    },
+    'lecce':{photo:'lecce',emoji:'🏛️',cat:{en:'City',it:'Città',de:'Stadt',fr:'Ville'},dist:{en:'20 min',it:'20 min',de:'20 Min.',fr:'20 min'},name:'Lecce',desc:{en:'The Florence of the South. Lecce\'s old town is an extraordinary Baroque open-air museum carved in warm golden lecce stone. Piazzas, churches, trattorias — a perfect day.',it:'La Firenze del Sud. Il centro storico di Lecce è uno straordinario museo a cielo aperto del Barocco, scolpito nella calda pietra leccese.',de:'Das Florenz des Südens. Lecces Altstadt ist ein außergewöhnliches Barockfreiluftmuseum aus warmem goldenem Leccestone.',fr:'La Florence du Sud. Le centre historique de Lecce est un extraordinaire musée baroque à ciel ouvert sculpté dans la pierre de lecce dorée.'},hl:{en:['Piazza del Duomo — one of Italy\'s finest','Basilica di Santa Croce','Handmade papier-mâché workshops','Vibrant aperitivo culture'],it:['Piazza del Duomo','Basilica di Santa Croce','Botteghe di cartapesta','Cultura dell\'aperitivo'],de:['Piazza del Duomo','Basilika Santa Croce','Papiermaché-Werkstätten','Aperitivo-Kultur'],fr:['Piazza del Duomo','Basilique Santa Croce','Ateliers de papier mâché','Culture de l\'apéritif']}},
+    'ostuni':{photo:'ostuni',emoji:'🤍',cat:{en:'City',it:'Città',de:'Stadt',fr:'Ville'},dist:{en:'55 min',it:'55 min',de:'55 Min.',fr:'55 min'},name:'Ostuni',desc:{en:'The White City. A blinding cascade of whitewashed walls crowning a hilltop, with sweeping views over olive groves to the Adriatic sea.',it:'La Città Bianca. Una cascata abbagliante di mura bianche in cima a una collina, con ampie viste sugli uliveti fino al mare.',de:'Die Weiße Stadt. Eine blendend weiße Kaskade auf einem Hügel, mit Ausblick über Olivenhaine zur Adria.',fr:'La Ville Blanche. Une cascade éblouissante de murs blanchis couronnant une colline, avec des vues panoramiques sur les oliveraies.'},hl:{en:['Iconic white hilltop old town','Cathedral with Gothic rose window','Views to the Adriatic','Excellent masseria restaurants'],it:['Iconico centro bianco collinare','Cattedrale con rosone gotico','Viste sull\'Adriatico','Ottimi ristoranti in masseria'],de:['Ikonische weiße Altstadt','Kathedrale mit gotischer Rosette','Blick auf die Adria','Hervorragende Masseria-Restaurants'],fr:['Vieux centre blanc iconique','Cathédrale avec rosace gothique','Vues sur l\'Adriatique','Excellents restaurants de masseria']}},
+    'alberobello':{photo:'alberobello',emoji:'🍄',cat:{en:'City',it:'Città',de:'Stadt',fr:'Ville'},dist:{en:'75 min',it:'75 min',de:'75 Min.',fr:'75 min'},name:'Alberobello',desc:{en:'UNESCO World Heritage. Alberobello\'s trulli — ancient circular stone dwellings with conical roofs — cluster together in a scene unlike anywhere else on earth.',it:'Patrimonio UNESCO. I trulli di Alberobello — antiche abitazioni circolari in pietra con tetti conici — uno scenario unico al mondo.',de:'UNESCO-Weltkulturerbe. Alberobello\'s Trulli — uralte kreisförmige Steingebäude mit kegelförmigen Dächern — wie nirgendwo sonst.',fr:'Patrimoine UNESCO. Les trulli d\'Alberobello — anciennes maisons circulaires avec toits coniques — un décor unique au monde.'},hl:{en:['UNESCO World Heritage Site','1,400+ trulli in Rione Monti','Trullo Sovrano — the largest','Local wine and taralli'],it:['Patrimonio UNESCO','1.400+ trulli nel rione Monti','Trullo Sovrano','Vino locale e taralli'],de:['UNESCO-Weltkulturerbe','1.400+ Trulli','Trullo Sovrano — das größte','Lokaler Wein und Taralli'],fr:['Patrimoine mondial UNESCO','1 400+ trulli','Trullo Sovrano — le plus grand','Vin local et taralli']}},
+    'nardo':{photo:'nardo',emoji:'⛪',cat:{en:'City',it:'Città',de:'Stadt',fr:'Ville'},dist:{en:'40 min',it:'40 min',de:'40 Min.',fr:'40 min'},name:'Nardò',desc:{en:'An underrated Baroque gem. Nardò\'s Piazza Salandra is one of the most harmonious squares in Puglia, with far fewer tourists than Lecce.',it:'Un gioiello barocco sottovalutato. La Piazza Salandra di Nardò è una delle piazze più armoniose della Puglia.',de:'Ein unterschätztes Barockjuwel. Nardòs Piazza Salandra ist einer der harmonischsten Plätze Apuliens.',fr:'Un joyau baroque sous-estimé. La Piazza Salandra de Nardò est l\'une des places les plus harmonieuses des Pouilles.'},hl:{en:['Beautiful Piazza Salandra','Baroque cathedral & palaces','Authentic local atmosphere','Gateway to Porto Cesareo coast'],it:['Bella Piazza Salandra','Cattedrale e palazzi barocchi','Atmosfera locale autentica','Porta della costa di Porto Cesareo'],de:['Schöne Piazza Salandra','Barockkathedrale','Authentische Atmosphäre','Tor zur Küste von Porto Cesareo'],fr:['Belle Piazza Salandra','Cathédrale baroque','Atmosphère locale authentique','Porte vers Porto Cesareo']}},
+    'brindisi-airport':{photo:'brindisi-airport',emoji:'✈️',cat:{en:'Airport',it:'Aeroporto',de:'Flughafen',fr:'Aéroport'},dist:{en:'40 min',it:'40 min',de:'40 Min.',fr:'40 min'},name:'Brindisi Airport',desc:{en:'The closest international gateway to Salento. Brindisi Airport (BDS) connects to major European cities with frequent direct flights, making arrivals smooth and effortless.',it:'Il gateway internazionale più vicino al Salento. L\'aeroporto di Brindisi collega le principali città europee con voli diretti frequenti.',de:'Das nächste internationale Gateway nach Salento. Der Flughafen Brindisi verbindet die wichtigsten europäischen Städte mit häufigen Direktflügen.',fr:'La porte internationale la plus proche du Salento. L\'aéroport de Brindisi relie les grandes villes européennes avec des vols directs fréquents.'},hl:{en:['Closest airport to Torre Chianca','Direct EU city flights','Car rental on-site','Fast motorway connection'],it:['Aeroporto più vicino','Voli diretti UE','Autonoleggio in sede','Autostrada veloce'],de:['Nächster Flughafen','EU-Direktflüge','Autovermietung','Schnelle Autobahn'],fr:['Aéroport le plus proche','Vols directs EU','Location de voiture','Autoroute rapide']}},
+    'bari-airport':{photo:'bari-airport',emoji:'✈️',cat:{en:'Airport',it:'Aeroporto',de:'Flughafen',fr:'Aéroport'},dist:{en:'120 min',it:'120 min',de:'120 Min.',fr:'120 min'},name:'Bari Airport',desc:{en:'Puglia\'s main international hub with more routes and airlines. Worth considering for better flight connections.',it:'Il principale hub internazionale della Puglia, con più rotte e compagnie aeree.',de:'Apuliens Hauptflughafen mit mehr Strecken und Airlines.',fr:'Le principal hub international des Pouilles avec plus de routes.'},hl:{en:['Puglia\'s primary airport','Wider range of routes','Direct highway south','City of Bari worth a stop'],it:['Principale aeroporto','Più rotte','Autostrada diretta','Bari città merita una sosta'],de:['Hauptflughafen Apuliens','Breiteres Netz','Autobahn südwärts','Bari einen Halt wert'],fr:['Principal aéroport','Plus de routes','Autoroute directe','Bari vaut un arrêt']}},
+    'polignano':{photo:'polignano',emoji:'🌊',cat:{en:'Adriatic Coast',it:'Costa Adriatica',de:'Adriaküste',fr:'Côte Adriatique'},dist:{en:'90 min',it:'90 min',de:'90 Min.',fr:'90 min'},name:'Polignano a Mare',desc:{en:'Perhaps Puglia\'s most dramatic coastline. The old town perches at the cliff\'s edge, whitewashed houses suspended above the turquoise sea.',it:'Forse il tratto di costa più spettacolare della Puglia. Il centro storico si affaccia sull\'orlo della scogliera, case bianche sospese su un mare turchese.',de:'Vielleicht Apuliens dramatischste Küste. Die Altstadt thront am Klippenrand, weiße Häuser über türkisem Meer.',fr:'Peut-être le littoral le plus spectaculaire des Pouilles. La vieille ville perchée au bord de la falaise, maisons blanches au-dessus de la mer turquoise.'},hl:{en:['Dramatic clifftop old town','Crystal sea caves to swim','Lama Monachile beach','Birthplace of Domenico Modugno'],it:['Centro storico sulla scogliera','Grotte marine cristalline','Spiaggia Lama Monachile','Patria di Domenico Modugno'],de:['Klippen-Altstadt','Kristallklare Höhlen','Lama Monachile Strand','Geburtsort von Modugno'],fr:['Vieux centre au bord de la falaise','Grottes marines cristallines','Plage Lama Monachile','Ville natale de Modugno']}},
+    'monopoli':{photo:'monopoli',emoji:'⚓',cat:{en:'Adriatic Coast',it:'Costa Adriatica',de:'Adriaküste',fr:'Côte Adriatique'},dist:{en:'80 min',it:'80 min',de:'80 Min.',fr:'80 min'},name:'Monopoli',desc:{en:'A working harbour town with genuine Adriatic soul. Quieter than Polignano but just as beautiful — a seafront castle, whitewashed churches, excellent fresh seafood.',it:'Una cittadina portuale con un\'anima adriatica autentica. Più tranquilla di Polignano ma non meno bella.',de:'Eine Hafenstadt mit echter adriatischer Seele. Ruhiger als Polignano, aber genauso schön.',fr:'Une ville portuaire avec une vraie âme adriatique. Plus calme que Polignano mais tout aussi belle.'},hl:{en:['Castello di Carlo V by the sea','Authentic fish market','Porto Bianco beach','Less touristy than Polignano'],it:['Castello Carlo V','Mercato del pesce','Spiaggia Porto Bianco','Meno turistica'],de:['Castello Carlo V am Meer','Fischmarkt','Porto Bianco Strand','Weniger touristisch'],fr:['Castello Carlo V','Marché aux poissons','Plage Porto Bianco','Moins touristique']}},
+    'torre-orso':{photo:'torre-orso',emoji:'🐚',cat:{en:'Adriatic Coast',it:'Costa Adriatica',de:'Adriaküste',fr:'Côte Adriatique'},dist:{en:'35 min',it:'35 min',de:'35 Min.',fr:'35 min'},name:"Torre dell'Orso",desc:{en:'One of Salento\'s most beloved beaches. The Two Sisters sea stacks rise dramatically from crystal water — a wide arc of turquoise, perfect for families.',it:'Una delle spiagge più amate del Salento. Le Due Sorelle si ergono dall\'acqua cristallina — un ampio arco turchese.',de:'Einer der beliebtesten Strände Salentos. Die Zwei Schwestern ragen aus dem Kristallwasser.',fr:'L\'une des plages les plus appréciées du Salento. Les Deux Sœurs s\'élèvent de l\'eau cristalline.'},hl:{en:['Crystal shallow water','Le Due Sorelle rock stacks','Long sandy beach with dunes','Beach clubs & snorkelling'],it:['Acqua cristallina','Le Due Sorelle','Lunga spiaggia con dune','Stabilimenti e snorkeling'],de:['Kristallwasser','Le Due Sorelle','Langer Sandstrand','Strandclubs & Schnorcheln'],fr:['Eau cristalline','Le Due Sorelle','Longue plage avec dunes','Clubs et plongée']}},
+    'grotta-poesia':{photo:'grotta-poesia',emoji:'🗿',cat:{en:'Adriatic Coast',it:'Costa Adriatica',de:'Adriaküste',fr:'Côte Adriatique'},dist:{en:'40 min',it:'40 min',de:'40 Min.',fr:'40 min'},name:'Grotta della Poesia',desc:{en:'The Cave of Poetry. Over 3,000 inscriptions carved by ancient pilgrims — the largest concentration of prehistoric engravings in the Mediterranean, hidden in a sea cave on the cliffs.',it:'La Grotta della Poesia. Oltre 3.000 iscrizioni incise da antichi pellegrini — la più grande concentrazione di incisioni preistoriche del Mediterraneo.',de:'Die Höhle der Poesie. Über 3.000 von alten Pilgern eingravierte Inschriften — die größte Konzentration prähistorischer Gravuren im Mittelmeer.',fr:'La Grotte de la Poésie. Plus de 3 000 inscriptions gravées par d\'anciens pèlerins — la plus grande concentration de gravures préhistoriques en Méditerranée.'},hl:{en:['Oldest Mediterranean graffiti','3,000+ Bronze Age inscriptions','Spectacular cliff setting','Swim at the cave\'s sea entrance'],it:['Graffiti più antichi del Mediterraneo','3.000+ iscrizioni','Contesto spettacolare','Nuotare all\'ingresso della grotta'],de:['Älteste mediterrane Graffiti','3.000+ Inschriften','Spektakuläre Lage','Schwimmen am Höhleneingang'],fr:['Plus anciens graffitis méditerranéens','3 000+ inscriptions','Cadre spectaculaire','Nager à l\'entrée de la grotte']}},
+    'otranto':{photo:'otranto',emoji:'🏰',cat:{en:'Adriatic Coast',it:'Costa Adriatica',de:'Adriaküste',fr:'Côte Adriatique'},dist:{en:'50 min',it:'50 min',de:'50 Min.',fr:'50 min'},name:'Otranto',desc:{en:'Italy\'s easternmost city. A Norman cathedral with the world\'s largest mosaic floor, an Aragonese castle, and sunrises that paint Albania across the water.',it:'La città più orientale d\'Italia. Una cattedrale normanna con il più grande pavimento musivo del mondo, un castello aragonese.',de:'Italiens östlichste Stadt. Eine normannische Kathedrale mit dem weltgrößten Mosaikboden, eine aragonesische Burg.',fr:'La ville la plus orientale d\'Italie. Une cathédrale normande avec le plus grand sol en mosaïque du monde, un château aragonais.'},hl:{en:['Cathedral with 12th-century mosaic','Aragonese Castle','Clear harbour swimming','Sunrise over Albania'],it:['Cattedrale con mosaico XII sec.','Castello Aragonese','Porto limpido per nuotare','Alba sull\'Albania'],de:['Kathedrale (12. Jh. Mosaik)','Aragonesische Burg','Klarer Hafen zum Schwimmen','Sonnenaufgang über Albanien'],fr:['Cathédrale mosaïque XIIe s.','Château aragonais','Port clair pour nager','Lever de soleil sur l\'Albanie']}},
+    'leuca':{photo:'leuca',emoji:'💡',cat:{en:"Land's End",it:'Capo Sud',de:'Südspitze',fr:'Bout du Monde'},dist:{en:'80 min',it:'80 min',de:'80 Min.',fr:'80 min'},name:'Santa Maria di Leuca',desc:{en:'Finibus Terrae. Where the Adriatic meets the Ionian, crowned by a lighthouse and a sanctuary. Standing here watching two seas merge is genuinely moving.',it:'Finibus Terrae. Dove l\'Adriatico incontra lo Ionio, coronato da faro e santuario. Stare qui, guardare i due mari che si fondono, è emozionante.',de:'Finibus Terrae. Wo die Adria auf das Ionische Meer trifft, gekrönt von Leuchtturm und Heiligtum.',fr:'Finibus Terrae. Là où l\'Adriatique rencontre l\'Ionien, couronné d\'un phare et d\'un sanctuaire.'},hl:{en:['Where two seas meet','Lighthouse & Sanctuary','Belle Époque villas','Boat trips to sea caves'],it:['Dove i due mari si incontrano','Faro e Santuario','Ville Belle Époque','Gite in barca alle grotte'],de:['Wo zwei Meere sich treffen','Leuchtturm & Heiligtum','Belle-Époque-Villen','Bootstouren zu Höhlen'],fr:['Où deux mers se rencontrent','Phare et sanctuaire','Villas Belle Époque','Excursions aux grottes marines']}},
+    'porto-cesareo':{photo:'porto-cesareo',emoji:'🦈',cat:{en:'Ionian Coast',it:'Costa Ionica',de:'Ionische Küste',fr:'Côte Ionienne'},dist:{en:'50 min',it:'50 min',de:'50 Min.',fr:'50 min'},name:'Porto Cesareo',desc:{en:'The Maldives of Salento. Impossibly blue lagoons, sandbars, and small islands you can wade to at low tide — inside a Marine Protected Area.',it:'Le Maldive del Salento. Lagune di un blu impossibile, bassifondi e isole da raggiungere a guado, in un\'Area Marina Protetta.',de:'Die Malediven des Salento. Unglaublich blaue Lagunen, Sandbänke und Inseln, die bei Ebbe zu Fuß erreichbar sind.',fr:'Les Maldives du Salento. Lagons d\'un bleu impossible, bancs de sable, îles accessibles à gué dans une Aire Marine Protégée.'},hl:{en:['Marine Protected Area','Turquoise lagoon & sandbars','Flamingos in the reserve','Boat trips to islands'],it:['Area Marina Protetta','Laguna turchese','Fenicotteri nella riserva','Gite in barca'],de:['Meeresschutzgebiet','Türkise Lagune','Flamingos im Reservat','Bootstouren'],fr:['Aire marine protégée','Lagon turquoise','Flamants roses','Excursions en bateau']}},
+    'punta-prosciutto':{photo:'punta-prosciutto',emoji:'🏖️',cat:{en:'Ionian Coast',it:'Costa Ionica',de:'Ionische Küste',fr:'Côte Ionienne'},dist:{en:'60 min',it:'60 min',de:'60 Min.',fr:'60 min'},name:'Punta Prosciutto',desc:{en:'Fine white sand backed by pine trees, water the colour of the Caribbean. One of the most unspoiled stretches on the entire Ionian coast.',it:'Sabbia bianca fine ai margini di pinete, acqua del colore dei Caraibi. Uno dei tratti più incontaminati della costa ionica.',de:'Feiner weißer Sand, Pinienwälder, Wasser in Karibikfarben. Einer der unberührtesten Abschnitte der ionischen Küste.',fr:'Sable blanc fin bordé de pins, eau couleur Caraïbes. L\'un des tronçons les plus préservés de la côte ionienne.'},hl:{en:['Finest white sand in Salento','Protected dunes & pine forest','Shallow crystal water','Wild, uncrowded beach'],it:['Sabbia bianca più fine del Salento','Dune e pineta protette','Acqua cristallina bassa','Spiaggia selvaggia'],de:['Feinster weißer Sand','Dünen & Pinienwald','Seichtes Kristallwasser','Natürlicher Strand'],fr:['Sable blanc le plus fin','Dunes & forêt de pins','Eau cristalline peu profonde','Plage sauvage']}},
+    'santa-maria-bagno':{photo:'santa-maria-bagno',emoji:'🫧',cat:{en:'Ionian Coast',it:'Costa Ionica',de:'Ionische Küste',fr:'Côte Ionienne'},dist:{en:'35 min',it:'35 min',de:'35 Min.',fr:'35 min'},name:'Santa Maria al Bagno',desc:{en:'A small dignified resort with a moving wartime history — it sheltered thousands of Jewish refugees after WWII. Lovely Ionian coves and excellent seafood.',it:'Una piccola e dignitosa località con una storia toccante: ospitò migliaia di profughi ebrei dopo la Seconda Guerra Mondiale.',de:'Ein kleines würdiges Resort mit bewegender Geschichte — es beherbergte nach dem Zweiten Weltkrieg tausende jüdische Flüchtlinge.',fr:'Une petite station digne avec une histoire touchante — elle a abrité des milliers de réfugiés juifs après la Seconde Guerre mondiale.'},hl:{en:['Calm sheltered Ionian coves','WWII Jewish refugee museum','Excellent seafood restaurants','Quieter than Gallipoli'],it:['Calette ioniche riparate','Museo profughi ebrei WWII','Ottimi ristoranti di pesce','Più tranquilla di Gallipoli'],de:['Ruhige ionische Buchten','WWII-Gedenkmuseum','Meeresfrüchte-Restaurants','Ruhiger als Gallipoli'],fr:['Criques ioniennes calmes','Musée réfugiés juifs WWII','Restaurants fruits de mer','Plus calme que Gallipoli']}},
+    'gallipoli':{photo:'gallipoli',emoji:'🐟',cat:{en:'Ionian Coast',it:'Costa Ionica',de:'Ionische Küste',fr:'Côte Ionienne'},dist:{en:'50 min',it:'50 min',de:'50 Min.',fr:'50 min'},name:'Gallipoli',desc:{en:'The beautiful city, as the Greeks named it. An island old town connected by bridge — a labyrinth of whitewashed lanes, baroque churches, and fish stalls over a working harbour.',it:'La bella città, come la chiamavano i Greci. Il centro insulare collegato da un ponte — un labirinto di vicoli bianchi, chiese barocche, bancarelle di pesce.',de:'Die schöne Stadt, wie die Griechen sie nannten. Eine Inselaltstadt, verbunden durch eine Brücke.',fr:'La belle ville, comme les Grecs la nommaient. Un vieux centre insulaire relié par un pont.'},hl:{en:['Island old town with sea walls','Beaches north & south','Lively summer nightlife','Baroque cathedral'],it:['Centro insulare con mura','Spiagge a nord e sud','Vita notturna estiva','Cattedrale barocca'],de:['Inselaltstadt mit Mauern','Strände N & S','Lebhaftes Nachtleben','Barockkathedrale'],fr:['Vieux centre insulaire','Plages nord & sud','Vie nocturne animée','Cathédrale baroque']}},
+    'torre-sg':{photo:'torre-sg',emoji:'🌅',cat:{en:'Ionian Coast',it:'Costa Ionica',de:'Ionische Küste',fr:'Côte Ionienne'},dist:{en:'60 min',it:'60 min',de:'60 Min.',fr:'60 min'},name:'Torre San Giovanni',desc:{en:'A classic Salento beach village — medieval watchtower, long sandy beach, and the unhurried rhythm of a place where summer still feels like decades ago.',it:'Un classico villaggio balneare salentino — torre medievale, lunga spiaggia sabbiosa e il ritmo tranquillo di un\'estate che sa ancora di decenni fa.',de:'Ein klassisches Salento-Stranddorf — mittelalterlicher Wachturm, langer Sandstrand, gemächlicher Rhythmus.',fr:'Un village de plage classique du Salento — tour médiévale, longue plage de sable, rythme tranquille.'},hl:{en:['Long sandy beach','Medieval watchtower','Relaxed local atmosphere','Stunning west-facing sunsets'],it:['Lunga spiaggia sabbiosa','Torre medievale','Atmosfera locale rilassata','Splendidi tramonti'],de:['Langer Sandstrand','Mittelalterlicher Turm','Entspannte Atmosphäre','Wunderschöne Sonnenuntergänge'],fr:['Longue plage de sable','Tour médiévale','Atmosphère détendue','Magnifiques couchers de soleil']}}
+  };
+
+  window.mmOpen = function(id) {
+    var loc = D[id]; if (!loc) return;
+    var l = mmLang || 'en';
+    document.getElementById('expCat').textContent = loc.cat[l] || loc.cat.en;
+    document.getElementById('expDist').textContent = loc.dist[l] || loc.dist.en;
+    document.getElementById('expTitle').textContent = loc.name;
+    document.getElementById('expDesc').textContent = loc.desc[l] || loc.desc.en;
+    var imgEl = document.getElementById('expImg');
+    imgEl.innerHTML = '<img src="images/picture-' + loc.photo + '.jpg" alt="' + loc.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';"/><span class="exp-emoji" style="display:none;font-size:58px;position:relative;z-index:2;">' + loc.emoji + '</span>';
+    var highlights = loc.hl[l] || loc.hl.en;
+    document.getElementById('expHl').innerHTML = highlights.map(function(h){ return '<div class="exp-hl-item">'+h+'</div>'; }).join('');
+    document.getElementById('expOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.mmClose = function() {
+    document.getElementById('expOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.mmHandleOverlay = function(e) {
+    if (e.target === document.getElementById('expOverlay')) mmClose();
+  };
+
+  window.mmFilter = function(cat, btn) {
+    var tabs = document.querySelectorAll('.map-tab');
+    for (var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
+    btn.classList.add('active');
+    var pins = document.querySelectorAll('.pin-grp');
+    for (var j=0;j<pins.length;j++) {
+      var show = cat==='all' || pins[j].getAttribute('data-cat')===cat;
+      pins[j].style.opacity = show ? '1' : '0.1';
+      pins[j].style.pointerEvents = show ? 'auto' : 'none';
+    }
+  };
+
+  // Swipe to close
+  var ty = 0;
+  var card = document.getElementById('expCard');
+  card.addEventListener('touchstart', function(e){ ty=e.touches[0].clientY; }, {passive:true});
+  card.addEventListener('touchmove', function(e){ if(e.touches[0].clientY-ty>70) mmClose(); }, {passive:true});
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') mmClose(); });
+
+  // Sync with existing site language on click
+  var langBtns = document.querySelectorAll('.lang-btn');
+  for (var k=0;k<langBtns.length;k++) {
+    langBtns[k].addEventListener('click', function(){
+      var l = this.getAttribute('data-lang') || this.textContent.trim().toLowerCase();
+      if (l && l.length === 2) mmLang = l;
+    });
+  }
 })();
 </script>
 
