@@ -4,15 +4,6 @@
 blog-generator.py
 Mare Mediterraneo — Daily Blog Automation
 Called by GitHub Actions: .github/workflows/daily-blog.yml
-
-Workflow:
-  1. Load topics.json
-  2. Try RSS feeds for news angle
-  3. If RSS fails, pick next unused topic
-  4. Call Claude API for all 4 languages
-  5. Save articles as static HTML files
-  6. Update blog/articles.json index
-  7. Update sitemap.xml
 """
 
 import os
@@ -20,8 +11,9 @@ import json
 import re
 import sys
 import datetime
-import urllib2
-import urllib
+import urllib.request
+import urllib.error
+import urllib.parse
 import xml.etree.ElementTree as ET
 
 # ── CONFIGURATION ────────────────────────────────────────────
@@ -41,7 +33,7 @@ LANG_CONFIG = {
         "label": "Italiano",
         "og_locale": "it_IT",
         "cta_title": "Soggiornate in Salento?",
-        "cta_text": "Mare Mediterraneo — due suite eleganti a Torre Chianca, 400m dal mare, 15 minuti da Lecce. Da \u20ac200 a notte, prenotazione diretta.",
+        "cta_text": "Mare Mediterraneo \u2014 due suite eleganti a Torre Chianca, 400m dal mare, 15 minuti da Lecce. Da \u20ac200 a notte, prenotazione diretta.",
         "cta_button": "Verifica disponibilit\u00e0",
         "share_label": "Condividi",
         "related_heading": "Articoli correlati",
@@ -51,7 +43,7 @@ LANG_CONFIG = {
         "label": "Deutsch",
         "og_locale": "de_DE",
         "cta_title": "Urlaub im Salento?",
-        "cta_text": "Mare Mediterraneo — zwei elegante Suiten in Torre Chianca, 400m vom Meer, 15 Minuten von Lecce. Ab \u20ac200 pro Nacht, Direktbuchung.",
+        "cta_text": "Mare Mediterraneo \u2014 zwei elegante Suiten in Torre Chianca, 400m vom Meer, 15 Minuten von Lecce. Ab \u20ac200 pro Nacht, Direktbuchung.",
         "cta_button": "Verf\u00fcgbarkeit pr\u00fcfen",
         "share_label": "Teilen",
         "related_heading": "Weitere Artikel",
@@ -71,7 +63,7 @@ LANG_CONFIG = {
         "label": "English",
         "og_locale": "en_GB",
         "cta_title": "Staying in Salento?",
-        "cta_text": "Mare Mediterraneo — two elegant suites in Torre Chianca, 400m from the sea, 15 minutes from Lecce. From \u20ac200 per night, direct booking.",
+        "cta_text": "Mare Mediterraneo \u2014 two elegant suites in Torre Chianca, 400m from the sea, 15 minutes from Lecce. From \u20ac200 per night, direct booking.",
         "cta_button": "Check Availability",
         "share_label": "Share",
         "related_heading": "Related Articles",
@@ -109,17 +101,17 @@ REQUIREMENTS:
 - Structure with H2 subheadings for readability
 - Total article word count: approximately {word_count} words
 
-OUTPUT FORMAT — return only a JSON object with these fields, no markdown, no backticks:
+OUTPUT FORMAT — return only a JSON object with these exact fields, no markdown fences, no backticks:
 {{
   "title": "article title in {language}",
   "meta_description": "150-160 character meta description in {language}",
   "excerpt": "2-3 sentence excerpt for blog index in {language}",
   "body_html": "full article body HTML with <h2>, <p>, <ul>, <li> tags — no <html>, <head>, <body> wrappers",
-  "reading_time": estimated reading time as integer (minutes)
+  "reading_time": 5
 }}"""
 
 
-# ── HELPERS ─────────────────────────────────────────────────
+# ── HELPERS ──────────────────────────────────────────────────
 
 def log(msg):
     print("[blog-generator] " + str(msg))
@@ -130,18 +122,15 @@ def load_json(path, default=None):
     if not os.path.exists(path):
         return default
     try:
-        f = open(path, "r")
-        data = json.load(f)
-        f.close()
-        return data
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
     except Exception as e:
         log("Failed to load " + path + ": " + str(e))
         return default
 
 def save_json(path, data):
-    f = open(path, "w")
-    json.dump(data, f, ensure_ascii=False, indent=2)
-    f.close()
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 def slugify(text):
     text = text.lower()
@@ -154,22 +143,17 @@ def slugify(text):
 # ── RSS FETCHING ─────────────────────────────────────────────
 
 def fetch_rss_headline():
-    """Try each RSS feed and return (headline, source) or None."""
     for feed_url in RSS_FEEDS:
         try:
-            req = urllib2.Request(feed_url)
-            req.add_header("User-Agent", "MareMediarraneo-BlogBot/1.0")
-            response = urllib2.urlopen(req, timeout=10)
-            content = response.read()
+            req = urllib.request.Request(feed_url)
+            req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                content = resp.read()
             root = ET.fromstring(content)
-
-            # Try standard RSS
             items = root.findall(".//item")
             if not items:
-                # Try Atom
                 ns = {"atom": "http://www.w3.org/2005/Atom"}
                 items = root.findall(".//atom:entry", ns)
-
             if items:
                 item = items[0]
                 title_el = item.find("title")
@@ -180,27 +164,20 @@ def fetch_rss_headline():
                     if desc_el is not None and desc_el.text:
                         summary = re.sub("<[^>]+>", "", desc_el.text).strip()[:300]
                     return {"headline": headline, "summary": summary, "source": feed_url}
-
         except Exception as e:
             log("RSS failed for " + feed_url + ": " + str(e))
             continue
-
     return None
 
 
 # ── TOPIC SELECTION ──────────────────────────────────────────
 
 def pick_topic(topics):
-    """Return next unused topic, cycling through."""
     used = load_json(USED_TOPICS_PATH, {"used_ids": []})
     used_ids = used.get("used_ids", [])
-
-    # Find first unused
     for topic in topics:
         if topic["id"] not in used_ids:
             return topic
-
-    # All used — reset and start again
     log("All topics used — resetting cycle")
     save_json(USED_TOPICS_PATH, {"used_ids": []})
     return topics[0]
@@ -216,7 +193,6 @@ def mark_topic_used(topic_id):
 # ── CLAUDE API ───────────────────────────────────────────────
 
 def call_claude(prompt, lang):
-    """Call Anthropic API and return parsed JSON response."""
     if not ANTHROPIC_API_KEY:
         log("ERROR: ANTHROPIC_API_KEY not set")
         return None
@@ -224,31 +200,27 @@ def call_claude(prompt, lang):
     payload = json.dumps({
         "model": "claude-sonnet-4-20250514",
         "max_tokens": 4096,
-        "messages": [
-            {"role": "user", "content": prompt}
-        ]
-    })
+        "messages": [{"role": "user", "content": prompt}]
+    }).encode("utf-8")
 
-    req = urllib2.Request("https://api.anthropic.com/v1/messages")
+    req = urllib.request.Request("https://api.anthropic.com/v1/messages")
     req.add_header("Content-Type", "application/json")
     req.add_header("x-api-key", ANTHROPIC_API_KEY)
     req.add_header("anthropic-version", "2023-06-01")
-    req.add_header("User-Agent", "MareMediarraneo-BlogBot/1.0")
+    req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
+    req.method = "POST"
 
     try:
-        response = urllib2.urlopen(req, payload, timeout=90)
-        data = json.loads(response.read())
+        with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
         text = data["content"][0]["text"].strip()
-
         # Strip markdown fences if present
         text = re.sub(r"^```json\s*", "", text)
         text = re.sub(r"\s*```$", "", text)
         text = text.strip()
-
         return json.loads(text)
-
-    except urllib2.HTTPError as e:
-        log("Claude API HTTP error " + str(e.code) + ": " + e.read())
+    except urllib.error.HTTPError as e:
+        log("Claude API HTTP error " + str(e.code) + ": " + e.read().decode("utf-8"))
         return None
     except Exception as e:
         log("Claude API error: " + str(e))
@@ -258,14 +230,12 @@ def call_claude(prompt, lang):
 # ── ARTICLE BUILDER ──────────────────────────────────────────
 
 def build_article_html(template, article_data, lang, slug, topic_info, today):
-    """Fill in template with article data."""
     cfg = LANG_CONFIG[lang]
     publish_date_iso = today.strftime("%Y-%m-%dT07:00:00+00:00")
     publish_date_human = today.strftime("%B %d, %Y")
 
-    # WhatsApp share URL
     share_url = "https://maremediterraneo.com/blog/" + slug + ".html"
-    whatsapp_msg = urllib.quote(cfg["whatsapp_text"] + ": " + share_url)
+    whatsapp_msg = urllib.parse.quote(cfg["whatsapp_text"] + ": " + share_url)
 
     html = template
     replacements = {
@@ -298,21 +268,18 @@ def build_article_html(template, article_data, lang, slug, topic_info, today):
 # ── SITEMAP UPDATE ────────────────────────────────────────────
 
 def update_sitemap(new_slugs, today):
-    """Insert new blog article URLs into sitemap.xml."""
     if not os.path.exists(SITEMAP_PATH):
         log("sitemap.xml not found — skipping update")
         return
 
-    f = open(SITEMAP_PATH, "r")
-    content = f.read()
-    f.close()
+    with open(SITEMAP_PATH, "r", encoding="utf-8") as f:
+        content = f.read()
 
     date_str = today.strftime("%Y-%m-%d")
     new_entries = ""
 
     for slug in new_slugs:
         url = "https://maremediterraneo.com/blog/" + slug + ".html"
-        # Check if already in sitemap
         if url in content:
             continue
         entry = (
@@ -326,22 +293,20 @@ def update_sitemap(new_slugs, today):
         new_entries += entry
 
     if new_entries:
-        content = content.replace("  <!-- BLOG_ARTICLES_PLACEHOLDER -->",
-                                  new_entries + "\n  <!-- BLOG_ARTICLES_PLACEHOLDER -->")
-        f = open(SITEMAP_PATH, "w")
-        f.write(content)
-        f.close()
+        content = content.replace(
+            "  <!-- BLOG_ARTICLES_PLACEHOLDER -->",
+            new_entries + "\n  <!-- BLOG_ARTICLES_PLACEHOLDER -->"
+        )
+        with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
+            f.write(content)
         log("Sitemap updated with " + str(len(new_slugs)) + " new URLs")
 
 
 # ── ARTICLES INDEX ────────────────────────────────────────────
 
 def update_articles_index(new_articles):
-    """Update blog/articles.json with new entries at the front."""
     existing = load_json(ARTICLES_JSON, [])
-    existing_slugs = set()
-    for a in existing:
-        existing_slugs.add(a.get("slug", ""))
+    existing_slugs = set(a.get("slug", "") for a in existing)
 
     added = 0
     for article in new_articles:
@@ -361,36 +326,30 @@ def main():
 
     log("Starting blog generation for " + date_prefix)
 
-    # Load template
     if not os.path.exists(TEMPLATE_PATH):
         log("ERROR: blog/template.html not found")
         sys.exit(1)
 
-    f = open(TEMPLATE_PATH, "r")
-    template = f.read()
-    f.close()
+    with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
+        template = f.read()
 
-    # Load topics
     topics = load_json(TOPICS_JSON, [])
     if not topics:
         log("ERROR: topics.json empty or missing")
         sys.exit(1)
 
-    # Decide content source: try RSS first
+    # Try RSS first, fall back to topics
     news_angle = None
     rss_result = fetch_rss_headline()
-
     if rss_result:
         log("RSS success: " + rss_result["headline"])
         news_angle = rss_result["headline"]
         if rss_result["summary"]:
             news_angle += " — " + rss_result["summary"]
 
-    # Pick base topic (always needed for keywords/metadata)
     topic = pick_topic(topics)
     log("Using topic #" + str(topic["id"]) + ": " + topic["topic"])
 
-    # Build the content angle
     if news_angle:
         write_angle = (
             "Inspired by recent Salento/Puglia news: " + news_angle +
@@ -399,7 +358,6 @@ def main():
     else:
         write_angle = topic.get("angle", topic["topic"])
 
-    # Generate articles in all 4 languages
     new_articles = []
     new_slugs = []
     errors = []
@@ -425,24 +383,19 @@ def main():
             errors.append(lang)
             continue
 
-        # Build slug
         title_for_slug = article_data.get("title", topic["topic"])
         slug = date_prefix + "-" + lang + "-" + slugify(title_for_slug)
 
-        # Build HTML
         article_html = build_article_html(template, article_data, lang, slug, topic, today)
 
-        # Save file
         filename = slug + ".html"
         filepath = os.path.join(BLOG_DIR, filename)
-        f = open(filepath, "w")
-        f.write(article_html.encode("utf-8"))
-        f.close()
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(article_html)
 
         log("Saved: " + filename)
         new_slugs.append(slug)
 
-        # Index entry
         new_articles.append({
             "slug": slug,
             "lang": lang.upper(),
@@ -454,16 +407,15 @@ def main():
             "reading_time": article_data.get("reading_time", 5)
         })
 
-    # Mark topic as used
     mark_topic_used(topic["id"])
 
-    # Update index and sitemap
     if new_articles:
         update_articles_index(new_articles)
         update_sitemap(new_slugs, today)
         log("Done. Generated " + str(len(new_articles)) + "/4 articles.")
     else:
         log("ERROR: No articles generated.")
+        sys.exit(1)
 
     if errors:
         log("Failed languages: " + ", ".join(errors))
