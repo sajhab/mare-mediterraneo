@@ -192,39 +192,48 @@ def mark_topic_used(topic_id):
 
 # ── CLAUDE API ───────────────────────────────────────────────
 
-def call_claude(prompt, lang):
-    if not ANTHROPIC_API_KEY:
-        log("ERROR: ANTHROPIC_API_KEY not set")
-        return None
-
+def call_claude_once(prompt):
     payload = json.dumps({
         "model": "claude-sonnet-4-20250514",
         "max_tokens": 4096,
         "messages": [{"role": "user", "content": prompt}]
     }).encode("utf-8")
-
     req = urllib.request.Request("https://api.anthropic.com/v1/messages")
     req.add_header("Content-Type", "application/json")
     req.add_header("x-api-key", ANTHROPIC_API_KEY)
     req.add_header("anthropic-version", "2023-06-01")
     req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
     req.method = "POST"
+    with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    text = data["content"][0]["text"].strip()
+    text = re.sub(r"^```json\s*", "", text)
+    text = re.sub(r"\s*```$", "", text)
+    return json.loads(text.strip())
 
-    try:
-        with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-        text = data["content"][0]["text"].strip()
-        # Strip markdown fences if present
-        text = re.sub(r"^```json\s*", "", text)
-        text = re.sub(r"\s*```$", "", text)
-        text = text.strip()
-        return json.loads(text)
-    except urllib.error.HTTPError as e:
-        log("Claude API HTTP error " + str(e.code) + ": " + e.read().decode("utf-8"))
+def call_claude(prompt, lang):
+    if not ANTHROPIC_API_KEY:
+        log("ERROR: ANTHROPIC_API_KEY not set")
         return None
-    except Exception as e:
-        log("Claude API error: " + str(e))
-        return None
+    for attempt in range(1, 3):
+        try:
+            return call_claude_once(prompt)
+        except urllib.error.HTTPError as e:
+            log("Claude API HTTP error " + str(e.code) + ": " + e.read().decode("utf-8"))
+            return None
+        except json.JSONDecodeError as e:
+            log("Invalid JSON from Claude (attempt " + str(attempt) + "): " + str(e))
+            if attempt < 2:
+                log("Retrying...")
+            else:
+                return None
+        except Exception as e:
+            log("Claude API error (attempt " + str(attempt) + "): " + str(e))
+            if attempt < 2:
+                log("Retrying...")
+            else:
+                return None
+    return None
 
 
 # ── ARTICLE BUILDER ──────────────────────────────────────────
@@ -413,12 +422,10 @@ def main():
         update_articles_index(new_articles)
         update_sitemap(new_slugs, today)
         log("Done. Generated " + str(len(new_articles)) + "/4 articles.")
+        if errors:
+            log("WARNING: Failed languages (non-fatal): " + ", ".join(errors))
     else:
-        log("ERROR: No articles generated.")
-        sys.exit(1)
-
-    if errors:
-        log("Failed languages: " + ", ".join(errors))
+        log("ERROR: No articles generated at all.")
         sys.exit(1)
 
 
