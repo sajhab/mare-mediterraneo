@@ -1847,9 +1847,8 @@ IMPORTANT:
       const data = await response.json();
       hideTyping();
 
-      if (data.content && data.content[0]) {
-        const reply = data.content[0].text;
-        conversationHistory.push({role:'assistant', content: reply});
+      if (data.choices && data.choices[0]) {
+        const reply = data.choices[0].message.content;
 
         // Decide quick replies based on conversation
         let qr = [];
