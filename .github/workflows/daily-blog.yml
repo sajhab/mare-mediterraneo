@@ -32,7 +32,7 @@ jobs:
 
       - name: Run blog generator
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python blog-generator.py
 
       - name: Verify output
