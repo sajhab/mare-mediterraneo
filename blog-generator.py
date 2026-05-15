@@ -17,7 +17,7 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 
 # ── CONFIGURATION ────────────────────────────────────────────
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 BLOG_DIR = os.path.join(REPO_ROOT, "blog")
 TEMPLATE_PATH = os.path.join(BLOG_DIR, "template.html")
@@ -190,45 +190,45 @@ def mark_topic_used(topic_id):
     save_json(USED_TOPICS_PATH, {"used_ids": used_ids})
 
 
-# ── CLAUDE API ───────────────────────────────────────────────
+# ── OPENAI API ───────────────────────────────────────────────
 
-def call_claude_once(prompt):
+def call_openai_once(prompt):
     payload = json.dumps({
-        "model": "claude-sonnet-4-20250514",
+        "model": "gpt-4o",
         "max_tokens": 4096,
-        "messages": [{"role": "user", "content": prompt}]
+        "messages": [{"role": "user", "content": prompt}],
+        "response_format": {"type": "json_object"}
     }).encode("utf-8")
-    req = urllib.request.Request("https://api.anthropic.com/v1/messages")
+    req = urllib.request.Request("https://api.openai.com/v1/chat/completions")
     req.add_header("Content-Type", "application/json")
-    req.add_header("x-api-key", ANTHROPIC_API_KEY)
-    req.add_header("anthropic-version", "2023-06-01")
+    req.add_header("Authorization", "Bearer " + OPENAI_API_KEY)
     req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
     req.method = "POST"
     with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
         data = json.loads(resp.read().decode("utf-8"))
-    text = data["content"][0]["text"].strip()
+    text = data["choices"][0]["message"]["content"].strip()
     text = re.sub(r"^```json\s*", "", text)
     text = re.sub(r"\s*```$", "", text)
     return json.loads(text.strip())
 
 def call_claude(prompt, lang):
-    if not ANTHROPIC_API_KEY:
-        log("ERROR: ANTHROPIC_API_KEY not set")
+    if not OPENAI_API_KEY:
+        log("ERROR: OPENAI_API_KEY not set")
         return None
     for attempt in range(1, 3):
         try:
-            return call_claude_once(prompt)
+            return call_openai_once(prompt)
         except urllib.error.HTTPError as e:
-            log("Claude API HTTP error " + str(e.code) + ": " + e.read().decode("utf-8"))
+            log("OpenAI API HTTP error " + str(e.code) + ": " + e.read().decode("utf-8"))
             return None
         except json.JSONDecodeError as e:
-            log("Invalid JSON from Claude (attempt " + str(attempt) + "): " + str(e))
+            log("Invalid JSON from OpenAI (attempt " + str(attempt) + "): " + str(e))
             if attempt < 2:
                 log("Retrying...")
             else:
                 return None
         except Exception as e:
-            log("Claude API error (attempt " + str(attempt) + "): " + str(e))
+            log("OpenAI API error (attempt " + str(attempt) + "): " + str(e))
             if attempt < 2:
                 log("Retrying...")
             else:
