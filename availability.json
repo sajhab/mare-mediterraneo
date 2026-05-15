@@ -10,7 +10,7 @@
     },
     "cielo": {
       "name": "Suite Cielo",
-      "price": 180,
+      "price": 200,
       "cleaningFee": 150,
       "maxGuests": 4,
       "bookings": []
