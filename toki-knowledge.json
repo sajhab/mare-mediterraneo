@@ -38,7 +38,7 @@
     "cielo": {
       "name": "Suite Cielo",
       "floor": "First floor",
-      "price": 200,
+      "price": 180,
       "cleaningFee": 150,
       "maxGuests": 4,
       "minStay": 4,
