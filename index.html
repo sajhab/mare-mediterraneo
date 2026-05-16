@@ -61,6 +61,8 @@
 <!-- Google Search Console Verification -->
 <meta name="google-site-verification" content="jbxoL-Q0Y4DlhErJjNLPb-qwHMrNdQUNlQauiTNAf68" />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Tenor+Sans&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
 :root{
@@ -77,6 +79,55 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-serif;overflow-x:hidden}
+
+
+/* ── IONICONS ── */
+/* ── LANGUAGE SELECTOR LIGHTBOX ── */
+#langSelect{
+  display:none;position:fixed;inset:0;z-index:900;
+  background:rgba(5,5,10,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  align-items:center;justify-content:center;flex-direction:column;
+  animation:lsFadeIn 0.4s ease;
+}
+#langSelect.open{display:flex}
+@keyframes lsFadeIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+.ls-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;font-weight:300;
+  color:var(--pietra);letter-spacing:3px;margin-bottom:6px;text-align:center}
+.ls-sub{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--muted);
+  margin-bottom:48px;text-align:center}
+.ls-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 24px;max-width:380px;width:100%}
+.ls-btn{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:22px 16px;background:rgba(200,185,154,0.05);
+  border:1px solid rgba(200,185,154,0.15);border-radius:6px;
+  cursor:pointer;transition:all 0.25s;font-family:'Tenor Sans',sans-serif;
+}
+.ls-btn:hover{border-color:var(--gold);background:rgba(200,150,62,0.1)}
+.ls-btn:hover .ls-lang-name{color:var(--gold)}
+.ls-flag{font-size:32px;line-height:1}
+.ls-lang-name{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);transition:color 0.25s}
+.ls-lang-native{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--pietra)}
+.ls-skip{margin-top:28px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(200,185,154,0.3);cursor:pointer;border:none;background:none;
+  font-family:'Tenor Sans',sans-serif;transition:color 0.2s;padding:8px}
+.ls-skip:hover{color:var(--muted)}
+
+.feat-icon ion-icon,.am-icon ion-icon,.pol-icon ion-icon{
+  font-size:20px;display:block;color:var(--gold);
+}
+ion-icon{pointer-events:none}
+
+
+/* ── MAP PIN TOUCH TARGETS ── */
+.pin-grp{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pin-grp circle:last-of-type{
+  /* invisible larger hit area overlay */
+  r:14;fill:transparent;stroke:none;
+}
+@media(max-width:768px){
+  #salento-svg{touch-action:pan-y;-webkit-overflow-scrolling:touch}
+  .pin-grp{pointer-events:all}
+}
 
 /* ── LANG BAR ── */
 .lang-bar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:flex-end;
@@ -571,7 +622,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 
   <!-- SVG Map -->
   <div class="map-svg-wrap">
-    <svg id="salento-svg" viewBox="0 0 340 570" xmlns="http://www.w3.org/2000/svg">
+    <svg id="salento-svg" viewBox="0 0 340 570" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation">
       <defs>
         <linearGradient id="mmSeaA" x1="1" y1="0" x2="0.2" y2="1"><stop offset="0%" stop-color="#091525"/><stop offset="100%" stop-color="#0C1D32"/></linearGradient>
         <linearGradient id="mmSeaI" x1="0" y1="0" x2="0.8" y2="1"><stop offset="0%" stop-color="#0A1B2E"/><stop offset="100%" stop-color="#0D2138"/></linearGradient>
@@ -830,10 +881,6 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <div class="suite-badge"><span data-lang="en" class="al">Ground Floor · Garden</span><span data-lang="it">Piano Terra · Giardino</span><span data-lang="de">Erdgeschoss · Garten</span><span data-lang="fr">Rez-de-chaussée · Jardin</span></div>
         <div class="suite-name">Suite Pietra</div>
         <div class="suite-sub">La Suite del Giardino</div>
-        <div class="suite-price-row">
-          <span class="suite-price">€200</span>
-          <span class="suite-price-note">/ night · min 4 nights</span>
-        </div>
         <button class="expand-btn" onclick="toggleSuite('pietra')">
           <span data-lang="en" class="al">View details &amp; photos</span>
           <span data-lang="it">Dettagli e foto</span>
@@ -844,18 +891,18 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       </div>
       <div class="suite-details">
         <div class="suite-features">
-          <div class="feat"><span class="feat-icon">🛏️</span><span data-lang="en" class="al">2 Bedrooms</span><span data-lang="it">2 Camere</span><span data-lang="de">2 Schlafzimmer</span><span data-lang="fr">2 Chambres</span></div>
-          <div class="feat"><span class="feat-icon">🚿</span><span data-lang="en" class="al">1 Bathroom</span><span data-lang="it">1 Bagno</span><span data-lang="de">1 Badezimmer</span><span data-lang="fr">1 Salle de bain</span></div>
-          <div class="feat"><span class="feat-icon">🛋️</span><span data-lang="en" class="al">Living Room</span><span data-lang="it">Soggiorno</span><span data-lang="de">Wohnzimmer</span><span data-lang="fr">Salon</span></div>
-          <div class="feat"><span class="feat-icon">🍳</span><span data-lang="en" class="al">Full Kitchen</span><span data-lang="it">Cucina Completa</span><span data-lang="de">Küche</span><span data-lang="fr">Cuisine Équipée</span></div>
-          <div class="feat"><span class="feat-icon">🌿</span><span data-lang="en" class="al">Private Garden</span><span data-lang="it">Giardino Privato</span><span data-lang="de">Privatgarten</span><span data-lang="fr">Jardin Privé</span></div>
-          <div class="feat"><span class="feat-icon">🪑</span><span data-lang="en" class="al">Outdoor Dining</span><span data-lang="it">Pranzo Esterno</span><span data-lang="de">Außenessen</span><span data-lang="fr">Repas Extérieur</span></div>
-          <div class="feat"><span class="feat-icon">☀️</span><span data-lang="en" class="al">Sun Beds</span><span data-lang="it">Lettini</span><span data-lang="de">Sonnenliegen</span><span data-lang="fr">Bains de Soleil</span></div>
-          <div class="feat"><span class="feat-icon">🚗</span><span data-lang="en" class="al">Private Parking</span><span data-lang="it">Parcheggio Privato</span><span data-lang="de">Privat Parkplatz</span><span data-lang="fr">Parking Privé</span></div>
-          <div class="feat"><span class="feat-icon">❄️</span><span data-lang="en" class="al">2 Air Con</span><span data-lang="it">2 Aria Condizionata</span><span data-lang="de">2 Klimaanlage</span><span data-lang="fr">2 Climatisation</span></div>
-          <div class="feat"><span class="feat-icon">🌊</span><span data-lang="en" class="al">Outdoor Shower</span><span data-lang="it">Doccia Esterna</span><span data-lang="de">Außendusche</span><span data-lang="fr">Douche Extérieure</span></div>
-          <div class="feat"><span class="feat-icon">🫧</span><span data-lang="en" class="al">Washing Machine</span><span data-lang="it">Lavatrice</span><span data-lang="de">Waschmaschine</span><span data-lang="fr">Lave-linge</span></div>
-          <div class="feat"><span class="feat-icon">📶</span><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="bed-outline"></ion-icon></span><span data-lang="en" class="al">2 Bedrooms</span><span data-lang="it">2 Camere</span><span data-lang="de">2 Schlafzimmer</span><span data-lang="fr">2 Chambres</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="water-outline"></ion-icon></span><span data-lang="en" class="al">1 Bathroom</span><span data-lang="it">1 Bagno</span><span data-lang="de">1 Badezimmer</span><span data-lang="fr">1 Salle de bain</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="home-outline"></ion-icon></span><span data-lang="en" class="al">Living Room</span><span data-lang="it">Soggiorno</span><span data-lang="de">Wohnzimmer</span><span data-lang="fr">Salon</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="restaurant-outline"></ion-icon></span><span data-lang="en" class="al">Full Kitchen</span><span data-lang="it">Cucina Completa</span><span data-lang="de">Küche</span><span data-lang="fr">Cuisine Équipée</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="leaf-outline"></ion-icon></span><span data-lang="en" class="al">Private Garden</span><span data-lang="it">Giardino Privato</span><span data-lang="de">Privatgarten</span><span data-lang="fr">Jardin Privé</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="fast-food-outline"></ion-icon></span><span data-lang="en" class="al">Outdoor Dining</span><span data-lang="it">Pranzo Esterno</span><span data-lang="de">Außenessen</span><span data-lang="fr">Repas Extérieur</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="sunny-outline"></ion-icon></span><span data-lang="en" class="al">Sun Beds</span><span data-lang="it">Lettini</span><span data-lang="de">Sonnenliegen</span><span data-lang="fr">Bains de Soleil</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="car-outline"></ion-icon></span><span data-lang="en" class="al">Private Parking</span><span data-lang="it">Parcheggio Privato</span><span data-lang="de">Privat Parkplatz</span><span data-lang="fr">Parking Privé</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="snow-outline"></ion-icon></span><span data-lang="en" class="al">2 Air Con</span><span data-lang="it">2 Aria Condizionata</span><span data-lang="de">2 Klimaanlage</span><span data-lang="fr">2 Climatisation</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="water-outline"></ion-icon></span><span data-lang="en" class="al">Outdoor Shower</span><span data-lang="it">Doccia Esterna</span><span data-lang="de">Außendusche</span><span data-lang="fr">Douche Extérieure</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="shirt-outline"></ion-icon></span><span data-lang="en" class="al">Washing Machine</span><span data-lang="it">Lavatrice</span><span data-lang="de">Waschmaschine</span><span data-lang="fr">Lave-linge</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="wifi-outline"></ion-icon></span><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></div>
         </div>
         <span class="photos-label">Photos</span>
         <div class="photo-grid">
@@ -881,10 +928,6 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <div class="suite-badge"><span data-lang="en" class="al">First Floor · Terrace</span><span data-lang="it">Primo Piano · Terrazza</span><span data-lang="de">Erstes Stockwerk · Terrasse</span><span data-lang="fr">Premier Étage · Terrasse</span></div>
         <div class="suite-name">Suite Cielo</div>
         <div class="suite-sub">La Suite della Terrazza</div>
-        <div class="suite-price-row">
-          <span class="suite-price">€200</span>
-          <span class="suite-price-note">/ night · min 4 nights</span>
-        </div>
         <button class="expand-btn" onclick="toggleSuite('cielo')">
           <span data-lang="en" class="al">View details &amp; photos</span>
           <span data-lang="it">Dettagli e foto</span>
@@ -895,18 +938,18 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       </div>
       <div class="suite-details">
         <div class="suite-features">
-          <div class="feat"><span class="feat-icon">🛏️</span><span data-lang="en" class="al">2 Bedrooms</span><span data-lang="it">2 Camere</span><span data-lang="de">2 Schlafzimmer</span><span data-lang="fr">2 Chambres</span></div>
-          <div class="feat"><span class="feat-icon">🚿</span><span data-lang="en" class="al">1 Bathroom</span><span data-lang="it">1 Bagno</span><span data-lang="de">1 Badezimmer</span><span data-lang="fr">1 Salle de bain</span></div>
-          <div class="feat"><span class="feat-icon">🍳</span><span data-lang="en" class="al">Open Kitchen</span><span data-lang="it">Cucina Aperta</span><span data-lang="de">Offene Küche</span><span data-lang="fr">Cuisine Ouverte</span></div>
-          <div class="feat"><span class="feat-icon">🛋️</span><span data-lang="en" class="al">Living Area</span><span data-lang="it">Area Living</span><span data-lang="de">Wohnbereich</span><span data-lang="fr">Espace Vie</span></div>
-          <div class="feat"><span class="feat-icon">🌅</span><span data-lang="en" class="al">Large Terrace</span><span data-lang="it">Terrazza Grande</span><span data-lang="de">Große Terrasse</span><span data-lang="fr">Grande Terrasse</span></div>
-          <div class="feat"><span class="feat-icon">🪑</span><span data-lang="en" class="al">Terrace Furniture</span><span data-lang="it">Mobili Terrazza</span><span data-lang="de">Terrassenmöbel</span><span data-lang="fr">Mobilier Terrasse</span></div>
-          <div class="feat"><span class="feat-icon">☀️</span><span data-lang="en" class="al">Sun Area</span><span data-lang="it">Area Sole</span><span data-lang="de">Sonnenbereich</span><span data-lang="fr">Espace Soleil</span></div>
-          <div class="feat"><span class="feat-icon">🚗</span><span data-lang="en" class="al">Parking On Site</span><span data-lang="it">Parcheggio in Loco</span><span data-lang="de">Parkplatz vor Ort</span><span data-lang="fr">Parking Sur Place</span></div>
-          <div class="feat"><span class="feat-icon">❄️</span><span data-lang="en" class="al">2 Air Con</span><span data-lang="it">2 Aria Condizionata</span><span data-lang="de">2 Klimaanlage</span><span data-lang="fr">2 Climatisation</span></div>
-          <div class="feat"><span class="feat-icon">🌊</span><span data-lang="en" class="al">Outdoor Shower</span><span data-lang="it">Doccia Esterna</span><span data-lang="de">Außendusche</span><span data-lang="fr">Douche Extérieure</span></div>
-          <div class="feat"><span class="feat-icon">🫧</span><span data-lang="en" class="al">Washing Machine</span><span data-lang="it">Lavatrice</span><span data-lang="de">Waschmaschine</span><span data-lang="fr">Lave-linge</span></div>
-          <div class="feat"><span class="feat-icon">📶</span><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="bed-outline"></ion-icon></span><span data-lang="en" class="al">2 Bedrooms</span><span data-lang="it">2 Camere</span><span data-lang="de">2 Schlafzimmer</span><span data-lang="fr">2 Chambres</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="water-outline"></ion-icon></span><span data-lang="en" class="al">1 Bathroom</span><span data-lang="it">1 Bagno</span><span data-lang="de">1 Badezimmer</span><span data-lang="fr">1 Salle de bain</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="restaurant-outline"></ion-icon></span><span data-lang="en" class="al">Open Kitchen</span><span data-lang="it">Cucina Aperta</span><span data-lang="de">Offene Küche</span><span data-lang="fr">Cuisine Ouverte</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="home-outline"></ion-icon></span><span data-lang="en" class="al">Living Area</span><span data-lang="it">Area Living</span><span data-lang="de">Wohnbereich</span><span data-lang="fr">Espace Vie</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="partly-sunny-outline"></ion-icon></span><span data-lang="en" class="al">Large Terrace</span><span data-lang="it">Terrazza Grande</span><span data-lang="de">Große Terrasse</span><span data-lang="fr">Grande Terrasse</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="fast-food-outline"></ion-icon></span><span data-lang="en" class="al">Terrace Furniture</span><span data-lang="it">Mobili Terrazza</span><span data-lang="de">Terrassenmöbel</span><span data-lang="fr">Mobilier Terrasse</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="sunny-outline"></ion-icon></span><span data-lang="en" class="al">Sun Area</span><span data-lang="it">Area Sole</span><span data-lang="de">Sonnenbereich</span><span data-lang="fr">Espace Soleil</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="car-outline"></ion-icon></span><span data-lang="en" class="al">Parking On Site</span><span data-lang="it">Parcheggio in Loco</span><span data-lang="de">Parkplatz vor Ort</span><span data-lang="fr">Parking Sur Place</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="snow-outline"></ion-icon></span><span data-lang="en" class="al">2 Air Con</span><span data-lang="it">2 Aria Condizionata</span><span data-lang="de">2 Klimaanlage</span><span data-lang="fr">2 Climatisation</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="water-outline"></ion-icon></span><span data-lang="en" class="al">Outdoor Shower</span><span data-lang="it">Doccia Esterna</span><span data-lang="de">Außendusche</span><span data-lang="fr">Douche Extérieure</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="shirt-outline"></ion-icon></span><span data-lang="en" class="al">Washing Machine</span><span data-lang="it">Lavatrice</span><span data-lang="de">Waschmaschine</span><span data-lang="fr">Lave-linge</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="wifi-outline"></ion-icon></span><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></div>
         </div>
         <span class="photos-label">Photos</span>
         <div class="photo-grid">
@@ -935,10 +978,6 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <div class="suite-badge"><span data-lang="en" class="al">Entire Property · Best Value</span><span data-lang="it">Proprietà Intera · Miglior Valore</span><span data-lang="de">Gesamtes Anwesen · Bestes Preis-Leistung</span><span data-lang="fr">Propriété Entière · Meilleur Rapport</span></div>
         <div class="suite-name">Villa Completa</div>
         <div class="suite-sub">La Villa Intera</div>
-        <div class="suite-price-row">
-          <span class="suite-price">€350</span>
-          <span class="suite-price-note">/ night · save €50</span>
-        </div>
         <button class="expand-btn" onclick="toggleSuite('villa')">
           <span data-lang="en" class="al">View details &amp; photos</span>
           <span data-lang="it">Dettagli e foto</span>
@@ -949,17 +988,17 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       </div>
       <div class="suite-details">
         <div class="suite-features">
-          <div class="feat"><span class="feat-icon">🛏️</span><span data-lang="en" class="al">4 Bedrooms</span><span data-lang="it">4 Camere</span><span data-lang="de">4 Schlafzimmer</span><span data-lang="fr">4 Chambres</span></div>
-          <div class="feat"><span class="feat-icon">🚿</span><span data-lang="en" class="al">2 Bathrooms</span><span data-lang="it">2 Bagni</span><span data-lang="de">2 Badezimmer</span><span data-lang="fr">2 Salles de bain</span></div>
-          <div class="feat"><span class="feat-icon">👨‍👩‍👧‍👦</span><span data-lang="en" class="al">Up to 8 Guests</span><span data-lang="it">Fino a 8 Ospiti</span><span data-lang="de">Bis zu 8 Gäste</span><span data-lang="fr">Jusqu'à 8 Hôtes</span></div>
-          <div class="feat"><span class="feat-icon">🌿</span><span data-lang="en" class="al">Garden + Terrace</span><span data-lang="it">Giardino + Terrazza</span><span data-lang="de">Garten + Terrasse</span><span data-lang="fr">Jardin + Terrasse</span></div>
-          <div class="feat"><span class="feat-icon">❄️</span><span data-lang="en" class="al">4 Air Con</span><span data-lang="it">4 Aria Condizionata</span><span data-lang="de">4 Klimaanlage</span><span data-lang="fr">4 Climatisation</span></div>
-          <div class="feat"><span class="feat-icon">🚗</span><span data-lang="en" class="al">Full Parking</span><span data-lang="it">Parcheggio Completo</span><span data-lang="de">Voller Parkplatz</span><span data-lang="fr">Parking Complet</span></div>
-          <div class="feat"><span class="feat-icon">🍳</span><span data-lang="en" class="al">2 Full Kitchens</span><span data-lang="it">2 Cucine Complete</span><span data-lang="de">2 Küchen</span><span data-lang="fr">2 Cuisines</span></div>
-          <div class="feat"><span class="feat-icon">🌊</span><span data-lang="en" class="al">2 Outdoor Showers</span><span data-lang="it">2 Docce Esterne</span><span data-lang="de">2 Außenduschen</span><span data-lang="fr">2 Douches Ext.</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="bed-outline"></ion-icon></span><span data-lang="en" class="al">4 Bedrooms</span><span data-lang="it">4 Camere</span><span data-lang="de">4 Schlafzimmer</span><span data-lang="fr">4 Chambres</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="water-outline"></ion-icon></span><span data-lang="en" class="al">2 Bathrooms</span><span data-lang="it">2 Bagni</span><span data-lang="de">2 Badezimmer</span><span data-lang="fr">2 Salles de bain</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="people-outline"></ion-icon></span><span data-lang="en" class="al">Up to 8 Guests</span><span data-lang="it">Fino a 8 Ospiti</span><span data-lang="de">Bis zu 8 Gäste</span><span data-lang="fr">Jusqu'à 8 Hôtes</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="leaf-outline"></ion-icon></span><span data-lang="en" class="al">Garden + Terrace</span><span data-lang="it">Giardino + Terrazza</span><span data-lang="de">Garten + Terrasse</span><span data-lang="fr">Jardin + Terrasse</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="snow-outline"></ion-icon></span><span data-lang="en" class="al">4 Air Con</span><span data-lang="it">4 Aria Condizionata</span><span data-lang="de">4 Klimaanlage</span><span data-lang="fr">4 Climatisation</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="car-outline"></ion-icon></span><span data-lang="en" class="al">Full Parking</span><span data-lang="it">Parcheggio Completo</span><span data-lang="de">Voller Parkplatz</span><span data-lang="fr">Parking Complet</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="restaurant-outline"></ion-icon></span><span data-lang="en" class="al">2 Full Kitchens</span><span data-lang="it">2 Cucine Complete</span><span data-lang="de">2 Küchen</span><span data-lang="fr">2 Cuisines</span></div>
+          <div class="feat"><span class="feat-icon"><ion-icon name="water-outline"></ion-icon></span><span data-lang="en" class="al">2 Outdoor Showers</span><span data-lang="it">2 Docce Esterne</span><span data-lang="de">2 Außenduschen</span><span data-lang="fr">2 Douches Ext.</span></div>
         </div>
         <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);line-height:1.65;margin:0 0 18px;padding:14px;background:rgba(200,150,62,0.07);border-radius:3px;border-left:2px solid var(--gold)">
-          ✦ Two couples travelling together? Each couple gets their own apartment, bathroom and entrance — privacy when you need it, togetherness when you want it.
+          <ion-icon name="star-outline" style="font-size:14px;margin-right:6px;vertical-align:middle;color:var(--gold)"></ion-icon>Two couples travelling together? Each couple gets their own apartment, bathroom and entrance — privacy when you need it, togetherness when you want it.
         </p>
         <span class="photos-label">Photos</span>
         <div class="photo-grid">
@@ -1018,7 +1057,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   </div>
   <div class="stats reveal rd2">
     <div class="stat"><span class="stat-n">400m</span><span class="stat-l">Dal Mare</span></div>
-    <div class="stat"><span class="stat-n">15'</span><span class="stat-l">Da Lecce</span></div>
+    <div class="stat"><span class="stat-n">20'</span><span class="stat-l">Da Lecce</span></div>
     <div class="stat"><span class="stat-n">2</span><span class="stat-l">Private Suites</span></div>
     <div class="stat"><span class="stat-n">8</span><span class="stat-l">Max Guests</span></div>
   </div>
@@ -1031,18 +1070,18 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <h2 class="sec-title"><span data-lang="en" class="al">Everything<br><em>included.</em></span><span data-lang="it">Tutto<br><em>incluso.</em></span><span data-lang="de">Alles<br><em>inklusive.</em></span><span data-lang="fr">Tout<br><em>inclus.</em></span></h2>
   </div>
   <div class="am-grid reveal rd1">
-    <div class="am"><span class="am-icon">🌊</span><span class="am-name"><span data-lang="en" class="al">400m Sea</span><span data-lang="it">400m dal Mare</span><span data-lang="de">400m Meer</span><span data-lang="fr">400m Mer</span></span></div>
-    <div class="am"><span class="am-icon">❄️</span><span class="am-name"><span data-lang="en" class="al">Air Con</span><span data-lang="it">Aria Condizionata</span><span data-lang="de">Klimaanlage</span><span data-lang="fr">Climatisation</span></span></div>
-    <div class="am"><span class="am-icon">📶</span><span class="am-name"><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></span></div>
-    <div class="am"><span class="am-icon">🚗</span><span class="am-name"><span data-lang="en" class="al">Parking</span><span data-lang="it">Parcheggio</span><span data-lang="de">Parkplatz</span><span data-lang="fr">Parking</span></span></div>
-    <div class="am"><span class="am-icon">🍳</span><span class="am-name"><span data-lang="en" class="al">Full Kitchen</span><span data-lang="it">Cucina Completa</span><span data-lang="de">Küche</span><span data-lang="fr">Cuisine Équipée</span></span></div>
-    <div class="am"><span class="am-icon">🌿</span><span class="am-name"><span data-lang="en" class="al">Garden</span><span data-lang="it">Giardino</span><span data-lang="de">Garten</span><span data-lang="fr">Jardin</span></span></div>
-    <div class="am"><span class="am-icon">🌅</span><span class="am-name"><span data-lang="en" class="al">Terrace</span><span data-lang="it">Terrazza</span><span data-lang="de">Terrasse</span><span data-lang="fr">Terrasse</span></span></div>
-    <div class="am"><span class="am-icon">🪑</span><span class="am-name"><span data-lang="en" class="al">Outdoor Dining</span><span data-lang="it">Pranzo Esterno</span><span data-lang="de">Außenküche</span><span data-lang="fr">Repas Extérieur</span></span></div>
-    <div class="am"><span class="am-icon">☀️</span><span class="am-name"><span data-lang="en" class="al">Sun Beds</span><span data-lang="it">Lettini</span><span data-lang="de">Sonnenliegen</span><span data-lang="fr">Bains de Soleil</span></span></div>
-    <div class="am"><span class="am-icon">🌊</span><span class="am-name"><span data-lang="en" class="al">Outdoor Shower</span><span data-lang="it">Doccia Esterna</span><span data-lang="de">Außendusche</span><span data-lang="fr">Douche Extérieure</span></span></div>
-    <div class="am"><span class="am-icon">🫧</span><span class="am-name"><span data-lang="en" class="al">Washing Machine</span><span data-lang="it">Lavatrice</span><span data-lang="de">Waschmaschine</span><span data-lang="fr">Lave-linge</span></span></div>
-    <div class="am"><span class="am-icon">🔑</span><span class="am-name"><span data-lang="en" class="al">Private Entrance</span><span data-lang="it">Ingresso Privato</span><span data-lang="de">Privater Eingang</span><span data-lang="fr">Entrée Privée</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="water-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">400m Sea</span><span data-lang="it">400m dal Mare</span><span data-lang="de">400m Meer</span><span data-lang="fr">400m Mer</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="snow-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Air Con</span><span data-lang="it">Aria Condizionata</span><span data-lang="de">Klimaanlage</span><span data-lang="fr">Climatisation</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="wifi-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="car-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Parking</span><span data-lang="it">Parcheggio</span><span data-lang="de">Parkplatz</span><span data-lang="fr">Parking</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="restaurant-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Full Kitchen</span><span data-lang="it">Cucina Completa</span><span data-lang="de">Küche</span><span data-lang="fr">Cuisine Équipée</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="leaf-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Garden</span><span data-lang="it">Giardino</span><span data-lang="de">Garten</span><span data-lang="fr">Jardin</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="partly-sunny-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Terrace</span><span data-lang="it">Terrazza</span><span data-lang="de">Terrasse</span><span data-lang="fr">Terrasse</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="fast-food-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Outdoor Dining</span><span data-lang="it">Pranzo Esterno</span><span data-lang="de">Außenküche</span><span data-lang="fr">Repas Extérieur</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="sunny-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Sun Beds</span><span data-lang="it">Lettini</span><span data-lang="de">Sonnenliegen</span><span data-lang="fr">Bains de Soleil</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="water-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Outdoor Shower</span><span data-lang="it">Doccia Esterna</span><span data-lang="de">Außendusche</span><span data-lang="fr">Douche Extérieure</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="shirt-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Washing Machine</span><span data-lang="it">Lavatrice</span><span data-lang="de">Waschmaschine</span><span data-lang="fr">Lave-linge</span></span></div>
+    <div class="am"><span class="am-icon"><ion-icon name="key-outline"></ion-icon></span><span class="am-name"><span data-lang="en" class="al">Private Entrance</span><span data-lang="it">Ingresso Privato</span><span data-lang="de">Privater Eingang</span><span data-lang="fr">Entrée Privée</span></span></div>
   </div>
 </section>
 
@@ -1065,12 +1104,17 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 <section id="booking">
   <div class="reveal">
     <p class="sec-label">Prenota Diretto</p>
-    <h2 class="sec-title"><span data-lang="en" class="al">Book direct.<br><em>No fees.</em></span><span data-lang="it">Prenota diretto.<br><em>Nessuna commissione.</em></span><span data-lang="de">Direkt buchen.<br><em>Keine Gebühren.</em></span><span data-lang="fr">Réservation directe.<br><em>Sans frais.</em></span></h2>
+    <h2 class="sec-title">
+      <span data-lang="en" class="al">Book direct.<br><em>No fees.</em></span>
+      <span data-lang="it">Prenota diretto.<br><em>Nessuna commissione.</em></span>
+      <span data-lang="de">Direkt buchen.<br><em>Keine Gebühren.</em></span>
+      <span data-lang="fr">Réservation directe.<br><em>Sans frais.</em></span>
+    </h2>
   </div>
   <div class="book-tabs reveal rd1">
-    <button class="book-tab active" onclick="selTab('pietra',200,150)" id="tab-pietra">Suite Pietra</button>
-    <button class="book-tab" onclick="selTab('cielo',180,150)" id="tab-cielo">Suite Cielo</button>
-    <button class="book-tab" onclick="selTab('villa',350,250)" id="tab-villa">Villa</button>
+    <button class="book-tab active" onclick="bkSelTab('pietra')" id="tab-pietra">Suite Pietra</button>
+    <button class="book-tab"        onclick="bkSelTab('cielo')"  id="tab-cielo">Suite Cielo</button>
+    <button class="book-tab"        onclick="bkSelTab('villa')"  id="tab-villa">Villa</button>
   </div>
   <div class="book-card reveal rd2">
     <div class="price-row">
@@ -1083,12 +1127,13 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       <div class="f-field"><span class="f-label">Check-in</span><input type="date" class="f-input" id="checkin"></div>
       <div class="f-field"><span class="f-label">Check-out</span><input type="date" class="f-input" id="checkout"></div>
     </div>
+    <div class="bk-msg" id="bkInlineMsg"></div>
     <div class="g-field">
       <div><span class="f-label">Guests</span><div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia)" id="gdisp">2 guests</div></div>
       <div class="g-ctrl">
-        <button class="g-btn" onclick="chg(-1)">−</button>
+        <button class="g-btn" onclick="bkChg(-1)">−</button>
         <span class="g-num" id="gnum">2</span>
-        <button class="g-btn" onclick="chg(1)">+</button>
+        <button class="g-btn" onclick="bkChg(1)">+</button>
       </div>
     </div>
     <div class="psummary" id="psummary">
@@ -1096,29 +1141,31 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       <div class="ps-row"><span class="ps-label">Cleaning fee</span><span class="ps-val" id="ctotal"></span></div>
       <div class="ps-total"><span class="ps-total-label">Total</span><span class="ps-total-val" id="gtotal"></span></div>
     </div>
-    <button class="submit-btn" onclick="submitBook()">
+    <button class="submit-btn" id="bkRequestBtn" onclick="bkOpenPanel()">
       <span data-lang="en" class="al">Request Booking</span>
       <span data-lang="it">Richiedi Prenotazione</span>
       <span data-lang="de">Buchung anfragen</span>
       <span data-lang="fr">Demander une Réservation</span>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </button>
-    <a href="https://wa.me/35699699184" target="_blank" class="wa-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D166"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      <span data-lang="en" class="al">Chat on WhatsApp</span>
-      <span data-lang="it">Scrivici su WhatsApp</span>
-      <span data-lang="de">WhatsApp schreiben</span>
-      <span data-lang="fr">Chat sur WhatsApp</span>
-    </a>
+    <!-- Toki AI hint -->
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:10px;background:rgba(200,185,154,0.04);border:1px solid rgba(200,185,154,0.12);border-radius:3px">
+      <ion-icon name="chatbubble-ellipses-outline" style="font-size:22px;color:var(--gold);flex-shrink:0"></ion-icon>
+      <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);line-height:1.5">
+        <span data-lang="en" class="al">Have a question? Our AI concierge <strong style="color:var(--pietra);font-style:normal">Toki</strong> is live 24/7 — tap the wave icon below.</span>
+        <span data-lang="de">Haben Sie eine Frage? Unser KI-Assistent <strong style="color:var(--pietra);font-style:normal">Toki</strong> antwortet rund um die Uhr.</span>
+        <span data-lang="it">Hai una domanda? Il nostro concierge AI <strong style="color:var(--pietra);font-style:normal">Toki</strong> è disponibile 24/7.</span>
+        <span data-lang="fr">Une question ? Notre concierge IA <strong style="color:var(--pietra);font-style:normal">Toki</strong> est disponible 24h/24.</span>
+      </span>
+    </div>
     <p class="book-note">
-      <span data-lang="en" class="al">Secure payment via Stripe · Free to enquire · Min 4 nights</span>
-      <span data-lang="it">Pagamento sicuro via Stripe · Min 4 notti</span>
-      <span data-lang="de">Sichere Zahlung via Stripe · Min 4 Nächte</span>
-      <span data-lang="fr">Paiement sécurisé via Stripe · Min 4 nuits</span>
+      <span data-lang="en" class="al">Free to enquire · Stripe payment coming soon · Min 4 nights</span>
+      <span data-lang="it">Richiesta gratuita · Min 4 notti</span>
+      <span data-lang="de">Kostenlose Anfrage · Min 4 Nächte</span>
+      <span data-lang="fr">Demande gratuite · Min 4 nuits</span>
     </p>
   </div>
 </section>
-
 <!-- REVIEWS -->
 <section id="reviews">
   <div class="reveal"><p class="sec-label">Ospiti</p><h2 class="sec-title">
@@ -1143,12 +1190,12 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
       <span data-lang="fr">Bon à<br><em>savoir.</em></span>
     </h2></div>
   <div class="pol-grid reveal rd1">
-    <div class="pol"><span class="pol-icon">🕐</span><div><div class="pol-title"><span data-lang="en" class="al">Check-in / Check-out</span><span data-lang="it">Check-in / Check-out</span><span data-lang="de">Check-in / Check-out</span><span data-lang="fr">Arrivée / Départ</span></div><p class="pol-text"><span data-lang="en" class="al">Check-in from 3:00 PM · Check-out by 10:00 AM</span><span data-lang="it">Check-in dalle 15:00 · Check-out entro le 10:00</span><span data-lang="de">Check-in ab 15:00 Uhr · Check-out bis 10:00 Uhr</span><span data-lang="fr">Arrivée à partir de 15h · Départ avant 10h</span></p></div></div>
-    <div class="pol"><span class="pol-icon">❌</span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — Low Season (Oct–May)</span><span data-lang="it">Cancellazione — Bassa Stagione (Ott–Mag)</span><span data-lang="de">Stornierung — Nebensaison (Okt–Mai)</span><span data-lang="fr">Annulation — Basse Saison (Oct–Mai)</span></div><p class="pol-text"><span data-lang="en" class="al">Full refund if cancelled 5+ days before. No refund under 5 days.</span><span data-lang="it">Rimborso completo se cancellato 5+ giorni prima. Nessun rimborso sotto i 5 giorni.</span><span data-lang="de">Volle Rückerstattung bei Stornierung 5+ Tage vorher. Keine Rückerstattung unter 5 Tagen.</span><span data-lang="fr">Remboursement complet si annulé 5+ jours avant. Aucun remboursement en dessous de 5 jours.</span></p></div></div>
-    <div class="pol"><span class="pol-icon">📋</span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — High Season (Jun–Sep)</span><span data-lang="it">Cancellazione — Alta Stagione (Giu–Set)</span><span data-lang="de">Stornierung — Hochsaison (Jun–Sep)</span><span data-lang="fr">Annulation — Haute Saison (Juin–Sep)</span></div><p class="pol-text"><span data-lang="en" class="al">50% refund if cancelled 7+ days before. No refund under 7 days.</span><span data-lang="it">Rimborso del 50% se cancellato 7+ giorni prima. Nessun rimborso sotto i 7 giorni.</span><span data-lang="de">50% Rückerstattung bei Stornierung 7+ Tage vorher. Keine Rückerstattung unter 7 Tagen.</span><span data-lang="fr">50% de remboursement si annulé 7+ jours avant. Aucun remboursement en dessous de 7 jours.</span></p></div></div>
-    <div class="pol"><span class="pol-icon">🚭</span><div><div class="pol-title"><span data-lang="en" class="al">No Smoking</span><span data-lang="it">Vietato Fumare</span><span data-lang="de">Rauchverbot</span><span data-lang="fr">Non Fumeur</span></div><p class="pol-text"><span data-lang="en" class="al">Strictly no smoking inside the apartments.</span><span data-lang="it">Assolutamente vietato fumare all'interno degli appartamenti.</span><span data-lang="de">Strenges Rauchverbot in den Apartments.</span><span data-lang="fr">Interdiction absolue de fumer dans les appartements.</span></p></div></div>
-    <div class="pol"><span class="pol-icon">🐾</span><div><div class="pol-title"><span data-lang="en" class="al">No Pets</span><span data-lang="it">Nessun Animale</span><span data-lang="de">Keine Haustiere</span><span data-lang="fr">Animaux Interdits</span></div><p class="pol-text"><span data-lang="en" class="al">We do not accept pets in either apartment.</span><span data-lang="it">Non accettiamo animali domestici in nessuno dei due appartamenti.</span><span data-lang="de">Wir akzeptieren keine Haustiere in beiden Apartments.</span><span data-lang="fr">Nous n'acceptons pas les animaux dans aucun des appartements.</span></p></div></div>
-    <div class="pol"><span class="pol-icon">🌙</span><div><div class="pol-title"><span data-lang="en" class="al">Minimum Stay</span><span data-lang="it">Soggiorno Minimo</span><span data-lang="de">Mindestaufenthalt</span><span data-lang="fr">Séjour Minimum</span></div><p class="pol-text"><span data-lang="en" class="al">4 nights minimum for all apartments and the full villa.</span><span data-lang="it">Minimo 4 notti per tutti gli appartamenti e la villa completa.</span><span data-lang="de">Mindestens 4 Nächte für alle Apartments und die Villa.</span><span data-lang="fr">4 nuits minimum pour tous les appartements et la villa entière.</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="time-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Check-in / Check-out</span><span data-lang="it">Check-in / Check-out</span><span data-lang="de">Check-in / Check-out</span><span data-lang="fr">Arrivée / Départ</span></div><p class="pol-text"><span data-lang="en" class="al">Check-in from 3:00 PM · Check-out by 10:00 AM</span><span data-lang="it">Check-in dalle 15:00 · Check-out entro le 10:00</span><span data-lang="de">Check-in ab 15:00 Uhr · Check-out bis 10:00 Uhr</span><span data-lang="fr">Arrivée à partir de 15h · Départ avant 10h</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="close-circle-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — Low Season (Oct–May)</span><span data-lang="it">Cancellazione — Bassa Stagione (Ott–Mag)</span><span data-lang="de">Stornierung — Nebensaison (Okt–Mai)</span><span data-lang="fr">Annulation — Basse Saison (Oct–Mai)</span></div><p class="pol-text"><span data-lang="en" class="al">Full refund if cancelled 5+ days before. No refund under 5 days.</span><span data-lang="it">Rimborso completo se cancellato 5+ giorni prima. Nessun rimborso sotto i 5 giorni.</span><span data-lang="de">Volle Rückerstattung bei Stornierung 5+ Tage vorher. Keine Rückerstattung unter 5 Tagen.</span><span data-lang="fr">Remboursement complet si annulé 5+ jours avant. Aucun remboursement en dessous de 5 jours.</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="document-text-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — High Season (Jun–Sep)</span><span data-lang="it">Cancellazione — Alta Stagione (Giu–Set)</span><span data-lang="de">Stornierung — Hochsaison (Jun–Sep)</span><span data-lang="fr">Annulation — Haute Saison (Juin–Sep)</span></div><p class="pol-text"><span data-lang="en" class="al">50% refund if cancelled 7+ days before. No refund under 7 days.</span><span data-lang="it">Rimborso del 50% se cancellato 7+ giorni prima. Nessun rimborso sotto i 7 giorni.</span><span data-lang="de">50% Rückerstattung bei Stornierung 7+ Tage vorher. Keine Rückerstattung unter 7 Tagen.</span><span data-lang="fr">50% de remboursement si annulé 7+ jours avant. Aucun remboursement en dessous de 7 jours.</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="ban-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">No Smoking</span><span data-lang="it">Vietato Fumare</span><span data-lang="de">Rauchverbot</span><span data-lang="fr">Non Fumeur</span></div><p class="pol-text"><span data-lang="en" class="al">Strictly no smoking inside the apartments.</span><span data-lang="it">Assolutamente vietato fumare all'interno degli appartamenti.</span><span data-lang="de">Strenges Rauchverbot in den Apartments.</span><span data-lang="fr">Interdiction absolue de fumer dans les appartements.</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="paw-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">No Pets</span><span data-lang="it">Nessun Animale</span><span data-lang="de">Keine Haustiere</span><span data-lang="fr">Animaux Interdits</span></div><p class="pol-text"><span data-lang="en" class="al">We do not accept pets in either apartment.</span><span data-lang="it">Non accettiamo animali domestici in nessuno dei due appartamenti.</span><span data-lang="de">Wir akzeptieren keine Haustiere in beiden Apartments.</span><span data-lang="fr">Nous n'acceptons pas les animaux dans aucun des appartements.</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="moon-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Minimum Stay</span><span data-lang="it">Soggiorno Minimo</span><span data-lang="de">Mindestaufenthalt</span><span data-lang="fr">Séjour Minimum</span></div><p class="pol-text"><span data-lang="en" class="al">4 nights minimum for all apartments and the full villa.</span><span data-lang="it">Minimo 4 notti per tutti gli appartamenti e la villa completa.</span><span data-lang="de">Mindestens 4 Nächte für alle Apartments und die Villa.</span><span data-lang="fr">4 nuits minimum pour tous les appartements et la villa entière.</span></p></div></div>
   </div>
 </section>
 
@@ -1205,6 +1252,8 @@ function setLang(l){
   document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
   document.querySelectorAll('[data-lang]').forEach(el=>el.classList.toggle('al',el.getAttribute('data-lang')===l));
 }
+// Apply saved language choice immediately on page load
+(function(){var saved=localStorage.getItem('mm_lang_chosen');if(saved&&saved!=='en')setLang(saved);})();
 
 // ── NAV ──
 window.addEventListener('scroll',()=>{
@@ -1232,48 +1281,214 @@ function selectSuite(n){
   selTab(n,p[n][0],p[n][1]);
 }
 
-// ── BOOKING ──
-let cp=200,cc=150,guests=2,maxG=4;
-function selTab(s,p,c){
-  // Use live prices if available
-  if (window.LIVE_PRICES && window.LIVE_PRICES[s]) {
-    p = window.LIVE_PRICES[s].price;
-    c = window.LIVE_PRICES[s].cleaning;
+// ── BOOKING ENGINE ──
+(function(){
+'use strict';
+var CFG={
+  SB_URL:'https://wbosfegdgizkygxjxjiz.supabase.co',
+  SB_KEY:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg',
+  RESEND_KEY:'YOUR_RESEND_API_KEY',
+  FROM_EMAIL:'hello@maremediterraneo.com',
+  OWNER_EMAIL:'YOUR_EMAIL@example.com',
+  OWNER_WA:'35699699184',
+  MIN_NIGHTS:4,
+};
+var SUITES={
+  pietra:{name:'Suite Pietra',   price:200,cleaning:150,maxG:4,discount:0},
+  cielo: {name:'Suite Cielo',    price:200,cleaning:150,maxG:4,discount:0},
+  villa: {name:'Villa Completa', price:350,cleaning:250,maxG:8,discount:0},
+};
+var BK={suite:'pietra',checkin:'',checkout:'',nights:0,guests:2,price:0,cleaning:0,total:0,name:'',email:'',phone:'',message:''};
+var _bookings=[],_blocked=[],_panelOpen=false;
+
+function qs(id){return document.getElementById(id);}
+function dStr(d){return d.toISOString().split('T')[0];}
+function fmtDate(s){if(!s)return'—';var p=s.split('-');return p[2]+'.'+p[1]+'.'+p[0];}
+function nCount(ci,co){return Math.round((new Date(co)-new Date(ci))/86400000);}
+function overlaps(s1,e1,s2,e2){return s1<e2&&e1>s2;}
+
+function sbHdrs(){return{'apikey':CFG.SB_KEY,'Authorization':'Bearer '+CFG.SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};}
+function sbGet(table,extra){
+  var orderCol=table==='blocked_dates'?'from_date':'checkin';
+  var url=CFG.SB_URL+'/rest/v1/'+table+'?apikey='+CFG.SB_KEY+'&order='+orderCol+'.asc'+(extra?'&'+extra:'');
+  return fetch(url,{headers:sbHdrs()}).then(function(r){return r.json();});
+}
+function sbInsert(table,obj){
+  return fetch(CFG.SB_URL+'/rest/v1/'+table+'?apikey='+CFG.SB_KEY,{method:'POST',headers:sbHdrs(),body:JSON.stringify(obj)}).then(function(r){return r.json();});
+}
+
+function loadAvailability(){
+  sbGet('bookings').then(function(rows){_bookings=Array.isArray(rows)?rows:[];return sbGet('blocked_dates');})
+    .then(function(rows){_blocked=Array.isArray(rows)?rows:[];}).catch(function(){});
+}
+
+function loadLivePrices(){
+  fetch(CFG.SB_URL+'/rest/v1/settings?apikey='+CFG.SB_KEY+'&key=eq.prices',{headers:sbHdrs()})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      if(!rows||!rows[0]||!rows[0].value)return;
+      var p=rows[0].value;
+      if(p.pietra)         SUITES.pietra.price    =p.pietra;
+      if(p.cielo)          SUITES.cielo.price     =p.cielo;
+      if(p.villa)          SUITES.villa.price     =p.villa;
+      if(p.cleaningPietra) SUITES.pietra.cleaning =p.cleaningPietra;
+      if(p.cleaningCielo)  SUITES.cielo.cleaning  =p.cleaningCielo;
+      if(p.cleaningVilla)  SUITES.villa.cleaning  =p.cleaningVilla;
+      if(p.minStay)        CFG.MIN_NIGHTS         =p.minStay;
+      // Discount: set discountPietra / discountCielo / discountVilla (0-100) in Supabase settings
+      if(p.discountPietra) SUITES.pietra.discount =p.discountPietra;
+      if(p.discountCielo)  SUITES.cielo.discount  =p.discountCielo;
+      if(p.discountVilla)  SUITES.villa.discount  =p.discountVilla;
+      bkRefreshDisplay();
+    }).catch(function(){});
+}
+
+function isConflict(suite,ci,co){
+  var i,b,bSuite;
+  for(i=0;i<_bookings.length;i++){
+    b=_bookings[i];if(!b.checkin||!b.checkout)continue;
+    bSuite=(b.suite||'').toLowerCase();
+    if(suite==='villa'){if((bSuite==='villa'||bSuite==='pietra'||bSuite==='cielo')&&!b.linked_to_villa&&overlaps(ci,co,b.checkin,b.checkout))return true;}
+    else{if((bSuite===suite||bSuite==='villa')&&overlaps(ci,co,b.checkin,b.checkout))return true;}
   }
-  cp=p;cc=c;maxG=s==='villa'?8:4;
-  if(guests>maxG){guests=maxG;updG();}
-  document.querySelectorAll('.book-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+s).classList.add('active');
-  document.getElementById('bprice').textContent='€'+p;
-  document.getElementById('cnote').textContent=`+ €${c} one-time cleaning fee · Minimum 4 nights`;
-  calcTotal();
-  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+  for(i=0;i<_blocked.length;i++){
+    b=_blocked[i];if(!b.from_date||!b.to_date)continue;
+    bSuite=(b.suite||'').toLowerCase();
+    var applies=bSuite==='all'||bSuite===suite||(suite==='villa'&&(bSuite==='pietra'||bSuite==='cielo'))||(suite!=='villa'&&bSuite==='villa');
+    if(applies&&overlaps(ci,co,b.from_date,b.to_date))return true;
+  }
+  return false;
 }
-function chg(d){guests=Math.max(1,Math.min(maxG,guests+d));updG();}
-function updG(){document.getElementById('gnum').textContent=guests;document.getElementById('gdisp').textContent=guests+' guest'+(guests>1?'s':'');}
-function calcTotal(){
-  const ci=document.getElementById('checkin').value,co=document.getElementById('checkout').value;
-  if(!ci||!co){document.getElementById('psummary').style.display='none';return;}
-  const n=Math.round((new Date(co)-new Date(ci))/86400000);
-  if(n<4){alert('Minimum stay is 4 nights.');return;}
-  document.getElementById('ptotal').textContent=`€${cp} × ${n} nights = €${n*cp}`;
-  document.getElementById('ctotal').textContent=`€${cc}`;
-  document.getElementById('gtotal').textContent=`€${n*cp+cc}`;
-  document.getElementById('psummary').style.display='block';
+
+function effPrice(s){
+  var disc=s.discount||0;
+  return disc>0?Math.round(s.price*(1-disc/100)):s.price;
 }
-document.getElementById('checkin').min=new Date().toISOString().split('T')[0];
-document.getElementById('checkin').addEventListener('change',function(){
-  const d=new Date(this.value);d.setDate(d.getDate()+4);
-  document.getElementById('checkout').min=d.toISOString().split('T')[0];calcTotal();
-});
-document.getElementById('checkout').addEventListener('change',calcTotal);
-function submitBook(){
-  const ci=document.getElementById('checkin').value,co=document.getElementById('checkout').value;
-  const s=document.querySelector('.book-tab.active').textContent.trim();
-  if(!ci||!co){alert('Please select your check-in and check-out dates.');return;}
-  const msg=encodeURIComponent(`Ciao! I'd like to book ${s} at Mare Mediterraneo.\n\nCheck-in: ${ci}\nCheck-out: ${co}\nGuests: ${guests}\n\nPlease confirm availability. Grazie!`);
-  window.open(`https://wa.me/35699699184?text=${msg}`,'_blank');
+
+function bkRefreshDisplay(){
+  var s=SUITES[BK.suite];
+  var disc=s.discount||0;
+  var ep=effPrice(s);
+  if(disc>0){
+    qs('bprice').innerHTML='<s style="font-size:22px;color:var(--muted);vertical-align:middle">€'+s.price+'</s>&nbsp;<span style="color:var(--gold)">€'+ep+'</span>';
+  }else{
+    qs('bprice').textContent='€'+s.price;
+  }
+  var discNote=disc>0?' · '+disc+'% off':'';
+  qs('cnote').textContent='+ €'+s.cleaning+' one-time cleaning fee · Minimum '+CFG.MIN_NIGHTS+' nights'+discNote;
+  bkCalcTotal();
 }
+
+function bkCalcTotal(){
+  var ci=qs('checkin').value,co=qs('checkout').value;
+  var msg=qs('bkInlineMsg');
+  if(!ci||!co){qs('psummary').style.display='none';msg.className='bk-msg';return;}
+  var n=nCount(ci,co);
+  if(n<CFG.MIN_NIGHTS){msg.textContent='Minimum stay is '+CFG.MIN_NIGHTS+' nights. Please adjust your dates.';msg.className='bk-msg warn';qs('psummary').style.display='none';return;}
+  if(isConflict(BK.suite,ci,co)){msg.textContent=SUITES[BK.suite].name+' is not available for these dates.';msg.className='bk-msg err';qs('psummary').style.display='none';return;}
+  msg.className='bk-msg';
+  var s=SUITES[BK.suite];
+  var disc=s.discount||0;
+  var ep=effPrice(s);
+  BK.checkin=ci;BK.checkout=co;BK.nights=n;BK.price=ep;BK.cleaning=s.cleaning;BK.total=n*ep+s.cleaning;
+  var rateHtml=disc>0?'<s style="color:var(--muted);font-size:12px">€'+s.price+'</s> <span style="color:var(--gold)">€'+ep+'</span> × '+n+' night'+(n>1?'s':'')+'  =  €'+(n*ep):'€'+ep+' × '+n+' night'+(n>1?'s':'')+'  =  €'+(n*ep);
+  qs('ptotal').innerHTML=rateHtml;
+  qs('ctotal').textContent='€'+s.cleaning;
+  qs('gtotal').textContent='€'+BK.total;
+  if(disc>0){qs('psummary').style.borderColor='rgba(200,150,62,0.4)';qs('psummary').style.background='rgba(200,150,62,0.09)';}
+  else{qs('psummary').style.borderColor='';qs('psummary').style.background='';}
+  qs('psummary').style.display='block';
+}
+
+window.bkSelTab=function(s){
+  BK.suite=s;
+  if(BK.guests>SUITES[s].maxG){BK.guests=SUITES[s].maxG;qs('gnum').textContent=BK.guests;qs('gdisp').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');}
+  document.querySelectorAll('.book-tab').forEach(function(t){t.classList.remove('active');});
+  qs('tab-'+s).classList.add('active');
+  bkRefreshDisplay();
+  qs('booking').scrollIntoView({behavior:'smooth'});
+};
+window.bkChg=function(d){BK.guests=Math.max(1,Math.min(SUITES[BK.suite].maxG,BK.guests+d));qs('gnum').textContent=BK.guests;qs('gdisp').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');};
+
+window.bkOpenPanel=function(){
+  BK.checkin=qs('checkin').value;BK.checkout=qs('checkout').value;
+  var msg=qs('bkInlineMsg');
+  if(!BK.checkin||!BK.checkout){msg.textContent='Please select your check-in and check-out dates.';msg.className='bk-msg warn';return;}
+  BK.nights=nCount(BK.checkin,BK.checkout);
+  if(BK.nights<CFG.MIN_NIGHTS){msg.textContent='Minimum stay is '+CFG.MIN_NIGHTS+' nights.';msg.className='bk-msg warn';return;}
+  if(isConflict(BK.suite,BK.checkin,BK.checkout)){msg.textContent=SUITES[BK.suite].name+' is not available for these dates.';msg.className='bk-msg err';return;}
+  var s=SUITES[BK.suite];var ep=effPrice(s);
+  BK.price=ep;BK.cleaning=s.cleaning;BK.total=BK.nights*ep+s.cleaning;
+  qs('bkR_suite').textContent=s.name;qs('bkR_in').textContent=fmtDate(BK.checkin);qs('bkR_out').textContent=fmtDate(BK.checkout);
+  qs('bkR_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');qs('bkR_total').textContent='€'+BK.total;
+  qs('bkPanelSuite').textContent=s.name;qs('bkPanelTitle').textContent='Your Details';
+  ['bkName','bkEmail','bkPhone','bkMsg'].forEach(function(id){qs(id).value='';});
+  qs('bkStep2Err').className='bk-msg';
+  bkShowStep(2);_panelOpen=true;qs('bk-overlay').classList.add('open');document.body.style.overflow='hidden';
+  setTimeout(function(){qs('bkName').focus();},320);
+};
+
+window.bkToSummary=function(){
+  var name=qs('bkName').value.trim(),email=qs('bkEmail').value.trim(),phone=qs('bkPhone').value.trim();
+  var err=qs('bkStep2Err');
+  if(!name){err.textContent='Please enter your full name.';err.className='bk-msg err';qs('bkName').focus();return;}
+  if(!email||!email.includes('@')){err.textContent='Please enter a valid email.';err.className='bk-msg err';qs('bkEmail').focus();return;}
+  if(!phone){err.textContent='Please enter your phone number.';err.className='bk-msg err';qs('bkPhone').focus();return;}
+  err.className='bk-msg';
+  BK.name=name;BK.email=email;BK.phone=phone;BK.message=qs('bkMsg').value.trim();
+  var s=SUITES[BK.suite];var disc=s.discount||0;var ep=effPrice(s);
+  qs('bkS_suite').textContent=s.name;qs('bkS_in').textContent=fmtDate(BK.checkin);qs('bkS_out').textContent=fmtDate(BK.checkout);
+  qs('bkS_nights').textContent=BK.nights+' nights';qs('bkS_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');
+  var rateLabel=disc>0?'€'+ep+' ('+disc+'% off €'+s.price+') × '+BK.nights:'€'+ep+' × '+BK.nights;
+  qs('bkS_rate').textContent=rateLabel;qs('bkS_cleaning').textContent='€'+s.cleaning;qs('bkS_total').textContent='€'+BK.total;
+  qs('bkS_name').textContent=name;qs('bkS_email').textContent=email;qs('bkS_phone').textContent=phone;
+  qs('bkPanelTitle').textContent='Confirm Booking';
+  window._bkDraft=JSON.parse(JSON.stringify(BK));
+  bkShowStep(3);qs('bk-panel').scrollTop=0;
+};
+
+window.bkBack=function(){qs('bkPanelTitle').textContent='Your Details';bkShowStep(2);qs('bk-panel').scrollTop=0;};
+
+window.bkSubmit=async function(){
+  var btn=qs('bkConfirmBtn');btn.disabled=true;btn.innerHTML='<span class="bk-spin"></span>&nbsp;Confirming…';
+  var id=Date.now();var ref='MM-'+id.toString(36).toUpperCase();
+  var base={id:id,suite:BK.suite,source:'direct',checkin:BK.checkin,checkout:BK.checkout,guest:BK.name,email:BK.email,phone:BK.phone,notes:BK.message,status:'pending',guests:BK.guests,nights:BK.nights,total_price:BK.total,linked_to_villa:false};
+  var rows=[base];
+  if(BK.suite==='villa'){rows.push(Object.assign({},base,{id:id+1,suite:'pietra',linked_to_villa:true}));rows.push(Object.assign({},base,{id:id+2,suite:'cielo',linked_to_villa:true}));}
+  try{await sbInsert('bookings',rows);_bookings=_bookings.concat(rows);}catch(e){console.error('[MM]',e);}
+  var s=SUITES[BK.suite];var disc=s.discount||0;var ep=effPrice(s);
+  var rateLabel=disc>0?'€'+ep+' ('+disc+'% off €'+s.price+') × '+BK.nights:'€'+ep+' × '+BK.nights;
+  function row(k,v){return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">'+v+'</td></tr>';}
+  function gRow(k,v,gold){return '<tr><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:'+(gold?'#C8963E':'#F5EFE6')+';text-align:right">'+v+'</td></tr>';}
+  var ownerHtml='<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">New booking — '+ref+'</h2><table style="border-collapse:collapse;width:100%">'+row('Suite',s.name)+row('Check-in',BK.checkin)+row('Check-out',BK.checkout)+row('Nights',BK.nights)+row('Guests',BK.guests)+row('Rate',rateLabel)+row('Cleaning','€'+s.cleaning)+'<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase">TOTAL</td><td style="padding:10px 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr>'+row('Name',BK.name)+row('Email',BK.email)+row('Phone',BK.phone)+(BK.message?row('Message',BK.message):'')+'</table></div>';
+  var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking request is received</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">Reference: '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow('Suite',s.name,true)+gRow('Check-in',BK.checkin+' · from 15:00',false)+gRow('Check-out',BK.checkout+' · by 10:00',false)+gRow('Nights',BK.nights,false)+gRow('Guests',BK.guests,false)+gRow('Rate',rateLabel,false)+gRow('Cleaning','€'+s.cleaning,false)+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">TOTAL</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table><div style="margin:24px 0;padding:18px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.2);border-radius:4px"><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">We will confirm your booking within 24 hours. Questions? <a href="https://wa.me/35699699184" style="color:#C8963E">WhatsApp +356 9969 9184</a></p></div><p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
+  var emails=[{to:CFG.OWNER_EMAIL,subject:'[Mare Med] New booking — '+ref+' — '+BK.name,html:ownerHtml},{to:BK.email,subject:'Booking received — '+s.name+' — '+ref,html:guestHtml}];
+  try{for(var i=0;i<emails.length;i++){await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+CFG.RESEND_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:emails[i].to,subject:emails[i].subject,html:emails[i].html,reply_to:CFG.OWNER_EMAIL})});}}catch(e){console.log('[MM] Email error:',e.message);}
+  var waText=encodeURIComponent('🌊 New booking — '+ref+'\n\nSuite: '+s.name+'\nCheck-in: '+BK.checkin+'\nCheck-out: '+BK.checkout+'\nNights: '+BK.nights+'  |  Guests: '+BK.guests+'\nTotal: €'+BK.total+'\n\nGuest: '+BK.name+'\nEmail: '+BK.email+'\nPhone: '+BK.phone+(BK.message?'\nMessage: '+BK.message:''));
+  window.open('https://wa.me/'+CFG.OWNER_WA+'?text='+waText,'_blank');
+  qs('bkD_suite').textContent=s.name;qs('bkD_in').textContent=fmtDate(BK.checkin);qs('bkD_out').textContent=fmtDate(BK.checkout);qs('bkD_total').textContent='€'+BK.total;
+  qs('bkRef').textContent='Reference: '+ref;
+  qs('bkConfirmMsg').innerHTML='Thank you, <strong>'+BK.name.split(' ')[0]+'</strong>! We\'ve received your request and will confirm within 24 hours.<br><br>A confirmation email is on its way to <em>'+BK.email+'</em>.';
+  qs('bkPanelTitle').textContent='Booking Received';
+  bkShowStep(4);qs('bk-panel').scrollTop=0;
+};
+
+window.bkClosePanel=function(){qs('bk-overlay').classList.remove('open');document.body.style.overflow='';_panelOpen=false;setTimeout(function(){bkShowStep(2);},350);};
+window.bkBgClose=function(e){if(e.target===qs('bk-overlay'))bkClosePanel();};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&_panelOpen)bkClosePanel();});
+
+function bkShowStep(n){['bkStep2','bkStep3','bkStep4'].forEach(function(id,i){qs(id).style.display=(i+2===n)?'':'none';});bkDots(n);}
+function bkDots(step){var dots=[qs('bkDot1'),qs('bkDot2'),qs('bkDot3')];var lines=[qs('bkLine1'),qs('bkLine2')];var idx=step-2;dots.forEach(function(d,i){d.classList.remove('active','done');if(i<idx)d.classList.add('done');else if(i===idx)d.classList.add('active');});lines.forEach(function(l,i){l.classList.toggle('done',i<idx);});}
+
+var todayStr=dStr(new Date());qs('checkin').min=todayStr;
+qs('checkin').addEventListener('change',function(){BK.checkin=this.value;var m=new Date(this.value+'T00:00:00');m.setDate(m.getDate()+CFG.MIN_NIGHTS);var ms=dStr(m);qs('checkout').min=ms;if(qs('checkout').value&&qs('checkout').value<ms)qs('checkout').value='';bkCalcTotal();});
+qs('checkout').addEventListener('change',function(){BK.checkout=this.value;bkCalcTotal();});
+
+// Back-compat aliases
+window.selTab=function(s){bkSelTab(s);};window.chg=function(d){bkChg(d);};window.calcTotal=function(){bkCalcTotal();};window.submitBook=function(){bkOpenPanel();};window.selectSuite=function(n){bkSelTab(n);};
+
+loadAvailability();loadLivePrices();bkDots(2);
+})();
 
 // ── MAP ──
 const mc=document.getElementById('mapCanvas');
@@ -1425,12 +1640,150 @@ window.scrollTo(0,0);
   }
 })();
 
-fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
-  const m={IT:'it',DE:'de',AT:'de',CH:'de',FR:'fr',BE:'fr'};
-  if(m[d.country_code]&&lang==='en')setLang(m[d.country_code]);
-}).catch(()=>{});
+// Only auto-detect language if user hasn't explicitly chosen one
+if(!localStorage.getItem('mm_lang_chosen')){
+  fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
+    const m={IT:'it',DE:'de',AT:'de',CH:'de',FR:'fr',BE:'fr'};
+    if(m[d.country_code]&&lang==='en')setLang(m[d.country_code]);
+  }).catch(()=>{});
+}
 </script>
-<!-- ── TOKI CHATBOT ── Add before </body> in index.html ── -->
+
+<!-- LANGUAGE SELECTOR LIGHTBOX -->
+<div id="langSelect">
+  <div class="ls-logo">Mare Mediterraneo</div>
+  <div class="ls-sub">Torre Chianca · Salento · Puglia</div>
+  <div class="ls-grid">
+    <button class="ls-btn" onclick="lsChoose('it')">
+      <span class="ls-flag">🇮🇹</span>
+      <span class="ls-lang-native">Italiano</span>
+      <span class="ls-lang-name">Italian</span>
+    </button>
+    <button class="ls-btn" onclick="lsChoose('en')">
+      <span class="ls-flag">🇬🇧</span>
+      <span class="ls-lang-native">English</span>
+      <span class="ls-lang-name">English</span>
+    </button>
+    <button class="ls-btn" onclick="lsChoose('de')">
+      <span class="ls-flag">🇩🇪</span>
+      <span class="ls-lang-native">Deutsch</span>
+      <span class="ls-lang-name">German</span>
+    </button>
+    <button class="ls-btn" onclick="lsChoose('fr')">
+      <span class="ls-flag">🇫🇷</span>
+      <span class="ls-lang-native">Français</span>
+      <span class="ls-lang-name">French</span>
+    </button>
+  </div>
+  <button class="ls-skip" onclick="lsChoose('en')">Continue in English</button>
+</div>
+
+<script>
+// ── LANGUAGE SELECTOR ──
+(function(){
+  var LS_KEY = 'mm_lang_chosen';
+  var chosen = localStorage.getItem(LS_KEY);
+  if(!chosen){
+    document.getElementById('langSelect').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  window.lsChoose = function(l){
+    localStorage.setItem(LS_KEY, l);
+    document.getElementById('langSelect').classList.remove('open');
+    document.body.style.overflow='';
+    if(window.setLang) setLang(l);
+  };
+  // Apply saved language immediately
+  if(chosen && window.setLang){
+    setLang(chosen);
+  }
+})();
+</script>
+
+
+<!-- BOOKING OVERLAY -->
+<div id="bk-overlay" role="dialog" aria-modal="true" onclick="bkBgClose(event)">
+  <div id="bk-panel">
+    <div class="bk-handle"></div>
+    <div class="bk-header">
+      <div>
+        <div class="bk-header-title" id="bkPanelTitle">Your Details</div>
+        <div class="bk-header-suite" id="bkPanelSuite">Suite Pietra</div>
+      </div>
+      <button class="bk-close-btn" onclick="bkClosePanel()" aria-label="Close">✕</button>
+    </div>
+    <div class="bk-steps">
+      <div class="bk-step-dot active" id="bkDot1">1</div>
+      <div class="bk-step-line" id="bkLine1"></div>
+      <div class="bk-step-dot" id="bkDot2">2</div>
+      <div class="bk-step-line" id="bkLine2"></div>
+      <div class="bk-step-dot" id="bkDot3">3</div>
+    </div>
+    <!-- Step 2: Guest details -->
+    <div class="bk-body" id="bkStep2">
+      <div class="bk-sum-block" style="margin-bottom:18px">
+        <div class="bk-sum-row"><span class="bk-sum-key">Suite</span><span class="bk-sum-val" id="bkR_suite">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Check-in</span><span class="bk-sum-val" id="bkR_in">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Check-out</span><span class="bk-sum-val" id="bkR_out">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Guests</span><span class="bk-sum-val" id="bkR_guests">—</span></div>
+        <div class="bk-sum-row" style="border-bottom:none"><span class="bk-sum-key">Total</span><span class="bk-sum-val" style="color:var(--gold);font-size:18px" id="bkR_total">—</span></div>
+      </div>
+      <div class="bk-field"><label for="bkName">Full name *</label><input type="text" id="bkName" placeholder="Maria Rossi" autocomplete="name"></div>
+      <div class="bk-field"><label for="bkEmail">Email address *</label><input type="email" id="bkEmail" placeholder="maria@example.com" autocomplete="email"></div>
+      <div class="bk-field"><label for="bkPhone">Phone number *</label><input type="tel" id="bkPhone" placeholder="+39 123 456 7890" autocomplete="tel"></div>
+      <div class="bk-field"><label for="bkMsg">Message (optional)</label><textarea id="bkMsg" placeholder="Special requests, arrival time…"></textarea></div>
+      <div class="bk-msg" id="bkStep2Err"></div>
+      <button class="bk-btn-gold" onclick="bkToSummary()">
+        Review Booking
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <!-- Step 3: Summary -->
+    <div class="bk-body" id="bkStep3" style="display:none">
+      <div class="bk-sum-block">
+        <p class="bk-sum-lbl-hd">Booking Summary</p>
+        <div class="bk-sum-row"><span class="bk-sum-key">Suite</span><span class="bk-sum-val" id="bkS_suite">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Check-in</span><span class="bk-sum-val" id="bkS_in">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Check-out</span><span class="bk-sum-val" id="bkS_out">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Nights</span><span class="bk-sum-val" id="bkS_nights">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Guests</span><span class="bk-sum-val" id="bkS_guests">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Nightly rate</span><span class="bk-sum-val" id="bkS_rate">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Cleaning fee</span><span class="bk-sum-val" id="bkS_cleaning">—</span></div>
+        <div class="bk-sum-total-row"><span class="bk-sum-total-key">Total</span><span class="bk-sum-total-val" id="bkS_total">—</span></div>
+      </div>
+      <div class="bk-divider"></div>
+      <div class="bk-sum-block">
+        <p class="bk-sum-lbl-hd">Guest Information</p>
+        <div class="bk-sum-row"><span class="bk-sum-key">Name</span><span class="bk-sum-val" id="bkS_name">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Email</span><span class="bk-sum-val" id="bkS_email" style="word-break:break-all">—</span></div>
+        <div class="bk-sum-row" style="border-bottom:none"><span class="bk-sum-key">Phone</span><span class="bk-sum-val" id="bkS_phone">—</span></div>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.65">
+        Please check your booking details above. Confirming sends your request — we'll reply within 24 hours to confirm dates.
+      </p>
+      <!-- STRIPE_HOOK -->
+      <button class="bk-btn-gold" id="bkConfirmBtn" onclick="bkSubmit()">
+        Buchung bestätigen
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 13 4 10"/><line x1="4" y1="10" x2="4" y2="20"/><polyline points="9 13 9 20"/></svg>
+      </button>
+      <button class="bk-btn-ghost" onclick="bkBack()">← Zurück &amp; bearbeiten</button>
+    </div>
+    <!-- Step 4: Confirmed -->
+    <div class="bk-body" id="bkStep4" style="display:none">
+      <div class="bk-confirm-icon">🌊</div>
+      <h3 class="bk-confirm-title">Booking Received!</h3>
+      <p class="bk-confirm-sub" id="bkConfirmMsg">We've received your request and will confirm within 24 hours.</p>
+      <p class="bk-ref" id="bkRef"></p>
+      <div class="bk-sum-block">
+        <div class="bk-sum-row"><span class="bk-sum-key">Suite</span><span class="bk-sum-val" id="bkD_suite">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Check-in</span><span class="bk-sum-val" id="bkD_in">—</span></div>
+        <div class="bk-sum-row"><span class="bk-sum-key">Check-out</span><span class="bk-sum-val" id="bkD_out">—</span></div>
+        <div class="bk-sum-row" style="border-bottom:none"><span class="bk-sum-key">Total</span><span class="bk-sum-val" style="color:var(--gold);font-size:18px" id="bkD_total">—</span></div>
+      </div>
+      <button class="bk-btn-ghost" style="margin-top:14px" onclick="bkClosePanel()">Close</button>
+    </div>
+  </div>
+</div>
 
 <!-- TOKI STYLES -->
 <style>
@@ -1442,9 +1795,14 @@ fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 24px rgba(0,0,0,0.4);
   transition:all 0.3s;font-size:22px;
+  animation:tokiGlow 2.8s ease-in-out infinite;
 }
-.toki-bubble:hover{transform:scale(1.08);box-shadow:0 6px 30px rgba(200,150,62,0.4)}
-.toki-bubble.open{background:var(--notte2);border:1px solid var(--border)}
+@keyframes tokiGlow{
+  0%,100%{box-shadow:0 4px 24px rgba(0,0,0,0.4),0 0 0 0 rgba(200,150,62,0)}
+  50%{box-shadow:0 4px 28px rgba(0,0,0,0.5),0 0 0 10px rgba(200,150,62,0.18),0 0 28px 6px rgba(200,150,62,0.12)}
+}
+.toki-bubble:hover{transform:scale(1.08);box-shadow:0 6px 30px rgba(200,150,62,0.4);animation:none}
+.toki-bubble.open{background:var(--notte2);border:1px solid var(--border);animation:none}
 .toki-notif{
   position:absolute;top:-2px;right:-2px;
   width:16px;height:16px;border-radius:50%;
@@ -1680,7 +2038,7 @@ fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
     msg.appendChild(bubble);
 
     // WhatsApp button
-    if (text.includes('WhatsApp') || text.includes('book') && text.includes('confirm')) {
+    if (text.includes('WhatsApp') && text.includes('contact')) {
       const wa = document.createElement('a');
       wa.className = 'toki-wa-btn';
       wa.href = 'https://wa.me/' + WA_NUMBER;
@@ -1824,10 +2182,11 @@ PERSONALITY:
 - Always detect and respond in the guest's language automatically.
 
 BOOKING FLOW:
-- If guest wants to book or check dates → give availability info → suggest WhatsApp to confirm.
+- If guest wants to book or check dates → give availability info → direct them to the booking section on the page ("scroll up to the Booking section to select your dates").
 - NEVER invent availability. Only say available if the dates are not in the booked periods.
 - If dates are booked → apologise warmly and suggest alternatives.
-- When guest is ready to book → encourage them to message on WhatsApp.
+- NEVER push WhatsApp for bookings — the website has a full booking form.
+- Only mention WhatsApp as a last resort if the guest has a very specific question you truly cannot answer after trying your best.
 
 IMPORTANT:
 - Keep responses under 150 words unless complex question requires more.
@@ -1854,11 +2213,11 @@ IMPORTANT:
         let qr = [];
         const lower = reply.toLowerCase();
         if (lower.includes('available') || lower.includes('date')) {
-          qr = ['Book on WhatsApp', 'Tell me more', 'Other dates'];
+          qr = ['Check other dates', 'Tell me more', 'What\'s included?'];
         } else if (lower.includes('price') || lower.includes('€')) {
-          qr = ['Check availability', 'Book now', 'What\'s included?'];
-        } else if (lower.includes('whatsapp') || lower.includes('book')) {
-          qr = [];
+          qr = ['Check availability', 'How do I book?', 'What\'s included?'];
+        } else if (lower.includes('book')) {
+          qr = ['How does booking work?', 'Check availability', 'Prices'];
         } else {
           qr = ['Availability', 'Prices', 'Location'];
         }
@@ -1869,7 +2228,7 @@ IMPORTANT:
       }
     } catch(e) {
       hideTyping();
-      addMessage('toki', 'Mi dispiace — I\'m having a moment! 😅 For immediate help please reach us directly on WhatsApp and we\'ll respond right away. 🌊', []);
+      addMessage('toki', 'Mi dispiace — I\'m having a little moment! 😅 Please try again in a few seconds, or scroll up to use our booking form directly.', ['Try again', 'Check availability']);
     }
 
     isTyping = false;
@@ -1952,6 +2311,15 @@ window.setLang = function(l) {
     document.getElementById('expOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   };
+
+  // Better touch handling for map pins
+  document.querySelectorAll('.pin-grp').forEach(function(pin) {
+    pin.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      var id = pin.getAttribute('data-mm');
+      if (id) mmOpen(id);
+    }, { passive: false });
+  });
 
   window.mmClose = function() {
     document.getElementById('expOverlay').classList.remove('open');
@@ -2161,6 +2529,58 @@ window.setLang = function(l) {
     }
   ]
 }
+</script>
+
+
+<!-- LANGUAGE SELECTOR LIGHTBOX -->
+<div id="langSelect">
+  <div class="ls-logo">Mare Mediterraneo</div>
+  <div class="ls-sub">Torre Chianca · Salento · Puglia</div>
+  <div class="ls-grid">
+    <button class="ls-btn" onclick="lsChoose('it')">
+      <span class="ls-flag">🇮🇹</span>
+      <span class="ls-lang-native">Italiano</span>
+      <span class="ls-lang-name">Italian</span>
+    </button>
+    <button class="ls-btn" onclick="lsChoose('en')">
+      <span class="ls-flag">🇬🇧</span>
+      <span class="ls-lang-native">English</span>
+      <span class="ls-lang-name">English</span>
+    </button>
+    <button class="ls-btn" onclick="lsChoose('de')">
+      <span class="ls-flag">🇩🇪</span>
+      <span class="ls-lang-native">Deutsch</span>
+      <span class="ls-lang-name">German</span>
+    </button>
+    <button class="ls-btn" onclick="lsChoose('fr')">
+      <span class="ls-flag">🇫🇷</span>
+      <span class="ls-lang-native">Français</span>
+      <span class="ls-lang-name">French</span>
+    </button>
+  </div>
+  <button class="ls-skip" onclick="lsChoose('en')">Continue in English</button>
+</div>
+
+<script>
+// ── LANGUAGE SELECTOR ──
+(function(){
+  var LS_KEY = 'mm_lang_chosen';
+  var chosen = localStorage.getItem(LS_KEY);
+  if(!chosen){
+    document.getElementById('langSelect').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  window.lsChoose = function(l){
+    localStorage.setItem(LS_KEY, l);
+    document.getElementById('langSelect').classList.remove('open');
+    document.body.style.overflow='';
+    if(window.setLang) setLang(l);
+  };
+  // Apply saved language immediately
+  if(chosen && window.setLang){
+    setLang(chosen);
+  }
+})();
 </script>
 
 </body>
