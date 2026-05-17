@@ -138,6 +138,31 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-it-puglia-per-coppie-una-guida-romantica-al-salento.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-de-puglia-für-paare-ein-romantischer-reiseführer-durch-salento.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-fr-puglia-pour-les-couples-un-guide-romantique-de-salento.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-en-puglia-for-couples-a-romantic-guide-to-salento.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
