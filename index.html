@@ -1338,6 +1338,7 @@ document.querySelectorAll('.reveal').forEach(el=>
   {threshold:0.1}).observe(el));
 
 // ── SUITE TOGGLE ──
+var cp=200,cc=150; // booking calc compat vars
 function toggleSuite(n){
   const card=document.getElementById('card-'+n);
   const isOpen=card.classList.contains('open');
@@ -2092,13 +2093,19 @@ if(!localStorage.getItem('mm_lang_chosen')){
     if (isOpen && !hasOpened) {
       hasOpened = true;
       setTimeout(() => {
-        addMessage('toki', 'Ciao! 🌊 I\'m Toki, your personal concierge at Mare Mediterraneo.\n\nI can answer any question about the property, check availability — and if you already have a booking, I can look it up for you instantly.\n\nHow can I help?', [
-          'Check availability',
-          'Prices & suites',
-          'My booking',
-          'Location & distances',
-          'House rules'
-        ]);
+        const _tl = {
+          en: { msg: 'Ciao! 🌊 I\'m Toki, your personal concierge at Mare Mediterraneo.\n\nI can answer any question about the property, check availability — and if you already have a booking, I can look it up for you instantly.\n\nHow can I help?',
+                qr: ['Check availability','Prices & suites','My booking / Reservation','Location & distances','House rules'] },
+          it: { msg: 'Ciao! 🌊 Sono Toki, il tuo concierge personale al Mare Mediterraneo.\n\nPosso rispondere a qualsiasi domanda sulla proprietà, verificare la disponibilità — e se hai già una prenotazione, posso cercarla subito.\n\nCome posso aiutarti?',
+                qr: ['Verifica disponibilità','Prezzi & suite','La mia prenotazione','Posizione & dintorni','Regole della casa'] },
+          de: { msg: 'Ciao! 🌊 Ich bin Toki, Ihr persönlicher Concierge im Mare Mediterraneo.\n\nIch beantworte alle Fragen zur Unterkunft, prüfe die Verfügbarkeit — und wenn Sie bereits eine Buchung haben, kann ich diese sofort aufrufen.\n\nWie kann ich helfen?',
+                qr: ['Verfügbarkeit prüfen','Preise & Suiten','Meine Buchung','Lage & Umgebung','Hausregeln'] },
+          fr: { msg: 'Ciao! 🌊 Je suis Toki, votre concierge personnel au Mare Mediterraneo.\n\nJe peux répondre à toutes vos questions, vérifier les disponibilités — et si vous avez déjà une réservation, je peux la retrouver immédiatement.\n\nComment puis-je vous aider?',
+                qr: ['Vérifier disponibilité','Prix & suites','Ma réservation','Situation & environs','Règles de la maison'] },
+        };
+        const _lang = (typeof lang !== 'undefined' ? lang : 'en');
+        const _t = _tl[_lang] || _tl.en;
+        addMessage('toki', _t.msg, _t.qr);
       }, 400);
     }
 
@@ -2183,7 +2190,11 @@ if(!localStorage.getItem('mm_lang_chosen')){
       }
       return;
     }
-    if (reply === 'My booking' || reply === 'My reservation') {
+    if (['My booking','My reservation','My booking / Reservation',
+         'La mia prenotazione','Meine Buchung','Ma réservation',
+         'Verifica disponibilità','Check availability'].includes(reply) && reply.includes('reservation') || 
+        reply === 'My booking' || reply === 'My reservation' || reply === 'My booking / Reservation' ||
+        reply === 'La mia prenotazione' || reply === 'Meine Buchung' || reply === 'Ma réservation') {
       if (!verifiedGuest) {
         awaitingEmail = true;
         addMessage('toki', 'I\'d love to help with your booking! 🌊\n\nPlease share the **email address** you used when making your reservation and I\'ll pull up your details right away.');
@@ -2296,9 +2307,12 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   // Detect if message is asking about their booking
   function isBookingQuery(msg) {
-    const kw = ['my booking','my reservation','reference','ref number','booked','my stay',
+    const kw = ['my booking','my reservation','reservation','my booking / reservation',
+                'reference','ref number','booked','my stay','check my booking',
                 'my check','status','confirm','when is','did you receive','did i book',
-                'meine buchung','meine reservierung','la mia prenotazione','ma réservation'];
+                'meine buchung','meine reservierung','buchung nachschlagen',
+                'la mia prenotazione','verifica prenotazione',
+                'ma réservation','vérifier ma réservation'];
     const lower = msg.toLowerCase();
     return kw.some(k => lower.includes(k));
   }
@@ -2529,6 +2543,8 @@ WhatsApp: +35699699184`;
       } catch(e) {}
     }
 
+    const _siteLang = (typeof lang !== 'undefined' ? lang : 'en');
+    const _langNames = {en:'English',it:'Italian',de:'German',fr:'French'};
     const systemPrompt = `You are Toki, the warm and knowledgeable AI concierge for Mare Mediterraneo — a beautiful vacation property in Torre Chianca, Salento, Puglia, Italy.
 
 PROPERTY KNOWLEDGE:
@@ -2542,7 +2558,7 @@ PERSONALITY:
 - Be enthusiastic about Salento — you love this place.
 - Keep responses concise but complete. Use line breaks for readability.
 - Use emojis sparingly and naturally 🌊 🏛️ ☀️
-- Always detect and respond in the guest's language automatically.
+- LANGUAGE: The guest has selected **\${_langNames[_siteLang] || 'English'}** as their language. Respond ENTIRELY in that language unless they write to you in a different language, in which case switch to match them.
 
 BOOKING FLOW:
 - If guest wants to book or check dates → give availability info → direct them to the booking section on the page ("scroll up to the Booking section to select your dates").
