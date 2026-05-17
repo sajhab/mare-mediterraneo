@@ -273,6 +273,26 @@
       font-style: italic;
     }
 
+    /* ── PROPERTY PHOTO ── */
+    .property-photo-section {
+      margin: 48px 0 0;
+    }
+    .property-photo-section img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+      border-radius: 2px;
+    }
+    .property-photo-caption {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-align: center;
+      margin-top: 8px;
+    }
+
     /* ── BOOKING CTA ── */
     .booking-cta {
       background: var(--notte2);
@@ -486,6 +506,14 @@
   <!-- ARTICLE BODY -->
   <main class="article-body">
     {{ARTICLE_BODY}}
+
+    <!-- PROPERTY PHOTO — always shows the house -->
+    <div class="property-photo-section">
+      <img src="https://maremediterraneo.com/hero.jpg"
+           alt="Mare Mediterraneo — Suite Pietra and Suite Cielo, Torre Chianca, Salento"
+           loading="lazy">
+      <p class="property-photo-caption">Mare Mediterraneo — Torre Chianca, Salento · Suite Pietra &amp; Suite Cielo · 400m from the sea</p>
+    </div>
 
     <!-- BOOKING CTA -->
     <div class="booking-cta">
