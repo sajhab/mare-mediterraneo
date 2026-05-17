@@ -2045,6 +2045,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 <!-- TOKI SCRIPT -->
 <script>
 
+
 (function() {
   // ── CONFIG ──
   const WA_NUMBER = '35699699184';
@@ -2257,13 +2258,12 @@ if(!localStorage.getItem('mm_lang_chosen')){
     }
 
     container.appendChild(msg);
-    // Scroll to TOP of new message
-    setTimeout(() => {
-      const msgTop  = msg.offsetTop;
-      const contH   = container.clientHeight;
-      const msgH    = msg.offsetHeight;
-      container.scrollTop = msgH > contH ? msgTop : Math.max(0, msgTop - 12);
-    }, 30);
+    // Scroll so the TOP of the new message is visible
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        msg.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      });
+    });
   }
 
   // ── TYPING ──
@@ -2601,29 +2601,84 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const sn  = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
     showTyping();
     try {
-      const html = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
-        + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Date Change Request</h2>'
+      // 1. Check availability for new dates
+      const avail = await checkAvailability(b.suite, newCi, newCo);
+      if (!avail) {
+        hideTyping();
+        const _sl2 = siteLang();
+        const _nam = {
+          en: 'Mi dispiace! Those dates are **not available** for ' + (sn[b.suite]||b.suite) + ' 😔\n\nWould you like to try different dates?',
+          it: 'Mi dispiace! Quelle date **non sono disponibili** per ' + (sn[b.suite]||b.suite) + ' 😔\n\nVuoi provare date diverse?',
+          de: 'Mi dispiace! Diese Daten sind für ' + (sn[b.suite]||b.suite) + ' **nicht verfügbar** 😔\n\nAndere Daten probieren?',
+          fr: 'Mi dispiace! Ces dates ne sont **pas disponibles** pour ' + (sn[b.suite]||b.suite) + ' 😔\n\nEssayer d\'autres dates?',
+        };
+        addMessage('toki', (_nam[_sl2]||_nam.en), [
+          {en:'Try different dates',it:'Prova altre date',de:'Andere Daten',fr:'Autres dates'}[_sl2]||'Try different dates',
+          {en:'I have a question',it:'Ho una domanda',de:'Ich habe eine Frage',fr:"J'ai une question"}[_sl2]||'I have a question'
+        ]);
+        pendingDateChange = null;
+        return;
+      }
+
+      // 2. Update the booking row in Supabase
+      const newNights = Math.round((new Date(newCo) - new Date(newCi)) / 86400000);
+      await fetch(SB_URL + '/rest/v1/bookings?id=eq.' + b.id + '&apikey=' + SB_KEY, {
+        method: 'PATCH',
+        headers: Object.assign({}, sbHdrs(), { 'Prefer': 'return=minimal' }),
+        body: JSON.stringify({ checkin: newCi, checkout: newCo, nights: newNights })
+      });
+      // Also update linked villa sub-rows if any
+      if (b.suite === 'villa') {
+        await fetch(SB_URL + '/rest/v1/bookings?reference_id=eq.' + encodeURIComponent(ref) + '&linked_to_villa=eq.true&apikey=' + SB_KEY, {
+          method: 'PATCH',
+          headers: Object.assign({}, sbHdrs(), { 'Prefer': 'return=minimal' }),
+          body: JSON.stringify({ checkin: newCi, checkout: newCo, nights: newNights })
+        });
+      }
+
+      // 3. Update verifiedGuest cache so session reflects new dates
+      if (verifiedGuest) {
+        verifiedGuest.bookings = verifiedGuest.bookings.map(bk =>
+          bk.id === b.id ? Object.assign({}, bk, { checkin: newCi, checkout: newCo, nights: newNights }) : bk
+        );
+        saveSession();
+      }
+
+      // 4. Email owner (update notification) + guest (confirmation)
+      function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
+      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
+        + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Booking Updated — ' + ref + '</h2>'
         + '<table style="border-collapse:collapse;width:100%">'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Reference</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + ref + '</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Suite</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + (sn[b.suite]||b.suite) + '</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Guest</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + b.guest + '</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;font-size:11px;text-transform:uppercase">Current</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;text-align:right">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
-        + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">Requested</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCi + ' → ' + newCo + '</td></tr>'
+        + eRow('Reference', ref) + eRow('Suite', sn[b.suite]||b.suite) + eRow('Guest', b.guest) + eRow('Email', b.email)
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Old dates</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;text-align:right;text-decoration:line-through">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
+        + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">New dates</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCi + ' → ' + newCo + ' (' + newNights + ' nights)</td></tr>'
         + '</table></div>';
-      await sendEmail([{
-        from: 'Mare Mediterraneo <' + FROM_EMAIL + '>',
-        to: OWNER_EMAIL,
-        subject: '[Mare Med] Date change request — ' + ref + ' — ' + b.guest,
-        html, reply_to: b.email
-      }]);
+      const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
+        + '<p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p>'
+        + '<p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p>'
+        + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking dates have been updated ✅</h2>'
+        + '<p style="color:#666;margin:0 0 22px;font-size:13px">Reference: ' + ref + '</p>'
+        + '<table style="border-collapse:collapse;width:100%">'
+        + eRow('Suite', sn[b.suite]||b.suite)
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">New check-in</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right">' + newCi + ' · from 15:00</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">New check-out</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right">' + newCo + ' · by 10:00</td></tr>'
+        + eRow('Nights', newNights)
+        + '</table>'
+        + '<p style="margin:24px 0 0;color:#aaa;font-size:13px;font-style:italic">Questions? Email <a href="mailto:' + OWNER_EMAIL + '" style="color:#C8963E">' + OWNER_EMAIL + '</a></p></div>';
+
+      await sendEmail([
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL, subject: '[Mare Med] Booking updated — '+ref+' — '+b.guest, html: ownerHtml, reply_to: b.email },
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: b.email, subject: 'Your booking dates are updated — '+ref, html: guestHtml, reply_to: OWNER_EMAIL }
+      ]);
+
       hideTyping();
       addMessage('toki',
-        'Perfetto! ✅ Your date change request has been sent.\n\n**Requested:**\nCheck-in: ' + newCi + '\nCheck-out: ' + newCo + '\n\nThe owner will confirm within 24 hours and email you at **' + b.email + '**.',
-        ['I have another question','Check-in info']);
+        'Perfetto! ✅ Dates updated and confirmed!\n\n**New dates:**\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\n\nA confirmation email has been sent to **' + b.email + '**.',
+        ['I have another question', 'Check-in info']);
+
     } catch(e) {
       hideTyping();
-      addMessage('toki',
-        'Mi dispiace, something went wrong. Please email **' + OWNER_EMAIL + '** directly with reference **' + ref + '** and your new dates.');
+      addMessage('toki', 'Mi dispiace, something went wrong. Please email **' + OWNER_EMAIL + '** with reference **' + ref + '** and your new dates.');
     }
     pendingDateChange = null;
   }
@@ -2863,11 +2918,40 @@ IMPORTANT:
       if (data.choices && data.choices[0]) {
         const reply = data.choices[0].message.content;
         const lower = reply.toLowerCase();
+        // Multilingual quick replies — match site language
+        const _ql = siteLang();
+        const QR = {
+          en: {
+            dates:  ['Check other dates','Tell me more','What\'s included?'],
+            price:  ['Check availability','How do I book?','What\'s included?'],
+            book:   ['How does booking work?','Check availability','Prices'],
+            def:    ['Availability','Prices','Location'],
+          },
+          it: {
+            dates:  ['Altre date','Dimmi di più','Cosa è incluso?'],
+            price:  ['Verifica disponibilità','Come si prenota?','Cosa è incluso?'],
+            book:   ['Come funziona?','Verifica disponibilità','Prezzi'],
+            def:    ['Disponibilità','Prezzi','Posizione'],
+          },
+          de: {
+            dates:  ['Andere Daten','Mehr erfahren','Was ist inbegriffen?'],
+            price:  ['Verfügbarkeit prüfen','Wie buche ich?','Was ist inbegriffen?'],
+            book:   ['Wie funktioniert es?','Verfügbarkeit prüfen','Preise'],
+            def:    ['Verfügbarkeit','Preise','Lage'],
+          },
+          fr: {
+            dates:  ['Autres dates','En savoir plus','Qu\'est-ce qui est inclus?'],
+            price:  ['Vérifier disponibilité','Comment réserver?','Qu\'est-ce qui est inclus?'],
+            book:   ['Comment ça marche?','Vérifier disponibilité','Prix'],
+            def:    ['Disponibilité','Prix','Situation'],
+          },
+        };
+        const qrSet = QR[_ql] || QR.en;
         let qr = [];
-        if (lower.includes('available') || lower.includes('date')) qr = ['Check other dates','Tell me more','What\'s included?'];
-        else if (lower.includes('price') || lower.includes('€'))  qr = ['Check availability','How do I book?','What\'s included?'];
-        else if (lower.includes('book'))                           qr = ['How does booking work?','Check availability','Prices'];
-        else                                                        qr = ['Availability','Prices','Location'];
+        if (lower.includes('available') || lower.includes('disponib') || lower.includes('verfügbar') || lower.includes('date') || lower.includes('data') || lower.includes('datum')) qr = qrSet.dates;
+        else if (lower.includes('price') || lower.includes('€') || lower.includes('prezzo') || lower.includes('preis') || lower.includes('prix')) qr = qrSet.price;
+        else if (lower.includes('book') || lower.includes('prenot') || lower.includes('buch') || lower.includes('réserv')) qr = qrSet.book;
+        else qr = qrSet.def;
         addMessage('toki', reply, qr);
       } else { throw new Error('No response'); }
     } catch(e) {
@@ -2885,6 +2969,7 @@ IMPORTANT:
   setTimeout(() => { if (!hasOpened) document.getElementById('tokiNotif').style.display = 'flex'; }, 8000);
 
 })();
+
 
 </script>
 
