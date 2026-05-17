@@ -138,31 +138,6 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
-
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-it-lecce-e-dintorni-la-guida-completa-per-una-vacanza-in-puglia.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-de-lecce-und-umgebung-der-komplette-reiseführer-für-ihren-apulien-urlaub.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-fr-lecce-et-ses-environs-le-guide-complet-pour-vos-vacances-en-apulie.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-en-lecce-and-surroundings-the-complete-travel-guide-for-your-apulian-vacation.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
