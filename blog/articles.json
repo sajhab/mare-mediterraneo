@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-05-17-en-the-bountiful-flavors-of-apulian-cuisine-wine-olive-oil-and-nonnas-pasta",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "The Bountiful Flavors of Apulian Cuisine: Wine, Olive Oil, and Nonna's Pasta",
+    "excerpt": "Journey through the heart of Salento and discover the exquisite Apulian cuisine. From the renowned Primitivo wine to the handmade orecchiette pasta, experience ",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/blog/images/2026-05-17-apulische-küche-wein-olivenöl-und-die-pa.jpg"
+  },
+  {
+    "slug": "2026-05-17-fr-délices-dapulie-vin-huile-dolive-et-la-pasta-des-nonnas-en-salento",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "Délices d'Apulie : Vin, Huile d'Olive et la Pasta des Nonnas en Salento",
+    "excerpt": "Découvrez la cuisine apulienne authentique à Salento : vin Primitivo, huile d'olive locale et les mythiques orecchiettes des grand-mères.",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/blog/images/2026-05-17-apulische-küche-wein-olivenöl-und-die-pa.jpg"
+  },
+  {
+    "slug": "2026-05-17-de-apulische-küche-wein-olivenöl-und-die-pasta-der-nonnas",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Apulische Küche: Wein, Olivenöl und die Pasta der Nonnas",
+    "excerpt": "Tauchen Sie ein in die apulische Küche von Salento und entdecken Sie den köstlichen Primitivo-Wein und die handgemachten Orecchiette der Nonnas. Der perfekte Au",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/blog/images/2026-05-17-apulische-küche-wein-olivenöl-und-die-pa.jpg"
+  },
+  {
+    "slug": "2026-05-17-it-apulische-küche-wein-olivenöl-und-die-pasta-der-nonnas",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "Apulische Küche: Wein, Olivenöl und die Pasta der Nonnas",
+    "excerpt": "Esplora i tesori culinari dell'Apulia, tra vino Primitivo e le orecchiette salentine, soggiornando presso Mare Mediterraneo a due passi da Lecce.",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/blog/images/2026-05-17-apulische-küche-wein-olivenöl-und-die-pa.jpg"
+  },
+  {
     "slug": "2026-05-17-en-the-most-beautiful-beaches-in-apulia-from-punta-prosciutto-to-otranto",
     "lang": "EN",
     "lang_label": "English",
