@@ -43,11 +43,12 @@ RESPONSIVE_CSS = """
     }
     .property-photo-section img {
       width: 100%;
-      aspect-ratio: 16 / 7;
-      object-fit: cover;
-      object-position: center 30%;
+      height: auto;
+      object-fit: contain;
+      object-position: center center;
       display: block;
       border-radius: 2px;
+      background: #0F0F1A;
     }
     .property-photo-caption {
       font-size: 0.75rem;
@@ -66,14 +67,18 @@ RESPONSIVE_CSS = """
         border-right: none;
       }
       .property-photo-section {
-        margin-left: calc(-50vw + 50%);
-        margin-right: calc(-50vw + 50%);
-        width: 100vw;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
       }
       .property-photo-section img {
-        aspect-ratio: 21 / 7;
-        border-radius: 0;
-        object-position: center 35%;
+        aspect-ratio: auto;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: center center;
+        border-radius: 2px;
+        max-height: 480px;
       }
     }
     /* Tablet */
@@ -92,9 +97,12 @@ RESPONSIVE_CSS = """
 PROPERTY_PHOTO_HTML = """
     <!-- PROPERTY PHOTO — always shows the house -->
     <div class="property-photo-section">
-      <img src="https://maremediterraneo.com/hero.jpg"
-           alt="Mare Mediterraneo — Suite Pietra and Suite Cielo, Torre Chianca, Salento"
-           loading="lazy">
+      <picture>
+        <source media="(min-width: 900px)" srcset="https://maremediterraneo.com/hero_2.PNG">
+        <img src="https://maremediterraneo.com/hero.jpg"
+             alt="Mare Mediterraneo — Suite Pietra and Suite Cielo, Torre Chianca, Salento"
+             loading="lazy">
+      </picture>
       <p class="property-photo-caption">Mare Mediterraneo — Torre Chianca, Salento · Suite Pietra &amp; Suite Cielo · 400m from the sea</p>
     </div>
 """
