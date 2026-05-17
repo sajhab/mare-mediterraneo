@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-05-17-en-santa-maria-di-leuca-where-two-seas-beautifully-meet-at-the-tip-of-italy",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "Santa Maria di Leuca: Where Two Seas Beautifully Meet at the Tip of Italy",
+    "excerpt": "Discover Santa Maria di Leuca, the southernmost tip of Italy's Puglia region, where the Adriatic and Ionian seas converge, creating stunning coastal views. Plan",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/hero.jpg"
+  },
+  {
+    "slug": "2026-05-17-fr-santa-maria-di-leuca-là-où-se-rencontrent-deux-mers-au-bout-de-litalie",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "Santa Maria di Leuca : Là où se rencontrent deux mers au bout de l'Italie",
+    "excerpt": "Explorez Santa Maria di Leuca, une destination unique où l'Adriatique et la mer Ionienne se rencontrent. Découvrez la région grâce à nos conseils locaux.",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/hero.jpg"
+  },
+  {
+    "slug": "2026-05-17-de-santa-maria-di-leuca-wo-italiens-stiefelspitze-zwei-meere-vereint",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Santa Maria di Leuca: Wo Italiens Stiefelspitze Zwei Meere Vereint",
+    "excerpt": "Santa Maria di Leuca, der südlichste Punkt Italiens, bietet dramatische Küstenlandschaften und historische Sehenswürdigkeiten. Ein Muss für Entdecker auf Tour.",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/hero.jpg"
+  },
+  {
+    "slug": "2026-05-17-it-santa-maria-di-leuca-dove-si-incontrano-due-mari",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "Santa Maria di Leuca: dove si incontrano due mari",
+    "excerpt": "Esplora Santa Maria di Leuca, l'estremo sud della Puglia, dove il mare si divide tra Adriatico e Ionio. Un luogo ricco di storia, fascino naturale e comodamente",
+    "date": "May 17, 2026",
+    "date_iso": "2026-05-17",
+    "reading_time": 5,
+    "image_url": "https://maremediterraneo.com/hero.jpg"
+  },
+  {
     "slug": "2026-05-17-en-bari-the-capital-of-puglia-worth-stopping-for",
     "lang": "EN",
     "lang_label": "English",
