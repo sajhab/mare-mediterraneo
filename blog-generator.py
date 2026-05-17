@@ -24,7 +24,8 @@ import xml.etree.ElementTree as ET
 import base64
 
 # ── CONFIGURATION ────────────────────────────────────────────
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_API_KEY    = os.environ.get("OPENAI_API_KEY", "")
+UNSPLASH_ACCESS_KEY = os.environ.get("UNSPLASH_ACCESS_KEY", "")
 REPO_ROOT      = os.path.dirname(os.path.abspath(__file__))
 BLOG_DIR       = os.path.join(REPO_ROOT, "blog")
 IMAGES_DIR     = os.path.join(BLOG_DIR, "images")
@@ -80,11 +81,18 @@ LANG_CONFIG = {
 }
 
 RSS_FEEDS = [
-    "https://www.lagazzettadelmezzogiorno.it/rss",
-    "https://www.quotidianodipuglia.it/feed",
+    # Puglia / Salento local news
     "https://www.leccenews24.it/feed",
     "https://www.brindisireport.it/feed",
-    "https://www.viaggiareinpuglia.it/feed"
+    # Italian national travel
+    "https://www.viaggiart.com/feed",
+    "https://feeds.feedburner.com/turismo-italia",
+    # International travel — high quality open feeds
+    "https://www.theguardian.com/travel/italy/rss",
+    "https://www.theguardian.com/travel/rss",
+    "https://feeds.lonelyplanet.com/lonelyplanet/news",
+    # Official Italian tourism
+    "https://www.italia.it/en/rss.xml",
 ]
 
 ARTICLE_PROMPT = """You are a warm, knowledgeable local travel writer for Mare Mediterraneo, a vacation rental in Torre Chianca, Salento, 15 minutes from Lecce.
@@ -116,7 +124,7 @@ OUTPUT FORMAT — return only a JSON object with these exact fields, no markdown
   "excerpt": "2-3 sentence excerpt for blog index in {language}",
   "body_html": "full article body HTML with <h2>, <p>, <ul>, <li> tags — no <html>, <head>, <body> wrappers",
   "reading_time": 5,
-  "image_prompt": "a single English sentence describing a photorealistic travel photo that would illustrate this article — specific Salento/Puglia scene, no text overlays, golden hour preferred"
+  "image_search": "2-4 English keywords for searching a travel photo on Unsplash that would illustrate this article — e.g. Lecce baroque, Salento beach, Puglia olive trees, Gallipoli sea"
 }}"""
 
 
@@ -222,64 +230,81 @@ def call_openai_json(prompt):
     return json.loads(text.strip())
 
 
-def generate_image(image_prompt, image_path):
+def fetch_unsplash_image(search_query):
     """
-    Call DALL-E 3 to generate an image and save it to image_path.
-    Returns True on success, False on failure.
-
-    Uses b64_json response format so we don't need a second download step.
+    Search Unsplash for a photo matching the query.
+    Returns dict with {url, photographer_name, photographer_url} or None.
+    Complies with Unsplash API guidelines:
+      - Hotlinks to original Unsplash URL (no download to server)
+      - Triggers download endpoint
+      - Returns attribution data for caption
     """
-    if not OPENAI_API_KEY:
-        log("Skipping image generation — no API key")
-        return False
-
-    # Wrap the prompt with style guidance to match the site aesthetic
-    full_prompt = (
-        "Photorealistic travel photography, golden hour light, Puglia Italy. "
-        + image_prompt
-        + " No text, no watermarks, no logos. Warm mediterranean colours."
-    )
-
-    payload = json.dumps({
-        "model": "gpt-image-1",
-        "prompt": full_prompt,
-        "n": 1,
-        "size": "1536x1024",   # landscape format for hero images
-        "quality": "medium"    # low / medium / high
-    }).encode("utf-8")
-
-    req = urllib.request.Request("https://api.openai.com/v1/images/generations")
-    req.add_header("Content-Type", "application/json")
-    req.add_header("Authorization", "Bearer " + OPENAI_API_KEY)
-    req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
-    req.method = "POST"
+    if not UNSPLASH_ACCESS_KEY:
+        log("Skipping Unsplash — no UNSPLASH_ACCESS_KEY set")
+        return None
 
     try:
-        with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
+        # Search for a photo
+        search_url = (
+            "https://api.unsplash.com/search/photos"
+            "?query=" + urllib.parse.quote(search_query) +
+            "&per_page=1&orientation=landscape"
+            "&content_filter=high"
+        )
+        req = urllib.request.Request(search_url)
+        req.add_header("Authorization", "Client-ID " + UNSPLASH_ACCESS_KEY)
+        req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
+        with urllib.request.urlopen(req, timeout=15) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-        # gpt-image-1 returns b64_json by default
-        import base64
-        b64 = data["data"][0].get("b64_json") or data["data"][0].get("url")
-        if data["data"][0].get("b64_json"):
-            image_bytes = base64.b64decode(b64)
-        else:
-            # fallback: download from URL
-            img_req = urllib.request.Request(b64)
-            img_req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
-            with urllib.request.urlopen(img_req, timeout=60) as img_resp:
-                image_bytes = img_resp.read()
-        os.makedirs(os.path.dirname(image_path), exist_ok=True)
-        with open(image_path, "wb") as f:
-            f.write(image_bytes)
-        log("Image saved: " + image_path + " (" + str(len(image_bytes) // 1024) + " KB)")
-        return True
+
+        results = data.get("results", [])
+        if not results:
+            log("Unsplash: no results for query: " + search_query)
+            return None
+
+        photo      = results[0]
+        photo_id   = photo["id"]
+        # Use the "regular" size URL — good quality, not too large
+        image_url  = photo["urls"]["regular"]
+        # Attribution data (required by Unsplash guidelines)
+        photographer_name = photo["user"]["name"]
+        photographer_username = photo["user"]["username"]
+        photographer_url = (
+            "https://unsplash.com/@" + photographer_username +
+            "?utm_source=mare_mediterraneo&utm_medium=referral"
+        )
+        unsplash_url = "https://unsplash.com/?utm_source=mare_mediterraneo&utm_medium=referral"
+
+        # Trigger download endpoint (required by Unsplash guidelines)
+        try:
+            dl_url = "https://api.unsplash.com/photos/" + photo_id + "/download"
+            dl_req = urllib.request.Request(dl_url)
+            dl_req.add_header("Authorization", "Client-ID " + UNSPLASH_ACCESS_KEY)
+            dl_req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
+            urllib.request.urlopen(dl_req, timeout=10)
+            log("Unsplash download event triggered for photo: " + photo_id)
+        except Exception as e:
+            log("Unsplash download trigger failed (non-fatal): " + str(e))
+
+        log("Unsplash image found: " + image_url[:80])
+        return {
+            "url": image_url,
+            "photographer_name": photographer_name,
+            "photographer_url": photographer_url,
+            "unsplash_url": unsplash_url,
+            "caption": (
+                'Photo by <a href="' + photographer_url + '" target="_blank" rel="noopener">'
+                + photographer_name + '</a> on '
+                + '<a href="' + unsplash_url + '" target="_blank" rel="noopener">Unsplash</a>'
+            )
+        }
+
     except urllib.error.HTTPError as e:
-        body = e.read().decode("utf-8", errors="replace")
-        log("DALL-E HTTP error " + str(e.code) + ": " + body[:300])
-        return False
+        log("Unsplash HTTP error " + str(e.code) + ": " + e.read().decode("utf-8", errors="replace")[:200])
+        return None
     except Exception as e:
-        log("DALL-E error: " + str(e))
-        return False
+        log("Unsplash error: " + str(e))
+        return None
 
 
 def call_claude(prompt, lang):
@@ -310,7 +335,7 @@ def call_claude(prompt, lang):
 
 # ── ARTICLE BUILDER ──────────────────────────────────────────
 
-def build_article_html(template, article_data, lang, slug, topic_info, today, image_url, image_alt):
+def build_article_html(template, article_data, lang, slug, topic_info, today, image_url, image_alt, image_caption=None):
     cfg = LANG_CONFIG[lang]
     publish_date_iso   = today.strftime("%Y-%m-%dT07:00:00+00:00")
     publish_date_human = today.strftime("%B %d, %Y")
@@ -341,6 +366,7 @@ def build_article_html(template, article_data, lang, slug, topic_info, today, im
         # New image placeholders
         "{{HERO_IMAGE_URL}}":     image_url,
         "{{HERO_IMAGE_ALT}}":     image_alt,
+        "{{HERO_IMAGE_CAPTION}}": image_caption or "Mare Mediterraneo — Torre Chianca, Salento · 400m from the sea · 15 min from Lecce",
         # OG/Twitter/Schema images use {{HERO_IMAGE_URL}} placeholder — handled above
     }
 
@@ -461,24 +487,34 @@ def main():
         log("ERROR: Failed to generate master article")
         sys.exit(1)
 
-    # ── STEP 2: Generate image from the prompt in the master article
-    image_prompt    = master_data.get("image_prompt", "")
-    topic_slug      = slugify(topic["topic"])[:40]
-    image_filename  = date_prefix + "-" + topic_slug + ".jpg"
-    image_local     = os.path.join(IMAGES_DIR, image_filename)
-    image_web_url   = "https://maremediterraneo.com/blog/images/" + image_filename
-    fallback_image  = "https://maremediterraneo.com/hero.jpg"
+    # ── STEP 2: Fetch image from Unsplash using search keywords from master article
+    image_search   = master_data.get("image_search", topic["topic"])
+    fallback_image = "https://maremediterraneo.com/hero.jpg"
+    image_caption  = "Mare Mediterraneo — Torre Chianca, Salento · 400m from the sea · 15 min from Lecce"
 
-    if image_prompt:
-        log("Generating image: " + image_prompt[:80] + "...")
-        image_ok = generate_image(image_prompt, image_local)
+    if image_search:
+        log("Searching Unsplash: " + image_search)
+        unsplash_result = fetch_unsplash_image(image_search)
     else:
-        log("No image_prompt returned — using fallback hero.jpg")
-        image_ok = False
+        unsplash_result = None
 
-    final_image_url = image_web_url if image_ok else fallback_image
-    image_alt       = master_data.get("title", topic["topic"]) + " — Mare Mediterraneo, Salento"
+    if unsplash_result:
+        final_image_url = unsplash_result["url"]
+        image_caption   = unsplash_result["caption"]
+        log("Unsplash image URL: " + final_image_url[:80])
+    else:
+        # Fallback: try topic name as search query
+        log("Trying fallback Unsplash search: " + topic["topic"])
+        fallback_result = fetch_unsplash_image(topic["topic"] + " Puglia Italy")
+        if fallback_result:
+            final_image_url = fallback_result["url"]
+            image_caption   = fallback_result["caption"]
+            log("Fallback Unsplash image found")
+        else:
+            final_image_url = fallback_image
+            log("No Unsplash image found — using hero.jpg")
 
+    image_alt = master_data.get("title", topic["topic"]) + " — Mare Mediterraneo, Salento"
     log("Image URL for all articles: " + final_image_url)
 
     # ── STEP 3: Generate all 4 language articles
@@ -515,7 +551,7 @@ def main():
 
         article_html = build_article_html(
             template, article_data, lang, slug, topic, today,
-            final_image_url, image_alt
+            final_image_url, image_alt, image_caption
         )
 
         filename = slug + ".html"
