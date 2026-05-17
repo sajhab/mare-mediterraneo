@@ -138,6 +138,31 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-it-bari-la-capitale-della-puglia-che-vale-la-pena-di-scoprire.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-de-bari-die-hauptstadt-von-apulien-die-einen-zwischenstopp-wert-ist.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-fr-bari-la-capitale-des-pouilles-qui-mérite-un-arrêt.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-en-bari-the-capital-of-puglia-worth-stopping-for.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
