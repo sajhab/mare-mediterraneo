@@ -188,6 +188,16 @@
 
     .card-read-time::before { content: "· "; }
 
+    .card-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      margin-bottom: 16px;
+      border-radius: 2px;
+      background: var(--notte2);
+    }
+
     .card-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.2rem;
@@ -361,7 +371,11 @@
         var card = document.createElement("a");
         card.href = "/blog/" + a.slug + ".html";
         card.className = "article-card";
+        var imgHtml = a.image_url
+          ? '<img class="card-img" src="' + a.image_url + '" alt="' + a.title + '" loading="lazy" onerror="this.style.display='none'">'
+          : '';
         card.innerHTML =
+          imgHtml +
           '<div class="card-top">' +
             '<span class="card-lang">' + a.lang + '</span>' +
             '<span class="card-date">' + a.date + '</span>' +
