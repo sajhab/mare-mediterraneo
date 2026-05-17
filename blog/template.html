@@ -187,18 +187,16 @@
 
     .hero-image-placeholder {
       width: 100%;
-      height: 420px;
+      aspect-ratio: 16 / 7;     /* wide cinematic ratio — never crops content */
       background: linear-gradient(135deg, var(--notte2) 0%, rgba(200,150,62,0.06) 100%);
       border: 1px solid var(--border);
       border-radius: 2px;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
     }
 
     @media (max-width: 768px) {
-      .hero-image-placeholder { height: 220px; }
+      .hero-image-placeholder { aspect-ratio: 4 / 3; }
     }
 
     .hero-caption {
@@ -479,7 +477,7 @@
     <div class="hero-image-placeholder">
       <img src="{{HERO_IMAGE_URL}}"
            alt="{{HERO_IMAGE_ALT}}"
-           style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;"
+           style="width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block;"
            onerror="this.style.display='none'">
     </div>
     <p class="hero-caption">Mare Mediterraneo — Torre Chianca, Salento · 400m from the sea · 15 min from Lecce</p>
