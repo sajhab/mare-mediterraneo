@@ -138,31 +138,6 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
-
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-it-le-spiagge-più-belle-della-puglia-da-punta-prosciutto-a-otranto.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-de-die-schönsten-strände-in-apulien-von-punta-prosciutto-bis-otranto.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-fr-les-plus-belles-plages-des-pouilles-de-punta-prosciutto-à-otranto.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-en-the-most-beautiful-beaches-in-apulia-from-punta-prosciutto-to-otranto.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
