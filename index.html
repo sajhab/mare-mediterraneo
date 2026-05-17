@@ -2054,6 +2054,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 <script>
 
 
+
 (function() {
   // ── CONFIG ──
   const WA_NUMBER = '35699699184';
@@ -2300,6 +2301,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     if (awaitingEmail)      { awaitingEmail = false;      handleEmailVerification(text); return; }
     if (awaitingRef)        { awaitingRef = false;        handleReferenceVerification(text); return; }
+    if (awaitingSuiteChange){ awaitingSuiteChange = false; handleSuiteTextInput(text); return; }
     if (awaitingDateChange) { awaitingDateChange = false; handleDateInput(text); return; }
     if (tokiBooking)        { handleBookingStep(text); return; }
 
@@ -2335,14 +2337,22 @@ if(!localStorage.getItem('mm_lang_chosen')){
       addMessage('toki', t('tryAgain'));
       return;
     }
-    if (reply === 'Change my dates') {
+    if (reply === 'Change my dates' || reply === 'Modify my booking') {
       if (verifiedGuest) { startDateChange(); }
       else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
       return;
     }
-    if (reply === 'Modify my booking') {
-      if (verifiedGuest) { startDateChange(); }
-      else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
+    // Suite selection quick replies during change flow
+    if (reply === 'Just the dates' && awaitingSuiteChange) {
+      awaitingSuiteChange = false;
+      if (pendingDateChange) pendingDateChange.newSuite = null;
+      awaitingDateChange = true;
+      addMessage('toki', 'No problem! Tell me the new dates:\n\n*"1 September to 8 September"*');
+      return;
+    }
+    if ((reply === 'Suite Pietra' || reply === 'Suite Cielo' || reply === 'Villa Completa') && awaitingSuiteChange) {
+      const suiteMap = { 'Suite Pietra':'pietra', 'Suite Cielo':'cielo', 'Villa Completa':'villa' };
+      handleSuiteChoice(suiteMap[reply]);
       return;
     }
     if (reply === 'Show all bookings' && verifiedGuest) {
@@ -2360,12 +2370,38 @@ if(!localStorage.getItem('mm_lang_chosen')){
     routeMessage(reply);
   }
 
+  function isChangeRequest(msg) {
+    const kw = ['change','modify','update','switch','move','different dates','other dates',
+                'ändern','wechseln','verschieben','andere datum','neues datum',
+                'cambiare','modificare','spostare','diverse date',
+                'changer','modifier','déplacer','autres dates'];
+    const lower = msg.toLowerCase();
+    return kw.some(k => lower.includes(k));
+  }
+
+  function extractSuiteFromMessage(msg) {
+    const lower = msg.toLowerCase();
+    if (lower.includes('pietra') || lower.includes('garden') || lower.includes('giardino')) return 'pietra';
+    if (lower.includes('cielo') || lower.includes('terrace') || lower.includes('terrasse') || lower.includes('terrazza')) return 'cielo';
+    if (lower.includes('villa') || lower.includes('both') || lower.includes('beide') || lower.includes('entrambe')) return 'villa';
+    return null;
+  }
+
   function routeMessage(msg) {
+    // Unverified booking query → verify first
     if (isBookingQuery(msg) && !verifiedGuest) {
       awaitingEmail = true;
       addMessage('toki', t('askEmail'));
       return;
     }
+
+    // Verified guest making a change request → run real code, don't let AI handle it
+    if (verifiedGuest && isChangeRequest(msg)) {
+      const suite = extractSuiteFromMessage(msg);
+      startDateChange(suite);
+      return;
+    }
+
     getAIResponse(msg);
   }
 
@@ -2522,15 +2558,55 @@ if(!localStorage.getItem('mm_lang_chosen')){
   }
 
   // ── DATE CHANGE ──
-  function startDateChange() {
+  // ── awaitingSuiteChange: waiting for guest to pick a new suite ──
+  let awaitingSuiteChange = false;
+
+  function startDateChange(preselectedSuite) {
     if (!verifiedGuest || !verifiedGuest.bookings.length) return;
-    pendingDateChange  = { booking: verifiedGuest.bookings[0] };
-    awaitingDateChange = true;
-    addMessage('toki',
-      'Of course! 🌊 Just tell me your new preferred dates — you can write naturally, for example:\n\n*"August 10 to August 17"*\n*"10/08 to 17/08/2026"*\n*"one week from August 10"*');
+    const booking = verifiedGuest.bookings[0];
+    pendingDateChange = { booking, newSuite: preselectedSuite || null };
+    if (!preselectedSuite) {
+      // Ask if they also want to change suite
+      awaitingSuiteChange = true;
+      addMessage('toki',
+        'Of course! 🌊 Do you also want to change the suite, or just the dates?',
+        ['Just the dates', 'Suite Pietra', 'Suite Cielo', 'Villa Completa']);
+    } else {
+      // Suite already known — go straight to dates
+      awaitingDateChange = true;
+      addMessage('toki',
+        'Great! Now tell me the new dates — write naturally, for example:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
+    }
   }
 
-  // ── DATE INPUT — uses AI to parse any natural language ──
+  function handleSuiteChoice(suiteKey) {
+    awaitingSuiteChange = false;
+    if (pendingDateChange) {
+      pendingDateChange.newSuite = suiteKey;
+    }
+    awaitingDateChange = true;
+    addMessage('toki',
+      'Perfect! Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
+  }
+
+  function handleSuiteTextInput(text) {
+    const lower = text.toLowerCase();
+    let suiteKey = null;
+    if (lower.includes('pietra') || lower.includes('garden') || lower.includes('ground')) suiteKey = 'pietra';
+    else if (lower.includes('cielo') || lower.includes('terrace') || lower.includes('sky') || lower.includes('himmel')) suiteKey = 'cielo';
+    else if (lower.includes('villa') || lower.includes('both') || lower.includes('komplett') || lower.includes('complet')) suiteKey = 'villa';
+    else if (lower.includes('just') || lower.includes('only') || lower.includes('nur') || lower.includes('solo') || lower.includes('same')) suiteKey = null;
+
+    if (suiteKey === undefined) {
+      // Couldn't parse — ask again with buttons
+      addMessage('toki', 'Which suite would you like?', ['Suite Pietra', 'Suite Cielo', 'Villa Completa', 'Just the dates']);
+      awaitingSuiteChange = true;
+      return;
+    }
+    handleSuiteChoice(suiteKey);
+  }
+
+    // ── DATE INPUT — uses AI to parse any natural language ──
   async function handleDateInput(text) {
     // Ask AI to extract two ISO dates from natural language
     showTyping();
@@ -2671,13 +2747,17 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       // 2. Update the booking row in Supabase
       const newNights = Math.round((new Date(newCo) - new Date(newCi)) / 86400000);
+      const newSuite   = pendingDateChange.newSuite || b.suite;
+      const patchBody  = { checkin: newCi, checkout: newCo, nights: newNights };
+      if (newSuite !== b.suite) patchBody.suite = newSuite;
+
       await fetch(SB_URL + '/rest/v1/bookings?id=eq.' + b.id + '&apikey=' + SB_KEY, {
         method: 'PATCH',
         headers: Object.assign({}, sbHdrs(), { 'Prefer': 'return=minimal' }),
-        body: JSON.stringify({ checkin: newCi, checkout: newCo, nights: newNights })
+        body: JSON.stringify(patchBody)
       });
-      // Also update linked villa sub-rows if any
-      if (b.suite === 'villa') {
+      // Update linked villa sub-rows dates
+      if (b.suite === 'villa' || newSuite === 'villa') {
         await fetch(SB_URL + '/rest/v1/bookings?reference_id=eq.' + encodeURIComponent(ref) + '&linked_to_villa=eq.true&apikey=' + SB_KEY, {
           method: 'PATCH',
           headers: Object.assign({}, sbHdrs(), { 'Prefer': 'return=minimal' }),
@@ -2687,18 +2767,27 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       // 3. Update verifiedGuest cache so session reflects new dates
       if (verifiedGuest) {
-        verifiedGuest.bookings = verifiedGuest.bookings.map(bk =>
-          bk.id === b.id ? Object.assign({}, bk, { checkin: newCi, checkout: newCo, nights: newNights }) : bk
-        );
+        verifiedGuest.bookings = verifiedGuest.bookings.map(bk => {
+          if (bk.id !== b.id) return bk;
+          const updated = { checkin: newCi, checkout: newCo, nights: newNights };
+          if (newSuite && newSuite !== b.suite) updated.suite = newSuite;
+          return Object.assign({}, bk, updated);
+        });
         saveSession();
       }
 
       // 4. Email owner (update notification) + guest (confirmation)
+      const displaySuite = sn[newSuite] || sn[b.suite] || b.suite;
+      const suiteChanged = newSuite && newSuite !== b.suite;
       function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
       const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
         + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Booking Updated — ' + ref + '</h2>'
         + '<table style="border-collapse:collapse;width:100%">'
-        + eRow('Reference', ref) + eRow('Suite', sn[b.suite]||b.suite) + eRow('Guest', b.guest) + eRow('Email', b.email)
+        + eRow('Reference', ref)
+        + (suiteChanged
+            ? '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Suite (old)</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;text-align:right;text-decoration:line-through">' + (sn[b.suite]||b.suite) + '</td></tr><tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">Suite (new)</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right">' + displaySuite + '</td></tr>'
+            : eRow('Suite', displaySuite))
+        + eRow('Guest', b.guest) + eRow('Email', b.email)
         + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Old dates</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;text-align:right;text-decoration:line-through">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
         + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">New dates</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCi + ' → ' + newCo + ' (' + newNights + ' nights)</td></tr>'
         + '</table></div>';
@@ -2721,8 +2810,9 @@ if(!localStorage.getItem('mm_lang_chosen')){
       ]);
 
       hideTyping();
+      const suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
       addMessage('toki',
-        'Perfetto! ✅ Dates updated and confirmed!\n\n**New dates:**\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\n\nA confirmation email has been sent to **' + b.email + '**.',
+        'Perfetto! ✅ Booking updated and confirmed!\n\n**Updated details:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\n\nConfirmation emails sent to **' + b.email + '** and the owner.',
         ['I have another question', 'Check-in info']);
 
     } catch(e) {
@@ -3018,6 +3108,7 @@ IMPORTANT:
   setTimeout(() => { if (!hasOpened) document.getElementById('tokiNotif').style.display = 'flex'; }, 8000);
 
 })();
+
 
 
 </script>
