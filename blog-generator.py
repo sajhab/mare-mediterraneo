@@ -244,9 +244,8 @@ def generate_image(image_prompt, image_path):
         "model": "dall-e-3",
         "prompt": full_prompt,
         "n": 1,
-        "size": "1792x1024",   # wide format suits hero images
-        "quality": "standard", # use "hd" for higher quality (costs 2x)
-        "response_format": "b64_json"
+        "size": "1792x1024",
+        "quality": "standard"
     }).encode("utf-8")
 
     req = urllib.request.Request("https://api.openai.com/v1/images/generations")
@@ -258,8 +257,12 @@ def generate_image(image_prompt, image_path):
     try:
         with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-        b64 = data["data"][0]["b64_json"]
-        image_bytes = base64.b64decode(b64)
+        image_url = data["data"][0]["url"]
+        # Download the image from the temporary OpenAI URL
+        img_req = urllib.request.Request(image_url)
+        img_req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
+        with urllib.request.urlopen(img_req, timeout=60) as img_resp:
+            image_bytes = img_resp.read()
         os.makedirs(os.path.dirname(image_path), exist_ok=True)
         with open(image_path, "wb") as f:
             f.write(image_bytes)
