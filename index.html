@@ -1459,6 +1459,11 @@ function bkCalcTotal(){
   var ci=qs('checkin').value,co=qs('checkout').value;
   var msg=qs('bkInlineMsg');
   if(!ci||!co){qs('psummary').style.display='none';msg.className='bk-msg';return;}
+  // Reject past dates
+  var todayISO=dStr(new Date());
+  if(ci<todayISO){msg.textContent='Check-in cannot be in the past. Please choose a future date.';msg.className='bk-msg warn';qs('psummary').style.display='none';return;}
+  // Reject checkout before/equal checkin
+  if(co<=ci){msg.textContent='Check-out must be after check-in.';msg.className='bk-msg warn';qs('psummary').style.display='none';return;}
   var n=nCount(ci,co);
   if(n<CFG.MIN_NIGHTS){msg.textContent='Minimum stay is '+CFG.MIN_NIGHTS+' nights. Please adjust your dates.';msg.className='bk-msg warn';qs('psummary').style.display='none';return;}
   if(isConflict(BK.suite,ci,co)){msg.textContent=SUITES[BK.suite].name+' is not available for these dates.';msg.className='bk-msg err';qs('psummary').style.display='none';return;}
@@ -1490,6 +1495,9 @@ window.bkOpenPanel=function(){
   BK.checkin=qs('checkin').value;BK.checkout=qs('checkout').value;
   var msg=qs('bkInlineMsg');
   if(!BK.checkin||!BK.checkout){msg.textContent='Please select your check-in and check-out dates.';msg.className='bk-msg warn';return;}
+  var todayCheck=dStr(new Date());
+  if(BK.checkin<todayCheck){msg.textContent='Check-in cannot be in the past.';msg.className='bk-msg warn';return;}
+  if(BK.checkout<=BK.checkin){msg.textContent='Check-out must be after check-in.';msg.className='bk-msg warn';return;}
   BK.nights=nCount(BK.checkin,BK.checkout);
   if(BK.nights<CFG.MIN_NIGHTS){msg.textContent='Minimum stay is '+CFG.MIN_NIGHTS+' nights.';msg.className='bk-msg warn';return;}
   if(isConflict(BK.suite,BK.checkin,BK.checkout)){msg.textContent=SUITES[BK.suite].name+' is not available for these dates.';msg.className='bk-msg err';return;}
@@ -2532,7 +2540,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system: 'You are a date parser. Extract exactly two dates from the user message and return ONLY a JSON object like {"checkin":"YYYY-MM-DD","checkout":"YYYY-MM-DD"}. Today is ' + new Date().toISOString().split('T')[0] + '. If you cannot extract two clear dates, return {"error":"unclear"}.',
+          system: 'You are a strict date parser. Extract exactly two future dates from the user message and return ONLY a JSON object like {"checkin":"YYYY-MM-DD","checkout":"YYYY-MM-DD"}. Today is ' + new Date().toISOString().split('T')[0] + '. RULES: 1) checkin must be today or in the future. 2) checkout must be strictly AFTER checkin. 3) If checkout would be before checkin, swap them. 4) If you cannot extract two valid dates, return {"error":"unclear"}. Return JSON only, no other text.',
           messages: [{ role:'user', content: text }]
         })
       });
@@ -2570,11 +2578,32 @@ if(!localStorage.getItem('mm_lang_chosen')){
       return;
     }
 
-    // Validate min stay
+    // ── DATE VALIDATION ──
+    const today = new Date().toISOString().split('T')[0];
+
+    // 1. Check-in must not be in the past
+    if (ci < today) {
+      addMessage('toki',
+        'Check-in can\'t be in the past 📅 Please choose a future date.',
+        ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+
+    // 2. Checkout must be after check-in
+    if (co <= ci) {
+      addMessage('toki',
+        'Check-out must be **after** check-in. It looks like those dates are the wrong way around — please try again.',
+        ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+
+    // 3. Min stay
     const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
     if (nights < MIN_NIGHTS) {
       addMessage('toki',
-        'The minimum stay is ' + MIN_NIGHTS + ' nights. Those dates are only ' + nights + ' night' + (nights === 1 ? '' : 's') + '. Could you adjust?',
+        'The minimum stay is **' + MIN_NIGHTS + ' nights**. Those dates are only ' + nights + ' night' + (nights === 1 ? '' : 's') + '. Could you adjust?',
         ['Try again']);
       awaitingDateChange = true;
       return;
@@ -2599,6 +2628,26 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const b   = pendingDateChange.booking;
     const ref = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
     const sn  = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+
+    // Guard: sanity check dates before hitting Supabase
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (newCi < todayStr) {
+      addMessage('toki', 'New check-in can\'t be in the past 📅 Please choose a future date.', ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+    if (newCo <= newCi) {
+      addMessage('toki', 'Check-out must be after check-in. Please try again.', ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+    const chgNights = Math.round((new Date(newCo) - new Date(newCi)) / 86400000);
+    if (chgNights < MIN_NIGHTS) {
+      addMessage('toki', 'The minimum stay is **' + MIN_NIGHTS + ' nights**. Those dates are only ' + chgNights + ' night' + (chgNights === 1 ? '' : 's') + '. Could you adjust?', ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+
     showTyping();
     try {
       // 1. Check availability for new dates
