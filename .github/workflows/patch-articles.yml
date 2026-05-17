@@ -1,0 +1,33 @@
+name: Patch Blog Articles (one-time)
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run patch script
+        run: python patch-blog-articles.py
+
+      - name: Commit and push patched articles
+        run: |
+          git config --local user.email "blog-bot@maremediterraneo.com"
+          git config --local user.name "Mare Mediterraneo Blog Bot"
+          git add blog/
+          if git diff --staged --quiet; then
+            echo "No changes — articles already patched"
+          else
+            git commit -m "patch: responsive images on all existing articles"
+            git push origin HEAD:main
+            echo "Pushed successfully"
+          fi
