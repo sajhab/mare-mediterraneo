@@ -2348,10 +2348,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const nights = b.nights || Math.round((new Date(b.checkout)-new Date(b.checkin))/86400000);
     const guests = b.guests || '—';
     const total  = b.total_price ? '€' + b.total_price : '—';
-    const notes  = b.notes ? '
-Your notes: ' + b.notes : '';
-    const phone  = b.phone ? '
-Phone: ' + b.phone : '';
+    const notes  = b.notes ? '\nYour notes: ' + b.notes : '';
+    const phone  = b.phone ? '\nPhone: ' + b.phone : '';
 
     return `**${suite}**
 Reference: ${ref}
