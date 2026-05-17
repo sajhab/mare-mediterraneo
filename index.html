@@ -1355,12 +1355,16 @@ function selectSuite(n){
 // ── BOOKING ENGINE ──
 (function(){
 'use strict';
+/* ─── FILL IN YOUR DETAILS HERE ─────────────────────────────────────────
+   OWNER_EMAIL : the email address where YOU receive booking notifications
+   Everything else is already correct — do not change SB_URL or SB_KEY
+   RESEND_API_KEY lives in Supabase → Edge Functions → Secrets (not here)
+   ──────────────────────────────────────────────────────────────────── */
 var CFG={
   SB_URL:'https://wbosfegdgizkygxjxjiz.supabase.co',
   SB_KEY:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg',
-  RESEND_KEY:'re_GUnjvkhH_Doc9xHWnJFaNVWYgMNSqp7os',
   FROM_EMAIL:'hello@maremediterraneo.com',
-  OWNER_EMAIL:'sajadhabibi0405@yahoo.com',  /* ← replace with your actual email */
+  OWNER_EMAIL:'online.mmarts@gmail.com', // ← REPLACE THIS with your email
   OWNER_WA:'35699699184',
   MIN_NIGHTS:4,
 };
@@ -1534,7 +1538,14 @@ window.bkSubmit=async function(){
   var ownerHtml='<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">New booking — '+ref+'</h2><table style="border-collapse:collapse;width:100%">'+row('Suite',s.name)+row('Check-in',BK.checkin)+row('Check-out',BK.checkout)+row('Nights',BK.nights)+row('Guests',BK.guests)+row('Rate',rateLabel)+row('Cleaning','€'+s.cleaning)+'<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase">TOTAL</td><td style="padding:10px 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr>'+row('Name',BK.name)+row('Email',BK.email)+row('Phone',BK.phone)+(BK.message?row('Message',BK.message):'')+'</table></div>';
   var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking request is received</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">Reference: '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow('Suite',s.name,true)+gRow('Check-in',BK.checkin+' · from 15:00',false)+gRow('Check-out',BK.checkout+' · by 10:00',false)+gRow('Nights',BK.nights,false)+gRow('Guests',BK.guests,false)+gRow('Rate',rateLabel,false)+gRow('Cleaning','€'+s.cleaning,false)+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">TOTAL</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table><div style="margin:24px 0;padding:18px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.2);border-radius:4px"><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">We will confirm your booking within 24 hours. Questions? <a href="https://wa.me/35699699184" style="color:#C8963E">WhatsApp +356 9969 9184</a></p></div><p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
   var emails=[{to:CFG.OWNER_EMAIL,subject:'[Mare Med] New booking — '+ref+' — '+BK.name,html:ownerHtml},{to:BK.email,subject:'Booking received — '+s.name+' — '+ref,html:guestHtml}];
-  try{for(var i=0;i<emails.length;i++){await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+CFG.RESEND_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:emails[i].to,subject:emails[i].subject,html:emails[i].html,reply_to:CFG.OWNER_EMAIL})});}}catch(e){console.log('[MM] Email error:',e.message);}
+  try{
+    // Calls Supabase Edge Function — avoids browser CORS block on api.resend.com
+    await fetch(CFG.SB_URL+'/functions/v1/send-booking-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':CFG.SB_KEY,'Authorization':'Bearer '+CFG.SB_KEY},
+      body:JSON.stringify({emails:emails.map(function(e){return{from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:e.to,subject:e.subject,html:e.html,reply_to:CFG.OWNER_EMAIL};})})
+    });
+  }catch(e){console.log('[MM] Email edge function error:',e.message);}
   var waText=encodeURIComponent('🌊 New booking — '+ref+'\n\nSuite: '+s.name+'\nCheck-in: '+BK.checkin+'\nCheck-out: '+BK.checkout+'\nNights: '+BK.nights+'  |  Guests: '+BK.guests+'\nTotal: €'+BK.total+'\n\nGuest: '+BK.name+'\nEmail: '+BK.email+'\nPhone: '+BK.phone+(BK.message?'\nMessage: '+BK.message:''));
   window.open('https://wa.me/'+CFG.OWNER_WA+'?text='+waText,'_blank');
   qs('bkD_suite').textContent=s.name;qs('bkD_in').textContent=fmtDate(BK.checkin);qs('bkD_out').textContent=fmtDate(BK.checkout);qs('bkD_total').textContent='€'+BK.total;
