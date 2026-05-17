@@ -105,7 +105,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 </div>
 
 <script>
-var PASS = 'Mare2026';
+// Password stored in Supabase — not in code
 var CLEANER = 'Daniela';
 var SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
@@ -332,19 +332,42 @@ function renderAll() {
 }
 
 // LOGIN
-document.getElementById('loginBtn').addEventListener('click', function() {
+document.getElementById('loginBtn').addEventListener('click', async function() {
   var pass = document.getElementById('loginPass').value;
-  if (pass === PASS) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    renderHeader();
-    document.getElementById('suiteStatuses').innerHTML = '<div class="loading">'+(lang==='it'?'Caricamento...':'Loading...')+'</div>';
-    loadData(function() { renderAll(); });
-  } else {
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginError').textContent = tx('err');
-    document.getElementById('loginPass').value = '';
+  if (!pass) return;
+  var btn = document.getElementById('loginBtn');
+  var errEl = document.getElementById('loginError');
+  btn.disabled = true;
+  errEl.style.display = 'none';
+  try {
+    var res = await fetch(SB_URL + '/rest/v1/settings?key=eq.clean_password&select=value&apikey=' + SB_KEY);
+    var rows = await res.json();
+    var stored = rows && rows[0] && rows[0].value ? rows[0].value.hash : null;
+    if (!stored) {
+      errEl.textContent = 'Password not configured';
+      errEl.style.display = 'block';
+    } else {
+      var encoder = new TextEncoder();
+      var hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(pass));
+      var hashHex = Array.from(new Uint8Array(hashBuffer)).map(function(b) { return b.toString(16).padStart(2,'0'); }).join('');
+      if (hashHex === stored) {
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        renderHeader();
+        document.getElementById('suiteStatuses').innerHTML = '<div class="loading">'+(lang==='it'?'Caricamento...':'Loading...')+'</div>';
+        loadData(function() { renderAll(); });
+      } else {
+        errEl.style.display = 'block';
+        errEl.textContent = tx('err');
+        document.getElementById('loginPass').value = '';
+      }
+    }
+  } catch(e) {
+    errEl.textContent = 'Connection error — try again';
+    errEl.style.display = 'block';
   }
+  btn.disabled = false;
 });
 
 document.getElementById('loginPass').addEventListener('keydown', function(e) {
