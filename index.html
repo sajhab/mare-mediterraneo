@@ -2044,28 +2044,126 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
 <!-- TOKI SCRIPT -->
 <script>
+
 (function() {
   // ── CONFIG ──
   const WA_NUMBER = '35699699184';
-  const REPO_RAW = 'https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main';
+  const REPO_RAW  = 'https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main';
+  const SB_URL    = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+  const SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+  const OWNER_EMAIL = 'online.mmarts@gmail.com';
+  const FROM_EMAIL  = 'hello@maremediterraneo.com';
+  const MIN_NIGHTS  = 4;
 
   // ── STATE ──
-  let isOpen = false;
-  let isTyping = false;
+  let isOpen     = false;
+  let isTyping   = false;
+  let hasOpened  = false;
   let conversationHistory = [];
-  let availabilityData = null;
-  let tokiKnowledge = null;
-  let hasOpened = false;
+  let availabilityData    = null;
+  let tokiKnowledge       = null;
 
-  // ── BOOKING LOOKUP STATE ──
-  const SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
-  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
-  let verifiedGuest = null;       // { email, bookings[] } — set once per session
-  let awaitingEmail = false;      // true when Toki asked for email
-  let awaitingRef = false;        // true when Toki asked for reference number
-  let pendingEmail = null;        // holds email while waiting for reference
-  let awaitingDateChange = false; // true when collecting new dates
-  let pendingDateChange = null;   // { booking } being changed
+  // Verification state (persisted in sessionStorage across refresh)
+  let verifiedGuest    = null;
+  let awaitingEmail    = false;
+  let awaitingRef      = false;
+  let pendingEmail     = null;
+
+  // Date change state
+  let awaitingDateChange = false;
+  let pendingDateChange  = null;
+
+  // New booking via Toki state
+  let tokiBooking = null; // collecting new booking details step by step
+
+  // ── SESSION PERSISTENCE — survive refresh, reset on tab close ──
+  function saveSession() {
+    if (verifiedGuest) {
+      try { sessionStorage.setItem('toki_verified', JSON.stringify(verifiedGuest)); } catch(e) {}
+    }
+  }
+  function loadSession() {
+    try {
+      const s = sessionStorage.getItem('toki_verified');
+      if (s) verifiedGuest = JSON.parse(s);
+    } catch(e) {}
+  }
+  loadSession();
+
+  // ── LANGUAGE HELPERS ──
+  function siteLang() {
+    return (typeof lang !== 'undefined' ? lang : 'en');
+  }
+
+  const LANG_NAMES = { en:'English', it:'Italian', de:'German', fr:'French' };
+
+  // Translations for Toki UI strings
+  const T = {
+    en: {
+      welcome: 'Ciao! 🌊 I\'m Toki, your personal concierge at Mare Mediterraneo.\n\nI can answer any question about the property, check availability — and if you already have a booking, I can look it up for you instantly.\n\nHow can I help?',
+      qr: ['Check availability','Prices & suites','My booking / Reservation','Location & distances','House rules'],
+      askEmail: 'I\'d be happy to look that up! 🌊\n\nTo access your booking, please enter the **email address** you used when booking:',
+      askRef: 'Grazie! Now please enter your **booking reference number** — it starts with **MM-** and was in your confirmation email.\n\n*(Example: MM-1ABC2DEF)*',
+      badEmail: 'Hmm, that doesn\'t look like a valid email. Please try again 🌊',
+      badRef: 'I couldn\'t match that email and reference. Please double-check both — your reference starts with **MM-** and was in your confirmation email.',
+      verifiedSingle: 'Identity verified ✅\n\nHere is your booking, **{name}**:\n\n{booking}',
+      verifiedMulti: 'Identity verified ✅\n\nI found **{n} bookings**. Most recent:\n\n{booking}',
+      tryAgain: 'No problem! Let\'s start over — please enter your **email address**:',
+      placeholder: 'Ask me anything...',
+    },
+    it: {
+      welcome: 'Ciao! 🌊 Sono Toki, il tuo concierge personale al Mare Mediterraneo.\n\nPosso rispondere a qualsiasi domanda sulla proprietà, verificare la disponibilità — e se hai già una prenotazione, posso cercarla subito.\n\nCome posso aiutarti?',
+      qr: ['Verifica disponibilità','Prezzi & suite','La mia prenotazione','Posizione & dintorni','Regole della casa'],
+      askEmail: 'Figurati! 🌊\n\nPer accedere alla tua prenotazione, inserisci l\'**indirizzo email** che hai usato quando hai prenotato:',
+      askRef: 'Grazie! Ora inserisci il tuo **numero di riferimento prenotazione** — inizia con **MM-** ed era nella tua email di conferma.',
+      badEmail: 'Hmm, non sembra un\'email valida. Riprova 🌊',
+      badRef: 'Non riesco ad abbinare quell\'email e quel riferimento. Controlla entrambi — il tuo riferimento inizia con **MM-**.',
+      verifiedSingle: 'Identità verificata ✅\n\nEcco la tua prenotazione, **{name}**:\n\n{booking}',
+      verifiedMulti: 'Identità verificata ✅\n\nHo trovato **{n} prenotazioni**. La più recente:\n\n{booking}',
+      tryAgain: 'Nessun problema! Ricominciamo — inserisci il tuo **indirizzo email**:',
+      placeholder: 'Chiedimi qualcosa...',
+    },
+    de: {
+      welcome: 'Ciao! 🌊 Ich bin Toki, Ihr persönlicher Concierge im Mare Mediterraneo.\n\nIch beantworte alle Fragen zur Unterkunft, prüfe die Verfügbarkeit — und wenn Sie bereits eine Buchung haben, kann ich diese sofort aufrufen.\n\nWie kann ich helfen?',
+      qr: ['Verfügbarkeit prüfen','Preise & Suiten','Meine Buchung','Lage & Umgebung','Hausregeln'],
+      askEmail: 'Gerne helfe ich! 🌊\n\nBitte geben Sie die **E-Mail-Adresse** ein, die Sie bei der Buchung verwendet haben:',
+      askRef: 'Danke! Bitte geben Sie jetzt Ihre **Buchungsreferenz** ein — sie beginnt mit **MM-** und war in Ihrer Bestätigungs-E-Mail.',
+      badEmail: 'Hmm, das sieht nicht wie eine gültige E-Mail aus. Bitte erneut versuchen 🌊',
+      badRef: 'Ich konnte diese E-Mail und Referenz nicht zuordnen. Bitte beides prüfen — Ihre Referenz beginnt mit **MM-**.',
+      verifiedSingle: 'Identität bestätigt ✅\n\nHier ist Ihre Buchung, **{name}**:\n\n{booking}',
+      verifiedMulti: 'Identität bestätigt ✅\n\nIch habe **{n} Buchungen** gefunden. Neueste:\n\n{booking}',
+      tryAgain: 'Kein Problem! Von vorne — bitte Ihre **E-Mail-Adresse** eingeben:',
+      placeholder: 'Fragen Sie mich alles...',
+    },
+    fr: {
+      welcome: 'Ciao! 🌊 Je suis Toki, votre concierge personnel au Mare Mediterraneo.\n\nJe peux répondre à toutes vos questions, vérifier les disponibilités — et si vous avez déjà une réservation, je peux la retrouver immédiatement.\n\nComment puis-je vous aider?',
+      qr: ['Vérifier disponibilité','Prix & suites','Ma réservation','Situation & environs','Règles de la maison'],
+      askEmail: 'Avec plaisir! 🌊\n\nPour accéder à votre réservation, entrez l\'**adresse email** utilisée lors de la réservation:',
+      askRef: 'Merci! Entrez maintenant votre **numéro de référence** — il commence par **MM-** et figurait dans votre email de confirmation.',
+      badEmail: 'Hmm, cela ne ressemble pas à un email valide. Veuillez réessayer 🌊',
+      badRef: 'Je n\'arrive pas à faire correspondre cet email et cette référence. Vérifiez les deux — votre référence commence par **MM-**.',
+      verifiedSingle: 'Identité vérifiée ✅\n\nVoici votre réservation, **{name}**:\n\n{booking}',
+      verifiedMulti: 'Identité vérifiée ✅\n\nJ\'ai trouvé **{n} réservations**. La plus récente:\n\n{booking}',
+      tryAgain: 'Pas de problème! Recommençons — entrez votre **adresse email**:',
+      placeholder: 'Posez-moi une question...',
+    },
+  };
+
+  function t(key, vars) {
+    const l = siteLang();
+    let str = (T[l] || T.en)[key] || (T.en)[key] || '';
+    if (vars) Object.keys(vars).forEach(k => { str = str.replace('{' + k + '}', vars[k]); });
+    return str;
+  }
+
+  // ── LIVE LANGUAGE SWITCH — hook into site setLang ──
+  const _origSetLang = window.setLang;
+  window.setLang = function(l) {
+    if (_origSetLang) _origSetLang(l);
+    // Update Toki input placeholder live
+    const inp = document.getElementById('tokiInput');
+    if (inp) inp.placeholder = (T[l] || T.en).placeholder;
+  };
 
   // ── LOAD DATA ──
   async function loadData() {
@@ -2075,12 +2173,9 @@ if(!localStorage.getItem('mm_lang_chosen')){
         fetch(REPO_RAW + '/toki-knowledge.json?t=' + Date.now())
       ]);
       if (avRes.ok) availabilityData = await avRes.json();
-      if (knRes.ok) tokiKnowledge = await knRes.json();
-    } catch(e) {
-      // Use defaults if fetch fails
-    }
+      if (knRes.ok) tokiKnowledge    = await knRes.json();
+    } catch(e) {}
   }
-
   loadData();
 
   // ── TOGGLE ──
@@ -2092,21 +2187,26 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     if (isOpen && !hasOpened) {
       hasOpened = true;
-      setTimeout(() => {
-        const _tl = {
-          en: { msg: 'Ciao! 🌊 I\'m Toki, your personal concierge at Mare Mediterraneo.\n\nI can answer any question about the property, check availability — and if you already have a booking, I can look it up for you instantly.\n\nHow can I help?',
-                qr: ['Check availability','Prices & suites','My booking / Reservation','Location & distances','House rules'] },
-          it: { msg: 'Ciao! 🌊 Sono Toki, il tuo concierge personale al Mare Mediterraneo.\n\nPosso rispondere a qualsiasi domanda sulla proprietà, verificare la disponibilità — e se hai già una prenotazione, posso cercarla subito.\n\nCome posso aiutarti?',
-                qr: ['Verifica disponibilità','Prezzi & suite','La mia prenotazione','Posizione & dintorni','Regole della casa'] },
-          de: { msg: 'Ciao! 🌊 Ich bin Toki, Ihr persönlicher Concierge im Mare Mediterraneo.\n\nIch beantworte alle Fragen zur Unterkunft, prüfe die Verfügbarkeit — und wenn Sie bereits eine Buchung haben, kann ich diese sofort aufrufen.\n\nWie kann ich helfen?',
-                qr: ['Verfügbarkeit prüfen','Preise & Suiten','Meine Buchung','Lage & Umgebung','Hausregeln'] },
-          fr: { msg: 'Ciao! 🌊 Je suis Toki, votre concierge personnel au Mare Mediterraneo.\n\nJe peux répondre à toutes vos questions, vérifier les disponibilités — et si vous avez déjà une réservation, je peux la retrouver immédiatement.\n\nComment puis-je vous aider?',
-                qr: ['Vérifier disponibilité','Prix & suites','Ma réservation','Situation & environs','Règles de la maison'] },
-        };
-        const _lang = (typeof lang !== 'undefined' ? lang : 'en');
-        const _t = _tl[_lang] || _tl.en;
-        addMessage('toki', _t.msg, _t.qr);
-      }, 400);
+
+      // If already verified from sessionStorage, restore context
+      if (verifiedGuest && verifiedGuest.bookings && verifiedGuest.bookings.length) {
+        const bookingContext = verifiedGuest.bookings.map(formatBooking).join('\n\n---\n\n');
+        conversationHistory.push({
+          role: 'user',
+          content: '[SYSTEM: Guest verified (session restored). Found ' + verifiedGuest.bookings.length + ' booking(s):\n\n' + bookingContext + '\n\nUse this data to answer their questions.]'
+        });
+        setTimeout(() => {
+          const l = siteLang();
+          addMessage('toki',
+            'Bentornato! 🌊 I still have your booking details. How can I help?',
+            ['My booking details', 'Change my dates', 'Check-in info', 'I have a question']);
+        }, 400);
+      } else {
+        setTimeout(() => {
+          const qr = t('qr');
+          addMessage('toki', t('welcome'), qr);
+        }, 400);
+      }
     }
 
     if (isOpen) {
@@ -2126,9 +2226,6 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     const bubble = document.createElement('div');
     bubble.className = 'msg-bubble';
-    bubble.style.whiteSpace = 'pre-wrap';
-
-    // Format links
     bubble.innerHTML = text
       .replace(/\n/g, '<br>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -2136,19 +2233,16 @@ if(!localStorage.getItem('mm_lang_chosen')){
     msg.appendChild(avatar);
     msg.appendChild(bubble);
 
-    // WhatsApp button
     if (text.includes('WhatsApp') && text.includes('contact')) {
       const wa = document.createElement('a');
       wa.className = 'toki-wa-btn';
       wa.href = 'https://wa.me/' + WA_NUMBER;
       wa.target = '_blank';
-      wa.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#25D166"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Continue on WhatsApp`;
+      wa.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="#25D166"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Continue on WhatsApp';
       bubble.appendChild(document.createElement('br'));
       bubble.appendChild(wa);
     }
 
-    // Quick replies
     if (quickReplies.length > 0) {
       const qr = document.createElement('div');
       qr.className = 'quick-replies';
@@ -2156,111 +2250,32 @@ if(!localStorage.getItem('mm_lang_chosen')){
         const btn = document.createElement('button');
         btn.className = 'quick-btn';
         btn.textContent = reply;
-        btn.onclick = () => {
-          qr.remove();
-          handleQuickReply(reply);
-        };
+        btn.onclick = () => { qr.remove(); handleQuickReply(reply); };
         qr.appendChild(btn);
       });
       msg.appendChild(qr);
     }
 
     container.appendChild(msg);
-    // Scroll so the TOP of the new message is visible (not the bottom)
-    setTimeout(function() {
-      const msgTop = msg.offsetTop;
-      const containerH = container.clientHeight;
-      const msgH = msg.offsetHeight;
-      // If message is taller than container, show the top; otherwise center it
-      container.scrollTop = msgH > containerH
-        ? msgTop
-        : Math.max(0, msgTop - 12);
+    // Scroll to TOP of new message
+    setTimeout(() => {
+      const msgTop  = msg.offsetTop;
+      const contH   = container.clientHeight;
+      const msgH    = msg.offsetHeight;
+      container.scrollTop = msgH > contH ? msgTop : Math.max(0, msgTop - 12);
     }, 30);
   }
 
-  function handleQuickReply(reply) {
-    addMessage('user', reply);
-
-    // Special quick reply handlers
-    if (reply === 'Modify my booking') {
-      if (verifiedGuest) { startDateChange(); }
-      else {
-        awaitingEmail = true;
-        addMessage('toki', 'To modify your booking I\'ll need to verify your identity first. Please enter your **email address**:');
-      }
-      return;
-    }
-    if (['My booking','My reservation','My booking / Reservation',
-         'La mia prenotazione','Meine Buchung','Ma réservation',
-         'Verifica disponibilità','Check availability'].includes(reply) && reply.includes('reservation') || 
-        reply === 'My booking' || reply === 'My reservation' || reply === 'My booking / Reservation' ||
-        reply === 'La mia prenotazione' || reply === 'Meine Buchung' || reply === 'Ma réservation') {
-      if (!verifiedGuest) {
-        awaitingEmail = true;
-        addMessage('toki', 'I\'d love to help with your booking! 🌊\n\nPlease share the **email address** you used when making your reservation and I\'ll pull up your details right away.');
-        return;
-      }
-      // Already verified
-      const intro = verifiedGuest.bookings.length === 1
-        ? 'Here is your booking:\n\n' + formatBooking(verifiedGuest.bookings[0])
-        : 'Here are your bookings:\n\n' + verifiedGuest.bookings.map(formatBooking).join('\n\n---\n\n');
-      addMessage('toki', intro, ['Check-in info', 'Modify my booking', 'I have a question']);
-      return;
-    }
-    if (reply === 'Try a different email' || reply === 'Try again') {
-      // Reset and restart from email
-      pendingEmail = null; awaitingEmail = false; awaitingRef = false;
-      awaitingEmail = true;
-      addMessage('toki', 'No problem! Let\'s start over — please enter the **email address** you used when booking:');
-      return;
-    }
-    if (reply === 'Change my dates') {
-      if (verifiedGuest) { startDateChange(); } else {
-        awaitingEmail = true;
-        addMessage('toki', 'To request a date change I\'ll need to verify your booking first. Please enter your **email address**:');
-      }
-      return;
-    }
-    if (reply === 'Show all bookings' && verifiedGuest) {
-      const all = verifiedGuest.bookings.map(formatBooking).join('\n\n---\n\n');
-      addMessage('toki', 'Here are all your bookings:\n\n' + all, ['Check-in info', 'I have a question']);
-      return;
-    }
-
-    conversationHistory.push({role:'user', content: reply});
-    routeMessage(reply);
-  }
-
-  // Route message: booking query → verify email first, else AI
-  function routeMessage(msg) {
-    // If asking about their booking and not yet verified → ask for email
-    if (isBookingQuery(msg) && !verifiedGuest) {
-      awaitingEmail = true;
-      addMessage('toki',
-        'I\'d be happy to look that up for you! 🌊\n\nTo access your booking details, could you please share the **email address** you used when making your reservation?');
-      return;
-    }
-    // Already verified and booking query → inject context and ask AI
-    getAIResponse(msg);
-  }
-
-  // ── TYPING INDICATOR ──
+  // ── TYPING ──
   function showTyping() {
     const container = document.getElementById('tokiMessages');
     const el = document.createElement('div');
     el.className = 'msg toki';
     el.id = 'typingIndicator';
-    el.innerHTML = `
-      <div class="msg-avatar">🌊</div>
-      <div class="msg-bubble">
-        <div class="typing-dots">
-          <span></span><span></span><span></span>
-        </div>
-      </div>`;
+    el.innerHTML = '<div class="msg-avatar">🌊</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
     container.appendChild(el);
     container.scrollTop = container.scrollHeight;
   }
-
   function hideTyping() {
     const el = document.getElementById('typingIndicator');
     if (el) el.remove();
@@ -2269,31 +2284,18 @@ if(!localStorage.getItem('mm_lang_chosen')){
   // ── SEND MESSAGE ──
   window.sendMessage = function() {
     const input = document.getElementById('tokiInput');
-    const text = input.value.trim();
+    const text  = input.value.trim();
     if (!text || isTyping) return;
-
     input.value = '';
     input.style.height = 'auto';
     addMessage('user', text);
 
-    // Verification flow intercepts
-    if (awaitingEmail) {
-      awaitingEmail = false;
-      handleEmailVerification(text);
-      return;
-    }
-    if (awaitingRef) {
-      awaitingRef = false;
-      handleReferenceVerification(text);
-      return;
-    }
-    if (awaitingDateChange) {
-      awaitingDateChange = false;
-      handleDateChange(text);
-      return;
-    }
+    if (awaitingEmail)      { awaitingEmail = false;      handleEmailVerification(text); return; }
+    if (awaitingRef)        { awaitingRef = false;        handleReferenceVerification(text); return; }
+    if (awaitingDateChange) { awaitingDateChange = false; handleDateInput(text); return; }
+    if (tokiBooking)        { handleBookingStep(text); return; }
 
-    conversationHistory.push({role:'user', content: text});
+    conversationHistory.push({ role:'user', content: text });
     routeMessage(text);
   };
 
@@ -2302,247 +2304,525 @@ if(!localStorage.getItem('mm_lang_chosen')){
     el.style.height = Math.min(el.scrollHeight, 100) + 'px';
   };
 
+  // ── QUICK REPLIES ──
+  function handleQuickReply(reply) {
+    addMessage('user', reply);
 
-  // ── BOOKING LOOKUP ──────────────────────────────────────────────────────────
+    const r = reply.toLowerCase();
 
-  // Detect if message is asking about their booking
+    // Booking lookup triggers
+    if (['my booking / reservation','la mia prenotazione','meine buchung','ma réservation',
+         'my booking details'].some(k => r.includes(k)) || r === 'my booking' || r === 'my reservation') {
+      if (verifiedGuest) {
+        showVerifiedBooking();
+      } else {
+        awaitingEmail = true;
+        addMessage('toki', t('askEmail'));
+      }
+      return;
+    }
+    if (reply === 'Try again' || reply === 'Try a different email') {
+      pendingEmail = null; awaitingEmail = false; awaitingRef = false;
+      awaitingEmail = true;
+      addMessage('toki', t('tryAgain'));
+      return;
+    }
+    if (reply === 'Change my dates') {
+      if (verifiedGuest) { startDateChange(); }
+      else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
+      return;
+    }
+    if (reply === 'Modify my booking') {
+      if (verifiedGuest) { startDateChange(); }
+      else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
+      return;
+    }
+    if (reply === 'Show all bookings' && verifiedGuest) {
+      addMessage('toki', 'Here are all your bookings:\n\n' +
+        verifiedGuest.bookings.map(formatBooking).join('\n\n---\n\n'),
+        ['Check-in info', 'I have a question']);
+      return;
+    }
+    if (reply === 'My booking details' && verifiedGuest) {
+      showVerifiedBooking();
+      return;
+    }
+
+    conversationHistory.push({ role:'user', content: reply });
+    routeMessage(reply);
+  }
+
+  function routeMessage(msg) {
+    if (isBookingQuery(msg) && !verifiedGuest) {
+      awaitingEmail = true;
+      addMessage('toki', t('askEmail'));
+      return;
+    }
+    getAIResponse(msg);
+  }
+
+  function showVerifiedBooking() {
+    const b = verifiedGuest.bookings;
+    const count = b.length;
+    const intro = count === 1
+      ? t('verifiedSingle', { name: b[0].guest || '', booking: formatBooking(b[0]) })
+      : t('verifiedMulti',  { n: count, booking: formatBooking(b[0]) });
+    const qr = count > 1
+      ? ['Show all bookings','Change my dates','Check-in info','I have a question']
+      : ['Change my dates','Check-in info','What should I bring?','I have a question'];
+    addMessage('toki', intro, qr);
+  }
+
+  // ── BOOKING QUERY DETECTION ──
   function isBookingQuery(msg) {
     const kw = ['my booking','my reservation','reservation','my booking / reservation',
                 'reference','ref number','booked','my stay','check my booking',
                 'my check','status','confirm','when is','did you receive','did i book',
-                'meine buchung','meine reservierung','buchung nachschlagen',
-                'la mia prenotazione','verifica prenotazione',
+                'meine buchung','meine reservierung','la mia prenotazione','verifica prenotazione',
                 'ma réservation','vérifier ma réservation'];
     const lower = msg.toLowerCase();
     return kw.some(k => lower.includes(k));
   }
 
-  // Fetch bookings by email + reference_id from Supabase (dual verification)
-  async function fetchGuestBookings(email, refId) {
-    // refId is the full reference like "MM-1ABC2DEF" — we store reference_id in DB
-    const url = SB_URL + '/rest/v1/bookings'
-      + '?email=eq.' + encodeURIComponent(email.trim().toLowerCase())
-      + '&reference_id=eq.' + encodeURIComponent(refId.trim().toUpperCase())
-      + '&linked_to_villa=eq.false'
-      + '&order=checkin.desc'
-      + '&select=id,suite,checkin,checkout,nights,guests,total_price,reference_id,guest,email,phone,notes,status,created_at';
-    const res = await fetch(url, {
-      headers: {
-        'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + SB_KEY,
-      }
-    });
+  // ── SUPABASE HELPERS ──
+  function sbHdrs() {
+    return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+  }
+  async function sbFetch(url) {
+    const res = await fetch(url, { headers: sbHdrs() });
     if (!res.ok) return [];
-    return await res.json();
+    return res.json();
+  }
+  async function sbInsert(table, obj) {
+    const res = await fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY, {
+      method: 'POST', headers: sbHdrs(), body: JSON.stringify(obj)
+    });
+    return res.json();
+  }
+  async function sendEmail(emails) {
+    await fetch(SB_URL + '/functions/v1/send-booking-email', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY },
+      body: JSON.stringify({ emails })
+    });
   }
 
-  // Format a booking into a readable Toki message
+  // ── AVAILABILITY CHECK (Supabase live) ──
+  function overlaps(s1, e1, s2, e2) { return s1 < e2 && e1 > s2; }
+
+  async function checkAvailability(suite, checkin, checkout) {
+    // Query existing bookings
+    const url = SB_URL + '/rest/v1/bookings'
+      + '?select=suite,checkin,checkout,linked_to_villa'
+      + '&or=(status.eq.confirmed,status.eq.pending)'
+      + '&apikey=' + SB_KEY;
+    const rows = await sbFetch(url);
+    const suitesToCheck = suite === 'villa' ? ['pietra','cielo','villa'] : [suite, 'villa'];
+    for (const row of rows) {
+      const rs = (row.suite || '').toLowerCase();
+      if (suite === 'villa') {
+        if (['pietra','cielo','villa'].includes(rs) && !row.linked_to_villa &&
+            overlaps(checkin, checkout, row.checkin, row.checkout)) return false;
+      } else {
+        if (suitesToCheck.includes(rs) &&
+            overlaps(checkin, checkout, row.checkin, row.checkout)) return false;
+      }
+    }
+    // Also check blocked_dates
+    const burl = SB_URL + '/rest/v1/blocked_dates?select=suite,from_date,to_date&apikey=' + SB_KEY;
+    const blocked = await sbFetch(burl);
+    for (const b of blocked) {
+      const bs = (b.suite || '').toLowerCase();
+      const applies = bs === 'all' || bs === suite ||
+        (suite === 'villa' && (bs === 'pietra' || bs === 'cielo')) ||
+        (suite !== 'villa' && bs === 'villa');
+      if (applies && overlaps(checkin, checkout, b.from_date, b.to_date)) return false;
+    }
+    return true;
+  }
+
+  // ── FETCH GUEST BOOKINGS (email + reference) ──
+  async function fetchGuestBookings(email, refId) {
+    const url = SB_URL + '/rest/v1/bookings'
+      + '?email=eq.' + encodeURIComponent(email)
+      + '&reference_id=eq.' + encodeURIComponent(refId.toUpperCase())
+      + '&linked_to_villa=eq.false'
+      + '&order=checkin.desc'
+      + '&select=id,suite,checkin,checkout,nights,guests,total_price,reference_id,guest,email,phone,notes,status,created_at'
+      + '&apikey=' + SB_KEY;
+    return sbFetch(url);
+  }
+
+  // ── FORMAT BOOKING ──
   function formatBooking(b) {
     const suiteNames = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
     const suite  = suiteNames[b.suite] || b.suite;
     const ref    = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
     const status = b.status === 'confirmed' ? '✅ Confirmed'
                  : b.status === 'pending'   ? '⏳ Pending confirmation'
-                 : b.status === 'cancelled' ? '❌ Cancelled'
-                 : b.status;
-    const nights = b.nights || Math.round((new Date(b.checkout)-new Date(b.checkin))/86400000);
-    const guests = b.guests || '—';
-    const total  = b.total_price ? '€' + b.total_price : '—';
-    const notes  = b.notes ? '\nYour notes: ' + b.notes : '';
+                 : b.status === 'cancelled' ? '❌ Cancelled' : b.status;
+    const nights = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
+    const notes  = b.notes ? '\nNotes: ' + b.notes : '';
     const phone  = b.phone ? '\nPhone: ' + b.phone : '';
-
-    return `**${suite}**
-Reference: ${ref}
-Status: ${status}
-Check-in: ${b.checkin} (from 15:00)
-Check-out: ${b.checkout} (by 10:00)
-Nights: ${nights} · Guests: ${guests}
-Total: ${total}${phone}${notes}`;
+    return '**' + suite + '**\nReference: ' + ref + '\nStatus: ' + status +
+           '\nCheck-in: ' + b.checkin + ' (from 15:00)' +
+           '\nCheck-out: ' + b.checkout + ' (by 10:00)' +
+           '\nNights: ' + nights + ' · Guests: ' + (b.guests || '—') +
+           '\nTotal: ' + (b.total_price ? '€' + b.total_price : '—') + phone + notes;
   }
 
-  // Handle email verification flow
-  // Step 1: collect email, then ask for reference number
+  // ── VERIFICATION ──
   async function handleEmailVerification(email) {
     if (!email.includes('@') || !email.includes('.')) {
-      addMessage('toki', "Hmm, that doesn't look like a valid email. Please try again 🌊");
+      addMessage('toki', t('badEmail'));
       awaitingEmail = true;
       return;
     }
     pendingEmail = email.trim().toLowerCase();
-    awaitingEmail = false;
-    awaitingRef = true;
-    addMessage('toki',
-      'Grazie! 🌊 Now please enter your **booking reference number** — it starts with MM- and was included in your confirmation email.\n\n*(Example: MM-1ABC2DEF)*');
+    awaitingRef  = true;
+    addMessage('toki', t('askRef'));
   }
 
-  // Step 2: collect reference, query Supabase with both email + ref
   async function handleReferenceVerification(refInput) {
     let ref = refInput.trim().toUpperCase();
     if (!ref.startsWith('MM-')) ref = 'MM-' + ref;
-
     showTyping();
     let bookings = [];
-    try {
-      bookings = await fetchGuestBookings(pendingEmail, ref);
-    } catch(e) {
-      hideTyping();
-      addMessage('toki', "Mi dispiace, I had trouble reaching the database. Please try again.", ['Try again']);
-      awaitingRef = false;
-      return;
-    }
+    try { bookings = await fetchGuestBookings(pendingEmail, ref); } catch(e) {}
     hideTyping();
-
     if (!bookings || bookings.length === 0) {
-      addMessage('toki',
-        'I couldn\'t match that email and reference number. Please double-check both and try again.\n\nYour reference starts with **MM-** and was in your confirmation email.',
-        ['Try again', 'I need other help']);
+      addMessage('toki', t('badRef'), ['Try again', 'I need other help']);
       awaitingRef = true;
       return;
     }
-
     verifiedGuest = { email: pendingEmail, bookings };
-    awaitingRef = false;
-    pendingEmail = null;
-
+    pendingEmail  = null;
+    saveSession();
     const bookingContext = bookings.map(formatBooking).join('\n\n---\n\n');
-    const count = bookings.length;
-
     conversationHistory.push({
       role: 'user',
-      content: '[SYSTEM: Guest verified by email + reference. Found ' + count + ' booking(s):\n\n' + bookingContext + '\n\nUse this data to answer their questions.]'
+      content: '[SYSTEM: Guest verified by email + reference. Found ' + bookings.length + ' booking(s):\n\n' + bookingContext + '\n\nUse this data to answer their questions.]'
     });
-
-    const intro = count === 1
-      ? 'Identity verified ✅\n\nHere is your booking, **' + (bookings[0].guest || '') + '**:\n\n' + formatBooking(bookings[0])
-      : 'Identity verified ✅\n\nI found **' + count + ' bookings**. Most recent:\n\n' + formatBooking(bookings[0]);
-
-    const qr = count > 1
-      ? ['Show all bookings', 'Change my dates', 'Check-in info', 'I have a question']
-      : ['Change my dates', 'Check-in info', 'What should I bring?', 'I have a question'];
-
-    addMessage('toki', intro, qr);
+    const qr = bookings.length > 1
+      ? ['Show all bookings','Change my dates','Check-in info','I have a question']
+      : ['Change my dates','Check-in info','What should I bring?','I have a question'];
+    addMessage('toki',
+      bookings.length === 1
+        ? t('verifiedSingle', { name: bookings[0].guest || '', booking: formatBooking(bookings[0]) })
+        : t('verifiedMulti',  { n: bookings.length, booking: formatBooking(bookings[0]) }),
+      qr);
   }
 
-  // ── DATE CHANGE REQUEST ────────────────────────────────────────────────────
-
+  // ── DATE CHANGE ──
   function startDateChange() {
     if (!verifiedGuest || !verifiedGuest.bookings.length) return;
-    pendingDateChange = { booking: verifiedGuest.bookings[0] };
+    pendingDateChange  = { booking: verifiedGuest.bookings[0] };
     awaitingDateChange = true;
     addMessage('toki',
-      'Of course! Please type your new preferred dates in this format:\n\n**Check-in: YYYY-MM-DD**\n**Check-out: YYYY-MM-DD**\n\nFor example:\nCheck-in: 2026-08-10\nCheck-out: 2026-08-17');
+      'Of course! 🌊 Just tell me your new preferred dates — you can write naturally, for example:\n\n*"August 10 to August 17"*\n*"10/08 to 17/08/2026"*\n*"one week from August 10"*');
   }
 
-  async function handleDateChange(text) {
-    awaitingDateChange = false;
-    // Parse dates from free text
-    const dates = text.match(/\d{4}-\d{2}-\d{2}/g);
-    if (!dates || dates.length < 2) {
+  // ── DATE INPUT — uses AI to parse any natural language ──
+  async function handleDateInput(text) {
+    // Ask AI to extract two ISO dates from natural language
+    showTyping();
+    let ci = null, co = null;
+    try {
+      const parseRes = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: 'You are a date parser. Extract exactly two dates from the user message and return ONLY a JSON object like {"checkin":"YYYY-MM-DD","checkout":"YYYY-MM-DD"}. Today is ' + new Date().toISOString().split('T')[0] + '. If you cannot extract two clear dates, return {"error":"unclear"}.',
+          messages: [{ role:'user', content: text }]
+        })
+      });
+      const pd = await parseRes.json();
+      const raw = pd.choices && pd.choices[0] ? pd.choices[0].message.content.trim() : '';
+      const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+      if (!parsed.error) { ci = parsed.checkin; co = parsed.checkout; }
+    } catch(e) {}
+
+    // Fallback: regex ISO or DD/MM/YYYY
+    if (!ci || !co) {
+      const isoMatches = text.match(/\d{4}-\d{2}-\d{2}/g);
+      if (isoMatches && isoMatches.length >= 2) { ci = isoMatches[0]; co = isoMatches[1]; }
+      else {
+        const euMatches = text.match(/(\d{1,2})[\/\-\.](\d{1,2})(?:[\/\-\.](\d{4}))?/g);
+        if (euMatches && euMatches.length >= 2) {
+          function euToIso(s) {
+            const p = s.split(/[\/\-\.]/);
+            const y = p[2] || new Date().getFullYear().toString();
+            return y + '-' + p[1].padStart(2,'0') + '-' + p[0].padStart(2,'0');
+          }
+          ci = euToIso(euMatches[0]);
+          co = euToIso(euMatches[1]);
+        }
+      }
+    }
+
+    hideTyping();
+
+    if (!ci || !co) {
       addMessage('toki',
-        "I couldn't read those dates. Please use the format YYYY-MM-DD, for example:\n\nCheck-in: 2026-08-10\nCheck-out: 2026-08-17",
+        'I couldn\'t quite figure out those dates 😅 Please try again — for example:\n\n"10 August to 17 August" or "2026-08-10 to 2026-08-17"',
         ['Try again']);
       awaitingDateChange = true;
       return;
     }
-    const newCheckin  = dates[0];
-    const newCheckout = dates[1];
-    const b = pendingDateChange.booking;
-    const ref = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
-    const suiteNames = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
 
-    // Send email to owner via Edge Function
+    // Validate min stay
+    const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+    if (nights < MIN_NIGHTS) {
+      addMessage('toki',
+        'The minimum stay is ' + MIN_NIGHTS + ' nights. Those dates are only ' + nights + ' night' + (nights === 1 ? '' : 's') + '. Could you adjust?',
+        ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+
+    // If this is for a date CHANGE request (existing booking)
+    if (pendingDateChange) {
+      await sendDateChangeRequest(ci, co);
+      return;
+    }
+
+    // If this is for a new Toki booking
+    if (tokiBooking) {
+      tokiBooking.checkin  = ci;
+      tokiBooking.checkout = co;
+      tokiBooking.nights   = nights;
+      advanceBookingStep();
+    }
+  }
+
+  async function sendDateChangeRequest(newCi, newCo) {
+    const b   = pendingDateChange.booking;
+    const ref = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
+    const sn  = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
     showTyping();
     try {
-      const SB_URL_E = 'https://wbosfegdgizkygxjxjiz.supabase.co';
-      const SB_KEY_E = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
-      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
+      const html = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
         + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Date Change Request</h2>'
         + '<table style="border-collapse:collapse;width:100%">'
         + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Reference</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + ref + '</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Suite</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + (suiteNames[b.suite]||b.suite) + '</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Suite</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + (sn[b.suite]||b.suite) + '</td></tr>'
         + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Guest</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + b.guest + '</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Guest email</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + b.email + '</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;font-size:11px;text-transform:uppercase">Current dates</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;text-align:right">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
-        + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">Requested dates</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCheckin + ' → ' + newCheckout + '</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;font-size:11px;text-transform:uppercase">Current</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;text-align:right">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
+        + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">Requested</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCi + ' → ' + newCo + '</td></tr>'
         + '</table></div>';
-
-      await fetch(SB_URL_E + '/functions/v1/send-booking-email', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json','apikey':SB_KEY_E,'Authorization':'Bearer '+SB_KEY_E },
-        body: JSON.stringify({ emails: [{
-          from: 'Mare Mediterraneo <hello@maremediterraneo.com>',
-          to: 'online.mmarts@gmail.com',
-          subject: '[Mare Med] Date change request — ' + ref + ' — ' + b.guest,
-          html: ownerHtml,
-          reply_to: b.email,
-        }]})
-      });
+      await sendEmail([{
+        from: 'Mare Mediterraneo <' + FROM_EMAIL + '>',
+        to: OWNER_EMAIL,
+        subject: '[Mare Med] Date change request — ' + ref + ' — ' + b.guest,
+        html, reply_to: b.email
+      }]);
       hideTyping();
       addMessage('toki',
-        'Perfetto! ✅ Your date change request has been sent to the owner.\n\n**New dates requested:**\nCheck-in: ' + newCheckin + '\nCheck-out: ' + newCheckout + '\n\nYou\'ll receive a confirmation email at **' + b.email + '** within 24 hours once the owner confirms availability.',
-        ['I have another question', 'Check-in info']);
+        'Perfetto! ✅ Your date change request has been sent.\n\n**Requested:**\nCheck-in: ' + newCi + '\nCheck-out: ' + newCo + '\n\nThe owner will confirm within 24 hours and email you at **' + b.email + '**.',
+        ['I have another question','Check-in info']);
     } catch(e) {
       hideTyping();
       addMessage('toki',
-        'Mi dispiace, I had trouble sending that request. Please email us directly at **online.mmarts@gmail.com** with your reference **' + ref + '** and your new preferred dates.',
-        ['I need other help']);
+        'Mi dispiace, something went wrong. Please email **' + OWNER_EMAIL + '** directly with reference **' + ref + '** and your new dates.');
     }
     pendingDateChange = null;
   }
 
-  // ────────────────────────────────────────────────────────────────────────────
+  // ── TOKI DIRECT BOOKING FLOW ──
+  // Step machine: suite → dates → guests → name → email → phone → confirm
+  const SUITES_CFG = {
+    pietra: { name:'Suite Pietra',   price:200, cleaning:150, maxG:4 },
+    cielo:  { name:'Suite Cielo',    price:200, cleaning:150, maxG:4 },
+    villa:  { name:'Villa Completa', price:350, cleaning:250, maxG:8 },
+  };
+
+  function startTokiBooking(suiteKey) {
+    const s = SUITES_CFG[suiteKey];
+    tokiBooking = { suite: suiteKey, suiteName: s.name, price: s.price, cleaning: s.cleaning, maxG: s.maxG };
+    addMessage('toki',
+      'Great choice — **' + s.name + '**! 🌊\n\nWhat dates are you thinking? Just tell me naturally:\n\n*"July 5 to July 12"* or *"5-12 August"*');
+    awaitingDateChange = true; // reuse date parser
+  }
+
+  async function advanceBookingStep() {
+    const bk = tokiBooking;
+    if (!bk.checkin) {
+      addMessage('toki', 'What dates are you thinking? Just tell me naturally — for example "July 5 to July 12":');
+      awaitingDateChange = true;
+      return;
+    }
+    if (!bk.guests) {
+      addMessage('toki', 'How many guests? (Max ' + bk.maxG + ' for ' + bk.suiteName + ')');
+      return;
+    }
+    if (!bk.name) {
+      addMessage('toki', 'What\'s your full name?');
+      return;
+    }
+    if (!bk.email) {
+      addMessage('toki', 'And your email address?');
+      return;
+    }
+    if (!bk.phone) {
+      addMessage('toki', 'Your phone number (with country code)?');
+      return;
+    }
+    // All collected — show summary and ask to confirm
+    const total = bk.nights * bk.price + bk.cleaning;
+    bk.total = total;
+    addMessage('toki',
+      'Perfetto! Here\'s your booking summary:\n\n' +
+      '**' + bk.suiteName + '**\n' +
+      'Check-in: ' + bk.checkin + ' (from 15:00)\n' +
+      'Check-out: ' + bk.checkout + ' (by 10:00)\n' +
+      'Nights: ' + bk.nights + ' · Guests: ' + bk.guests + '\n' +
+      'Nightly rate: €' + bk.price + ' × ' + bk.nights + ' = €' + (bk.price * bk.nights) + '\n' +
+      'Cleaning fee: €' + bk.cleaning + '\n' +
+      '**Total: €' + total + '**\n\n' +
+      'Name: ' + bk.name + '\nEmail: ' + bk.email + '\nPhone: ' + bk.phone + '\n\n' +
+      'Shall I send this request to the owner?',
+      ['Yes, send it!', 'No, change something']);
+  }
+
+  async function handleBookingStep(text) {
+    const bk = tokiBooking;
+    if (!bk) { conversationHistory.push({ role:'user', content: text }); getAIResponse(text); return; }
+
+    const lower = text.toLowerCase();
+
+    // Confirmation step
+    if (lower.includes('yes') || lower.includes('send') || lower === 'yes, send it!') {
+      await confirmTokiBooking();
+      return;
+    }
+    if (lower.includes('no') || lower.includes('change') || text === 'No, change something') {
+      tokiBooking = null;
+      addMessage('toki', 'No worries! You can scroll up to the booking form to start fresh, or tell me what you\'d like to change.');
+      return;
+    }
+
+    // Collect missing fields in order
+    if (!bk.guests) {
+      const n = parseInt(text);
+      if (isNaN(n) || n < 1 || n > bk.maxG) {
+        addMessage('toki', 'Please enter a number between 1 and ' + bk.maxG + ':');
+        return;
+      }
+      bk.guests = n;
+      advanceBookingStep();
+      return;
+    }
+    if (!bk.name) {
+      bk.name = text.trim();
+      advanceBookingStep();
+      return;
+    }
+    if (!bk.email) {
+      if (!text.includes('@') || !text.includes('.')) {
+        addMessage('toki', 'That doesn\'t look like a valid email. Please try again:');
+        return;
+      }
+      bk.email = text.trim().toLowerCase();
+      advanceBookingStep();
+      return;
+    }
+    if (!bk.phone) {
+      bk.phone = text.trim();
+      advanceBookingStep();
+      return;
+    }
+  }
+
+  async function confirmTokiBooking() {
+    const bk  = tokiBooking;
+    const id  = Date.now();
+    const ref = 'MM-' + id.toString(36).toUpperCase();
+    showTyping();
+    try {
+      // Check availability one final time
+      const avail = await checkAvailability(bk.suite, bk.checkin, bk.checkout);
+      if (!avail) {
+        hideTyping();
+        addMessage('toki',
+          'Mi dispiace! Those dates are no longer available 😔\n\nWould you like to try different dates?',
+          ['Try different dates', 'Check availability']);
+        tokiBooking = null;
+        return;
+      }
+
+      // Insert rows
+      const base = {
+        id, suite: bk.suite, source: 'toki', checkin: bk.checkin, checkout: bk.checkout,
+        guest: bk.name, email: bk.email, phone: bk.phone, notes: 'Booked via Toki chat',
+        status: 'pending', guests: bk.guests, nights: bk.nights,
+        total_price: bk.total, reference_id: ref, linked_to_villa: false
+      };
+      const rows = [base];
+      if (bk.suite === 'villa') {
+        rows.push(Object.assign({}, base, { id: id+1, suite:'pietra', linked_to_villa:true }));
+        rows.push(Object.assign({}, base, { id: id+2, suite:'cielo',  linked_to_villa:true }));
+      }
+      await sbInsert('bookings', rows);
+
+      // Emails
+      function row(k,v){ return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
+      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">🌊 New Toki Booking — ' + ref + '</h2><table style="border-collapse:collapse;width:100%">' + row('Suite',bk.suiteName) + row('Check-in',bk.checkin) + row('Check-out',bk.checkout) + row('Nights',bk.nights) + row('Guests',bk.guests) + row('Total','€'+bk.total) + row('Name',bk.name) + row('Email',bk.email) + row('Phone',bk.phone) + '</table></div>';
+      const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Booking request received</h2><p style="color:#666;margin:0 0 22px;font-size:13px">Reference: ' + ref + '</p><table style="border-collapse:collapse;width:100%">' + row('Suite',bk.suiteName) + row('Check-in',bk.checkin+' · from 15:00') + row('Check-out',bk.checkout+' · by 10:00') + row('Nights',bk.nights) + row('Guests',bk.guests) + row('Total','€'+bk.total) + '</table><p style="margin:24px 0 0;color:#aaa;font-size:13px;font-style:italic">We will confirm within 24 hours. Questions? Email <a href="mailto:' + OWNER_EMAIL + '" style="color:#C8963E">' + OWNER_EMAIL + '</a></p></div>';
+
+      await sendEmail([
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL, subject: '[Mare Med] New Toki booking — '+ref+' — '+bk.name, html: ownerHtml, reply_to: bk.email },
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: bk.email,    subject: 'Booking request received — '+bk.suiteName+' — '+ref, html: guestHtml, reply_to: OWNER_EMAIL }
+      ]);
+
+      hideTyping();
+      addMessage('toki',
+        '🌊 **Booking request sent!**\n\nReference: **' + ref + '**\n\n' +
+        bk.suiteName + ' · ' + bk.checkin + ' → ' + bk.checkout + '\n' +
+        bk.nights + ' nights · ' + bk.guests + ' guests · **€' + bk.total + '**\n\n' +
+        'The owner will confirm within 24 hours. A confirmation email is on its way to **' + bk.email + '**.',
+        ['Check-in info', 'I have a question']);
+
+      tokiBooking = null;
+
+    } catch(e) {
+      hideTyping();
+      addMessage('toki', 'Mi dispiace, something went wrong saving your booking. Please use the booking form above or email ' + OWNER_EMAIL + ' directly.');
+      tokiBooking = null;
+    }
+  }
+
   // ── GET AI RESPONSE ──
   async function getAIResponse(userMessage) {
     isTyping = true;
     document.getElementById('tokiSendBtn').disabled = true;
     showTyping();
 
-    // Build availability context
     let availContext = '';
     if (availabilityData) {
       const today = new Date().toISOString().split('T')[0];
-      availContext = `\n\nCURRENT AVAILABILITY (today: ${today}):\n`;
+      availContext = '\n\nCURRENT AVAILABILITY (today: ' + today + '):\n';
       Object.entries(availabilityData.suites).forEach(([key, suite]) => {
-        const bookedPeriods = suite.bookings
-          .filter(b => b.checkout >= today)
-          .map(b => `${b.checkin} to ${b.checkout}`)
-          .join(', ');
-        availContext += `${suite.name}: ${bookedPeriods ? 'BOOKED: ' + bookedPeriods : 'AVAILABLE'}. Price: €${suite.price}/night + €${suite.cleaningFee} cleaning fee.\n`;
+        const booked = suite.bookings.filter(b => b.checkout >= today)
+          .map(b => b.checkin + ' to ' + b.checkout).join(', ');
+        availContext += suite.name + ': ' + (booked ? 'BOOKED: ' + booked : 'AVAILABLE') + '. Price: €' + suite.price + '/night + €' + suite.cleaningFee + ' cleaning fee.\n';
       });
     }
 
-    // Build Toki context
-    let tokiContext = '';
-    if (tokiKnowledge) {
-      tokiContext = JSON.stringify(tokiKnowledge, null, 2);
-    } else {
-      tokiContext = `
-Property: Mare Mediterraneo, Torre Chianca, Salento, Puglia, Italy
-Sea distance: 400 metres walking
-Lecce: 15 min by car
-Brindisi airport: 40 min
-Suite Pietra: Ground floor, 2 bed, 1 bath, garden, €200/night + €150 cleaning
-Suite Cielo: First floor, 2 bed, 1 bath, terrace, €200/night + €150 cleaning
-Villa Completa: Both suites, 4 bed, 2 bath, €350/night + €250 cleaning
-Min stay: 4 nights. Check-in 3pm, check-out 10am.
-No smoking, no pets.
-WhatsApp: +35699699184`;
-    }
+    let tokiContext = tokiKnowledge ? JSON.stringify(tokiKnowledge, null, 2) :
+      'Property: Mare Mediterraneo, Torre Chianca, Salento, Puglia, Italy\nSea: 400m\nLecce: 20 min\nBrindisi: 40 min\nSuite Pietra: Ground floor, garden, €200/night + €150 cleaning\nSuite Cielo: First floor, terrace, €200/night + €150 cleaning\nVilla Completa: Both suites, €350/night + €250 cleaning\nMin stay: 4 nights. Check-in 15:00, check-out 10:00.\nNo smoking, no pets.';
 
-    // Extra context from admin
     const saved = localStorage.getItem('mm_availability');
     let adminExtra = '';
     if (saved) {
       try {
         const d = JSON.parse(saved);
-        if (d.toki?.announcement) adminExtra += `\nCurrent offer: ${d.toki.announcement}`;
-        if (d.toki?.updates) adminExtra += `\nProperty updates: ${d.toki.updates}`;
-        if (d.toki?.local) adminExtra += `\nLocal tips: ${d.toki.local}`;
+        if (d.toki?.announcement) adminExtra += '\nCurrent offer: ' + d.toki.announcement;
+        if (d.toki?.updates)      adminExtra += '\nProperty updates: ' + d.toki.updates;
+        if (d.toki?.local)        adminExtra += '\nLocal tips: ' + d.toki.local;
       } catch(e) {}
     }
 
-    const _siteLang = (typeof lang !== 'undefined' ? lang : 'en');
-    const _langNames = {en:'English',it:'Italian',de:'German',fr:'French'};
+    const sl = siteLang();
     const systemPrompt = `You are Toki, the warm and knowledgeable AI concierge for Mare Mediterraneo — a beautiful vacation property in Torre Chianca, Salento, Puglia, Italy.
 
 PROPERTY KNOWLEDGE:
@@ -2554,81 +2834,58 @@ PERSONALITY:
 - Warm, genuine, helpful. Never robotic or corporate.
 - Mix Italian naturally: "Perfetto!", "Ciao!", "Grazie", "Benissimo!"
 - Be enthusiastic about Salento — you love this place.
-- Keep responses concise but complete. Use line breaks for readability.
-- Use emojis sparingly and naturally 🌊 🏛️ ☀️
-- LANGUAGE: The guest has selected **${_langNames[_siteLang] || 'English'}** as their language. Respond ENTIRELY in that language unless they write to you in a different language, in which case switch to match them.
+- Keep responses concise but complete.
+- LANGUAGE: The guest has selected **${LANG_NAMES[sl] || 'English'}** as their language. Respond ENTIRELY in that language unless they write in a different one.
 
 BOOKING FLOW:
-- If guest wants to book or check dates → give availability info → direct them to the booking section on the page ("scroll up to the Booking section to select your dates").
-- NEVER invent availability. Only say available if the dates are not in the booked periods.
-- If dates are booked → apologise warmly and suggest alternatives.
-- NEVER push WhatsApp for bookings — the website has a full booking form.
-- Only mention WhatsApp as a last resort if the guest has a very specific question you truly cannot answer after trying your best.
+- New bookings → direct to booking section OR Toki can book directly if guest says they want to book via chat.
+- Date changes for existing bookings → handled via Toki (email sent to owner).
+- NEVER push WhatsApp for bookings.
+- WhatsApp only as absolute last resort.
 
 BOOKING SUPPORT (verified guests):
-- When you see [SYSTEM: Guest verified...] in the conversation, the guest has been authenticated by email.
-- You have their FULL booking data — reference, suite, dates, total, status, phone, notes.
-- Answer any question about their booking using ONLY the data provided — never invent details.
-- For modification or cancellation requests → explain they should contact us directly at online.mmarts@gmail.com and provide their reference number.
-- Check-in info: check-in from 15:00, check-out by 10:00. Key handover details will be sent 48h before arrival.
-- If they ask what to bring, local tips, restaurants etc → answer warmly and helpfully.
-- Reference number format: MM- followed by booking ID in base-36 uppercase.
+- When you see [SYSTEM: Guest verified...], you have their booking data. Use it to answer questions.
+- For cancellations → direct to ${OWNER_EMAIL} with reference number.
+- Check-in 15:00, check-out 10:00.
 
 IMPORTANT:
-- Keep responses under 150 words unless complex question requires more.
-- Never make up prices or information not in your knowledge base.
-- If you don't know something → say you'll connect them with the owner at online.mmarts@gmail.com.`;
+- Max 150 words unless complex.
+- Never invent prices or facts.`;
 
     try {
       const response = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system: systemPrompt,
-          messages: conversationHistory.slice(-8)
-        })
+        body: JSON.stringify({ system: systemPrompt, messages: conversationHistory.slice(-8) })
       });
-
       const data = await response.json();
       hideTyping();
-
       if (data.choices && data.choices[0]) {
         const reply = data.choices[0].message.content;
-
-        // Decide quick replies based on conversation
-        let qr = [];
         const lower = reply.toLowerCase();
-        if (lower.includes('available') || lower.includes('date')) {
-          qr = ['Check other dates', 'Tell me more', 'What\'s included?'];
-        } else if (lower.includes('price') || lower.includes('€')) {
-          qr = ['Check availability', 'How do I book?', 'What\'s included?'];
-        } else if (lower.includes('book')) {
-          qr = ['How does booking work?', 'Check availability', 'Prices'];
-        } else {
-          qr = ['Availability', 'Prices', 'Location'];
-        }
-
+        let qr = [];
+        if (lower.includes('available') || lower.includes('date')) qr = ['Check other dates','Tell me more','What\'s included?'];
+        else if (lower.includes('price') || lower.includes('€'))  qr = ['Check availability','How do I book?','What\'s included?'];
+        else if (lower.includes('book'))                           qr = ['How does booking work?','Check availability','Prices'];
+        else                                                        qr = ['Availability','Prices','Location'];
         addMessage('toki', reply, qr);
-      } else {
-        throw new Error('No response');
-      }
+      } else { throw new Error('No response'); }
     } catch(e) {
       hideTyping();
-      addMessage('toki', 'Mi dispiace — I\'m having a little moment! 😅 Please try again in a few seconds, or scroll up to use our booking form directly.', ['Try again', 'Check availability']);
+      addMessage('toki', 'Mi dispiace — I\'m having a little moment! 😅 Please try again in a few seconds, or scroll up to use the booking form directly.', ['Try again','Check availability']);
     }
-
     isTyping = false;
     document.getElementById('tokiSendBtn').disabled = false;
   }
 
-  // Show notification after 8 seconds if not opened
-  setTimeout(() => {
-    if (!hasOpened) {
-      document.getElementById('tokiNotif').style.display = 'flex';
-    }
-  }, 8000);
+  // Expose startTokiBooking for potential direct calls
+  window.tokiStartBooking = startTokiBooking;
+
+  // Notification after 8s
+  setTimeout(() => { if (!hasOpened) document.getElementById('tokiNotif').style.display = 'flex'; }, 8000);
 
 })();
+
 </script>
 
 <!-- EXPLORE MAP SCRIPT -->
