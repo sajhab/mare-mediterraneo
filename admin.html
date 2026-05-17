@@ -275,7 +275,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 </div>
 
 <script>
-var PASS = 'Malta.2017';
+// Password stored in Supabase — not in code
 var SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
 
@@ -645,16 +645,40 @@ function testConnection(callback) {
 }
 
 // EVENT LISTENERS
-document.getElementById('loginBtn').addEventListener('click', function() {
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+document.getElementById('loginBtn').addEventListener('click', async function() {
   var pass = document.getElementById('loginPass').value;
-  if (pass === PASS) {
-    document.getElementById('loginScreen').style.display = 'none';
+  if (!pass) return;
+  var btn = document.getElementById('loginBtn');
+  btn.textContent = '...';
+  btn.disabled = true;
+  try {
+    // Fetch password hash from Supabase settings table
+    var res = await fetch(SUPABASE_URL + '/rest/v1/settings?key=eq.admin_password&select=value&apikey=' + SUPABASE_KEY);
+    var rows = await res.json();
+    var stored = rows && rows[0] && rows[0].value ? rows[0].value.hash : null;
+    // Compare using SHA-256 hash
+    var encoder = new TextEncoder();
+    var data = encoder.encode(pass);
+    var hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    var hashArray = Array.from(new Uint8Array(hashBuffer));
+    var hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    if (stored && hashHex === stored) {
+      document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     testConnection(function() {
       loadAll(function() { renderDashboard(); });
     });
   } else {
     document.getElementById('loginError').style.display = 'block';
+  } catch(e) {
+    document.getElementById('loginError').textContent = 'Connection error — try again';
+    document.getElementById('loginError').style.display = 'block';
+  }
+  btn.textContent = 'Enter';
+  btn.disabled = false;
     document.getElementById('loginPass').value = '';
   }
 });
