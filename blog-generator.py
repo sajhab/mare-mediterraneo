@@ -234,18 +234,19 @@ def generate_image(image_prompt, image_path):
         return False
 
     # Wrap the prompt with style guidance to match the site aesthetic
+    # dall-e-2 limit: 1000 chars total
     full_prompt = (
-        "Photorealistic travel photography, golden hour light, Puglia Italy. "
+        "Travel photo, Puglia Italy, golden hour. "
         + image_prompt
-        + " No text, no watermarks, no logos. Warm mediterranean colours, cinematic composition."
+        + " No text, no watermarks."
     )
+    full_prompt = full_prompt[:1000]
 
     payload = json.dumps({
-        "model": "dall-e-3",
-        "prompt": full_prompt,
+        "model": "dall-e-2",
+        "prompt": full_prompt[:1000],  # dall-e-2 has 1000 char limit
         "n": 1,
-        "size": "1792x1024",
-        "quality": "standard"
+        "size": "1024x1024"
     }).encode("utf-8")
 
     req = urllib.request.Request("https://api.openai.com/v1/images/generations")
