@@ -138,31 +138,6 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
-
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-it-apulische-küche-wein-olivenöl-und-die-pasta-der-nonnas.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-de-apulische-küche-wein-olivenöl-und-die-pasta-der-nonnas.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-fr-délices-dapulie-vin-huile-dolive-et-la-pasta-des-nonnas-en-salento.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-17-en-the-bountiful-flavors-of-apulian-cuisine-wine-olive-oil-and-nonnas-pasta.html</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
