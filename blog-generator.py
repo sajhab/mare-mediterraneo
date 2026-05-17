@@ -234,19 +234,18 @@ def generate_image(image_prompt, image_path):
         return False
 
     # Wrap the prompt with style guidance to match the site aesthetic
-    # dall-e-2 limit: 1000 chars total
     full_prompt = (
-        "Travel photo, Puglia Italy, golden hour. "
+        "Photorealistic travel photography, golden hour light, Puglia Italy. "
         + image_prompt
-        + " No text, no watermarks."
+        + " No text, no watermarks, no logos. Warm mediterranean colours."
     )
-    full_prompt = full_prompt[:1000]
 
     payload = json.dumps({
-        "model": "dall-e-2",
-        "prompt": full_prompt[:1000],  # dall-e-2 has 1000 char limit
+        "model": "gpt-image-1",
+        "prompt": full_prompt,
         "n": 1,
-        "size": "1024x1024"
+        "size": "1536x1024",   # landscape format for hero images
+        "quality": "medium"    # low / medium / high
     }).encode("utf-8")
 
     req = urllib.request.Request("https://api.openai.com/v1/images/generations")
@@ -258,12 +257,17 @@ def generate_image(image_prompt, image_path):
     try:
         with urllib.request.urlopen(req, data=payload, timeout=120) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-        image_url = data["data"][0]["url"]
-        # Download the image from the temporary OpenAI URL
-        img_req = urllib.request.Request(image_url)
-        img_req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
-        with urllib.request.urlopen(img_req, timeout=60) as img_resp:
-            image_bytes = img_resp.read()
+        # gpt-image-1 returns b64_json by default
+        import base64
+        b64 = data["data"][0].get("b64_json") or data["data"][0].get("url")
+        if data["data"][0].get("b64_json"):
+            image_bytes = base64.b64decode(b64)
+        else:
+            # fallback: download from URL
+            img_req = urllib.request.Request(b64)
+            img_req.add_header("User-Agent", "MareMediterraneo-BlogBot/1.0")
+            with urllib.request.urlopen(img_req, timeout=60) as img_resp:
+                image_bytes = img_resp.read()
         os.makedirs(os.path.dirname(image_path), exist_ok=True)
         with open(image_path, "wb") as f:
             f.write(image_bytes)
