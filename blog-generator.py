@@ -341,8 +341,7 @@ def build_article_html(template, article_data, lang, slug, topic_info, today, im
         # New image placeholders
         "{{HERO_IMAGE_URL}}":     image_url,
         "{{HERO_IMAGE_ALT}}":     image_alt,
-        # Also update the OG image to use the article image
-        "https://maremediterraneo.com/hero.jpg": image_url,
+        # OG/Twitter/Schema images use {{HERO_IMAGE_URL}} placeholder — handled above
     }
 
     for placeholder, value in replacements.items():
