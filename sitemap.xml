@@ -138,6 +138,31 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-it-avventure-in-famiglia-in-salento-vacanza-in-spiaggia-con-i-bambini.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-de-apulien-mit-kindern-familienurlaub-am-salento-strand.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-fr-des-vacances-en-famille-à-salento-découverte-de-la-côte-avec-les-enfants.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-17-en-family-adventures-on-salentos-beaches-discover-apulia-with-kids.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
