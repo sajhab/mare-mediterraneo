@@ -1527,7 +1527,7 @@ window.bkBack=function(){qs('bkPanelTitle').textContent='Your Details';bkShowSte
 window.bkSubmit=async function(){
   var btn=qs('bkConfirmBtn');btn.disabled=true;btn.innerHTML='<span class="bk-spin"></span>&nbsp;Confirming…';
   var id=Date.now();var ref='MM-'+id.toString(36).toUpperCase();
-  var base={id:id,suite:BK.suite,source:'direct',checkin:BK.checkin,checkout:BK.checkout,guest:BK.name,email:BK.email,phone:BK.phone,notes:BK.message,status:'pending',guests:BK.guests,nights:BK.nights,total_price:BK.total,linked_to_villa:false};
+  var base={id:id,suite:BK.suite,source:'direct',checkin:BK.checkin,checkout:BK.checkout,guest:BK.name,email:BK.email,phone:BK.phone,notes:BK.message,status:'pending',guests:BK.guests,nights:BK.nights,total_price:BK.total,reference_id:ref,linked_to_villa:false};
   var rows=[base];
   if(BK.suite==='villa'){rows.push(Object.assign({},base,{id:id+1,suite:'pietra',linked_to_villa:true}));rows.push(Object.assign({},base,{id:id+2,suite:'cielo',linked_to_villa:true}));}
   try{await sbInsert('bookings',rows);_bookings=_bookings.concat(rows);}catch(e){console.error('[MM]',e);}
@@ -2056,6 +2056,16 @@ if(!localStorage.getItem('mm_lang_chosen')){
   let tokiKnowledge = null;
   let hasOpened = false;
 
+  // ── BOOKING LOOKUP STATE ──
+  const SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+  let verifiedGuest = null;       // { email, bookings[] } — set once per session
+  let awaitingEmail = false;      // true when Toki asked for email
+  let awaitingRef = false;        // true when Toki asked for reference number
+  let pendingEmail = null;        // holds email while waiting for reference
+  let awaitingDateChange = false; // true when collecting new dates
+  let pendingDateChange = null;   // { booking } being changed
+
   // ── LOAD DATA ──
   async function loadData() {
     try {
@@ -2082,12 +2092,12 @@ if(!localStorage.getItem('mm_lang_chosen')){
     if (isOpen && !hasOpened) {
       hasOpened = true;
       setTimeout(() => {
-        addMessage('toki', 'Ciao! 🌊 I\'m Toki, your personal concierge at Mare Mediterraneo.\n\nHow can I help you today?', [
+        addMessage('toki', 'Ciao! 🌊 I\'m Toki, your personal concierge at Mare Mediterraneo.\n\nI can answer any question about the property, check availability — and if you already have a booking, I can look it up for you instantly.\n\nHow can I help?', [
           'Check availability',
           'Prices & suites',
+          'My booking',
           'Location & distances',
-          'House rules',
-          'Ready to book'
+          'House rules'
         ]);
       }, 400);
     }
@@ -2149,13 +2159,78 @@ if(!localStorage.getItem('mm_lang_chosen')){
     }
 
     container.appendChild(msg);
-    container.scrollTop = container.scrollHeight;
+    // Scroll so the TOP of the new message is visible (not the bottom)
+    setTimeout(function() {
+      const msgTop = msg.offsetTop;
+      const containerH = container.clientHeight;
+      const msgH = msg.offsetHeight;
+      // If message is taller than container, show the top; otherwise center it
+      container.scrollTop = msgH > containerH
+        ? msgTop
+        : Math.max(0, msgTop - 12);
+    }, 30);
   }
 
   function handleQuickReply(reply) {
     addMessage('user', reply);
+
+    // Special quick reply handlers
+    if (reply === 'Modify my booking') {
+      if (verifiedGuest) { startDateChange(); }
+      else {
+        awaitingEmail = true;
+        addMessage('toki', 'To modify your booking I\'ll need to verify your identity first. Please enter your **email address**:');
+      }
+      return;
+    }
+    if (reply === 'My booking' || reply === 'My reservation') {
+      if (!verifiedGuest) {
+        awaitingEmail = true;
+        addMessage('toki', 'I\'d love to help with your booking! 🌊\n\nPlease share the **email address** you used when making your reservation and I\'ll pull up your details right away.');
+        return;
+      }
+      // Already verified
+      const intro = verifiedGuest.bookings.length === 1
+        ? 'Here is your booking:\n\n' + formatBooking(verifiedGuest.bookings[0])
+        : 'Here are your bookings:\n\n' + verifiedGuest.bookings.map(formatBooking).join('\n\n---\n\n');
+      addMessage('toki', intro, ['Check-in info', 'Modify my booking', 'I have a question']);
+      return;
+    }
+    if (reply === 'Try a different email' || reply === 'Try again') {
+      // Reset and restart from email
+      pendingEmail = null; awaitingEmail = false; awaitingRef = false;
+      awaitingEmail = true;
+      addMessage('toki', 'No problem! Let\'s start over — please enter the **email address** you used when booking:');
+      return;
+    }
+    if (reply === 'Change my dates') {
+      if (verifiedGuest) { startDateChange(); } else {
+        awaitingEmail = true;
+        addMessage('toki', 'To request a date change I\'ll need to verify your booking first. Please enter your **email address**:');
+      }
+      return;
+    }
+    if (reply === 'Show all bookings' && verifiedGuest) {
+      const all = verifiedGuest.bookings.map(formatBooking).join('\n\n---\n\n');
+      addMessage('toki', 'Here are all your bookings:\n\n' + all, ['Check-in info', 'I have a question']);
+      return;
+    }
+
     conversationHistory.push({role:'user', content: reply});
-    getAIResponse(reply);
+    routeMessage(reply);
+  }
+
+  // Route message: booking query → verify email first, else AI
+  function routeMessage(msg) {
+    // If asking about their booking and not yet verified → ask for email
+    if (isBookingQuery(msg) && !verifiedGuest) {
+      awaitingEmail = true;
+      addMessage('toki',
+        'I\'d be happy to look that up for you! 🌊\n\nTo access your booking details, could you please share the **email address** you used when making your reservation?');
+      return;
+    }
+    // Already verified and booking query → inject context and ask AI
+    getAIResponse(msg);
   }
 
   // ── TYPING INDICATOR ──
@@ -2189,8 +2264,26 @@ if(!localStorage.getItem('mm_lang_chosen')){
     input.value = '';
     input.style.height = 'auto';
     addMessage('user', text);
+
+    // Verification flow intercepts
+    if (awaitingEmail) {
+      awaitingEmail = false;
+      handleEmailVerification(text);
+      return;
+    }
+    if (awaitingRef) {
+      awaitingRef = false;
+      handleReferenceVerification(text);
+      return;
+    }
+    if (awaitingDateChange) {
+      awaitingDateChange = false;
+      handleDateChange(text);
+      return;
+    }
+
     conversationHistory.push({role:'user', content: text});
-    getAIResponse(text);
+    routeMessage(text);
   };
 
   window.autoResize = function(el) {
@@ -2198,6 +2291,194 @@ if(!localStorage.getItem('mm_lang_chosen')){
     el.style.height = Math.min(el.scrollHeight, 100) + 'px';
   };
 
+
+  // ── BOOKING LOOKUP ──────────────────────────────────────────────────────────
+
+  // Detect if message is asking about their booking
+  function isBookingQuery(msg) {
+    const kw = ['my booking','my reservation','reference','ref number','booked','my stay',
+                'my check','status','confirm','when is','did you receive','did i book',
+                'meine buchung','meine reservierung','la mia prenotazione','ma réservation'];
+    const lower = msg.toLowerCase();
+    return kw.some(k => lower.includes(k));
+  }
+
+  // Fetch bookings by email + reference_id from Supabase (dual verification)
+  async function fetchGuestBookings(email, refId) {
+    // refId is the full reference like "MM-1ABC2DEF" — we store reference_id in DB
+    const url = SB_URL + '/rest/v1/bookings'
+      + '?email=eq.' + encodeURIComponent(email.trim().toLowerCase())
+      + '&reference_id=eq.' + encodeURIComponent(refId.trim().toUpperCase())
+      + '&linked_to_villa=eq.false'
+      + '&order=checkin.desc'
+      + '&select=id,suite,checkin,checkout,nights,guests,total_price,reference_id,guest,email,phone,notes,status,created_at';
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+      }
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  }
+
+  // Format a booking into a readable Toki message
+  function formatBooking(b) {
+    const suiteNames = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+    const suite  = suiteNames[b.suite] || b.suite;
+    const ref    = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
+    const status = b.status === 'confirmed' ? '✅ Confirmed'
+                 : b.status === 'pending'   ? '⏳ Pending confirmation'
+                 : b.status === 'cancelled' ? '❌ Cancelled'
+                 : b.status;
+    const nights = b.nights || Math.round((new Date(b.checkout)-new Date(b.checkin))/86400000);
+    const guests = b.guests || '—';
+    const total  = b.total_price ? '€' + b.total_price : '—';
+    const notes  = b.notes ? '
+Your notes: ' + b.notes : '';
+    const phone  = b.phone ? '
+Phone: ' + b.phone : '';
+
+    return `**${suite}**
+Reference: ${ref}
+Status: ${status}
+Check-in: ${b.checkin} (from 15:00)
+Check-out: ${b.checkout} (by 10:00)
+Nights: ${nights} · Guests: ${guests}
+Total: ${total}${phone}${notes}`;
+  }
+
+  // Handle email verification flow
+  // Step 1: collect email, then ask for reference number
+  async function handleEmailVerification(email) {
+    if (!email.includes('@') || !email.includes('.')) {
+      addMessage('toki', "Hmm, that doesn't look like a valid email. Please try again 🌊");
+      awaitingEmail = true;
+      return;
+    }
+    pendingEmail = email.trim().toLowerCase();
+    awaitingEmail = false;
+    awaitingRef = true;
+    addMessage('toki',
+      'Grazie! 🌊 Now please enter your **booking reference number** — it starts with MM- and was included in your confirmation email.\n\n*(Example: MM-1ABC2DEF)*');
+  }
+
+  // Step 2: collect reference, query Supabase with both email + ref
+  async function handleReferenceVerification(refInput) {
+    let ref = refInput.trim().toUpperCase();
+    if (!ref.startsWith('MM-')) ref = 'MM-' + ref;
+
+    showTyping();
+    let bookings = [];
+    try {
+      bookings = await fetchGuestBookings(pendingEmail, ref);
+    } catch(e) {
+      hideTyping();
+      addMessage('toki', "Mi dispiace, I had trouble reaching the database. Please try again.", ['Try again']);
+      awaitingRef = false;
+      return;
+    }
+    hideTyping();
+
+    if (!bookings || bookings.length === 0) {
+      addMessage('toki',
+        'I couldn\'t match that email and reference number. Please double-check both and try again.\n\nYour reference starts with **MM-** and was in your confirmation email.',
+        ['Try again', 'I need other help']);
+      awaitingRef = true;
+      return;
+    }
+
+    verifiedGuest = { email: pendingEmail, bookings };
+    awaitingRef = false;
+    pendingEmail = null;
+
+    const bookingContext = bookings.map(formatBooking).join('\n\n---\n\n');
+    const count = bookings.length;
+
+    conversationHistory.push({
+      role: 'user',
+      content: '[SYSTEM: Guest verified by email + reference. Found ' + count + ' booking(s):\n\n' + bookingContext + '\n\nUse this data to answer their questions.]'
+    });
+
+    const intro = count === 1
+      ? 'Identity verified ✅\n\nHere is your booking, **' + (bookings[0].guest || '') + '**:\n\n' + formatBooking(bookings[0])
+      : 'Identity verified ✅\n\nI found **' + count + ' bookings**. Most recent:\n\n' + formatBooking(bookings[0]);
+
+    const qr = count > 1
+      ? ['Show all bookings', 'Change my dates', 'Check-in info', 'I have a question']
+      : ['Change my dates', 'Check-in info', 'What should I bring?', 'I have a question'];
+
+    addMessage('toki', intro, qr);
+  }
+
+  // ── DATE CHANGE REQUEST ────────────────────────────────────────────────────
+
+  function startDateChange() {
+    if (!verifiedGuest || !verifiedGuest.bookings.length) return;
+    pendingDateChange = { booking: verifiedGuest.bookings[0] };
+    awaitingDateChange = true;
+    addMessage('toki',
+      'Of course! Please type your new preferred dates in this format:\n\n**Check-in: YYYY-MM-DD**\n**Check-out: YYYY-MM-DD**\n\nFor example:\nCheck-in: 2026-08-10\nCheck-out: 2026-08-17');
+  }
+
+  async function handleDateChange(text) {
+    awaitingDateChange = false;
+    // Parse dates from free text
+    const dates = text.match(/\d{4}-\d{2}-\d{2}/g);
+    if (!dates || dates.length < 2) {
+      addMessage('toki',
+        "I couldn't read those dates. Please use the format YYYY-MM-DD, for example:\n\nCheck-in: 2026-08-10\nCheck-out: 2026-08-17",
+        ['Try again']);
+      awaitingDateChange = true;
+      return;
+    }
+    const newCheckin  = dates[0];
+    const newCheckout = dates[1];
+    const b = pendingDateChange.booking;
+    const ref = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
+    const suiteNames = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+
+    // Send email to owner via Edge Function
+    showTyping();
+    try {
+      const SB_URL_E = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+      const SB_KEY_E = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
+        + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Date Change Request</h2>'
+        + '<table style="border-collapse:collapse;width:100%">'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Reference</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + ref + '</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Suite</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + (suiteNames[b.suite]||b.suite) + '</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Guest</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + b.guest + '</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Guest email</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + b.email + '</td></tr>'
+        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;font-size:11px;text-transform:uppercase">Current dates</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#C8963E;text-align:right">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
+        + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">Requested dates</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCheckin + ' → ' + newCheckout + '</td></tr>'
+        + '</table></div>';
+
+      await fetch(SB_URL_E + '/functions/v1/send-booking-email', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json','apikey':SB_KEY_E,'Authorization':'Bearer '+SB_KEY_E },
+        body: JSON.stringify({ emails: [{
+          from: 'Mare Mediterraneo <hello@maremediterraneo.com>',
+          to: 'online.mmarts@gmail.com',
+          subject: '[Mare Med] Date change request — ' + ref + ' — ' + b.guest,
+          html: ownerHtml,
+          reply_to: b.email,
+        }]})
+      });
+      hideTyping();
+      addMessage('toki',
+        'Perfetto! ✅ Your date change request has been sent to the owner.\n\n**New dates requested:**\nCheck-in: ' + newCheckin + '\nCheck-out: ' + newCheckout + '\n\nYou\'ll receive a confirmation email at **' + b.email + '** within 24 hours once the owner confirms availability.',
+        ['I have another question', 'Check-in info']);
+    } catch(e) {
+      hideTyping();
+      addMessage('toki',
+        'Mi dispiace, I had trouble sending that request. Please email us directly at **online.mmarts@gmail.com** with your reference **' + ref + '** and your new preferred dates.',
+        ['I need other help']);
+    }
+    pendingDateChange = null;
+  }
+
+  // ────────────────────────────────────────────────────────────────────────────
   // ── GET AI RESPONSE ──
   async function getAIResponse(userMessage) {
     isTyping = true;
@@ -2270,10 +2551,19 @@ BOOKING FLOW:
 - NEVER push WhatsApp for bookings — the website has a full booking form.
 - Only mention WhatsApp as a last resort if the guest has a very specific question you truly cannot answer after trying your best.
 
+BOOKING SUPPORT (verified guests):
+- When you see [SYSTEM: Guest verified...] in the conversation, the guest has been authenticated by email.
+- You have their FULL booking data — reference, suite, dates, total, status, phone, notes.
+- Answer any question about their booking using ONLY the data provided — never invent details.
+- For modification or cancellation requests → explain they should contact us directly at online.mmarts@gmail.com and provide their reference number.
+- Check-in info: check-in from 15:00, check-out by 10:00. Key handover details will be sent 48h before arrival.
+- If they ask what to bring, local tips, restaurants etc → answer warmly and helpfully.
+- Reference number format: MM- followed by booking ID in base-36 uppercase.
+
 IMPORTANT:
 - Keep responses under 150 words unless complex question requires more.
 - Never make up prices or information not in your knowledge base.
-- If you don't know something → say you'll connect them with the owner on WhatsApp.`;
+- If you don't know something → say you'll connect them with the owner at online.mmarts@gmail.com.`;
 
     try {
       const response = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
