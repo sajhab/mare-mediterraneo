@@ -493,8 +493,20 @@ def main():
     image_caption  = "Mare Mediterraneo — Torre Chianca, Salento · 400m from the sea · 15 min from Lecce"
 
     if image_search:
-        log("Searching Unsplash: " + image_search)
-        unsplash_result = fetch_unsplash_image(image_search)
+        # Try full search first, then progressively simpler queries
+        search_queries = [
+            image_search,
+            image_search.split(",")[0].strip(),  # just first keyword group
+            topic["topic"].split("—")[0].strip() + " Italy",  # topic name + Italy
+        ]
+        unsplash_result = None
+        for sq in search_queries:
+            if not sq or len(sq) < 3:
+                continue
+            log("Searching Unsplash: " + sq)
+            unsplash_result = fetch_unsplash_image(sq)
+            if unsplash_result:
+                break
     else:
         unsplash_result = None
 
@@ -504,8 +516,19 @@ def main():
         log("Unsplash image URL: " + final_image_url[:80])
     else:
         # Fallback: try topic name as search query
-        log("Trying fallback Unsplash search: " + topic["topic"])
-        fallback_result = fetch_unsplash_image(topic["topic"] + " Puglia Italy")
+        # Fallback: use generic Puglia/Salento travel terms instead of specific topic
+        fallback_queries = [
+            "Puglia Italy coast beach",
+            "Salento Italy sea",
+            "Puglia travel Italy",
+            "Italian coast mediterranean"
+        ]
+        fallback_result = None
+        for fq in fallback_queries:
+            log("Trying fallback Unsplash search: " + fq)
+            fallback_result = fetch_unsplash_image(fq)
+            if fallback_result:
+                break
         if fallback_result:
             final_image_url = fallback_result["url"]
             image_caption   = fallback_result["caption"]
