@@ -43,11 +43,12 @@ RESPONSIVE_CSS = """
     }
     .property-photo-section img {
       width: 100%;
-      aspect-ratio: 16 / 7;
-      object-fit: cover;
-      object-position: center 30%;
+      height: auto;
+      object-fit: contain;
+      object-position: center center;
       display: block;
       border-radius: 2px;
+      background: #0F0F1A;
     }
     .property-photo-caption {
       font-size: 0.75rem;
@@ -66,14 +67,18 @@ RESPONSIVE_CSS = """
         border-right: none;
       }
       .property-photo-section {
-        margin-left: calc(-50vw + 50%);
-        margin-right: calc(-50vw + 50%);
-        width: 100vw;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
       }
       .property-photo-section img {
-        aspect-ratio: 21 / 7;
-        border-radius: 0;
-        object-position: center 35%;
+        aspect-ratio: auto;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: center center;
+        border-radius: 2px;
+        max-height: 480px;
       }
     }
     /* Tablet */
