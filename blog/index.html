@@ -371,11 +371,16 @@
         var card = document.createElement("a");
         card.href = "/blog/" + a.slug + ".html";
         card.className = "article-card";
-        var imgHtml = a.image_url
-          ? '<img class="card-img" src="' + a.image_url + '" alt="' + a.title + '" loading="lazy" onerror="this.style.display='none'">'
-          : '';
+        var imgEl = null;
+        if (a.image_url) {
+          imgEl = document.createElement('img');
+          imgEl.className = 'card-img';
+          imgEl.src = a.image_url;
+          imgEl.alt = a.title;
+          imgEl.loading = 'lazy';
+          imgEl.onerror = function() { this.style.display = 'none'; };
+        }
         card.innerHTML =
-          imgHtml +
           '<div class="card-top">' +
             '<span class="card-lang">' + a.lang + '</span>' +
             '<span class="card-date">' + a.date + '</span>' +
@@ -384,6 +389,7 @@
           '<h2 class="card-title">' + a.title + '</h2>' +
           '<p class="card-excerpt">' + a.excerpt + '</p>' +
           '<span class="card-cta">Read article →</span>';
+        if (imgEl) { card.insertBefore(imgEl, card.firstChild); }
         grid.appendChild(card);
       }
     }
