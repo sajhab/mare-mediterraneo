@@ -163,6 +163,31 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-19-it-come-arrivare-a-torre-chianca-dallaeroporto-di-brindisi-e-bari-al-paradiso-del-s.html</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-19-de-anreise-nach-torre-chianca-ihr-weg-vom-flughafen-brindisi-und-bari-nach-salento.html</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-19-fr-comment-rejoindre-torre-chianca-depuis-les-aéroports-de-brindisi-et-bari.html</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-19-en-journey-to-torre-chianca-every-step-from-brindisi-and-bari-airports.html</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
