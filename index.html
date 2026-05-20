@@ -3954,39 +3954,66 @@ window.setLang = function(l) {
       var ps = suitePhotos[suite];
       if (!ps || !ps.length) return;
       var l = typeof lang !== 'undefined' ? lang : 'en';
-      grid.innerHTML = ps.map(function(p, i) {
+      grid.innerHTML = '';
+      ps.forEach(function(p, i) {
         var cap = xlate(p.caption_en, l);
-        return '<div class="photo-thumb" onclick="lbOpen('' + suite + '',' + i + ')" title="' + cap + '">' +
-          '<img src="' + p.url + '" alt="' + cap + '" loading="lazy">' +
-          (cap ? '<div class="photo-thumb-cap">' + cap + '</div>' : '') +
-        '</div>';
-      }).join('');
+        var div = document.createElement('div');
+        div.className = 'photo-thumb';
+        div.title = cap;
+        (function(s, idx) {
+          div.onclick = function() { lbOpen(s, idx); };
+        })(suite, i);
+        var img = document.createElement('img');
+        img.src = p.url;
+        img.alt = cap;
+        img.loading = 'lazy';
+        div.appendChild(img);
+        if (cap) {
+          var capDiv = document.createElement('div');
+          capDiv.className = 'photo-thumb-cap';
+          capDiv.textContent = cap;
+          div.appendChild(capDiv);
+        }
+        grid.appendChild(div);
+      });
     });
   }
 
-  function renderGalleryStrip() {
+    function renderGalleryStrip() {
     var strip = document.getElementById('galleryStrip');
     if (!strip) return;
     var all = [];
     ['pietra','cielo','villa'].forEach(function(suite) {
-      suitePhotos[suite].forEach(function(p, i) {
+      (suitePhotos[suite]||[]).forEach(function(p, i) {
         all.push({ suite: suite, idx: i, url: p.url, caption_en: p.caption_en });
       });
     });
     if (!all.length) return;
-    // Duplicate for seamless scroll
-    var items = all.concat(all);
+    var items = all.concat(all); // duplicate for seamless loop
     var l = typeof lang !== 'undefined' ? lang : 'en';
-    strip.innerHTML = items.map(function(item) {
+    strip.innerHTML = '';
+    items.forEach(function(item) {
       var cap = xlate(item.caption_en, l);
-      return '<div class="strip-item" onclick="stripOpen('' + item.suite + '',' + item.idx + ')" style="cursor:pointer">' +
-        '<img src="' + item.url + '" alt="' + cap + '" loading="lazy">' +
-        '<div class="strip-cap">' + cap + '</div>' +
-      '</div>';
-    }).join('');
+      var div = document.createElement('div');
+      div.className = 'strip-item';
+      div.style.cursor = 'pointer';
+      (function(s, idx) {
+        div.onclick = function() { stripOpen(s, idx); };
+      })(item.suite, item.idx);
+      var img = document.createElement('img');
+      img.src = item.url;
+      img.alt = cap;
+      img.loading = 'lazy';
+      div.appendChild(img);
+      var capDiv = document.createElement('div');
+      capDiv.className = 'strip-cap';
+      capDiv.textContent = cap;
+      div.appendChild(capDiv);
+      strip.appendChild(div);
+    });
   }
 
-  // Re-render captions when language changes
+    // Re-render captions when language changes
   var _origSetLangPhoto = window.setLang;
   window.setLang = function(l) {
     if (_origSetLangPhoto) _origSetLangPhoto(l);
