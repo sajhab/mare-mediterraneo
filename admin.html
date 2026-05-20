@@ -1146,7 +1146,7 @@ function renderReviews() {
     // Review text
     var body = document.createElement('p');
     body.style.cssText = 'font-family:Cormorant Garamond,serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px';
-    body.textContent = '“' + (rv.body || '') + '”';
+    body.textContent = '“' + (rv.review_text || rv.review_text || '') + '”';
     card.appendChild(body);
 
     // Action buttons
