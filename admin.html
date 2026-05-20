@@ -1077,7 +1077,7 @@ var allReviews = [];
 var revCurrentFilter = 'pending';
 
 function loadReviews() {
-  fetch(SB_URL + '/rest/v1/reviews?order=created_at.desc&apikey=' + SB_KEY, { headers: sbHeaders() })
+  fetch(SB_URL + '/rest/v1/reviews?select=*&order=created_at.desc&apikey=' + SB_KEY, { headers: sbHeaders() })
     .then(function(r) { return r.json(); })
     .then(function(rows) {
       allReviews = Array.isArray(rows) ? rows : [];
