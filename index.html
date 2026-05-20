@@ -304,6 +304,8 @@ nav.scrolled .nav-logo{opacity:1}
 
 /* ── EXPLORE MAP ── */
 #explore{background:var(--notte);padding:60px 0 50px}
+.explore-layout{display:block}
+.explore-left,.explore-right{display:block}
 #explore .sec-label{padding:0 20px;margin-bottom:12px}
 #explore .sec-title{padding:0 20px;margin-bottom:8px}
 .explore-sub{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;
@@ -595,13 +597,20 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .hero-content{padding:0 64px;max-width:900px}
   .btn-gold,.btn-outline{font-size:10px;padding:14px 26px}
 
-  /* Explore / Gateway */
-  #explore{padding:90px 0 70px}
-  #explore .sec-label,#explore .sec-title,.explore-sub{padding-left:64px;padding-right:64px}
-  #explore .sec-title{font-size:50px}
-  .explore-sub{font-size:18px;max-width:520px}
-  .map-tabs{padding:0 64px 28px}
-  .map-svg-wrap{padding:0 64px}
+  /* Explore / Gateway — side by side on desktop */
+  #explore{padding:0}
+  .explore-layout{display:grid;grid-template-columns:380px 1fr;min-height:600px;max-height:80vh}
+  .explore-left{padding:60px 40px 40px;display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;border-right:1px solid var(--border)}
+  .explore-right{position:relative;overflow:hidden;background:var(--notte)}
+  .explore-right .map-svg-wrap{padding:0;height:100%;display:flex;align-items:stretch}
+  .explore-right #salento-svg{width:100%;height:100%;border-radius:0;border-left:none;border-top:none;border-bottom:none}
+  #explore .sec-label{padding:0;margin-bottom:12px}
+  #explore .sec-title{padding:0;font-size:44px;margin-bottom:8px}
+  .explore-sub{font-size:16px;max-width:100%;padding:0;margin-bottom:20px}
+  .map-tabs{padding:0;flex-wrap:wrap;gap:5px;margin-bottom:0}
+  .map-svg-wrap{padding:0;height:100%}
+  #salento-svg{width:100%;height:100%;object-fit:contain}
+  .map-legend-row{padding:16px 0 0;flex-wrap:wrap;gap:10px 16px}
 
   /* Suites */
   .suites-header{padding:0 64px 56px}
@@ -659,7 +668,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   #explore .sec-title,.sec-title{font-size:52px}
   .suite-name{font-size:50px}
   #about,#amenities,#location,#booking,#reviews,#policies,footer{padding-left:96px;padding-right:96px}
-  #explore .sec-label,#explore .sec-title,.explore-sub,.map-tabs,.map-svg-wrap{padding-left:96px;padding-right:96px}
+  .explore-left{padding:70px 48px 48px}
+  #explore .sec-title{font-size:50px}
+  .explore-layout{grid-template-columns:420px 1fr}
   .suites-header{padding:0 96px 60px}
   .am-grid{grid-template-columns:repeat(4,1fr)}
 }
@@ -738,6 +749,8 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 
 <!-- EXPLORE MAP -->
 <section id="explore">
+  <div class="explore-layout">
+  <div class="explore-left">
   <div class="reveal">
     <p class="sec-label">
       <span data-lang="en" class="al">Explore the Region</span>
@@ -787,6 +800,8 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     </button>
   </div>
 
+  </div><!-- end explore-left -->
+  <div class="explore-right">
   <!-- SVG Map -->
   <div class="map-svg-wrap">
     <svg id="salento-svg" viewBox="0 0 340 570" xmlns="http://www.w3.org/2000/svg" style="touch-action:manipulation">
@@ -997,7 +1012,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <div class="map-leg-item"><div class="map-leg-dot" style="background:#7EB8D4;"></div>
       <span data-lang="en" class="al">Airports</span><span data-lang="it">Aeroporti</span><span data-lang="de">Flughäfen</span><span data-lang="fr">Aéroports</span>
     </div>
-  </div>
+  </div><!-- end map-legend-row -->
+  </div><!-- end explore-right -->
+  </div><!-- end explore-layout -->
 </section>
 
 <!-- EXPLORE INFO CARD OVERLAY -->
