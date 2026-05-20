@@ -1531,7 +1531,7 @@ function revSubmit(){
   fetch(SB_URL_R+'/rest/v1/reviews',{
     method:'POST',
     headers:{'apikey':SB_KEY_R,'Authorization':'Bearer '+SB_KEY_R,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({suite:suite,guest_name:name,stay_month:month,review_text:body,status:'pending'})
+    body:JSON.stringify({suite:suite,guest_name:name,stay_month:month,text:body,status:'pending'})
   }).then(function(r){
     btn.disabled=false;btn.style.opacity='1';
     if(r.ok||r.status===201){
@@ -1557,7 +1557,7 @@ function revSubmit(){
         var card=document.createElement('div');
         card.className='rev-card';
         var stars='★★★★★'.slice(0,rv.rating||5);
-        card.innerHTML='<div class="rev-stars">'+stars+'</div><p class="rev-text">“'+rv.review_text+'”</p><p class="rev-by">'+rv.guest_name+'</p><p class="rev-suite">'+(sn[rv.suite]||rv.suite)+(rv.stay_month?' · '+rv.stay_month:'')+'</p>';
+        card.innerHTML='<div class="rev-stars">'+stars+'</div><p class="rev-text">“'+rv.text+'”</p><p class="rev-by">'+rv.guest_name+'</p><p class="rev-suite">'+(sn[rv.suite]||rv.suite)+(rv.stay_month?' · '+rv.stay_month:'')+'</p>';
         track.insertBefore(card,track.firstChild);
       });
     }).catch(function(){});
