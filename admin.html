@@ -838,6 +838,7 @@ function loadPhotos(callback) {
           if (allPhotos[p.suite]) allPhotos[p.suite].push(p);
         });
       }
+      _indexPhotos();
       renderPhotoGrids();
       if (callback) callback();
     }).catch(function(e) {
@@ -849,28 +850,99 @@ function renderPhotoGrids() {
   ['pietra', 'cielo', 'villa'].forEach(function(suite) {
     var grid = document.getElementById('photoGrid-' + suite);
     var count = document.getElementById('photoCount-' + suite);
-    var photos = allPhotos[suite] || [];
-    count.textContent = photos.length + ' photo' + (photos.length !== 1 ? 's' : '');
-    if (!photos.length) {
-      grid.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px 0;grid-column:1/-1">No photos yet. Upload above.</p>';
+    var ps = allPhotos[suite] || [];
+    count.textContent = ps.length + ' photo' + (ps.length !== 1 ? 's' : '');
+    grid.innerHTML = '';
+    if (!ps.length) {
+      var empty = document.createElement('p');
+      empty.style.cssText = 'color:var(--muted);font-size:13px;padding:12px 0;grid-column:1/-1';
+      empty.textContent = 'No photos yet. Upload above.';
+      grid.appendChild(empty);
       return;
     }
-    grid.innerHTML = photos.map(function(p) {
-      return '<div class="photo-card" id="photoCard-' + p.id + '">' +
-        '<img class="photo-card-img" src="' + p.url + '" alt="' + (p.caption_en || '') + '" loading="lazy" onerror="this.style.opacity=0.3">' +
-        '<div class="photo-card-body">' +
-          '<div class="photo-order-row">' +
-            '<span class="photo-order-label">Order</span>' +
-            '<input type="number" class="photo-order-input" value="' + (p.sort_order || 99) + '" min="1" max="99" id="order-' + p.id + '">' +
-          '</div>' +
-          '<input type="text" class="photo-caption-input" placeholder="Caption (English)..." value="' + (p.caption_en || '') + '" id="caption-' + p.id + '">' +
-          '<div class="photo-caption-hint">Auto-translates on website ↗</div>' +
-          '<button class="photo-save-btn" onclick="savePhotoMeta(' + p.id + ')">Save</button>' +
-          '<button class="photo-delete-btn" onclick="deletePhoto(' + p.id + ','' + p.filename + '','' + suite + '')">Delete</button>' +
-        '</div>' +
-      '</div>';
-    }).join('');
+    ps.forEach(function(p) {
+      var card = document.createElement('div');
+      card.className = 'photo-card';
+      card.id = 'photoCard-' + p.id;
+
+      var img = document.createElement('img');
+      img.className = 'photo-card-img';
+      img.src = p.url;
+      img.alt = p.caption_en || '';
+      img.loading = 'lazy';
+      img.onerror = function() { this.style.opacity = '0.3'; };
+      card.appendChild(img);
+
+      var body = document.createElement('div');
+      body.className = 'photo-card-body';
+
+      // Order row
+      var orderRow = document.createElement('div');
+      orderRow.className = 'photo-order-row';
+      var orderLabel = document.createElement('span');
+      orderLabel.className = 'photo-order-label';
+      orderLabel.textContent = 'Order';
+      var orderInput = document.createElement('input');
+      orderInput.type = 'number';
+      orderInput.className = 'photo-order-input';
+      orderInput.value = p.sort_order || 99;
+      orderInput.min = 1; orderInput.max = 99;
+      orderInput.id = 'order-' + p.id;
+      orderRow.appendChild(orderLabel);
+      orderRow.appendChild(orderInput);
+      body.appendChild(orderRow);
+
+      // Caption input
+      var capInput = document.createElement('input');
+      capInput.type = 'text';
+      capInput.className = 'photo-caption-input';
+      capInput.placeholder = 'Caption (English)...';
+      capInput.value = p.caption_en || '';
+      capInput.id = 'caption-' + p.id;
+      body.appendChild(capInput);
+
+      // Hint
+      var hint = document.createElement('div');
+      hint.className = 'photo-caption-hint';
+      hint.textContent = 'Auto-translates on website ↗';
+      body.appendChild(hint);
+
+      // Save button
+      var saveBtn = document.createElement('button');
+      saveBtn.className = 'photo-save-btn';
+      saveBtn.textContent = 'Save';
+      (function(pid) {
+        saveBtn.onclick = function() { savePhotoMeta(pid); };
+      })(p.id);
+      body.appendChild(saveBtn);
+
+      // Delete button
+      var delBtn = document.createElement('button');
+      delBtn.className = 'photo-delete-btn';
+      delBtn.textContent = 'Delete';
+      (function(pid) {
+        delBtn.onclick = function() { deletePhotoById(pid); };
+      })(p.id);
+      body.appendChild(delBtn);
+
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
   });
+}
+
+// Store photo data by id for delete lookup
+var photoDataById = {};
+function _indexPhotos() {
+  ['pietra','cielo','villa'].forEach(function(s) {
+    (allPhotos[s]||[]).forEach(function(p) { photoDataById[p.id] = p; });
+  });
+}
+
+function deletePhotoById(id) {
+  var p = photoDataById[id];
+  if (!p) return;
+  deletePhoto(id, p.filename, p.suite);
 }
 
 // Save caption + order
@@ -1027,33 +1099,81 @@ function renderReviews() {
     allReviews.filter(function(r) { return r.status === revCurrentFilter; });
 
   var el = document.getElementById('revList');
+  el.innerHTML = '';
+
   if (!filtered.length) {
-    el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:20px 0">No ' + revCurrentFilter + ' reviews.</p>';
+    var msg = document.createElement('p');
+    msg.style.cssText = 'color:var(--muted);font-size:13px;padding:20px 0';
+    msg.textContent = 'No ' + revCurrentFilter + ' reviews.';
+    el.appendChild(msg);
     return;
   }
+
   var sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
   var sc = { pending:'#C8963E', approved:'#27ae60', rejected:'#e74c3c' };
-  el.innerHTML = filtered.map(function(rv) {
+
+  filtered.forEach(function(rv) {
     var date = rv.created_at ? new Date(rv.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '';
-    var stars = '★'.repeat(rv.rating || 5);
-    return '<div class="card" style="margin-bottom:12px">' +
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">' +
-        '<div>' +
-          '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + (sc[rv.status]||'#888') + ';margin-bottom:4px">' + rv.status.toUpperCase() + '</div>' +
-          '<div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--sabbia)">' + (rv.guest_name||'—') + '</div>' +
-          '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + (sn[rv.suite]||rv.suite) + (rv.stay_month?' · '+rv.stay_month:'') + ' · ' + date + '</div>' +
-        '</div>' +
-        '<div style="font-size:14px;color:#C8963E">' + stars + '</div>' +
-      '</div>' +
-      '<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px">&ldquo;' + (rv.body||'') + '&rdquo;</p>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        (rv.status !== 'approved' ? '<button class="btn btn-outline" style="border-color:rgba(39,174,96,0.4);color:#27ae60" onclick="revUpdateStatus(' + rv.id + ','approved')">✓ Approve</button>' : '') +
-        (rv.status !== 'rejected' ? '<button class="btn btn-outline" style="border-color:rgba(231,76,60,0.3);color:#e74c3c" onclick="revUpdateStatus(' + rv.id + ','rejected')">✕ Reject</button>' : '') +
-        (rv.status !== 'pending'  ? '<button class="btn btn-outline" onclick="revUpdateStatus(' + rv.id + ','pending')">↩ Reset</button>' : '') +
-        '<button class="btn btn-red" onclick="revDelete(' + rv.id + ')">Delete</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
+    var stars = '';
+    for (var s = 0; s < (rv.rating || 5); s++) stars += '★';
+
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '12px';
+
+    // Header row
+    var hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px';
+
+    var info = document.createElement('div');
+    var statusEl = document.createElement('div');
+    statusEl.style.cssText = 'font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + (sc[rv.status]||'#888') + ';margin-bottom:4px';
+    statusEl.textContent = rv.status.toUpperCase();
+    var nameEl = document.createElement('div');
+    nameEl.style.cssText = 'font-family:Cormorant Garamond,serif;font-size:17px;color:var(--sabbia)';
+    nameEl.textContent = rv.guest_name || '';
+    var metaEl = document.createElement('div');
+    metaEl.style.cssText = 'font-size:10px;color:var(--muted);margin-top:2px';
+    metaEl.textContent = (sn[rv.suite]||rv.suite) + (rv.stay_month ? ' · ' + rv.stay_month : '') + ' · ' + date;
+    info.appendChild(statusEl); info.appendChild(nameEl); info.appendChild(metaEl);
+
+    var starsEl = document.createElement('div');
+    starsEl.style.cssText = 'font-size:14px;color:#C8963E';
+    starsEl.textContent = stars;
+    hdr.appendChild(info); hdr.appendChild(starsEl);
+    card.appendChild(hdr);
+
+    // Review text
+    var body = document.createElement('p');
+    body.style.cssText = 'font-family:Cormorant Garamond,serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px';
+    body.textContent = '“' + (rv.body || '') + '”';
+    card.appendChild(body);
+
+    // Action buttons
+    var actions = document.createElement('div');
+    actions.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap';
+
+    function makeRevBtn(label, color, borderColor, fn) {
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-outline';
+      btn.style.cssText = 'border-color:' + borderColor + ';color:' + color;
+      btn.textContent = label;
+      btn.onclick = fn;
+      return btn;
+    }
+
+    if (rv.status !== 'approved') actions.appendChild(makeRevBtn('✓ Approve', '#27ae60', 'rgba(39,174,96,0.4)', function() { revUpdateStatus(rv.id, 'approved'); }));
+    if (rv.status !== 'rejected') actions.appendChild(makeRevBtn('✕ Reject', '#e74c3c', 'rgba(231,76,60,0.3)', function() { revUpdateStatus(rv.id, 'rejected'); }));
+    if (rv.status !== 'pending')  actions.appendChild(makeRevBtn('↩ Reset', 'var(--pietra)', 'var(--border)', function() { revUpdateStatus(rv.id, 'pending'); }));
+
+    var delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-red';
+    delBtn.textContent = 'Delete';
+    delBtn.onclick = function() { revDelete(rv.id); };
+    actions.appendChild(delBtn);
+    card.appendChild(actions);
+    el.appendChild(card);
+  });
 }
 
 function revSetFilter(f) {
