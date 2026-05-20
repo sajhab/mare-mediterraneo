@@ -82,6 +82,39 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--notte2);border:1px solid var(--gold);color:var(--sabbia);padding:12px 24px;border-radius:4px;font-size:12px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .toast.show{opacity:1}
 @media(min-width:600px){.stats-row{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:1fr 1fr 1fr}}
+
+/* ── PHOTO MANAGER ── */
+.photo-suite-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.upload-zone{border:2px dashed rgba(200,150,62,0.3);border-radius:6px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:20px;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:rgba(200,150,62,0.05)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone-icon{font-size:28px;margin-bottom:8px;color:var(--gold)}
+.upload-zone-text{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted)}
+.upload-zone-sub{font-size:10px;letter-spacing:1px;color:rgba(200,185,154,0.3);margin-top:4px}
+.upload-progress{background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:4px;padding:12px;margin-bottom:12px;display:none}
+.upload-progress-bar{height:4px;background:rgba(200,185,154,0.1);border-radius:2px;margin-top:8px;overflow:hidden}
+.upload-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.3s;width:0%}
+.photo-grid-admin{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(min-width:600px){.photo-grid-admin{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:900px){.photo-grid-admin{grid-template-columns:repeat(5,1fr)}}
+.photo-card{background:var(--notte2);border:1px solid var(--border);border-radius:6px;overflow:hidden;position:relative;transition:border-color 0.2s}
+.photo-card:hover{border-color:rgba(200,150,62,0.4)}
+.photo-card-img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#0a0a12}
+.photo-card-body{padding:8px}
+.photo-order-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.photo-order-label{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);flex-shrink:0}
+.photo-order-input{width:48px;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:2px;padding:4px 6px;color:var(--text);font-family:'Tenor Sans',sans-serif;font-size:12px;text-align:center;outline:none}
+.photo-caption-input{width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:2px;padding:5px 7px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:13px;outline:none;margin-bottom:6px}
+.photo-caption-input::placeholder{color:rgba(200,185,154,0.3);font-style:italic}
+.photo-caption-hint{font-size:9px;color:rgba(200,185,154,0.35);margin-bottom:6px;font-family:'Cormorant Garamond',serif;font-style:italic}
+.photo-delete-btn{width:100%;padding:5px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);border-radius:2px;color:#e74c3c;font-family:'Tenor Sans',sans-serif;font-size:8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.photo-delete-btn:hover{background:rgba(192,57,43,0.2)}
+.photo-save-btn{width:100%;padding:5px;background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.25);border-radius:2px;color:var(--gold);font-family:'Tenor Sans',sans-serif;font-size:8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:4px;transition:all 0.2s}
+.photo-save-btn:hover{background:rgba(200,150,62,0.2)}
+.photo-count{font-size:10px;color:var(--muted);letter-spacing:1px}
+.suite-section{margin-bottom:40px}
+.suite-section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--sabbia);margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.suite-section-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,150,62,0.3);padding:3px 8px;border-radius:2px}
 </style>
 </head>
 <body>
@@ -168,6 +201,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <button class="tab-btn" data-tab="calendar">Calendar</button>
     <button class="tab-btn" data-tab="bookings">Bookings</button>
     <button class="tab-btn" data-tab="toki">Toki</button>
+    <button class="tab-btn" data-tab="photos">Photos</button>
     <button class="tab-btn" data-tab="reviews">Reviews</button>
     <button class="tab-btn" data-tab="settings">Settings</button>
   </div>
@@ -239,6 +273,98 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
           <textarea class="form-textarea" id="tokiLocal" placeholder="e.g. Best restaurant: Trattoria del Mare"></textarea>
         </div>
         <button class="btn btn-gold" id="saveTokiBtn">Save Toki Settings</button>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div id="panel-photos" class="tab-panel">
+      <div class="sec-title">Photo Manager</div>
+      <div class="sec-sub">Upload, caption and order photos per suite · All changes are live instantly</div>
+
+      <!-- SUITE PIETRA -->
+      <div class="suite-section" id="photoSection-pietra">
+        <div class="suite-section-title">
+          Suite Pietra
+          <span class="suite-section-badge">Ground Floor · Garden</span>
+          <span class="photo-count" id="photoCount-pietra">0 photos</span>
+        </div>
+        <div class="upload-zone" id="uploadZone-pietra" ondragover="uploadDrag(event,'pietra')" ondragleave="uploadDragEnd('pietra')" ondrop="uploadDrop(event,'pietra')">
+          <input type="file" accept="image/*" multiple onchange="uploadFiles(this.files,'pietra')">
+          <div class="upload-zone-icon">📷</div>
+          <div class="upload-zone-text">Click or drag photos here</div>
+          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each · Multiple files OK</div>
+        </div>
+        <div class="upload-progress" id="uploadProgress-pietra">
+          <div style="font-size:11px;color:var(--muted)" id="uploadProgressText-pietra">Uploading...</div>
+          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-pietra"></div></div>
+        </div>
+        <div class="photo-grid-admin" id="photoGrid-pietra"></div>
+      </div>
+
+      <!-- SUITE CIELO -->
+      <div class="suite-section" id="photoSection-cielo">
+        <div class="suite-section-title">
+          Suite Cielo
+          <span class="suite-section-badge">First Floor · Terrace</span>
+          <span class="photo-count" id="photoCount-cielo">0 photos</span>
+        </div>
+        <div class="upload-zone" id="uploadZone-cielo" ondragover="uploadDrag(event,'cielo')" ondragleave="uploadDragEnd('cielo')" ondrop="uploadDrop(event,'cielo')">
+          <input type="file" accept="image/*" multiple onchange="uploadFiles(this.files,'cielo')">
+          <div class="upload-zone-icon">📷</div>
+          <div class="upload-zone-text">Click or drag photos here</div>
+          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each · Multiple files OK</div>
+        </div>
+        <div class="upload-progress" id="uploadProgress-cielo">
+          <div style="font-size:11px;color:var(--muted)" id="uploadProgressText-cielo">Uploading...</div>
+          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-cielo"></div></div>
+        </div>
+        <div class="photo-grid-admin" id="photoGrid-cielo"></div>
+      </div>
+
+      <!-- VILLA COMPLETA -->
+      <div class="suite-section" id="photoSection-villa">
+        <div class="suite-section-title">
+          Villa Completa
+          <span class="suite-section-badge">Entire Property</span>
+          <span class="photo-count" id="photoCount-villa">0 photos</span>
+        </div>
+        <div class="upload-zone" id="uploadZone-villa" ondragover="uploadDrag(event,'villa')" ondragleave="uploadDragEnd('villa')" ondrop="uploadDrop(event,'villa')">
+          <input type="file" accept="image/*" multiple onchange="uploadFiles(this.files,'villa')">
+          <div class="upload-zone-icon">📷</div>
+          <div class="upload-zone-text">Click or drag photos here</div>
+          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each · Multiple files OK</div>
+        </div>
+        <div class="upload-progress" id="uploadProgress-villa">
+          <div style="font-size:11px;color:var(--muted)" id="uploadProgressText-villa">Uploading...</div>
+          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-villa"></div></div>
+        </div>
+        <div class="photo-grid-admin" id="photoGrid-villa"></div>
+      </div>
+
+      <!-- CAPTION DICTIONARY INFO -->
+      <div class="card" style="margin-top:8px">
+        <div class="card-title">Auto-translation Dictionary</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px">
+          Type captions in English — the website auto-translates them into Italian, German and French.
+          These words are recognized automatically:
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Living Room</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Bedroom</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Main Bedroom</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Second Bedroom</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Kitchen</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Bathroom</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Garden</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Terrace</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Outdoor Dining</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">View</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Sunset</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Exterior</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Pool</span>
+          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Parking</span>
+        </div>
+        <p style="font-size:10px;color:rgba(200,185,154,0.3);margin-top:10px;font-family:'Cormorant Garamond',serif;font-style:italic">Anything not in the list shows your English text in all languages.</p>
       </div>
     </div>
 
@@ -664,27 +790,236 @@ function testConnection(callback) {
 }
 
 
-// ─────────────────────────────────────────
-// REVIEWS TAB
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// PHOTO MANAGER
+// ═══════════════════════════════════════════════════════════
+var BUCKET = 'mare-photos';
+var allPhotos = { pietra: [], cielo: [], villa: [] };
+
+// Caption auto-translation dictionary
+var captionDict = {
+  'living room':    {it:'Soggiorno',       de:'Wohnzimmer',          fr:'Salon'},
+  'bedroom':        {it:'Camera da Letto', de:'Schlafzimmer',        fr:'Chambre'},
+  'main bedroom':   {it:'Camera Principale',de:'Hauptschlafzimmer',  fr:'Chambre Principale'},
+  'second bedroom': {it:'Seconda Camera',  de:'Zweites Schlafzimmer',fr:'Deuxième Chambre'},
+  'kitchen':        {it:'Cucina',          de:'Küche',               fr:'Cuisine'},
+  'bathroom':       {it:'Bagno',           de:'Badezimmer',          fr:'Salle de bain'},
+  'garden':         {it:'Giardino',        de:'Garten',              fr:'Jardin'},
+  'terrace':        {it:'Terrazza',        de:'Terrasse',            fr:'Terrasse'},
+  'outdoor dining': {it:'Pranzo Esterno',  de:'Außenessen',          fr:'Repas Extérieur'},
+  'view':           {it:'Vista',           de:'Aussicht',            fr:'Vue'},
+  'sunset':         {it:'Tramonto',        de:'Sonnenuntergang',     fr:'Coucher de soleil'},
+  'exterior':       {it:'Esterno',         de:'Außenansicht',        fr:'Extérieur'},
+  'pool':           {it:'Piscina',         de:'Pool',                fr:'Piscine'},
+  'parking':        {it:'Parcheggio',      de:'Parkplatz',           fr:'Parking'},
+  'sun beds':       {it:'Lettini',         de:'Sonnenliegen',        fr:'Bains de Soleil'},
+  'outdoor shower': {it:'Doccia Esterna',  de:'Außendusche',         fr:'Douche Extérieure'},
+  'living area':    {it:'Area Living',     de:'Wohnbereich',         fr:'Espace Vie'},
+  'dining area':    {it:'Zona Pranzo',     de:'Essbereich',          fr:'Salle à Manger'},
+};
+
+function translateCaption(en, lang) {
+  if (!en || !lang || lang === 'en') return en || '';
+  var key = en.toLowerCase().trim();
+  var entry = captionDict[key];
+  if (entry && entry[lang]) return entry[lang];
+  return en; // fallback: show English
+}
+
+// Load all photos from Supabase
+function loadPhotos(callback) {
+  fetch(SB_URL + '/rest/v1/photos?order=suite.asc,sort_order.asc,created_at.asc&apikey=' + SB_KEY, {
+    headers: sbHeaders()
+  }).then(function(r) { return r.json(); })
+    .then(function(rows) {
+      allPhotos = { pietra: [], cielo: [], villa: [] };
+      if (Array.isArray(rows)) {
+        rows.forEach(function(p) {
+          if (allPhotos[p.suite]) allPhotos[p.suite].push(p);
+        });
+      }
+      renderPhotoGrids();
+      if (callback) callback();
+    }).catch(function(e) {
+      showToast('Error loading photos: ' + e.message);
+    });
+}
+
+function renderPhotoGrids() {
+  ['pietra', 'cielo', 'villa'].forEach(function(suite) {
+    var grid = document.getElementById('photoGrid-' + suite);
+    var count = document.getElementById('photoCount-' + suite);
+    var photos = allPhotos[suite] || [];
+    count.textContent = photos.length + ' photo' + (photos.length !== 1 ? 's' : '');
+    if (!photos.length) {
+      grid.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:12px 0;grid-column:1/-1">No photos yet. Upload above.</p>';
+      return;
+    }
+    grid.innerHTML = photos.map(function(p) {
+      return '<div class="photo-card" id="photoCard-' + p.id + '">' +
+        '<img class="photo-card-img" src="' + p.url + '" alt="' + (p.caption_en || '') + '" loading="lazy" onerror="this.style.opacity=0.3">' +
+        '<div class="photo-card-body">' +
+          '<div class="photo-order-row">' +
+            '<span class="photo-order-label">Order</span>' +
+            '<input type="number" class="photo-order-input" value="' + (p.sort_order || 99) + '" min="1" max="99" id="order-' + p.id + '">' +
+          '</div>' +
+          '<input type="text" class="photo-caption-input" placeholder="Caption (English)..." value="' + (p.caption_en || '') + '" id="caption-' + p.id + '">' +
+          '<div class="photo-caption-hint">Auto-translates on website ↗</div>' +
+          '<button class="photo-save-btn" onclick="savePhotoMeta(' + p.id + ')">Save</button>' +
+          '<button class="photo-delete-btn" onclick="deletePhoto(' + p.id + ','' + p.filename + '','' + suite + '')">Delete</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  });
+}
+
+// Save caption + order
+function savePhotoMeta(id) {
+  var caption = document.getElementById('caption-' + id);
+  var order = document.getElementById('order-' + id);
+  if (!caption || !order) return;
+  fetch(SB_URL + '/rest/v1/photos?id=eq.' + id + '&apikey=' + SB_KEY, {
+    method: 'PATCH',
+    headers: Object.assign({}, sbHeaders(), {'Prefer': 'return=minimal'}),
+    body: JSON.stringify({ caption_en: caption.value.trim(), sort_order: parseInt(order.value) || 99 })
+  }).then(function(r) {
+    if (r.ok) {
+      showToast('Saved ✓');
+      // Update local cache
+      ['pietra','cielo','villa'].forEach(function(s) {
+        allPhotos[s] = allPhotos[s].map(function(p) {
+          if (p.id !== id) return p;
+          return Object.assign({}, p, { caption_en: caption.value.trim(), sort_order: parseInt(order.value) || 99 });
+        });
+      });
+    } else { showToast('Save failed'); }
+  });
+}
+
+// Delete photo
+function deletePhoto(id, filename, suite) {
+  if (!confirm('Delete this photo permanently?')) return;
+  // Delete from storage
+  fetch(SB_URL + '/storage/v1/object/' + BUCKET + '/' + suite + '/' + filename + '?apikey=' + SB_KEY, {
+    method: 'DELETE',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  }).then(function() {
+    // Delete from DB regardless of storage result
+    return fetch(SB_URL + '/rest/v1/photos?id=eq.' + id + '&apikey=' + SB_KEY, {
+      method: 'DELETE', headers: sbHeaders()
+    });
+  }).then(function() {
+    allPhotos[suite] = allPhotos[suite].filter(function(p) { return p.id !== id; });
+    renderPhotoGrids();
+    showToast('Photo deleted');
+  }).catch(function(e) { showToast('Delete error: ' + e.message); });
+}
+
+// Upload files
+function uploadFiles(files, suite) {
+  if (!files || !files.length) return;
+  var filesArr = Array.from(files);
+  var MAX_SIZE = 5 * 1024 * 1024; // 5MB
+  var toUpload = filesArr.filter(function(f) {
+    if (f.size > MAX_SIZE) { showToast(f.name + ' is too large (max 5MB)'); return false; }
+    return true;
+  });
+  if (!toUpload.length) return;
+
+  var prog = document.getElementById('uploadProgress-' + suite);
+  var progText = document.getElementById('uploadProgressText-' + suite);
+  var progFill = document.getElementById('uploadProgressFill-' + suite);
+  prog.style.display = 'block';
+  var done = 0;
+
+  function uploadNext(i) {
+    if (i >= toUpload.length) {
+      prog.style.display = 'none';
+      progFill.style.width = '0%';
+      loadPhotos(function() { showToast('Uploaded ' + toUpload.length + ' photo' + (toUpload.length > 1 ? 's' : '') + ' ✓'); });
+      return;
+    }
+    var file = toUpload[i];
+    // Clean filename: replace spaces with hyphens, lowercase
+    var cleanName = file.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_.]/g, '');
+    var timestamp = Date.now();
+    var storagePath = suite + '/' + timestamp + '-' + cleanName;
+    progText.textContent = 'Uploading ' + (i + 1) + ' of ' + toUpload.length + ': ' + file.name;
+    progFill.style.width = Math.round((i / toUpload.length) * 100) + '%';
+
+    // Upload to Supabase Storage
+    fetch(SB_URL + '/storage/v1/object/' + BUCKET + '/' + storagePath, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': file.type || 'image/jpeg',
+        'x-upsert': 'true'
+      },
+      body: file
+    }).then(function(r) {
+      if (!r.ok) { return r.text().then(function(t) { throw new Error(t); }); }
+      // Build public URL
+      var publicUrl = SB_URL + '/storage/v1/object/public/' + BUCKET + '/' + storagePath;
+      // Insert metadata row
+      return fetch(SB_URL + '/rest/v1/photos?apikey=' + SB_KEY, {
+        method: 'POST',
+        headers: sbHeaders(),
+        body: JSON.stringify({
+          suite: suite,
+          filename: storagePath,
+          url: publicUrl,
+          caption_en: '',
+          sort_order: 99
+        })
+      });
+    }).then(function() {
+      done++;
+      uploadNext(i + 1);
+    }).catch(function(e) {
+      showToast('Upload failed: ' + e.message);
+      uploadNext(i + 1);
+    });
+  }
+  uploadNext(0);
+}
+
+// Drag & drop
+function uploadDrag(e, suite) {
+  e.preventDefault();
+  document.getElementById('uploadZone-' + suite).classList.add('drag');
+}
+function uploadDragEnd(suite) {
+  document.getElementById('uploadZone-' + suite).classList.remove('drag');
+}
+function uploadDrop(e, suite) {
+  e.preventDefault();
+  uploadDragEnd(suite);
+  uploadFiles(e.dataTransfer.files, suite);
+}
+
+// ═══════════════════════════════════════════════════════════
+// REVIEWS
+// ═══════════════════════════════════════════════════════════
 var allReviews = [];
 var revCurrentFilter = 'pending';
 
 function loadReviews() {
-  fetch(SB_URL + '/rest/v1/reviews?order=created_at.desc&apikey=' + SB_KEY, {headers: sbHeaders()})
+  fetch(SB_URL + '/rest/v1/reviews?order=created_at.desc&apikey=' + SB_KEY, { headers: sbHeaders() })
     .then(function(r) { return r.json(); })
     .then(function(rows) {
       allReviews = Array.isArray(rows) ? rows : [];
       renderReviews();
-    })
-    .catch(function() { document.getElementById('revList').innerHTML = '<p style="color:#e74c3c;font-size:13px">Error loading reviews</p>'; });
+    }).catch(function() {
+      document.getElementById('revList').innerHTML = '<p style="color:#e74c3c;font-size:13px">Error loading reviews</p>';
+    });
 }
 
 function renderReviews() {
-  var pending = allReviews.filter(function(r) { return r.status === 'pending'; }).length;
+  var pending  = allReviews.filter(function(r) { return r.status === 'pending'; }).length;
   var approved = allReviews.filter(function(r) { return r.status === 'approved'; }).length;
   var rejected = allReviews.filter(function(r) { return r.status === 'rejected'; }).length;
-  document.getElementById('revPending').textContent = pending;
+  document.getElementById('revPending').textContent  = pending;
   document.getElementById('revApproved').textContent = approved;
   document.getElementById('revRejected').textContent = rejected;
 
@@ -696,29 +1031,25 @@ function renderReviews() {
     el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:20px 0">No ' + revCurrentFilter + ' reviews.</p>';
     return;
   }
-
-  var suiteNames = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
-  var statusColors = {pending:'#C8963E', approved:'#27ae60', rejected:'#e74c3c'};
-
+  var sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+  var sc = { pending:'#C8963E', approved:'#27ae60', rejected:'#e74c3c' };
   el.innerHTML = filtered.map(function(rv) {
     var date = rv.created_at ? new Date(rv.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '';
-    var suiteName = suiteNames[rv.suite] || rv.suite;
-    var statusCol = statusColors[rv.status] || '#888';
     var stars = '★'.repeat(rv.rating || 5);
     return '<div class="card" style="margin-bottom:12px">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">' +
         '<div>' +
-          '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + statusCol + ';margin-bottom:4px">' + rv.status.toUpperCase() + '</div>' +
-          '<div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--sabbia)">' + (rv.guest_name || '—') + '</div>' +
-          '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + suiteName + (rv.stay_month ? ' · ' + rv.stay_month : '') + ' · ' + date + '</div>' +
+          '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + (sc[rv.status]||'#888') + ';margin-bottom:4px">' + rv.status.toUpperCase() + '</div>' +
+          '<div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--sabbia)">' + (rv.guest_name||'—') + '</div>' +
+          '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + (sn[rv.suite]||rv.suite) + (rv.stay_month?' · '+rv.stay_month:'') + ' · ' + date + '</div>' +
         '</div>' +
-        '<div style="font-size:14px;color:#C8963E;letter-spacing:1px">' + stars + '</div>' +
+        '<div style="font-size:14px;color:#C8963E">' + stars + '</div>' +
       '</div>' +
-      '<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px">&ldquo;' + rv.body + '&rdquo;</p>' +
+      '<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px">&ldquo;' + (rv.body||'') + '&rdquo;</p>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        (rv.status !== 'approved'  ? '<button class="btn btn-outline" style="border-color:rgba(39,174,96,0.4);color:#27ae60" onclick="revUpdateStatus(' + rv.id + ','approved')">✓ Approve</button>' : '') +
-        (rv.status !== 'rejected'  ? '<button class="btn btn-outline" style="border-color:rgba(231,76,60,0.3);color:#e74c3c" onclick="revUpdateStatus(' + rv.id + ','rejected')">✕ Reject</button>' : '') +
-        (rv.status !== 'pending'   ? '<button class="btn btn-outline" onclick="revUpdateStatus(' + rv.id + ','pending')">↩ Reset to Pending</button>' : '') +
+        (rv.status !== 'approved' ? '<button class="btn btn-outline" style="border-color:rgba(39,174,96,0.4);color:#27ae60" onclick="revUpdateStatus(' + rv.id + ','approved')">✓ Approve</button>' : '') +
+        (rv.status !== 'rejected' ? '<button class="btn btn-outline" style="border-color:rgba(231,76,60,0.3);color:#e74c3c" onclick="revUpdateStatus(' + rv.id + ','rejected')">✕ Reject</button>' : '') +
+        (rv.status !== 'pending'  ? '<button class="btn btn-outline" onclick="revUpdateStatus(' + rv.id + ','pending')">↩ Reset</button>' : '') +
         '<button class="btn btn-red" onclick="revDelete(' + rv.id + ')">Delete</button>' +
       '</div>' +
     '</div>';
@@ -727,24 +1058,21 @@ function renderReviews() {
 
 function revSetFilter(f) {
   revCurrentFilter = f;
-  var ids = ['revFilterPending','revFilterApproved','revFilterRejected','revFilterAll'];
-  var filters = ['pending','approved','rejected','all'];
-  for (var i = 0; i < ids.length; i++) {
-    var btn = document.getElementById(ids[i]);
-    if (btn) btn.style.color = (filters[i] === f) ? 'var(--gold)' : '';
-    if (btn) btn.style.borderColor = (filters[i] === f) ? 'rgba(200,150,62,0.5)' : '';
-  }
+  ['pending','approved','rejected','all'].forEach(function(x) {
+    var b = document.getElementById('revFilter' + x.charAt(0).toUpperCase() + x.slice(1));
+    if (b) { b.style.color = x===f?'var(--gold)':''; b.style.borderColor = x===f?'rgba(200,150,62,0.5)':''; }
+  });
   renderReviews();
 }
 
 function revUpdateStatus(id, status) {
   fetch(SB_URL + '/rest/v1/reviews?id=eq.' + id + '&apikey=' + SB_KEY, {
     method: 'PATCH',
-    headers: Object.assign({}, sbHeaders(), {'Prefer': 'return=minimal'}),
-    body: JSON.stringify({status: status})
+    headers: Object.assign({}, sbHeaders(), {'Prefer':'return=minimal'}),
+    body: JSON.stringify({ status: status })
   }).then(function(r) {
     if (r.ok) {
-      allReviews = allReviews.map(function(rv) { return rv.id === id ? Object.assign({}, rv, {status: status}) : rv; });
+      allReviews = allReviews.map(function(rv) { return rv.id===id ? Object.assign({},rv,{status:status}) : rv; });
       renderReviews();
       showToast('Review ' + status);
     } else { showToast('Error updating review'); }
@@ -759,10 +1087,8 @@ function revDelete(id) {
     allReviews = allReviews.filter(function(rv) { return rv.id !== id; });
     renderReviews();
     showToast('Review deleted');
-  }).catch(function() { showToast('Error deleting review'); });
+  });
 }
-
-// Load reviews when tab clicked
 
 // EVENT LISTENERS
 document.getElementById('loginPass').addEventListener('keydown', function(e) {
@@ -829,6 +1155,7 @@ for (var ti = 0; ti < tabBtns.length; ti++) {
     document.getElementById('panel-' + tab).classList.add('active');
     if (tab === 'calendar') renderCalendar();
     if (tab === 'bookings') renderAllBookings();
+    if (tab === 'photos') loadPhotos();
     if (tab === 'reviews') loadReviews();
   });
 }
