@@ -663,6 +663,14 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .suites-header{padding:0 96px 60px}
   .am-grid{grid-template-columns:repeat(4,1fr)}
 }
+
+.photo-thumb-cap{position:absolute;bottom:0;left:0;right:0;
+  padding:4px 6px;font-size:9px;letter-spacing:1px;
+  color:rgba(245,239,230,0.9);background:rgba(10,10,18,0.65);
+  backdrop-filter:blur(4px);text-align:center;
+  font-family:'Tenor Sans',sans-serif;text-transform:uppercase;
+  opacity:0;transition:opacity 0.2s}
+.photo-thumb:hover .photo-thumb-cap{opacity:1}
 </style>
 </head>
 <body>
@@ -1064,7 +1072,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
           <div class="feat"><span class="feat-icon"><ion-icon name="wifi-outline"></ion-icon></span><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></div>
         </div>
         <span class="photos-label">Photos</span>
-        <div class="photo-grid">
+        <div class="photo-grid" id="photo-grid-pietra">
           <div class="photo-thumb" onclick="lbOpen('pietra',0)"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy" onerror="this.src='pietra-main.jpg'"></div>
           <div class="photo-thumb" onclick="lbOpen('pietra',3)"><img src="Main%20bedroom_p1.jpg" alt="Main Bedroom" loading="lazy" onerror="this.src='pietra-main.jpg'"></div>
           <div class="photo-thumb" onclick="lbOpen('pietra',7)"><img src="Small%20bedroom_p1.jpg" alt="Second Bedroom" loading="lazy" onerror="this.src='pietra-main.jpg'"></div>
@@ -1114,7 +1122,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
           <div class="feat"><span class="feat-icon"><ion-icon name="wifi-outline"></ion-icon></span><span data-lang="en" class="al">Fast WiFi</span><span data-lang="it">WiFi Veloce</span><span data-lang="de">Schnelles WLAN</span><span data-lang="fr">WiFi Rapide</span></div>
         </div>
         <span class="photos-label">Photos</span>
-        <div class="photo-grid">
+        <div class="photo-grid" id="photo-grid-cielo">
           <div class="photo-thumb" onclick="lbOpen('cielo',0)"><img src="cielo-main.jpg" alt="Suite Cielo" loading="lazy"></div>
           <div class="photo-thumb" onclick="lbOpen('cielo',1)"><img src="cielo-kitchen.jpg" alt="Kitchen" loading="lazy"></div>
           <div class="photo-thumb" onclick="lbOpen('cielo',2)"><img src="cielo-bedroom.jpg" alt="Bedroom" loading="lazy"></div>
@@ -1163,7 +1171,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
           <ion-icon name="star-outline" style="font-size:14px;margin-right:6px;vertical-align:middle;color:var(--gold)"></ion-icon>Two couples travelling together? Each couple gets their own apartment, bathroom and entrance — privacy when you need it, togetherness when you want it.
         </p>
         <span class="photos-label">Photos</span>
-        <div class="photo-grid">
+        <div class="photo-grid" id="photo-grid-villa">
           <div class="photo-thumb" onclick="lbOpen('villa',0)"><img src="hero.jpg" alt="Exterior" loading="lazy"></div>
           <div class="photo-thumb" onclick="lbOpen('villa',1)"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy" onerror="this.src='pietra-main.jpg'"></div>
           <div class="photo-thumb" onclick="lbOpen('villa',3)"><img src="Main%20bedroom_p1.jpg" alt="Bedroom" loading="lazy" onerror="this.src='pietra-main.jpg'"></div>
@@ -3852,6 +3860,148 @@ window.setLang = function(l) {
   if(chosen && window.setLang){
     setLang(chosen);
   }
+})();
+</script>
+
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// SUPABASE PHOTO LOADER
+// Loads photos dynamically from Supabase Storage
+// Replaces static GitHub file references
+// ═══════════════════════════════════════════════════════════
+(function() {
+  var SB_URL_P = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+  var SB_KEY_P = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+
+  // Caption translation dictionary
+  var captionDict = {
+    'living room':    {it:'Soggiorno',        de:'Wohnzimmer',           fr:'Salon'},
+    'bedroom':        {it:'Camera da Letto',  de:'Schlafzimmer',         fr:'Chambre'},
+    'main bedroom':   {it:'Camera Principale',de:'Hauptschlafzimmer',    fr:'Chambre Principale'},
+    'second bedroom': {it:'Seconda Camera',   de:'Zweites Schlafzimmer', fr:'Deuxième Chambre'},
+    'kitchen':        {it:'Cucina',           de:'Küche',                fr:'Cuisine'},
+    'bathroom':       {it:'Bagno',            de:'Badezimmer',           fr:'Salle de bain'},
+    'garden':         {it:'Giardino',         de:'Garten',               fr:'Jardin'},
+    'terrace':        {it:'Terrazza',         de:'Terrasse',             fr:'Terrasse'},
+    'outdoor dining': {it:'Pranzo Esterno',   de:'Außenessen',           fr:'Repas Extérieur'},
+    'view':           {it:'Vista',            de:'Aussicht',             fr:'Vue'},
+    'sunset':         {it:'Tramonto',         de:'Sonnenuntergang',      fr:'Coucher de soleil'},
+    'exterior':       {it:'Esterno',          de:'Außenansicht',         fr:'Extérieur'},
+    'pool':           {it:'Piscina',          de:'Pool',                 fr:'Piscine'},
+    'parking':        {it:'Parcheggio',       de:'Parkplatz',            fr:'Parking'},
+    'sun beds':       {it:'Lettini',          de:'Sonnenliegen',         fr:'Bains de Soleil'},
+    'outdoor shower': {it:'Doccia Esterna',   de:'Außendusche',          fr:'Douche Extérieure'},
+    'living area':    {it:'Area Living',      de:'Wohnbereich',          fr:'Espace Vie'},
+    'dining area':    {it:'Zona Pranzo',      de:'Essbereich',           fr:'Salle à Manger'},
+  };
+
+  function xlate(en, l) {
+    if (!en) return '';
+    if (!l || l === 'en') return en;
+    var e = captionDict[en.toLowerCase().trim()];
+    return (e && e[l]) ? e[l] : en;
+  }
+
+  // Store loaded photo data globally so lightbox + gallery can use it
+  var suitePhotos = { pietra: [], cielo: [], villa: [] };
+  var photosLoaded = false;
+
+  function loadSuitePhotos() {
+    fetch(SB_URL_P + '/rest/v1/photos?order=suite.asc,sort_order.asc,created_at.asc&apikey=' + SB_KEY_P, {
+      headers: { 'apikey': SB_KEY_P, 'Authorization': 'Bearer ' + SB_KEY_P }
+    }).then(function(r) { return r.json(); })
+      .then(function(rows) {
+        if (!Array.isArray(rows) || !rows.length) return; // keep static fallback
+        suitePhotos = { pietra: [], cielo: [], villa: [] };
+        rows.forEach(function(p) {
+          if (suitePhotos[p.suite]) suitePhotos[p.suite].push(p);
+        });
+        photosLoaded = true;
+
+        // Override the static photos object used by lightbox
+        var newPhotos = {};
+        ['pietra','cielo','villa'].forEach(function(s) {
+          newPhotos[s] = suitePhotos[s].map(function(p) { return p.url; });
+        });
+        if (typeof photos !== 'undefined') {
+          photos.pietra = newPhotos.pietra.length ? newPhotos.pietra : photos.pietra;
+          photos.cielo  = newPhotos.cielo.length  ? newPhotos.cielo  : photos.cielo;
+          photos.villa  = newPhotos.villa.length   ? newPhotos.villa  : photos.villa;
+        }
+
+        // Override caption lookup
+        window.lbCaption = function(url) {
+          var l = typeof lang !== 'undefined' ? lang : 'en';
+          var all = [].concat(suitePhotos.pietra, suitePhotos.cielo, suitePhotos.villa);
+          for (var i = 0; i < all.length; i++) {
+            if (all[i].url === url) return xlate(all[i].caption_en, l);
+          }
+          return '';
+        };
+
+        renderSuitePhotoGrids();
+        renderGalleryStrip();
+      }).catch(function() {
+        // Silently fall back to static photos already in HTML
+      });
+  }
+
+  function renderSuitePhotoGrids() {
+    ['pietra','cielo','villa'].forEach(function(suite) {
+      var grid = document.getElementById('photo-grid-' + suite);
+      if (!grid) return;
+      var ps = suitePhotos[suite];
+      if (!ps || !ps.length) return;
+      var l = typeof lang !== 'undefined' ? lang : 'en';
+      grid.innerHTML = ps.map(function(p, i) {
+        var cap = xlate(p.caption_en, l);
+        return '<div class="photo-thumb" onclick="lbOpen('' + suite + '',' + i + ')" title="' + cap + '">' +
+          '<img src="' + p.url + '" alt="' + cap + '" loading="lazy">' +
+          (cap ? '<div class="photo-thumb-cap">' + cap + '</div>' : '') +
+        '</div>';
+      }).join('');
+    });
+  }
+
+  function renderGalleryStrip() {
+    var strip = document.getElementById('galleryStrip');
+    if (!strip) return;
+    var all = [];
+    ['pietra','cielo','villa'].forEach(function(suite) {
+      suitePhotos[suite].forEach(function(p, i) {
+        all.push({ suite: suite, idx: i, url: p.url, caption_en: p.caption_en });
+      });
+    });
+    if (!all.length) return;
+    // Duplicate for seamless scroll
+    var items = all.concat(all);
+    var l = typeof lang !== 'undefined' ? lang : 'en';
+    strip.innerHTML = items.map(function(item) {
+      var cap = xlate(item.caption_en, l);
+      return '<div class="strip-item" onclick="stripOpen('' + item.suite + '',' + item.idx + ')" style="cursor:pointer">' +
+        '<img src="' + item.url + '" alt="' + cap + '" loading="lazy">' +
+        '<div class="strip-cap">' + cap + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Re-render captions when language changes
+  var _origSetLangPhoto = window.setLang;
+  window.setLang = function(l) {
+    if (_origSetLangPhoto) _origSetLangPhoto(l);
+    if (photosLoaded) {
+      renderSuitePhotoGrids();
+      renderGalleryStrip();
+      // Update lightbox caption if open
+      var capEl = document.getElementById('lb-cap');
+      var img = document.getElementById('lb-img');
+      if (capEl && img && img.src) capEl.textContent = window.lbCaption ? window.lbCaption(img.src) : '';
+    }
+  };
+
+  // Kick off load
+  loadSuitePhotos();
 })();
 </script>
 
