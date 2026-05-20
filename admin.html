@@ -168,7 +168,6 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <button class="tab-btn" data-tab="calendar">Calendar</button>
     <button class="tab-btn" data-tab="bookings">Bookings</button>
     <button class="tab-btn" data-tab="toki">Toki</button>
-    <button class="tab-btn" data-tab="reviews">Reviews</button>
     <button class="tab-btn" data-tab="settings">Settings</button>
   </div>
 
@@ -240,24 +239,6 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         </div>
         <button class="btn btn-gold" id="saveTokiBtn">Save Toki Settings</button>
       </div>
-    </div>
-
-    <!-- REVIEWS -->
-    <div id="panel-reviews" class="tab-panel">
-      <div class="sec-title">Guest Reviews</div>
-      <div class="sec-sub">Approve or reject submitted reviews</div>
-      <div class="stats-row" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:16px">
-        <div class="stat-card"><div class="stat-num" id="revPending">-</div><div class="stat-label">Pending</div></div>
-        <div class="stat-card"><div class="stat-num" id="revApproved">-</div><div class="stat-label">Approved</div></div>
-        <div class="stat-card"><div class="stat-num" id="revRejected">-</div><div class="stat-label">Rejected</div></div>
-      </div>
-      <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="btn btn-outline" id="revFilterPending" onclick="revSetFilter('pending')" style="border-color:rgba(200,150,62,0.5);color:var(--gold)">Pending</button>
-        <button class="btn btn-outline" id="revFilterApproved" onclick="revSetFilter('approved')">Approved</button>
-        <button class="btn btn-outline" id="revFilterRejected" onclick="revSetFilter('rejected')">Rejected</button>
-        <button class="btn btn-outline" id="revFilterAll" onclick="revSetFilter('all')">All</button>
-      </div>
-      <div id="revList"><div style="color:var(--muted);font-size:13px;padding:20px 0">Loading reviews...</div></div>
     </div>
 
     <!-- SETTINGS -->
@@ -663,107 +644,6 @@ function testConnection(callback) {
     });
 }
 
-
-// ─────────────────────────────────────────
-// REVIEWS TAB
-// ─────────────────────────────────────────
-var allReviews = [];
-var revCurrentFilter = 'pending';
-
-function loadReviews() {
-  fetch(SB_URL + '/rest/v1/reviews?order=created_at.desc&apikey=' + SB_KEY, {headers: sbHeaders()})
-    .then(function(r) { return r.json(); })
-    .then(function(rows) {
-      allReviews = Array.isArray(rows) ? rows : [];
-      renderReviews();
-    })
-    .catch(function() { document.getElementById('revList').innerHTML = '<p style="color:#e74c3c;font-size:13px">Error loading reviews</p>'; });
-}
-
-function renderReviews() {
-  var pending = allReviews.filter(function(r) { return r.status === 'pending'; }).length;
-  var approved = allReviews.filter(function(r) { return r.status === 'approved'; }).length;
-  var rejected = allReviews.filter(function(r) { return r.status === 'rejected'; }).length;
-  document.getElementById('revPending').textContent = pending;
-  document.getElementById('revApproved').textContent = approved;
-  document.getElementById('revRejected').textContent = rejected;
-
-  var filtered = revCurrentFilter === 'all' ? allReviews :
-    allReviews.filter(function(r) { return r.status === revCurrentFilter; });
-
-  var el = document.getElementById('revList');
-  if (!filtered.length) {
-    el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:20px 0">No ' + revCurrentFilter + ' reviews.</p>';
-    return;
-  }
-
-  var suiteNames = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
-  var statusColors = {pending:'#C8963E', approved:'#27ae60', rejected:'#e74c3c'};
-
-  el.innerHTML = filtered.map(function(rv) {
-    var date = rv.created_at ? new Date(rv.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '';
-    var suiteName = suiteNames[rv.suite] || rv.suite;
-    var statusCol = statusColors[rv.status] || '#888';
-    var stars = '★'.repeat(rv.rating || 5);
-    return '<div class="card" style="margin-bottom:12px">' +
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">' +
-        '<div>' +
-          '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + statusCol + ';margin-bottom:4px">' + rv.status.toUpperCase() + '</div>' +
-          '<div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--sabbia)">' + (rv.guest_name || '—') + '</div>' +
-          '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + suiteName + (rv.stay_month ? ' · ' + rv.stay_month : '') + ' · ' + date + '</div>' +
-        '</div>' +
-        '<div style="font-size:14px;color:#C8963E;letter-spacing:1px">' + stars + '</div>' +
-      '</div>' +
-      '<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px">&ldquo;' + rv.body + '&rdquo;</p>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        (rv.status !== 'approved'  ? '<button class="btn btn-outline" style="border-color:rgba(39,174,96,0.4);color:#27ae60" onclick="revUpdateStatus(' + rv.id + ','approved')">✓ Approve</button>' : '') +
-        (rv.status !== 'rejected'  ? '<button class="btn btn-outline" style="border-color:rgba(231,76,60,0.3);color:#e74c3c" onclick="revUpdateStatus(' + rv.id + ','rejected')">✕ Reject</button>' : '') +
-        (rv.status !== 'pending'   ? '<button class="btn btn-outline" onclick="revUpdateStatus(' + rv.id + ','pending')">↩ Reset to Pending</button>' : '') +
-        '<button class="btn btn-red" onclick="revDelete(' + rv.id + ')">Delete</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-function revSetFilter(f) {
-  revCurrentFilter = f;
-  var ids = ['revFilterPending','revFilterApproved','revFilterRejected','revFilterAll'];
-  var filters = ['pending','approved','rejected','all'];
-  for (var i = 0; i < ids.length; i++) {
-    var btn = document.getElementById(ids[i]);
-    if (btn) btn.style.color = (filters[i] === f) ? 'var(--gold)' : '';
-    if (btn) btn.style.borderColor = (filters[i] === f) ? 'rgba(200,150,62,0.5)' : '';
-  }
-  renderReviews();
-}
-
-function revUpdateStatus(id, status) {
-  fetch(SB_URL + '/rest/v1/reviews?id=eq.' + id + '&apikey=' + SB_KEY, {
-    method: 'PATCH',
-    headers: Object.assign({}, sbHeaders(), {'Prefer': 'return=minimal'}),
-    body: JSON.stringify({status: status})
-  }).then(function(r) {
-    if (r.ok) {
-      allReviews = allReviews.map(function(rv) { return rv.id === id ? Object.assign({}, rv, {status: status}) : rv; });
-      renderReviews();
-      showToast('Review ' + status);
-    } else { showToast('Error updating review'); }
-  });
-}
-
-function revDelete(id) {
-  if (!confirm('Permanently delete this review?')) return;
-  fetch(SB_URL + '/rest/v1/reviews?id=eq.' + id + '&apikey=' + SB_KEY, {
-    method: 'DELETE', headers: sbHeaders()
-  }).then(function() {
-    allReviews = allReviews.filter(function(rv) { return rv.id !== id; });
-    renderReviews();
-    showToast('Review deleted');
-  }).catch(function() { showToast('Error deleting review'); });
-}
-
-// Load reviews when tab clicked
-
 // EVENT LISTENERS
 document.getElementById('loginPass').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') document.getElementById('loginBtn').click();
@@ -829,7 +709,6 @@ for (var ti = 0; ti < tabBtns.length; ti++) {
     document.getElementById('panel-' + tab).classList.add('active');
     if (tab === 'calendar') renderCalendar();
     if (tab === 'bookings') renderAllBookings();
-    if (tab === 'reviews') loadReviews();
   });
 }
 
