@@ -506,83 +506,6 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .suites-header{padding:0 48px 48px}
 }
 
-/* ── DESKTOP ENHANCEMENTS ── */
-@media(min-width:1024px){
-  /* Base font */
-  body{font-size:16px}
-  .about-body{font-size:19px;max-width:700px}
-  .pol-text{font-size:17px}
-  .dist-name{font-size:20px}
-  .rev-text{font-size:17px}
-  .rev-by{font-size:11px}
-
-  /* Hero — full impact on wide screens */
-  #hero{height:100svh;max-height:none}
-  .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.15) 0%,rgba(10,10,18,0) 30%,rgba(10,10,18,0) 55%,rgba(10,10,18,0.92) 100%),url('hero.jpg') center 35%/cover no-repeat}
-  .hero-mare{font-size:110px}
-  .hero-med{font-size:13px;letter-spacing:12px;margin-top:6px}
-  .hero-sub{font-size:18px}
-  .hero-content{padding:0 60px;max-width:900px}
-
-  /* Explore / Gateway — side by side layout */
-  #explore{padding:80px 0 60px}
-  #explore .sec-label{padding:0 60px}
-  #explore .sec-title{padding:0 60px;font-size:48px}
-  .explore-sub{padding:0 60px;font-size:18px;max-width:500px}
-  .map-tabs{padding:0 60px 28px}
-  .map-svg-wrap{padding:0 60px}
-
-  /* Suites grid — larger cards */
-  .suite-name{font-size:42px}
-  .suite-thumb-wrap{height:480px}
-  .suite-features{grid-template-columns:1fr 1fr 1fr;gap:10px}
-  .photo-grid{grid-template-columns:repeat(4,1fr)}
-
-  /* Villa Completa — photo grid wider */
-  #card-villa .photo-grid{grid-template-columns:repeat(6,1fr)}
-  #card-villa .suite-thumb-wrap{height:400px}
-
-  /* Reviews — horizontal scroll better on desktop */
-  #reviews{padding:80px 60px}
-  .rev-track{gap:20px}
-  .rev-card{width:340px;padding:28px}
-
-  /* Booking section */
-  #booking{padding:80px 60px}
-  .book-card{max-width:560px}
-  .price-big{font-size:52px}
-
-  /* Location */
-  #location{padding:80px 60px}
-  .map-box{height:280px}
-
-  /* About */
-  #about{padding:80px 60px}
-  .stats{grid-template-columns:repeat(4,1fr)}
-  .stat-n{font-size:44px}
-
-  /* Amenities */
-  #amenities{padding:80px 60px}
-  .am-grid{grid-template-columns:repeat(3,1fr)}
-
-  /* Policies */
-  #policies{padding:80px 60px}
-  .pol-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px}
-
-  /* Section titles */
-  .sec-title{font-size:42px}
-
-  /* Gallery strip */
-  .strip-item{width:240px;height:300px}
-
-  /* Scroll top btn — move left of center on desktop */
-  .scroll-top{bottom:36px;right:36px;width:50px;height:50px}
-
-  /* Footer */
-  footer{padding:60px 60px 48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-  .ft-links{flex-direction:row;flex-wrap:wrap;gap:6px 20px}
-}
-
 /* ════════════════════════════════════════════════════
    BOOKING OVERLAY — fixed lightbox, slides up from bottom
    ════════════════════════════════════════════════════ */
@@ -660,13 +583,12 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 <!-- LIGHTBOX -->
 <div class="lb" id="lb">
   <button class="lb-close" onclick="lbClose()">✕</button>
-  <div class="lb-img-wrap" id="lb-img-wrap"><img id="lb-img" src="" alt="" style="opacity:1;transition:opacity 0.25s ease"></div>
+  <div class="lb-img-wrap"><img id="lb-img" src="" alt=""></div>
   <div class="lb-nav">
     <button class="lb-btn" onclick="lbNav(-1)">&#8592;</button>
     <span class="lb-count" id="lb-count">1 / 1</span>
     <button class="lb-btn" onclick="lbNav(1)">&#8594;</button>
   </div>
-  <div id="lb-cap" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(200,185,154,0.65);text-align:center;margin-top:8px;min-height:20px;letter-spacing:1px"></div>
 </div>
 
 <!-- LANG BAR -->
@@ -1055,12 +977,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         </div>
         <span class="photos-label">Photos</span>
         <div class="photo-grid">
-          <div class="photo-thumb" onclick="lbOpen('pietra',0)"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',3)"><img src="Main%20bedroom_p1.jpg" alt="Main Bedroom" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',7)"><img src="Small%20bedroom_p1.jpg" alt="Second Bedroom" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',10)"><img src="Kitchen_p.jpg" alt="Kitchen" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',11)"><img src="Bathroom_p.jpg" alt="Bathroom" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('pietra',14)"><img src="Garden_1.jpg" alt="Garden" loading="lazy"></div>
+          <div class="photo-thumb" onclick="lbOpen('pietra',0)"><img src="pietra-main-sq.jpg" alt="Living room"></div>
+          <div class="photo-thumb" onclick="lbOpen('pietra',1)"><img src="pietra-table-sq.jpg" alt="Outdoor dining"></div>
+          <div class="photo-thumb" onclick="lbOpen('pietra',2)"><img src="pietra-garden-sq.jpg" alt="Garden"></div>
         </div>
         <p class="suite-note"><span data-lang="en" class="al">+ €150 one-time cleaning fee · Up to 4 guests</span><span data-lang="it">+ €150 pulizia una tantum · Fino a 4 ospiti</span><span data-lang="de">+ €150 einmalige Reinigungsgebühr · Bis zu 4 Gäste</span><span data-lang="fr">+ €150 frais de ménage unique · Jusqu'à 4 hôtes</span></p>
         <button class="book-suite-btn" onclick="selectSuite('pietra')">
@@ -1105,12 +1024,12 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         </div>
         <span class="photos-label">Photos</span>
         <div class="photo-grid">
-          <div class="photo-thumb" onclick="lbOpen('cielo',0)"><img src="cielo-main.jpg" alt="Suite Cielo" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',1)"><img src="cielo-kitchen.jpg" alt="Kitchen" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',2)"><img src="cielo-bedroom.jpg" alt="Bedroom" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',3)"><img src="Bathroom_1.jpg" alt="Bathroom" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',4)"><img src="cielo-terrace.jpg" alt="Terrace" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('cielo',5)"><img src="cielo-view.jpg" alt="View" loading="lazy"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',0)"><img src="cielo-main-sq.jpg" alt="Kitchen"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',1)"><img src="cielo-sunset-sq.jpg" alt="Sunset"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',2)"><img src="cielo-terrace-sq.jpg" alt="Terrace"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',3)"><img src="cielo-view-sq.jpg" alt="View"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',4)"><img src="cielo-kitchen-sq.jpg" alt="Kitchen detail"></div>
+          <div class="photo-thumb" onclick="lbOpen('cielo',5)"><img src="cielo-bedroom-sq.jpg" alt="Bedroom"></div>
         </div>
         <p class="suite-note"><span data-lang="en" class="al">+ €150 one-time cleaning fee · Up to 4 guests</span><span data-lang="it">+ €150 pulizia una tantum · Fino a 4 ospiti</span><span data-lang="de">+ €150 einmalige Reinigungsgebühr · Bis zu 4 Gäste</span><span data-lang="fr">+ €150 frais de ménage unique · Jusqu'à 4 hôtes</span></p>
         <button class="book-suite-btn" onclick="selectSuite('cielo')">
@@ -1154,12 +1073,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         </p>
         <span class="photos-label">Photos</span>
         <div class="photo-grid">
-          <div class="photo-thumb" onclick="lbOpen('villa',0)"><img src="hero.jpg" alt="Exterior" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',1)"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',3)"><img src="Main%20bedroom_p1.jpg" alt="Bedroom" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',5)"><img src="Kitchen_p.jpg" alt="Kitchen" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',7)"><img src="cielo-main.jpg" alt="Suite Cielo" loading="lazy"></div>
-          <div class="photo-thumb" onclick="lbOpen('villa',9)"><img src="cielo-terrace.jpg" alt="Terrace" loading="lazy"></div>
+          <div class="photo-thumb" onclick="lbOpen('villa',0)"><img src="hero-sq.jpg" alt="Exterior"></div>
+          <div class="photo-thumb" onclick="lbOpen('villa',1)"><img src="pietra-garden-sq.jpg" alt="Garden"></div>
+          <div class="photo-thumb" onclick="lbOpen('villa',2)"><img src="cielo-terrace-sq.jpg" alt="Terrace"></div>
         </div>
         <p class="suite-note"><span data-lang="en" class="al">+ €250 one-time cleaning fee · Min 4 nights</span><span data-lang="it">+ €250 pulizia una tantum · Min 4 notti</span><span data-lang="de">+ €250 einmalige Reinigungsgebühr · Min 4 Nächte</span><span data-lang="fr">+ €250 frais de ménage unique · Min 4 nuits</span></p>
         <button class="book-suite-btn" onclick="selectSuite('villa')">
@@ -1173,76 +1089,25 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 
 <!-- GALLERY STRIP -->
 <section id="gallery">
-  <div class="strip" id="galleryStrip">
-    <div class="strip-item" onclick="stripOpen('villa',0)"><img src="hero.jpg" alt="Exterior" loading="lazy"><div class="strip-cap" data-cap-key="exterior">La Facciata</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',0)"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy"><div class="strip-cap" data-cap-key="livingroom">Soggiorno</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',3)"><img src="Main%20bedroom_p1.jpg" alt="Bedroom" loading="lazy"><div class="strip-cap" data-cap-key="bedroom">Camera</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',10)"><img src="Kitchen_p.jpg" alt="Kitchen" loading="lazy"><div class="strip-cap" data-cap-key="kitchen">Cucina</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',14)"><img src="Garden_1.jpg" alt="Garden" loading="lazy"><div class="strip-cap" data-cap-key="garden">Il Giardino</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',13)"><img src="Outdoor%20table.jpg" alt="Outdoor Dining" loading="lazy"><div class="strip-cap" data-cap-key="dining">Outdoor Dining</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',0)"><img src="cielo-main.jpg" alt="Suite Cielo" loading="lazy"><div class="strip-cap" data-cap-key="cielo">Suite Cielo</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',4)"><img src="cielo-terrace.jpg" alt="Terrace" loading="lazy"><div class="strip-cap" data-cap-key="terrace">La Terrazza</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',5)"><img src="cielo-view.jpg" alt="View" loading="lazy"><div class="strip-cap" data-cap-key="view">Vista Palme</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',7)"><img src="cielo-sunset.jpg" alt="Sunset" loading="lazy"><div class="strip-cap" data-cap-key="sunset">Il Tramonto</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',2)"><img src="cielo-bedroom.jpg" alt="Bedroom" loading="lazy"><div class="strip-cap" data-cap-key="bedroom">Camera da Letto</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',15)"><img src="Garden_2.jpg" alt="Garden" loading="lazy"><div class="strip-cap" data-cap-key="garden">Il Giardino</div></div>
-    <!-- Duplicate set for seamless loop -->
-    <div class="strip-item" onclick="stripOpen('villa',0)"><img src="hero.jpg" alt="Exterior" loading="lazy"><div class="strip-cap" data-cap-key="exterior">La Facciata</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',0)"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy"><div class="strip-cap" data-cap-key="livingroom">Soggiorno</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',3)"><img src="Main%20bedroom_p1.jpg" alt="Bedroom" loading="lazy"><div class="strip-cap" data-cap-key="bedroom">Camera</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',10)"><img src="Kitchen_p.jpg" alt="Kitchen" loading="lazy"><div class="strip-cap" data-cap-key="kitchen">Cucina</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',14)"><img src="Garden_1.jpg" alt="Garden" loading="lazy"><div class="strip-cap" data-cap-key="garden">Il Giardino</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',13)"><img src="Outdoor%20table.jpg" alt="Outdoor Dining" loading="lazy"><div class="strip-cap" data-cap-key="dining">Outdoor Dining</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',0)"><img src="cielo-main.jpg" alt="Suite Cielo" loading="lazy"><div class="strip-cap" data-cap-key="cielo">Suite Cielo</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',4)"><img src="cielo-terrace.jpg" alt="Terrace" loading="lazy"><div class="strip-cap" data-cap-key="terrace">La Terrazza</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',5)"><img src="cielo-view.jpg" alt="View" loading="lazy"><div class="strip-cap" data-cap-key="view">Vista Palme</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',7)"><img src="cielo-sunset.jpg" alt="Sunset" loading="lazy"><div class="strip-cap" data-cap-key="sunset">Il Tramonto</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',2)"><img src="cielo-bedroom.jpg" alt="Bedroom" loading="lazy"><div class="strip-cap" data-cap-key="bedroom">Camera da Letto</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',15)"><img src="Garden_2.jpg" alt="Garden" loading="lazy"><div class="strip-cap" data-cap-key="garden">Il Giardino</div></div>
+  <div class="strip">
+    <div class="strip-item"><img src="hero-sq.jpg" alt="Exterior"><div class="strip-cap">La Facciata</div></div>
+    <div class="strip-item"><img src="pietra-garden-sq.jpg" alt="Garden"><div class="strip-cap">Il Giardino</div></div>
+    <div class="strip-item"><img src="pietra-table-sq.jpg" alt="Dining"><div class="strip-cap">Outdoor Dining</div></div>
+    <div class="strip-item"><img src="cielo-sunset-sq.jpg" alt="Sunset"><div class="strip-cap">Il Tramonto</div></div>
+    <div class="strip-item"><img src="cielo-terrace-sq.jpg" alt="Terrace"><div class="strip-cap">La Terrazza</div></div>
+    <div class="strip-item"><img src="cielo-view-sq.jpg" alt="View"><div class="strip-cap">Vista Palme</div></div>
+    <div class="strip-item"><img src="cielo-kitchen-sq.jpg" alt="Kitchen"><div class="strip-cap">Cucina Cielo</div></div>
+    <div class="strip-item"><img src="cielo-bedroom-sq.jpg" alt="Bedroom"><div class="strip-cap">Camera da Letto</div></div>
+    <div class="strip-item"><img src="hero-sq.jpg" alt="Exterior"><div class="strip-cap">La Facciata</div></div>
+    <div class="strip-item"><img src="pietra-garden-sq.jpg" alt="Garden"><div class="strip-cap">Il Giardino</div></div>
+    <div class="strip-item"><img src="pietra-table-sq.jpg" alt="Dining"><div class="strip-cap">Outdoor Dining</div></div>
+    <div class="strip-item"><img src="cielo-sunset-sq.jpg" alt="Sunset"><div class="strip-cap">Il Tramonto</div></div>
+    <div class="strip-item"><img src="cielo-terrace-sq.jpg" alt="Terrace"><div class="strip-cap">La Terrazza</div></div>
+    <div class="strip-item"><img src="cielo-view-sq.jpg" alt="View"><div class="strip-cap">Vista Palme</div></div>
+    <div class="strip-item"><img src="cielo-kitchen-sq.jpg" alt="Kitchen"><div class="strip-cap">Cucina Cielo</div></div>
+    <div class="strip-item"><img src="cielo-bedroom-sq.jpg" alt="Bedroom"><div class="strip-cap">Camera da Letto</div></div>
   </div>
 </section>
-
-<script>
-// Strip click opens lightbox and pauses animation
-function stripOpen(suite, idx){
-  var strip=document.getElementById('galleryStrip');
-  if(strip)strip.style.animationPlayState='paused';
-  lbSet=photos[suite];lbIdx=idx;
-  lbShow();
-  // Resume strip when lightbox closes — hook into lbClose
-  var origClose=window._lbCloseOrig||lbClose;
-  window._lbCloseOrig=origClose;
-  window.lbClose=function(){
-    origClose();
-    if(strip)strip.style.animationPlayState='running';
-    window.lbClose=origClose;
-  };
-}
-
-// Translate gallery strip captions
-var stripCaps={
-  exterior:{en:'Exterior',it:'La Facciata',de:'Außenansicht',fr:'Extérieur'},
-  livingroom:{en:'Living Room',it:'Soggiorno',de:'Wohnzimmer',fr:'Salon'},
-  bedroom:{en:'Bedroom',it:'Camera',de:'Schlafzimmer',fr:'Chambre'},
-  kitchen:{en:'Kitchen',it:'Cucina',de:'Küche',fr:'Cuisine'},
-  garden:{en:'Garden',it:'Il Giardino',de:'Garten',fr:'Jardin'},
-  dining:{en:'Outdoor Dining',it:'Pranzo Esterno',de:'Außenessen',fr:'Repas Extérieur'},
-  cielo:{en:'Suite Cielo',it:'Suite Cielo',de:'Suite Cielo',fr:'Suite Cielo'},
-  terrace:{en:'Terrace',it:'La Terrazza',de:'Terrasse',fr:'Terrasse'},
-  view:{en:'View',it:'Vista Palme',de:'Aussicht',fr:'Vue'},
-  sunset:{en:'Sunset',it:'Il Tramonto',de:'Sonnenuntergang',fr:'Coucher de soleil'}
-};
-function updateStripCaptions(){
-  var l=typeof lang!=='undefined'?lang:'en';
-  document.querySelectorAll('.strip-cap[data-cap-key]').forEach(function(el){
-    var k=el.getAttribute('data-cap-key');
-    if(stripCaps[k])el.textContent=stripCaps[k][l]||stripCaps[k].en;
-  });
-}
-// Hook into setLang
-var _origSetLangStrip=window.setLang;
-window.setLang=function(l){if(_origSetLangStrip)_origSetLangStrip(l);updateStripCaptions();};
-</script>
 
 <!-- ABOUT -->
 <section id="about">
@@ -1262,10 +1127,10 @@ window.setLang=function(l){if(_origSetLangStrip)_origSetLangStrip(l);updateStrip
     </p>
   </div>
   <div class="stats reveal rd2">
-    <div class="stat"><span class="stat-n">400m</span><span class="stat-l"><span data-lang="en" class="al">From the Sea</span><span data-lang="it">Dal Mare</span><span data-lang="de">Vom Meer</span><span data-lang="fr">De la Mer</span></span></div>
-    <div class="stat"><span class="stat-n">20'</span><span class="stat-l"><span data-lang="en" class="al">From Lecce</span><span data-lang="it">Da Lecce</span><span data-lang="de">Von Lecce</span><span data-lang="fr">De Lecce</span></span></div>
-    <div class="stat"><span class="stat-n">2</span><span class="stat-l"><span data-lang="en" class="al">Private Suites</span><span data-lang="it">Suite Private</span><span data-lang="de">Private Suiten</span><span data-lang="fr">Suites Privées</span></span></div>
-    <div class="stat"><span class="stat-n">8</span><span class="stat-l"><span data-lang="en" class="al">Max Guests</span><span data-lang="it">Ospiti Max</span><span data-lang="de">Max Gäste</span><span data-lang="fr">Hôtes Max</span></span></div>
+    <div class="stat"><span class="stat-n">400m</span><span class="stat-l">Dal Mare</span></div>
+    <div class="stat"><span class="stat-n">20'</span><span class="stat-l">Da Lecce</span></div>
+    <div class="stat"><span class="stat-n">2</span><span class="stat-l">Private Suites</span></div>
+    <div class="stat"><span class="stat-n">8</span><span class="stat-l">Max Guests</span></div>
   </div>
 </section>
 
@@ -1297,56 +1162,11 @@ window.setLang=function(l){if(_origSetLangStrip)_origSetLangStrip(l);updateStrip
     <p class="sec-label">La Posizione</p>
     <h2 class="sec-title"><span data-lang="en" class="al">Between sea<br><em>&amp; history.</em></span><span data-lang="it">Tra mare<br><em>e storia.</em></span><span data-lang="de">Zwischen Meer<br><em>&amp; Geschichte.</em></span><span data-lang="fr">Entre mer<br><em>&amp; histoire.</em></span></h2>
   </div>
-    <div class="map-box reveal rd1" style="height:auto;padding:12px;background:var(--notte2)">
-    <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
-      <defs>
-        <linearGradient id="mLand2" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#1D2C3B"/><stop offset="100%" stop-color="#14202E"/></linearGradient>
-        <linearGradient id="mSea2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#091525"/><stop offset="100%" stop-color="#0C1D32"/></linearGradient>
-        <filter id="mGlow2"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <rect width="320" height="200" fill="url(#mSea2)"/>
-      <!-- Simplified Salento land mass -->
-      <path d="M50,0 L230,0 C245,8 260,20 268,40 C275,58 274,80 272,100 C270,118 268,136 270,155 C272,170 268,182 258,192 C248,200 235,200 220,200 L100,200 C85,198 72,188 60,174 C46,158 34,138 22,116 C12,96 4,72 3,48 C2,28 16,10 50,0Z" fill="url(#mLand2)" stroke="rgba(100,140,180,0.16)" stroke-width="0.8"/>
-      <!-- Road -->
-      <path d="M185,20 Q195,55 196,90 Q196,125 195,155" fill="none" stroke="rgba(200,150,62,0.25)" stroke-width="0.8" stroke-dasharray="4,3"/>
-      <!-- HOME pin -->
-      <g filter="url(#mGlow2)" style="cursor:pointer">
-        <circle cx="220" cy="92" r="10" fill="none" stroke="#E8534A" stroke-width="1" opacity="0.5"><animate attributeName="r" values="8;13;8" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0.2;0.5" dur="2.5s" repeatCount="indefinite"/></circle>
-        <circle cx="220" cy="92" r="5" fill="#E8534A"/>
-        <text x="208" y="89" font-family="Tenor Sans,sans-serif" font-size="6" fill="#E8534A" text-anchor="end">Torre Chianca</text>
-        <text x="208" y="97" font-family="Tenor Sans,sans-serif" font-size="5" fill="rgba(232,83,74,0.7)" text-anchor="end">HOME</text>
-      </g>
-      <!-- BEACH pin -->
-      <g filter="url(#mGlow2)">
-        <circle cx="224" cy="102" r="3.5" fill="#5BC4D8"/>
-        <text x="212" y="106" font-family="Tenor Sans,sans-serif" font-size="5" fill="#5BC4D8" text-anchor="end">Beach 400m</text>
-      </g>
-      <!-- LECCE pin -->
-      <g filter="url(#mGlow2)">
-        <circle cx="185" cy="82" r="4" fill="#C8963E"/>
-        <text x="174" y="79" font-family="Tenor Sans,sans-serif" font-size="6" fill="#C8963E" text-anchor="end">Lecce</text>
-        <text x="174" y="87" font-family="Tenor Sans,sans-serif" font-size="5" fill="rgba(200,150,62,0.6)" text-anchor="end">20 min</text>
-      </g>
-      <!-- BRINDISI AIRPORT pin -->
-      <g filter="url(#mGlow2)">
-        <circle cx="200" cy="52" r="3.5" fill="#7EB8D4"/>
-        <text x="210" y="50" font-family="Tenor Sans,sans-serif" font-size="5.5" fill="#7EB8D4">Brindisi ✈</text>
-        <text x="210" y="57" font-family="Tenor Sans,sans-serif" font-size="4.5" fill="rgba(126,184,212,0.6)">40 min</text>
-      </g>
-      <!-- Sea label -->
-      <text x="285" y="110" font-family="Cormorant Garamond,serif" font-size="7" font-style="italic" fill="rgba(100,160,200,0.3)" transform="rotate(90,285,110)">ADRIATIC</text>
-      <!-- Compass -->
-      <g opacity="0.35" transform="translate(295,175)">
-        <circle r="9" fill="none" stroke="rgba(200,150,62,0.25)" stroke-width="0.7"/>
-        <polygon points="0,-7 1.5,-2.5 0,-4.5 -1.5,-2.5" fill="#C8963E"/>
-        <text x="0" y="-10" text-anchor="middle" fill="#C8963E" font-size="4.5" font-family="Tenor Sans,sans-serif">N</text>
-      </g>
-    </svg>
-  </div>
+  <div class="map-box reveal rd1"><canvas id="mapCanvas" width="370" height="180" style="width:100%;height:100%"></canvas></div>
   <div class="dists reveal rd2">
     <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--mare)"></div><div><div class="dist-name">Il Mare</div><div class="dist-sub"><span data-lang="en" class="al">400m walking · swim &amp; sunbathe</span><span data-lang="it">400m a piedi · nuoto e relax</span><span data-lang="de">400m zu Fuß · Baden &amp; Entspannen</span><span data-lang="fr">400m à pied · baignade &amp; détente</span></div></div></div><span class="dist-val">400m</span></div>
     <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--gold)"></div><div><div class="dist-name">Torre Chianca</div><div class="dist-sub"><span data-lang="en" class="al">Ancient watchtower · village</span><span data-lang="it">Antica torre · borgo</span><span data-lang="de">Alter Wachturm · Dorf</span><span data-lang="fr">Ancienne tour · village</span></div></div></div><span class="dist-val">5 min</span></div>
-    <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--pietra)"></div><div><div class="dist-name">Lecce</div><div class="dist-sub"><span data-lang="en" class="al">Florence of the South</span><span data-lang="it">La Firenze del Sud</span><span data-lang="de">Florenz des Südens</span><span data-lang="fr">La Florence du Sud</span></div></div></div><span class="dist-val">20 min</span></div>
+    <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--pietra)"></div><div><div class="dist-name">Lecce</div><div class="dist-sub"><span data-lang="en" class="al">Florence of the South</span><span data-lang="it">La Firenze del Sud</span><span data-lang="de">Florenz des Südens</span><span data-lang="fr">La Florence du Sud</span></div></div></div><span class="dist-val">15 min</span></div>
     <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--rame)"></div><div><div class="dist-name">Brindisi Airport</div><div class="dist-sub"><span data-lang="en" class="al">Closest international airport</span><span data-lang="it">Aeroporto internazionale più vicino</span><span data-lang="de">Nächster internationaler Flughafen</span><span data-lang="fr">Aéroport international le plus proche</span></div></div></div><span class="dist-val">40 min</span></div>
   </div>
 </section>
@@ -1369,18 +1189,18 @@ window.setLang=function(l){if(_origSetLangStrip)_origSetLangStrip(l);updateStrip
   </div>
   <div class="book-card reveal rd2">
     <div class="price-row">
-      <span class="price-from"><span data-lang="en" class="al">from</span><span data-lang="it">da</span><span data-lang="de">ab</span><span data-lang="fr">dès</span></span>
+      <span class="price-from">from</span>
       <span class="price-big" id="bprice">€200</span>
-      <span class="price-per"><span data-lang="en" class="al">/ night</span><span data-lang="it">/ notte</span><span data-lang="de">/ Nacht</span><span data-lang="fr">/ nuit</span></span>
+      <span class="price-per">/ night</span>
     </div>
-    <p class="clean-note" id="cnote"><span data-lang="en" class="al">+ €150 one-time cleaning fee · Minimum 4 nights</span><span data-lang="it">+ €150 pulizia una tantum · Minimo 4 notti</span><span data-lang="de">+ €150 einmalige Reinigungsgebühr · Mindestens 4 Nächte</span><span data-lang="fr">+ €150 frais de ménage unique · Minimum 4 nuits</span></p>
+    <p class="clean-note" id="cnote">+ €150 one-time cleaning fee · Minimum 4 nights</p>
     <div class="f-row">
       <div class="f-field"><span class="f-label">Check-in</span><input type="date" class="f-input" id="checkin"></div>
       <div class="f-field"><span class="f-label">Check-out</span><input type="date" class="f-input" id="checkout"></div>
     </div>
     <div class="bk-msg" id="bkInlineMsg"></div>
-      <div class="g-field">
-      <div><span class="f-label"><span data-lang="en" class="al">Guests</span><span data-lang="it">Ospiti</span><span data-lang="de">Gäste</span><span data-lang="fr">Hôtes</span></span><div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia)" id="gdisp">2 guests</div></div>
+    <div class="g-field">
+      <div><span class="f-label">Guests</span><div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia)" id="gdisp">2 guests</div></div>
       <div class="g-ctrl">
         <button class="g-btn" onclick="bkChg(-1)">−</button>
         <span class="g-num" id="gnum">2</span>
@@ -1425,151 +1245,12 @@ window.setLang=function(l){if(_origSetLangStrip)_origSetLangStrip(l);updateStrip
       <span data-lang="de"><em>Was Gäste</em><br>sagen.</span>
       <span data-lang="fr"><em>Ce que disent</em><br>les hôtes.</span>
     </h2></div>
-
-  <!-- Static seed reviews (shown until dynamic reviews load) -->
-  <div class="rev-track" id="revTrack">
-    <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"The stone walls, the palm tree, the light at sunset — we felt like we'd discovered Puglia's best kept secret."</p><p class="rev-by">Sophie &amp; Marc — Paris, France</p><p class="rev-suite">Suite Pietra · July 2025</p></div>
-    <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"400 metri dal mare e 20 minuti da Lecce. Perfetto in ogni senso. La terrazza al tramonto è semplicemente magica."</p><p class="rev-by">Giulia R. — Milano, Italia</p><p class="rev-suite">Suite Cielo · Agosto 2025</p></div>
-    <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"Wir waren zu viert — zwei Paare. Jedes Paar hatte seine eigene Wohnung. Perfekte Privatsphäre und trotzdem zusammen."</p><p class="rev-by">Klaus &amp; Anna — München, DE</p><p class="rev-suite">Villa Completa · Juni 2025</p></div>
-  </div>
-
-  <!-- Leave a review CTA -->
-  <div style="padding:24px 20px 0;text-align:center">
-    <button onclick="revOpenForm()" style="background:transparent;border:1px solid rgba(200,150,62,0.35);color:var(--gold);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:11px 22px;border-radius:2px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(200,150,62,0.1)'" onmouseout="this.style.background='transparent'">
-      <span data-lang="en" class="al">Leave a Review</span>
-      <span data-lang="it">Scrivi una Recensione</span>
-      <span data-lang="de">Bewertung schreiben</span>
-      <span data-lang="fr">Laisser un Avis</span>
-    </button>
+  <div class="rev-track">
+    <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"The stone walls, the palm tree, the light at sunset — we felt like we'd discovered Puglia's best kept secret."</p><p class="rev-by">Sophie &amp; Marc — Paris, France</p><p class="rev-suite">Suite Pietra · July 2024</p></div>
+    <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"400 metri dal mare e 15 minuti da Lecce. Perfetto in ogni senso. La terrazza al tramonto è semplicemente magica."</p><p class="rev-by">Giulia R. — Milano, Italia</p><p class="rev-suite">Suite Cielo · Agosto 2024</p></div>
+    <div class="rev-card"><div class="rev-stars">★★★★★</div><p class="rev-text">"Wir waren zu viert — zwei Paare. Jedes Paar hatte seine eigene Wohnung. Perfekte Privatsphäre und trotzdem zusammen."</p><p class="rev-by">Klaus &amp; Anna — München, DE</p><p class="rev-suite">Villa Completa · Juni 2024</p></div>
   </div>
 </section>
-
-<!-- REVIEW FORM OVERLAY -->
-<div id="revOverlay" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(5,5,10,0.92);backdrop-filter:blur(10px);align-items:flex-end;justify-content:center" onclick="if(event.target===this)revCloseForm()">
-  <div style="width:100%;max-width:500px;background:var(--notte2);border:1px solid var(--border);border-radius:14px 14px 0 0;padding:24px 20px 36px;max-height:90vh;overflow-y:auto" id="revPanel">
-    <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px"></div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--sabbia);margin-bottom:4px">
-      <span data-lang="en" class="al">Share your experience</span>
-      <span data-lang="it">Condividi la tua esperienza</span>
-      <span data-lang="de">Teile deine Erfahrung</span>
-      <span data-lang="fr">Partagez votre expérience</span>
-    </div>
-    <p style="font-size:11px;color:var(--muted);margin-bottom:20px;font-family:'Cormorant Garamond',serif;font-style:italic">
-      <span data-lang="en" class="al">Your review will appear after approval.</span>
-      <span data-lang="it">La tua recensione apparirà dopo approvazione.</span>
-      <span data-lang="de">Ihre Bewertung erscheint nach Freigabe.</span>
-      <span data-lang="fr">Votre avis apparaîtra après approbation.</span>
-    </p>
-    <div id="revFormBody">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-        <div><label style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Suite</label>
-          <select id="revSuite" style="width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;padding:10px;color:var(--text);font-family:'Tenor Sans',sans-serif;font-size:12px">
-            <option value="pietra">Suite Pietra</option>
-            <option value="cielo">Suite Cielo</option>
-            <option value="villa">Villa Completa</option>
-          </select>
-        </div>
-        <div><label style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Month / Year</label>
-          <input type="text" id="revMonth" placeholder="e.g. July 2025" style="width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;padding:10px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:14px;outline:none">
-        </div>
-      </div>
-      <div style="margin-bottom:10px"><label style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Your name &amp; location</label>
-        <input type="text" id="revName" placeholder="Sophie & Marc — Paris, France" style="width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;padding:10px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:14px;outline:none">
-      </div>
-      <div style="margin-bottom:18px"><label style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px">Your review</label>
-        <textarea id="revBody" rows="4" placeholder="Tell us about your stay..." style="width:100%;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;padding:10px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;resize:none;line-height:1.6"></textarea>
-      </div>
-      <div id="revFormMsg" style="display:none;padding:10px;border-radius:3px;font-size:12px;margin-bottom:12px;font-family:'Cormorant Garamond',serif;font-style:italic"></div>
-      <button onclick="revSubmit()" style="width:100%;padding:14px;background:var(--gold);color:var(--notte);border:none;border-radius:3px;font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:600" id="revSubmitBtn">
-        <span data-lang="en" class="al">Submit Review</span>
-        <span data-lang="it">Invia Recensione</span>
-        <span data-lang="de">Bewertung senden</span>
-        <span data-lang="fr">Envoyer l'Avis</span>
-      </button>
-    </div>
-    <div id="revThankYou" style="display:none;text-align:center;padding:20px 0">
-      <div style="font-size:48px;margin-bottom:12px">🌊</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--sabbia);margin-bottom:8px">
-        <span data-lang="en" class="al">Thank you!</span><span data-lang="it">Grazie!</span><span data-lang="de">Danke!</span><span data-lang="fr">Merci!</span>
-      </div>
-      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7">
-        <span data-lang="en" class="al">Your review has been received and will appear on the site once approved.</span>
-        <span data-lang="it">La tua recensione è stata ricevuta e apparirà sul sito dopo approvazione.</span>
-        <span data-lang="de">Ihre Bewertung wurde empfangen und erscheint nach Freigabe.</span>
-        <span data-lang="fr">Votre avis a été reçu et apparaîtra après approbation.</span>
-      </p>
-      <button onclick="revCloseForm()" style="margin-top:20px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:2px;cursor:pointer">Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ── REVIEWS ──
-var SB_URL_REV='https://wbosfegdgizkygxjxjiz.supabase.co';
-var SB_KEY_REV='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
-
-function revOpenForm(){
-  var o=document.getElementById('revOverlay');
-  o.style.display='flex';
-  document.body.style.overflow='hidden';
-  document.getElementById('revThankYou').style.display='none';
-  document.getElementById('revFormBody').style.display='block';
-  document.getElementById('revFormMsg').style.display='none';
-}
-function revCloseForm(){
-  document.getElementById('revOverlay').style.display='none';
-  document.body.style.overflow='';
-}
-
-function revSubmit(){
-  var name=document.getElementById('revName').value.trim();
-  var body=document.getElementById('revBody').value.trim();
-  var suite=document.getElementById('revSuite').value;
-  var month=document.getElementById('revMonth').value.trim();
-  var msg=document.getElementById('revFormMsg');
-  var l=typeof lang!=='undefined'?lang:'en';
-  var errMsgs={en:'Please fill in your name and review.',it:'Compila nome e recensione.',de:'Bitte Name und Bewertung ausfüllen.',fr:'Veuillez remplir votre nom et avis.'};
-  if(!name||!body){msg.textContent=errMsgs[l]||errMsgs.en;msg.style.background='rgba(231,76,60,0.09)';msg.style.border='1px solid rgba(231,76,60,0.3)';msg.style.color='#e74c3c';msg.style.display='block';return;}
-  var btn=document.getElementById('revSubmitBtn');
-  btn.disabled=true;btn.style.opacity='0.5';
-  fetch(SB_URL_REV+'/rest/v1/reviews',{
-    method:'POST',
-    headers:{'apikey':SB_KEY_REV,'Authorization':'Bearer '+SB_KEY_REV,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({suite:suite,guest_name:name,stay_month:month,body:body,status:'pending'})
-  }).then(function(r){
-    btn.disabled=false;btn.style.opacity='1';
-    if(r.ok||r.status===201){
-      document.getElementById('revFormBody').style.display='none';
-      document.getElementById('revThankYou').style.display='block';
-      // re-apply lang to thank you message
-      if(window.setLang)setLang(typeof lang!=='undefined'?lang:'en');
-    } else {
-      msg.textContent='Something went wrong. Please try again.';msg.style.background='rgba(231,76,60,0.09)';msg.style.border='1px solid rgba(231,76,60,0.3)';msg.style.color='#e74c3c';msg.style.display='block';
-    }
-  }).catch(function(){
-    btn.disabled=false;btn.style.opacity='1';
-    msg.textContent='Connection error. Please try again.';msg.style.display='block';
-  });
-}
-
-// Load approved reviews from Supabase and prepend to track
-(function loadApprovedReviews(){
-  fetch(SB_URL_REV+'/rest/v1/reviews?status=eq.approved&order=created_at.desc&apikey='+SB_KEY_REV,{headers:{'apikey':SB_KEY_REV,'Authorization':'Bearer '+SB_KEY_REV}})
-    .then(function(r){return r.json();})
-    .then(function(rows){
-      if(!rows||!rows.length)return;
-      var track=document.getElementById('revTrack');
-      var suiteNames={pietra:'Suite Pietra',cielo:'Suite Cielo',villa:'Villa Completa'};
-      rows.forEach(function(rv){
-        var card=document.createElement('div');
-        card.className='rev-card';
-        var stars='★★★★★'.slice(0,rv.rating||5);
-        card.innerHTML='<div class="rev-stars">'+stars+'</div><p class="rev-text">"'+rv.body+'"</p><p class="rev-by">'+rv.guest_name+'</p><p class="rev-suite">'+(suiteNames[rv.suite]||rv.suite)+(rv.stay_month?' · '+rv.stay_month:'')+'</p>';
-        track.insertBefore(card,track.firstChild);
-      });
-    }).catch(function(){});
-})();
-</script>
 
 <!-- POLICIES -->
 <section id="policies">
@@ -1598,7 +1279,7 @@ function revSubmit(){
     <a href="#location"><span data-lang="en" class="al">Location &amp; Area</span><span data-lang="it">Posizione &amp; Area</span><span data-lang="de">Lage &amp; Umgebung</span><span data-lang="fr">Emplacement &amp; Zone</span></a>
     <a href="#booking"><span data-lang="en" class="al">Book Direct</span><span data-lang="it">Prenota Diretto</span><span data-lang="de">Direkt Buchen</span><span data-lang="fr">Réserver Directement</span></a>
     <a href="#policies"><span data-lang="en" class="al">House Rules</span><span data-lang="it">Regole della Casa</span><span data-lang="de">Hausregeln</span><span data-lang="fr">Règles de la Maison</span></a>
-    <!-- WhatsApp link removed -->
+    <a href="https://wa.me/35699699184" target="_blank">WhatsApp</a>
   </div>
   <div class="ft-copy">© 2025 Mare Mediterraneo · Torre Chianca, Salento, Puglia<br>Ancient land. Modern stay.</div>
 </footer>
@@ -1610,131 +1291,11 @@ function revSubmit(){
 
 <script>
 // ── PHOTO DATA (full resolution for lightbox) ──
-// ── PHOTO DATA (full resolution for lightbox) ──
-// Pietra order: living room → bedroom → kitchen → bathroom → garden/outdoor
-// Cielo order: living/kitchen → bedroom → bathroom → terrace/view
-var photos={
-  pietra:[
-    'Living%20room_p.jpg','Living%20room_p1.jpg','Living%20room_p2.jpg',
-    'Main%20bedroom_p1.jpg','Main%20bedroom_p2.jpg','Main%20bedroom_p3.jpg','Main%20bedroom_p4.jpg',
-    'Small%20bedroom_p1.jpg','Small%20bedroom_p2.jpg','Small%20bedroom_p3.jpg',
-    'Kitchen_p.jpg',
-    'Bathroom_p.jpg','Bathroom_1.jpg',
-    'Outdoor%20table.jpg',
-    'Garden_1.jpg','Garden_2.jpg','Garden_3.jpg','Garden_4.jpg','Garden_5.jpg',
-    'pietra-main.jpg','pietra-table.jpg','pietra-garden.jpg'
-  ],
-  cielo:[
-    'cielo-main.jpg','cielo-kitchen.jpg',
-    'cielo-bedroom.jpg',
-    'Bathroom_1.jpg','Bathroom_2.jpg',
-    'cielo-terrace.jpg','cielo-view.jpg','cielo-sunset.jpg'
-  ],
-  villa:[
-    'hero.jpg',
-    'Living%20room_p.jpg','Living%20room_p1.jpg',
-    'Main%20bedroom_p1.jpg','Main%20bedroom_p2.jpg',
-    'Kitchen_p.jpg',
-    'Bathroom_p.jpg',
-    'cielo-main.jpg','cielo-bedroom.jpg',
-    'cielo-terrace.jpg','cielo-view.jpg',
-    'Garden_1.jpg','Garden_2.jpg','pietra-garden.jpg',
-    'Outdoor%20table.jpg'
-  ]
+const photos={
+  pietra:['pietra-main.jpg','pietra-table.jpg','pietra-garden.jpg'],
+  cielo:['cielo-main.jpg','cielo-sunset.jpg','cielo-terrace.jpg','cielo-view.jpg','cielo-kitchen.jpg','cielo-bedroom.jpg'],
+  villa:['hero.jpg','pietra-garden.jpg','cielo-terrace.jpg']
 };
-
-// Caption labels per photo (translatable)
-var photoCaptions={
-  'Living%20room_p.jpg':        {en:'Living Room',it:'Soggiorno',de:'Wohnzimmer',fr:'Salon'},
-  'Living%20room_p1.jpg':       {en:'Living Room',it:'Soggiorno',de:'Wohnzimmer',fr:'Salon'},
-  'Living%20room_p2.jpg':       {en:'Living Room',it:'Soggiorno',de:'Wohnzimmer',fr:'Salon'},
-  'Main%20bedroom_p1.jpg':      {en:'Main Bedroom',it:'Camera Principale',de:'Hauptschlafzimmer',fr:'Chambre Principale'},
-  'Main%20bedroom_p2.jpg':      {en:'Main Bedroom',it:'Camera Principale',de:'Hauptschlafzimmer',fr:'Chambre Principale'},
-  'Main%20bedroom_p3.jpg':      {en:'Main Bedroom',it:'Camera Principale',de:'Hauptschlafzimmer',fr:'Chambre Principale'},
-  'Main%20bedroom_p4.jpg':      {en:'Main Bedroom',it:'Camera Principale',de:'Hauptschlafzimmer',fr:'Chambre Principale'},
-  'Small%20bedroom_p1.jpg':     {en:'Second Bedroom',it:'Seconda Camera',de:'Zweites Schlafzimmer',fr:'Deuxième Chambre'},
-  'Small%20bedroom_p2.jpg':     {en:'Second Bedroom',it:'Seconda Camera',de:'Zweites Schlafzimmer',fr:'Deuxième Chambre'},
-  'Small%20bedroom_p3.jpg':     {en:'Second Bedroom',it:'Seconda Camera',de:'Zweites Schlafzimmer',fr:'Deuxième Chambre'},
-  'Kitchen_p.jpg':              {en:'Kitchen',it:'Cucina',de:'Küche',fr:'Cuisine'},
-  'Bathroom_p.jpg':             {en:'Bathroom',it:'Bagno',de:'Badezimmer',fr:'Salle de bain'},
-  'Bathroom_1.jpg':             {en:'Bathroom',it:'Bagno',de:'Badezimmer',fr:'Salle de bain'},
-  'Bathroom_2.jpg':             {en:'Bathroom',it:'Bagno',de:'Badezimmer',fr:'Salle de bain'},
-  'Outdoor%20table.jpg':        {en:'Outdoor Dining',it:'Pranzo Esterno',de:'Außenessen',fr:'Repas Extérieur'},
-  'Garden_1.jpg':               {en:'Garden',it:'Giardino',de:'Garten',fr:'Jardin'},
-  'Garden_2.jpg':               {en:'Garden',it:'Giardino',de:'Garten',fr:'Jardin'},
-  'Garden_3.jpg':               {en:'Garden',it:'Giardino',de:'Garten',fr:'Jardin'},
-  'Garden_4.jpg':               {en:'Garden',it:'Giardino',de:'Garten',fr:'Jardin'},
-  'Garden_5.jpg':               {en:'Garden',it:'Giardino',de:'Garten',fr:'Jardin'},
-  'pietra-main.jpg':            {en:'Suite Pietra',it:'Suite Pietra',de:'Suite Pietra',fr:'Suite Pietra'},
-  'pietra-table.jpg':           {en:'Outdoor Dining',it:'Pranzo Esterno',de:'Außenessen',fr:'Repas Extérieur'},
-  'pietra-garden.jpg':          {en:'Garden',it:'Giardino',de:'Garten',fr:'Jardin'},
-  'cielo-main.jpg':             {en:'Suite Cielo',it:'Suite Cielo',de:'Suite Cielo',fr:'Suite Cielo'},
-  'cielo-kitchen.jpg':          {en:'Kitchen',it:'Cucina',de:'Küche',fr:'Cuisine'},
-  'cielo-bedroom.jpg':          {en:'Bedroom',it:'Camera da Letto',de:'Schlafzimmer',fr:'Chambre'},
-  'cielo-terrace.jpg':          {en:'Terrace',it:'Terrazza',de:'Terrasse',fr:'Terrasse'},
-  'cielo-view.jpg':             {en:'View',it:'Vista',de:'Aussicht',fr:'Vue'},
-  'cielo-sunset.jpg':           {en:'Sunset',it:'Tramonto',de:'Sonnenuntergang',fr:'Coucher de soleil'},
-  'hero.jpg':                   {en:'Exterior',it:'Esterno',de:'Außenansicht',fr:'Extérieur'}
-};
-
-function lbCaption(src){
-  var l=typeof lang!=='undefined'?lang:'en';
-  var c=photoCaptions[src];
-  return c?(c[l]||c.en):'';
-}
-
-// ── LIGHTBOX ──
-var lbSet=[],lbIdx=0,lbTouchX=0;
-
-function lbOpen(s,i){
-  // Filter out photos that 404 silently — only use confirmed uploads
-  lbSet=photos[s];lbIdx=i;lbShow();
-}
-
-function lbShow(){
-  var img=document.getElementById('lb-img');
-  var capEl=document.getElementById('lb-cap');
-  img.style.opacity='0';
-  img.src=lbSet[lbIdx];
-  document.getElementById('lb-count').textContent=(lbIdx+1)+' / '+lbSet.length;
-  if(capEl)capEl.textContent=lbCaption(lbSet[lbIdx]);
-  document.getElementById('lb').classList.add('open');
-  document.body.style.overflow='hidden';
-  img.onload=function(){img.style.opacity='1';};
-  img.onerror=function(){img.style.opacity='1';};
-  // Preload neighbours
-  if(lbSet[lbIdx+1]){var nx=new Image();nx.src=lbSet[lbIdx+1];}
-  if(lbIdx>0&&lbSet[lbIdx-1]){var pv=new Image();pv.src=lbSet[lbIdx-1];}
-}
-
-function lbClose(){
-  document.getElementById('lb').classList.remove('open');
-  document.body.style.overflow='';
-}
-
-function lbNav(d){
-  lbIdx=(lbIdx+d+lbSet.length)%lbSet.length;
-  lbShow();
-}
-
-document.getElementById('lb').addEventListener('click',function(e){
-  if(e.target===this||e.target===document.getElementById('lb-img-wrap'))lbClose();
-});
-
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape')lbClose();
-  if(e.key==='ArrowLeft')lbNav(-1);
-  if(e.key==='ArrowRight')lbNav(1);
-});
-
-// Mobile swipe
-document.getElementById('lb').addEventListener('touchstart',function(e){
-  lbTouchX=e.changedTouches[0].clientX;
-},{passive:true});
-document.getElementById('lb').addEventListener('touchend',function(e){
-  var dx=e.changedTouches[0].clientX-lbTouchX;
-  if(Math.abs(dx)>50){lbNav(dx<0?1:-1);}
-},{passive:true});
 
 // ── LIGHTBOX ──
 let lbSet=[],lbIdx=0;
@@ -1748,7 +1309,7 @@ function lbShow(){
 function lbClose(){document.getElementById('lb').classList.remove('open');document.body.style.overflow='';}
 function lbNav(d){lbIdx=(lbIdx+d+lbSet.length)%lbSet.length;lbShow();}
 document.getElementById('lb').addEventListener('click',function(e){if(e.target===this)lbClose();});
-document.addEventListener('keydown',function(e){
+document.addEventListener('keydown',e=>{
   if(e.key==='Escape')lbClose();
   if(e.key==='ArrowLeft')lbNav(-1);
   if(e.key==='ArrowRight')lbNav(1);
@@ -1779,17 +1340,12 @@ document.querySelectorAll('.reveal').forEach(el=>
 // ── SUITE TOGGLE ──
 var cp=200,cc=150; // booking calc compat vars
 function toggleSuite(n){
-  var card=document.getElementById('card-'+n);
-  var isOpen=card.classList.contains('open');
-  if(isOpen){
-    card.classList.remove('open');
-  } else {
+  const card=document.getElementById('card-'+n);
+  const isOpen=card.classList.contains('open');
+  ['pietra','cielo','villa'].forEach(x=>document.getElementById('card-'+x).classList.remove('open'));
+  if(!isOpen){
     card.classList.add('open');
-    // Only scroll if card is partially out of view
-    setTimeout(function(){
-      var rect=card.getBoundingClientRect();
-      if(rect.top<60){card.scrollIntoView({behavior:'smooth',block:'start'});}
-    },50);
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'start'}),50);
   }
 }
 function selectSuite(n){
@@ -2000,7 +1556,7 @@ window.bkSubmit=async function(){
     });
   }catch(e){console.log('[MM] Email edge function error:',e.message);}
   var waText=encodeURIComponent('🌊 New booking — '+ref+'\n\nSuite: '+s.name+'\nCheck-in: '+BK.checkin+'\nCheck-out: '+BK.checkout+'\nNights: '+BK.nights+'  |  Guests: '+BK.guests+'\nTotal: €'+BK.total+'\n\nGuest: '+BK.name+'\nEmail: '+BK.email+'\nPhone: '+BK.phone+(BK.message?'\nMessage: '+BK.message:''));
-    // WhatsApp notification removed — email only
+  window.open('https://wa.me/'+CFG.OWNER_WA+'?text='+waText,'_blank');
   qs('bkD_suite').textContent=s.name;qs('bkD_in').textContent=fmtDate(BK.checkin);qs('bkD_out').textContent=fmtDate(BK.checkout);qs('bkD_total').textContent='€'+BK.total;
   qs('bkRef').textContent='Reference: '+ref;
   qs('bkConfirmMsg').innerHTML='Thank you, <strong>'+BK.name.split(' ')[0]+'</strong>! We\'ve received your request and will confirm within 24 hours.<br><br>A confirmation email is on its way to <em>'+BK.email+'</em>.';
