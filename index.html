@@ -582,17 +582,46 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 /* ── DESKTOP ENHANCEMENTS (1024px+) ── */
 @media(min-width:1024px){
   /* Global body text 20px, headlines 45px */
-  body{font-size:20px}
-  p,li,.feat,.am-name,.pol-text,.dist-sub,.book-note,.clean-note,.suite-note,.rev-text,.about-body,.exp-desc,.exp-hl-item,.bs-feat,.bs-note,.bs-direct-text{font-size:20px;line-height:1.8}
-  .sec-title{font-size:45px}
-  .suite-name{font-size:45px}
-  .hero-mare{font-size:110px}
-  /* Base text */
-  .about-body{font-size:20px;max-width:680px}
-  .pol-text{font-size:20px}
-  .dist-name{font-size:20px}
-  .rev-text{font-size:20px}
-  .exp-desc{font-size:20px}
+  html{font-size:20px}
+  body{font-size:20px!important;line-height:1.8}
+
+  /* All paragraph-level text */
+  .about-body,.pol-text,.exp-desc,.rev-text,.dist-sub,.am-name,
+  .feat,.suite-note,.book-note,.clean-note,.bs-feat,.bs-note,
+  .bs-direct-text,.exp-hl-item,.bk-sum-val,.bk-field input,
+  .bk-field textarea,.f-input,.suite-badge,.suite-sub,
+  .price-from,.price-per,.ps-label,.ps-val{font-size:20px!important;line-height:1.8!important}
+
+  /* Section titles */
+  .sec-title{font-size:45px!important;line-height:1.1}
+  h2.sec-title{font-size:45px!important}
+
+  /* Suite name */
+  .suite-name{font-size:45px!important}
+
+  /* Distance names */
+  .dist-name{font-size:22px!important}
+
+  /* Review text */
+  .rev-text{font-size:20px!important;line-height:1.85!important}
+  .rev-by{font-size:13px!important}
+
+  /* Explore card */
+  .exp-title{font-size:32px!important}
+  .exp-desc{font-size:20px!important}
+
+  /* Booking summary right panel */
+  .bs-feat{font-size:20px!important}
+  .bs-title{font-size:28px!important}
+
+  /* About body */
+  .about-body{font-size:20px!important;max-width:680px;line-height:1.9!important}
+
+  /* Policies */
+  .pol-text{font-size:20px!important}
+
+  /* Hero mare stays large */
+  .hero-mare{font-size:130px!important}
 
   /* Hero — full viewport, bigger title */
   #hero{height:100svh;max-height:none;align-items:center;padding-bottom:0}
