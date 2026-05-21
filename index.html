@@ -1323,7 +1323,7 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
     <p class="sec-label">La Posizione</p>
     <h2 class="sec-title"><span data-lang="en" class="al">Between sea<br><em>&amp; history.</em></span><span data-lang="it">Tra mare<br><em>e storia.</em></span><span data-lang="de">Zwischen Meer<br><em>&amp; Geschichte.</em></span><span data-lang="fr">Entre mer<br><em>&amp; histoire.</em></span></h2>
   </div>
-  <div class="reveal rd1" style="margin-top:24px;margin-bottom:4px">
+  <div style="margin-top:24px;margin-bottom:4px">
     <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
       <defs>
         <linearGradient id="locSea" x1="0" y1="0" x2="1" y2="0">
@@ -1786,9 +1786,19 @@ window.addEventListener('scroll',()=>{
 });
 
 // ── REVEAL ──
-document.querySelectorAll('.reveal').forEach(el=>
-  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),
-  {threshold:0.1}).observe(el));
+document.querySelectorAll('.reveal').forEach(function(el) {
+  new IntersectionObserver(function(es) {
+    es.forEach(function(e) {
+      if(e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, {threshold:0.05, rootMargin:'0px 0px -20px 0px'}).observe(el);
+});
+// Fallback: make all reveals visible after 1.5s in case observer misses
+setTimeout(function(){
+  document.querySelectorAll('.reveal:not(.visible)').forEach(function(el){
+    el.classList.add('visible');
+  });
+}, 1500);
 
 // ── SUITE TOGGLE ──
 var cp=200,cc=150; // booking calc compat vars
@@ -2037,8 +2047,6 @@ window.selTab=function(s){bkSelTab(s);};window.chg=function(d){bkChg(d);};window
 
 loadAvailability();loadLivePrices();bkDots(2);
 })();
-
-}
 
 // ── IP LANGUAGE ──
 // Always scroll to top on load
