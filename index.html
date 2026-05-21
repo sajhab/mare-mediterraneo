@@ -306,6 +306,7 @@ nav.scrolled .nav-logo{opacity:1}
 #explore{background:var(--notte);padding:60px 0 50px}
 .explore-layout{display:block}
 .explore-left,.explore-right{display:block}
+.booking-layout{display:block}
 #explore .sec-label{padding:0 20px;margin-bottom:12px}
 #explore .sec-title{padding:0 20px;margin-bottom:8px}
 .explore-sub{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;
@@ -636,8 +637,19 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 
   /* Booking */
   #booking{padding:90px 64px}
-  .book-card{max-width:540px}
+  .booking-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-top:32px}
+  .book-card{max-width:100%}
   .price-big{font-size:54px}
+  .booking-summary{padding:36px;background:rgba(200,185,154,0.04);border:1px solid var(--border);border-radius:6px}
+  .bs-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--sabbia);margin-bottom:6px}
+  .bs-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block}
+  .bs-feat{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(200,185,154,0.07);font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text)}
+  .bs-feat:last-child{border-bottom:none}
+  .bs-feat ion-icon{font-size:17px;color:var(--gold);flex-shrink:0;width:22px}
+  .bs-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);line-height:1.75;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+  .bs-direct{display:flex;align-items:center;gap:10px;margin-top:16px;padding:14px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:4px}
+  .bs-direct ion-icon{font-size:20px;color:var(--gold);flex-shrink:0}
+  .bs-direct-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);line-height:1.6}
   .sec-title{font-size:44px}
 
   /* Reviews */
@@ -1421,6 +1433,8 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
       <span data-lang="fr">Réservation directe.<br><em>Sans frais.</em></span>
     </h2>
   </div>
+  <div class="booking-layout">
+  <div class="booking-left">
   <div class="book-tabs reveal rd1">
     <button class="book-tab active" onclick="bkSelTab('pietra')" id="tab-pietra">Suite Pietra</button>
     <button class="book-tab"        onclick="bkSelTab('cielo')"  id="tab-cielo">Suite Cielo</button>
@@ -1458,23 +1472,78 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
       <span data-lang="fr">Demander une Réservation</span>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </button>
-    <!-- Toki AI hint -->
-    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:10px;background:rgba(200,185,154,0.04);border:1px solid rgba(200,185,154,0.12);border-radius:3px">
-      <ion-icon name="chatbubble-ellipses-outline" style="font-size:22px;color:var(--gold);flex-shrink:0"></ion-icon>
-      <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);line-height:1.5">
-        <span data-lang="en" class="al">Have a question? Our AI concierge <strong style="color:var(--pietra);font-style:normal">Toki</strong> is live 24/7 — tap the wave icon below.</span>
-        <span data-lang="de">Haben Sie eine Frage? Unser KI-Assistent <strong style="color:var(--pietra);font-style:normal">Toki</strong> antwortet rund um die Uhr.</span>
-        <span data-lang="it">Hai una domanda? Il nostro concierge AI <strong style="color:var(--pietra);font-style:normal">Toki</strong> è disponibile 24/7.</span>
-        <span data-lang="fr">Une question ? Notre concierge IA <strong style="color:var(--pietra);font-style:normal">Toki</strong> est disponible 24h/24.</span>
-      </span>
-    </div>
+
     <p class="book-note">
       <span data-lang="en" class="al">Free to enquire · Stripe payment coming soon · Min 4 nights</span>
       <span data-lang="it">Richiesta gratuita · Min 4 notti</span>
       <span data-lang="de">Kostenlose Anfrage · Min 4 Nächte</span>
       <span data-lang="fr">Demande gratuite · Min 4 nuits</span>
     </p>
-  </div>
+  </div><!-- end book-card -->
+  </div><!-- end booking-left -->
+
+  <!-- RIGHT COLUMN: Why book direct -->
+  <div class="booking-summary">
+    <div class="bs-title">
+      <span data-lang="en" class="al">Why book direct?</span>
+      <span data-lang="it">Perché prenotare direttamente?</span>
+      <span data-lang="de">Warum direkt buchen?</span>
+      <span data-lang="fr">Pourquoi réserver directement?</span>
+    </div>
+    <span class="bs-sub">Mare Mediterraneo · Torre Chianca</span>
+    <div class="bs-feat"><ion-icon name="cash-outline"></ion-icon>
+      <span data-lang="en" class="al">No platform fees — save 12–15% vs Airbnb</span>
+      <span data-lang="it">Nessuna commissione — risparmia il 12–15%</span>
+      <span data-lang="de">Keine Plattformgebühren — 12–15% sparen</span>
+      <span data-lang="fr">Sans frais de plateforme — économisez 12–15%</span>
+    </div>
+    <div class="bs-feat"><ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+      <span data-lang="en" class="al">Direct contact with the owners</span>
+      <span data-lang="it">Contatto diretto con i proprietari</span>
+      <span data-lang="de">Direkter Kontakt mit den Eigentümern</span>
+      <span data-lang="fr">Contact direct avec les propriétaires</span>
+    </div>
+    <div class="bs-feat"><ion-icon name="calendar-outline"></ion-icon>
+      <span data-lang="en" class="al">Flexible dates & custom arrangements</span>
+      <span data-lang="it">Date flessibili e accordi personalizzati</span>
+      <span data-lang="de">Flexible Daten und individuelle Absprachen</span>
+      <span data-lang="fr">Dates flexibles et arrangements personnalisés</span>
+    </div>
+    <div class="bs-feat"><ion-icon name="shield-checkmark-outline"></ion-icon>
+      <span data-lang="en" class="al">Secure payment · Stripe coming soon</span>
+      <span data-lang="it">Pagamento sicuro · Stripe presto disponibile</span>
+      <span data-lang="de">Sichere Zahlung · Stripe demnächst</span>
+      <span data-lang="fr">Paiement sécurisé · Stripe bientôt disponible</span>
+    </div>
+    <div class="bs-feat"><ion-icon name="home-outline"></ion-icon>
+      <span data-lang="en" class="al">400m from the sea · 20 min from Lecce</span>
+      <span data-lang="it">400m dal mare · 20 min da Lecce</span>
+      <span data-lang="de">400m vom Meer · 20 Min. von Lecce</span>
+      <span data-lang="fr">400m de la mer · 20 min de Lecce</span>
+    </div>
+    <div class="bs-feat"><ion-icon name="people-outline"></ion-icon>
+      <span data-lang="en" class="al">Up to 8 guests · 2 private suites</span>
+      <span data-lang="it">Fino a 8 ospiti · 2 suite private</span>
+      <span data-lang="de">Bis zu 8 Gäste · 2 private Suiten</span>
+      <span data-lang="fr">Jusqu'à 8 hôtes · 2 suites privées</span>
+    </div>
+    <div class="bs-direct">
+      <ion-icon name="mail-outline"></ion-icon>
+      <span class="bs-direct-text">
+        <span data-lang="en" class="al">Questions? Our AI concierge <strong style="color:var(--pietra)">Toki</strong> is available 24/7 — or email us directly.</span>
+        <span data-lang="it">Domande? Il nostro concierge AI <strong style="color:var(--pietra)">Toki</strong> è disponibile 24/7.</span>
+        <span data-lang="de">Fragen? Unser KI-Concierge <strong style="color:var(--pietra)">Toki</strong> ist 24/7 verfügbar.</span>
+        <span data-lang="fr">Questions? Notre concierge IA <strong style="color:var(--pietra)">Toki</strong> est disponible 24h/24.</span>
+      </span>
+    </div>
+    <p class="bs-note">
+      <span data-lang="en" class="al">Minimum 4 nights · Check-in from 15:00 · Check-out by 10:00</span>
+      <span data-lang="it">Minimo 4 notti · Check-in dalle 15:00 · Check-out entro le 10:00</span>
+      <span data-lang="de">Mindestens 4 Nächte · Check-in ab 15:00 · Check-out bis 10:00</span>
+      <span data-lang="fr">Minimum 4 nuits · Arrivée à partir de 15h · Départ avant 10h</span>
+    </p>
+  </div><!-- end booking-summary -->
+  </div><!-- end booking-layout -->
 </section>
 <!-- REVIEWS -->
 <section id="reviews">
