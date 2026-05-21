@@ -1323,58 +1323,85 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
     <p class="sec-label">La Posizione</p>
     <h2 class="sec-title"><span data-lang="en" class="al">Between sea<br><em>&amp; history.</em></span><span data-lang="it">Tra mare<br><em>e storia.</em></span><span data-lang="de">Zwischen Meer<br><em>&amp; Geschichte.</em></span><span data-lang="fr">Entre mer<br><em>&amp; histoire.</em></span></h2>
   </div>
-  <div class="map-box reveal rd1" style="height:auto;background:var(--notte2);border-radius:4px;overflow:hidden">
-    <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+  <div class="reveal rd1" style="margin-top:24px;margin-bottom:4px">
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
       <defs>
-        <linearGradient id="mLand2" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#0e1e2e"/><stop offset="100%" stop-color="#091525"/></linearGradient>
-        <linearGradient id="mSea2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#091525"/><stop offset="100%" stop-color="#0C1D32"/></linearGradient>
-        <filter id="mGlow2"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="locSea" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0A0A12"/>
+          <stop offset="100%" stop-color="#091828"/>
+        </linearGradient>
+        <filter id="locGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="locGlowS"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <rect width="320" height="200" fill="url(#mSea2)"/>
-      <!-- Grid lines -->
-      <g opacity="0.04" stroke="#7EB8D4" stroke-width="0.4" fill="none">
-        <line x1="0" y1="50" x2="320" y2="50"/><line x1="0" y1="100" x2="320" y2="100"/><line x1="0" y1="150" x2="320" y2="150"/>
-        <line x1="80" y1="0" x2="80" y2="200"/><line x1="160" y1="0" x2="160" y2="200"/><line x1="240" y1="0" x2="240" y2="200"/>
+
+      <!-- Background -->
+      <rect width="600" height="180" fill="url(#locSea)"/>
+
+      <!-- Subtle grid lines -->
+      <g opacity="0.04" stroke="#7EB8D4" stroke-width="0.5">
+        <line x1="0" y1="60" x2="600" y2="60"/>
+        <line x1="0" y1="120" x2="600" y2="120"/>
+        <line x1="150" y1="0" x2="150" y2="180"/>
+        <line x1="300" y1="0" x2="300" y2="180"/>
+        <line x1="450" y1="0" x2="450" y2="180"/>
       </g>
-      <!-- Salento land mass (simplified) -->
-      <path d="M55,0 L230,0 C248,10 264,26 272,48 C278,66 276,88 274,110 C272,130 270,148 272,166 C274,180 270,192 258,198 L105,198 C90,194 76,182 62,166 C46,148 32,126 20,102 C10,80 3,56 4,34 C6,14 22,2 55,0Z" fill="url(#mLand2)" stroke="rgba(100,140,180,0.14)" stroke-width="0.8"/>
-      <!-- Road -->
-      <path d="M188,15 Q198,52 198,92 Q198,132 196,166" fill="none" stroke="rgba(200,150,62,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
-      <!-- HOME pin (Torre Chianca) -->
-      <g filter="url(#mGlow2)">
-        <circle cx="222" cy="94" r="12" fill="none" stroke="#E8534A" stroke-width="1" opacity="0.4"><animate attributeName="r" values="9;14;9" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0.15;0.4" dur="2.5s" repeatCount="indefinite"/></circle>
-        <circle cx="222" cy="94" r="5.5" fill="#E8534A"/>
-        <polygon points="222,82 227,89 222,91 217,89" fill="rgba(10,10,18,0.8)"/>
-        <text x="210" y="90" font-family="Tenor Sans,sans-serif" font-size="6.5" fill="#E8534A" text-anchor="end" font-weight="600">Torre Chianca</text>
-        <text x="210" y="99" font-family="Tenor Sans,sans-serif" font-size="5" fill="rgba(232,83,74,0.65)" text-anchor="end">HOME</text>
-      </g>
-      <!-- BEACH pin -->
-      <g filter="url(#mGlow2)">
-        <circle cx="227" cy="105" r="3.5" fill="#5BC4D8"/>
-        <text x="214" y="109" font-family="Tenor Sans,sans-serif" font-size="5.5" fill="#5BC4D8" text-anchor="end">Beach 400m</text>
-      </g>
-      <!-- LECCE pin -->
-      <g filter="url(#mGlow2)">
-        <circle cx="192" cy="82" r="4.5" fill="#C8963E" opacity="0.9"/>
-        <text x="180" y="78" font-family="Tenor Sans,sans-serif" font-size="6.5" fill="#C8963E" text-anchor="end">Lecce</text>
-        <text x="180" y="87" font-family="Tenor Sans,sans-serif" font-size="5" fill="rgba(200,150,62,0.6)" text-anchor="end">20 min</text>
-      </g>
-      <!-- BRINDISI AIRPORT -->
-      <g filter="url(#mGlow2)">
-        <circle cx="204" cy="50" r="3.5" fill="#7EB8D4"/>
-        <text x="214" y="47" font-family="Tenor Sans,sans-serif" font-size="5.5" fill="#7EB8D4">Brindisi ✈</text>
-        <text x="214" y="55" font-family="Tenor Sans,sans-serif" font-size="4.5" fill="rgba(126,184,212,0.6)">40 min</text>
-      </g>
+
       <!-- Sea label -->
-      <text x="292" y="108" font-family="Cormorant Garamond,serif" font-size="7" font-style="italic" fill="rgba(100,160,200,0.28)" transform="rotate(90,292,108)">ADRIATIC</text>
-      <!-- Compass -->
-      <g opacity="0.32" transform="translate(295,178)">
-        <circle r="9" fill="none" stroke="rgba(200,150,62,0.25)" stroke-width="0.7"/>
-        <polygon points="0,-7 1.5,-2.5 0,-4.5 -1.5,-2.5" fill="#C8963E"/>
-        <text x="0" y="-10" text-anchor="middle" fill="#C8963E" font-size="4.5" font-family="Tenor Sans,sans-serif">N</text>
+      <text x="520" y="95" font-family="Cormorant Garamond,serif" font-size="9" font-style="italic" fill="rgba(100,160,200,0.2)" letter-spacing="2">ADRIATIC</text>
+
+      <!-- Dotted road line from house to Lecce -->
+      <line x1="295" y1="90" x2="160" y2="90" stroke="rgba(200,150,62,0.25)" stroke-width="1" stroke-dasharray="4,4"/>
+      <!-- Dotted line from house to sea -->
+      <line x1="295" y1="90" x2="430" y2="90" stroke="rgba(91,196,216,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <!-- Distance labels on lines -->
+      <text x="220" y="83" font-family="Tenor Sans,sans-serif" font-size="8" fill="rgba(200,150,62,0.5)" text-anchor="middle" letter-spacing="1">20 min</text>
+      <text x="362" y="83" font-family="Tenor Sans,sans-serif" font-size="8" fill="rgba(91,196,216,0.5)" text-anchor="middle" letter-spacing="1">400m</text>
+
+      <!-- LECCE pin -->
+      <g filter="url(#locGlowS)">
+        <circle cx="140" cy="90" r="5" fill="rgba(200,150,62,0.15)"/>
+        <circle cx="140" cy="90" r="3" fill="#C8963E"/>
+        <text x="140" y="75" font-family="Tenor Sans,sans-serif" font-size="9" fill="#C8963E" text-anchor="middle" letter-spacing="2">LECCE</text>
+        <text x="140" y="112" font-family="Cormorant Garamond,serif" font-size="8" font-style="italic" fill="rgba(200,150,62,0.5)" text-anchor="middle">Florence of the South</text>
+      </g>
+
+      <!-- HOME PIN — Torre Chianca (center, larger) -->
+      <g filter="url(#locGlow)">
+        <!-- Pulse ring -->
+        <circle cx="295" cy="90" r="18" fill="none" stroke="rgba(232,83,74,0.2)" stroke-width="1">
+          <animate attributeName="r" values="14;22;14" dur="2.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="295" cy="90" r="8" fill="rgba(232,83,74,0.15)"/>
+        <circle cx="295" cy="90" r="5" fill="#E8534A"/>
+        <!-- House icon -->
+        <polygon points="295,78 301,85 289,85" fill="rgba(10,10,18,0.8)"/>
+        <rect x="290" y="85" width="10" height="7" fill="rgba(10,10,18,0.8)" rx="0.5"/>
+        <!-- Label -->
+        <text x="295" y="62" font-family="Tenor Sans,sans-serif" font-size="10" fill="#E8534A" text-anchor="middle" letter-spacing="2">MARE MED.</text>
+        <text x="295" y="73" font-family="Cormorant Garamond,serif" font-size="8" font-style="italic" fill="rgba(232,83,74,0.6)" text-anchor="middle">Torre Chianca</text>
+        <text x="295" y="115" font-family="Tenor Sans,sans-serif" font-size="7" fill="rgba(232,83,74,0.4)" text-anchor="middle" letter-spacing="1">HOME BASE</text>
+      </g>
+
+      <!-- SEA / BEACH pin -->
+      <g filter="url(#locGlowS)">
+        <circle cx="430" cy="90" r="5" fill="rgba(91,196,216,0.15)"/>
+        <circle cx="430" cy="90" r="3" fill="#5BC4D8"/>
+        <text x="430" y="75" font-family="Tenor Sans,sans-serif" font-size="9" fill="#5BC4D8" text-anchor="middle" letter-spacing="1">IL MARE</text>
+        <text x="430" y="112" font-family="Cormorant Garamond,serif" font-size="8" font-style="italic" fill="rgba(91,196,216,0.5)" text-anchor="middle">Adriatic Sea</text>
+      </g>
+
+      <!-- BRINDISI pin (top area) -->
+      <g filter="url(#locGlowS)" opacity="0.7">
+        <circle cx="250" cy="38" r="3" fill="#7EB8D4"/>
+        <line x1="250" y1="41" x2="280" y2="82" stroke="rgba(126,184,212,0.15)" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <text x="235" y="32" font-family="Tenor Sans,sans-serif" font-size="8" fill="#7EB8D4" letter-spacing="1">BRINDISI ✈  40 min</text>
       </g>
     </svg>
   </div>
+
+</div>
   <div class="dists reveal rd2">
     <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--mare)"></div><div><div class="dist-name">Il Mare</div><div class="dist-sub"><span data-lang="en" class="al">400m walking · swim &amp; sunbathe</span><span data-lang="it">400m a piedi · nuoto e relax</span><span data-lang="de">400m zu Fuß · Baden &amp; Entspannen</span><span data-lang="fr">400m à pied · baignade &amp; détente</span></div></div></div><span class="dist-val">400m</span></div>
     <div class="dist"><div class="dist-l"><div class="dot" style="background:var(--gold)"></div><div><div class="dist-name">Torre Chianca</div><div class="dist-sub"><span data-lang="en" class="al">Ancient watchtower · village</span><span data-lang="it">Antica torre · borgo</span><span data-lang="de">Alter Wachturm · Dorf</span><span data-lang="fr">Ancienne tour · village</span></div></div></div><span class="dist-val">5 min</span></div>
@@ -2011,35 +2038,6 @@ window.selTab=function(s){bkSelTab(s);};window.chg=function(d){bkChg(d);};window
 loadAvailability();loadLivePrices();bkDots(2);
 })();
 
-// ── MAP ──
-const mc=document.getElementById('mapCanvas');
-if(mc){
-  const c=mc.getContext('2d'),w=mc.width,h=mc.height;
-  c.fillStyle='#0F0F1A';c.fillRect(0,0,w,h);
-  const sg=c.createLinearGradient(w*.55,0,w,0);
-  sg.addColorStop(0,'rgba(27,108,168,0)');sg.addColorStop(1,'rgba(27,108,168,0.2)');
-  c.fillStyle=sg;c.fillRect(0,0,w,h);
-  c.strokeStyle='rgba(200,185,154,0.05)';c.lineWidth=.5;
-  for(let x=0;x<w;x+=35){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();}
-  for(let y=0;y<h;y+=35){c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke();}
-  c.strokeStyle='rgba(27,108,168,0.5)';c.lineWidth=1.5;
-  c.beginPath();c.moveTo(w*.72,0);c.bezierCurveTo(w*.76,h*.3,w*.79,h*.5,w*.75,h*.7);
-  c.bezierCurveTo(w*.71,h*.87,w*.73,h*.95,w*.71,h);c.stroke();
-  c.strokeStyle='rgba(200,185,154,0.2)';c.lineWidth=1;c.setLineDash([4,5]);
-  c.beginPath();c.moveTo(w*.22,h*.3);c.bezierCurveTo(w*.38,h*.25,w*.55,h*.42,w*.64,h*.52);c.stroke();
-  c.setLineDash([]);
-  c.fillStyle='#C8B99A';c.beginPath();c.arc(w*.2,h*.28,5,0,Math.PI*2);c.fill();
-  c.fillStyle='rgba(200,185,154,.1)';c.beginPath();c.arc(w*.2,h*.28,12,0,Math.PI*2);c.fill();
-  c.fillStyle='rgba(200,185,154,.7)';c.font='10px "Tenor Sans",sans-serif';c.fillText('Lecce',w*.07,h*.24);
-  c.fillStyle='#C8963E';c.beginPath();c.arc(w*.64,h*.52,7,0,Math.PI*2);c.fill();
-  c.fillStyle='rgba(200,150,62,.15)';c.beginPath();c.arc(w*.64,h*.52,16,0,Math.PI*2);c.fill();
-  c.fillStyle='#C8963E';c.font='9px "Tenor Sans",sans-serif';
-  c.fillText('Mare Mediterraneo',w*.38,h*.44);c.fillText('Torre Chianca',w*.41,h*.58);
-  c.strokeStyle='rgba(200,150,62,.3)';c.lineWidth=.5;
-  c.beginPath();c.moveTo(w*.64,h*.52);c.lineTo(w*.72,h*.52);c.stroke();
-  c.fillStyle='rgba(200,150,62,.6)';c.font='8px "Tenor Sans",sans-serif';c.fillText('400m',w*.73,h*.50);
-  c.fillStyle='rgba(27,108,168,.5)';c.font='italic 11px "Cormorant Garamond",serif';
-  c.fillText('Il Mare',w*.76,h*.45);
 }
 
 // ── IP LANGUAGE ──
