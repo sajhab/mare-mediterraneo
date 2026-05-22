@@ -325,11 +325,11 @@ nav.scrolled .nav-logo{opacity:1}
 .pin-grp:hover .pin-ring{animation:mmPulseFast 1s ease-in-out infinite}
 @keyframes mmPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.45)}}
 @keyframes mmPulseFast{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.55)}}
-.ml{font-family:'Tenor Sans',sans-serif;font-size:7px;fill:rgba(240,232,216,0.6);letter-spacing:0.04em;pointer-events:none}
-.ml-g{fill:#E8B86D;font-size:7.5px}
-.ml-r{fill:#E8534A;font-size:8px}
-.ml-b{fill:#5BC4D8;font-size:7px}
-.ml-ap{fill:rgba(126,184,212,0.9);font-size:6.5px}
+.ml{font-family:'Tenor Sans',sans-serif;font-size:5.5px;fill:rgba(240,232,216,0.5);letter-spacing:0.04em;pointer-events:none}
+.ml-g{fill:#E8B86D;font-size:6px}
+.ml-r{fill:#E8534A;font-size:6.5px}
+.ml-b{fill:#5BC4D8;font-size:5.5px}
+.ml-ap{fill:rgba(126,184,212,0.9)}
 .wn{font-family:'Cormorant Garamond',serif;font-size:7.5px;font-style:italic;
   fill:rgba(100,160,200,0.32);letter-spacing:0.16em;pointer-events:none}
 .map-legend-row{padding:16px 20px 0;display:flex;flex-wrap:wrap;gap:12px 18px}
@@ -501,7 +501,8 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   #hero{height:60vw;max-height:700px;margin-top:72px}
   .hero-mare{font-size:80px}
   .suite-thumb-wrap{height:420px}
-  /* suites-grid: flex column from suite CSS block */
+  .suites-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+  #card-villa{grid-column:1/-1}
   .suite-features{gap:8px}
   #about,#amenities,#location,#booking,#reviews,#policies{padding:80px 48px}
   .suites-header{padding:0 48px 36px}
@@ -646,32 +647,34 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .explore-right .map-svg-wrap{padding:0;margin:0;height:100%;display:block;background:transparent}
   .explore-right #salento-svg{width:100%;height:100%;border:none;border-radius:0;box-shadow:none;display:block;background:transparent}
   #explore .sec-label{padding:0;margin-bottom:12px}
-  #explore .sec-title{padding:0;font-size:44px!important;margin-bottom:12px;line-height:1.15}
-  .explore-sub{font-size:18px!important;max-width:100%;padding:0;margin-bottom:20px;line-height:1.75}
+  #explore .sec-title{padding:0;font-size:44px;margin-bottom:8px}
+  .explore-sub{font-size:16px;max-width:100%;padding:0;margin-bottom:20px}
   .map-tabs{padding:0;flex-wrap:wrap;gap:5px;margin-bottom:0}
   .map-legend-row{padding:16px 0 0;flex-wrap:wrap;gap:10px 16px}
 
-  /* Suites — original layout restored */
-  .suites-header{padding:0 48px 48px}
-  .suite-card{display:block!important;overflow:hidden}
-  .suite-thumb-wrap{width:100%!important;height:420px!important;min-height:unset!important;order:unset!important}
-  .suite-thumb{object-position:center 35%!important;height:100%!important}
-  .suite-header{padding:16px 20px 20px!important;background:var(--notte)}
-  .suite-details{padding:20px!important;background:var(--notte2);border-top:1px solid var(--border)}
-  .suites-grid{display:grid!important;grid-template-columns:1fr 1fr;gap:2px}
+  /* Suites — compact desktop layout */
+  .suites-header{padding:0 64px 40px}
+  .suite-name{font-size:26px!important}
+  .suite-sub{font-size:9px;letter-spacing:4px}
+  .suite-badge{font-size:8px;padding:3px 8px}
+  .suite-thumb-wrap{height:280px}
+  .suite-features{grid-template-columns:repeat(3,1fr);gap:6px}
+  .feat{font-size:13px!important;padding:6px 0}
+  .feat-icon ion-icon{font-size:16px}
+  .photo-grid{grid-template-columns:repeat(4,1fr);gap:4px}
+  .photo-thumb{border-width:1px}
+  #card-villa .photo-grid{grid-template-columns:repeat(6,1fr)}
+  #card-villa .suite-thumb-wrap{height:260px}
+  #card-villa .suite-thumb{object-position:center 55%}
+  .expand-btn{padding:8px 12px;font-size:8px}
+  .suite-header{padding:12px 16px 16px}
+  .suite-details{padding:16px}
+  .photos-label{font-size:8px;margin-bottom:8px}
+  .suite-note{font-size:11px!important}
+  .book-suite-btn{padding:11px 20px;font-size:8px}
   #card-villa{grid-column:1/-1;display:block!important}
-  #card-villa .suite-thumb-wrap{height:380px!important;background-image:none!important}
-  #card-villa .suite-thumb{opacity:1!important;object-position:center 45%!important}
-  .suite-badge{font-size:8px!important;letter-spacing:2px;padding:3px 10px}
-  .suite-name{font-size:28px!important}
-  .suite-sub{font-size:9px!important;letter-spacing:4px;opacity:0.7}
-  .suite-features{grid-template-columns:1fr 1fr;gap:8px}
-  .feat{font-size:14px!important;padding:6px 0}
-  .photo-grid{grid-template-columns:repeat(3,1fr)!important;gap:6px}
-  #card-villa .photo-grid{grid-template-columns:repeat(6,1fr)!important}
-  .expand-btn{font-size:9px!important;padding:10px 16px}
-  .book-suite-btn{padding:13px 22px!important;font-size:9px!important}
-  #card-cielo .suite-thumb-wrap{order:unset!important}
+  #card-villa .suite-thumb-wrap{height:380px}
+  #card-villa .suite-thumb{object-position:center 55%}
 
   /* About */
   #about{padding:90px 64px}
@@ -725,13 +728,6 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   footer{padding:60px 64px 48px}
   .ft-links{flex-direction:row;flex-wrap:wrap;gap:6px 24px}
 
-  /* Map pin labels larger on desktop */
-  #salento-svg .ml{font-size:7px!important}
-  #salento-svg .ml-g{font-size:7.5px!important}
-  #salento-svg .ml-r{font-size:8px!important}
-  #salento-svg .ml-b{font-size:7px!important}
-  #salento-svg .ml-ap{font-size:6.5px!important}
-  #salento-svg .wn{font-size:9px!important}
   /* Scroll top */
   .scroll-top{bottom:36px;right:36px;width:50px;height:50px}
 }
@@ -1236,7 +1232,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <!-- VILLA COMPLETA -->
     <div class="suite-card" id="card-villa">
       <div class="suite-thumb-wrap">
-        <img class="suite-thumb" src="hero.jpg" alt="Villa Completa" id="villa-thumb" style="object-position:center 40%">
+        <img class="suite-thumb" src="hero.jpg" alt="Villa Completa" style="object-position:center 40%">
         <div class="suite-thumb-overlay"></div>
       </div>
       <div class="suite-header">
@@ -1524,7 +1520,7 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
         <span class="g-num" id="gnum">2</span>
         <button class="g-btn" onclick="bkChg(1)">+</button>
       </div>
-
+    </div>
     <div class="psummary" id="psummary">
       <div class="ps-row"><span class="ps-label">Nightly rate</span><span class="ps-val" id="ptotal"></span></div>
       <div class="ps-row"><span class="ps-label">Cleaning fee</span><span class="ps-val" id="ctotal"></span></div>
@@ -1802,7 +1798,7 @@ var photos={
     'cielo-terrace.jpg','cielo-view.jpg','cielo-sunset.jpg'
   ],
   villa:[
-    'hero_rightangle.PNG','hero.jpg',
+    'hero.jpg',
     'Living%20room_p.jpg','Living%20room_p1.jpg',
     'Main%20bedroom_p1.jpg','Main%20bedroom_p2.jpg',
     'Kitchen_p.jpg',
