@@ -196,7 +196,7 @@ nav.scrolled .nav-logo{opacity:1}
 .suites-grid{display:flex;flex-direction:column;gap:2px}
 
 /* Suite card — CLOSED state */
-.suite-card{position:relative;overflow:hidden;background:var(--notte);display:block}
+.suite-card{position:relative;overflow:hidden;background:var(--notte)}
 .suite-thumb-wrap{position:relative;width:100%;height:260px;overflow:hidden}
 .suite-thumb{width:100%;height:100%;object-fit:cover;object-position:center 35%;
   display:block;transition:transform 0.6s ease}
@@ -501,7 +501,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   #hero{height:60vw;max-height:700px;margin-top:72px}
   .hero-mare{font-size:80px}
   .suite-thumb-wrap{height:420px}
-  .suites-grid{display:flex!important;flex-direction:column!important;gap:2px}
+  /* suites-grid: flex column from suite CSS block */
   .suite-features{gap:8px}
   #about,#amenities,#location,#booking,#reviews,#policies{padding:80px 48px}
   .suites-header{padding:0 48px 36px}
@@ -651,42 +651,59 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .map-tabs{padding:0;flex-wrap:wrap;gap:5px;margin-bottom:0}
   .map-legend-row{padding:16px 0 0;flex-wrap:wrap;gap:10px 16px}
 
-  /* Suites — horizontal card layout on desktop */
-  .suites-header{padding:0 64px 40px}
+  /* Suites — alternating layout on desktop */
+  .suites-header{padding:0 0 0}
+  .suites-grid{display:flex!important;flex-direction:column!important;gap:0}
 
-  /* Each suite card: flex row — photo left, content right */
-  .suite-card{display:flex!important;flex-direction:row!important;min-height:400px;overflow:hidden}
-  .suite-thumb-wrap{width:42%!important;flex-shrink:0;height:auto!important;min-height:400px}
-  .suite-thumb{object-position:center 40%!important}
+  /* Each card: full-width flex row, tall */
+  .suite-card{display:flex!important;flex-direction:row!important;min-height:520px;overflow:hidden;background:var(--notte)}
+  .suite-card.open{flex-wrap:wrap}
 
-  /* Right side wraps header + details */
-  .suite-right{flex:1;display:flex;flex-direction:column;min-width:0}
-  .suite-header{padding:28px 32px 16px!important;background:var(--notte);flex-shrink:0}
-  .suite-details{padding:16px 32px 28px!important;background:var(--notte2);border-top:none;flex:1}
-  .suite-card.open .suite-details{display:block}
+  /* Photo: 58% width, full height */
+  .suite-thumb-wrap{width:58%!important;flex-shrink:0;height:auto!important;min-height:520px;order:1}
+  .suite-thumb{object-position:center 40%!important;height:100%!important}
 
-  /* Text sizes */
-  .suite-badge{font-size:7px!important;letter-spacing:2px;padding:2px 8px;margin-bottom:8px}
-  .suite-name{font-size:22px!important;line-height:1.2;margin-bottom:2px}
-  .suite-sub{font-size:7px!important;letter-spacing:4px;opacity:0.45;margin-bottom:12px}
-  .expand-btn{font-size:8px!important;padding:9px 14px}
+  /* Right panel */
+  .suite-right{width:42%!important;order:2;display:flex;flex-direction:column;justify-content:center;padding:0}
+  .suite-header{padding:48px 48px 24px!important;background:var(--notte);border:none}
+  .suite-details{padding:0 48px 48px!important;background:var(--notte);border-top:none}
+  .suite-card.open .suite-details{display:flex;flex-direction:column}
 
-  /* Features: 2 columns */
-  .suite-features{grid-template-columns:1fr 1fr!important;gap:3px 16px;margin-bottom:16px}
-  .feat{font-size:13px!important;padding:4px 0}
-  .feat-icon ion-icon{font-size:14px}
+  /* Suite Cielo: swap sides */
+  #card-cielo .suite-thumb-wrap{order:2}
+  #card-cielo .suite-right{order:1}
 
-  /* Photos */
-  .photos-label{font-size:8px;margin-bottom:6px}
-  .photo-grid{grid-template-columns:repeat(4,1fr)!important;gap:4px;margin-bottom:12px}
-  .suite-note{font-size:11px!important;margin-bottom:10px}
-  .book-suite-btn{padding:11px 20px!important;font-size:8px!important}
+  /* Text */
+  .suite-badge{font-size:8px!important;letter-spacing:3px;padding:4px 10px;margin-bottom:14px;display:inline-block}
+  .suite-name{font-size:36px!important;line-height:1.1;margin-bottom:4px}
+  .suite-sub{font-size:8px!important;letter-spacing:5px;opacity:0.4;margin-bottom:20px}
+  .suite-price-row{margin-bottom:16px}
+  .suite-price{font-size:28px}
+  .suite-price-note{font-size:9px}
 
-  /* Villa Completa — reversed: photo right, content left */
-  #card-villa{flex-direction:row-reverse!important}
-  #card-villa .suite-thumb-wrap{width:48%!important;background-image:none!important}
-  #card-villa .suite-thumb{opacity:1!important;object-position:center 50%!important}
+  /* Expand button */
+  .expand-btn{font-size:9px!important;padding:11px 18px;letter-spacing:2px}
+
+  /* Features inside expanded */
+  .suite-features{grid-template-columns:1fr 1fr!important;gap:4px 24px;margin-bottom:20px}
+  .feat{font-size:14px!important;padding:6px 0}
+  .feat-icon ion-icon{font-size:15px}
+
+  /* Photo grid — compact 4 col */
+  .photos-label{font-size:8px;margin-bottom:8px;display:block}
+  .photo-grid{grid-template-columns:repeat(4,1fr)!important;gap:4px;margin-bottom:14px}
+  .suite-note{font-size:12px!important;margin-bottom:12px}
+  .book-suite-btn{padding:14px 24px!important;font-size:9px!important}
+
+  /* Villa Completa: photo left */
+  #card-villa .suite-thumb-wrap{order:1;width:58%!important}
+  #card-villa .suite-right{order:2;width:42%!important}
+  #card-villa .suite-thumb{object-position:center 50%!important;opacity:1!important}
+  #card-villa .suite-thumb-wrap{background-image:none!important}
   #card-villa .photo-grid{grid-template-columns:repeat(3,1fr)!important}
+
+  /* Separator line between cards */
+  .suite-card + .suite-card{border-top:1px solid var(--border)}
 
   /* About */
   #about{padding:90px 64px}
