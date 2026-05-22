@@ -277,8 +277,8 @@ nav.scrolled .nav-logo{opacity:1}
 .strip{display:flex;gap:3px;animation:stripScroll 28s linear infinite;width:max-content}
 .strip:hover{animation-play-state:paused}
 @keyframes stripScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.strip-item{width:180px;height:230px;flex-shrink:0;position:relative;overflow:hidden}
-.strip-item img{width:100%;height:100%;object-fit:cover;display:block}
+.strip-item{width:180px;height:230px;flex-shrink:0;position:relative;overflow:hidden;background:var(--notte2)}
+.strip-item img{width:100%;height:100%;object-fit:cover;display:block;background:var(--notte2)}
 .strip-cap{position:absolute;bottom:8px;left:8px;font-size:8px;letter-spacing:2px;
   text-transform:uppercase;color:rgba(245,239,230,0.85);
   background:rgba(10,10,18,0.65);backdrop-filter:blur(4px);padding:4px 8px;border-radius:2px}
@@ -767,7 +767,56 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   opacity:0;transition:opacity 0.2s}
 .photo-thumb:hover .photo-thumb-cap{opacity:1}
 
-/* ── MOBILE FIXES ── */
+/* ── MOBILE FONT SCALE (up to 767px) ── */
+@media(max-width:767px){
+  /* Section headings */
+  .sec-title{font-size:28px;line-height:1.15}
+  .sec-label{font-size:8px;letter-spacing:3px}
+
+  /* Suite names */
+  .suite-name{font-size:28px}
+  .suite-sub{font-size:9px;letter-spacing:3px}
+  .suite-badge{font-size:8px}
+
+  /* Body text */
+  .about-body{font-size:16px;line-height:1.8}
+  .pol-text{font-size:14px;line-height:1.65}
+  .rev-text{font-size:15px;line-height:1.75}
+  .exp-desc{font-size:15px;line-height:1.7}
+  .exp-title{font-size:24px}
+
+  /* Features & booking */
+  .feat{font-size:13px}
+  .bs-feat{font-size:14px}
+  .bs-title{font-size:20px}
+  .dist-name{font-size:16px}
+  .dist-sub{font-size:9px}
+  .am-name{font-size:10px}
+
+  /* Booking form */
+  .price-big{font-size:38px}
+  .price-from,.price-per{font-size:10px}
+  .clean-note{font-size:12px}
+  .book-note{font-size:11px}
+
+  /* Reviews */
+  .rev-by{font-size:10px}
+  .rev-stars{font-size:13px}
+
+  /* Hero */
+  .hero-mare{font-size:52px}
+  .hero-med{font-size:10px;letter-spacing:6px}
+  .hero-eyebrow{font-size:8px;letter-spacing:4px}
+  .hero-sub{font-size:14px;line-height:1.6}
+}
+
+/* ── MAP PIN TEXT — mobile readable size ── */
+@media(max-width:767px){
+  .ml{font-size:8px!important}
+  .ml-g{font-size:8.5px!important}
+  .ml-r{font-size:9px!important}
+  .ml-b{font-size:8px!important}
+}
 
 /* Fix: booking summary section — proper card layout on mobile */
 .booking-summary{
@@ -1367,18 +1416,18 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 <!-- GALLERY STRIP -->
 <section id="gallery">
   <div class="strip" id="galleryStrip">
-    <div class="strip-item" onclick="stripOpen('villa',0)" style="cursor:pointer"><img src="hero_new.jpeg" alt="Exterior" loading="lazy"><div class="strip-cap" data-cap="exterior">La Facciata</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',0)" style="cursor:pointer"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="livingroom">Soggiorno</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',3)" style="cursor:pointer"><img src="Main%20bedroom_p1.jpg" alt="Bedroom" loading="lazy" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="bedroom">Camera</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',10)" style="cursor:pointer"><img src="Kitchen_p.jpg" alt="Kitchen" loading="lazy" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="kitchen">Cucina</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',11)" style="cursor:pointer"><img src="Bathroom_p.jpg" alt="Bathroom" loading="lazy" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="bathroom">Bagno</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',14)" style="cursor:pointer"><img src="Garden_1.jpg" alt="Garden" loading="lazy" onerror="this.src='pietra-garden.jpg'"><div class="strip-cap" data-cap="garden">Il Giardino</div></div>
-    <div class="strip-item" onclick="stripOpen('pietra',13)" style="cursor:pointer"><img src="Outdoor%20table.jpg" alt="Outdoor Dining" loading="lazy" onerror="this.src='pietra-table.jpg'"><div class="strip-cap" data-cap="dining">Outdoor Dining</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',0)" style="cursor:pointer"><img src="cielo-main.jpg" alt="Suite Cielo" loading="lazy"><div class="strip-cap" data-cap="cielo">Suite Cielo</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',5)" style="cursor:pointer"><img src="cielo-terrace.jpg" alt="Terrace" loading="lazy"><div class="strip-cap" data-cap="terrace">La Terrazza</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',6)" style="cursor:pointer"><img src="cielo-view.jpg" alt="View" loading="lazy"><div class="strip-cap" data-cap="view">Vista Palme</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',7)" style="cursor:pointer"><img src="cielo-sunset.jpg" alt="Sunset" loading="lazy"><div class="strip-cap" data-cap="sunset">Il Tramonto</div></div>
-    <div class="strip-item" onclick="stripOpen('cielo',2)" style="cursor:pointer"><img src="cielo-bedroom.jpg" alt="Bedroom" loading="lazy"><div class="strip-cap" data-cap="bedroom">Camera da Letto</div></div>
+    <div class="strip-item" onclick="stripOpen('villa',0)" style="cursor:pointer"><img src="hero_new.jpeg" alt="Exterior" loading="eager"><div class="strip-cap" data-cap="exterior">La Facciata</div></div>
+    <div class="strip-item" onclick="stripOpen('pietra',0)" style="cursor:pointer"><img src="Living%20room_p.jpg" alt="Living Room" loading="eager" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="livingroom">Soggiorno</div></div>
+    <div class="strip-item" onclick="stripOpen('pietra',3)" style="cursor:pointer"><img src="Main%20bedroom_p1.jpg" alt="Bedroom" loading="eager" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="bedroom">Camera</div></div>
+    <div class="strip-item" onclick="stripOpen('pietra',10)" style="cursor:pointer"><img src="Kitchen_p.jpg" alt="Kitchen" loading="eager" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="kitchen">Cucina</div></div>
+    <div class="strip-item" onclick="stripOpen('pietra',11)" style="cursor:pointer"><img src="Bathroom_p.jpg" alt="Bathroom" loading="eager" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="bathroom">Bagno</div></div>
+    <div class="strip-item" onclick="stripOpen('pietra',14)" style="cursor:pointer"><img src="Garden_1.jpg" alt="Garden" loading="eager" onerror="this.src='pietra-garden.jpg'"><div class="strip-cap" data-cap="garden">Il Giardino</div></div>
+    <div class="strip-item" onclick="stripOpen('pietra',13)" style="cursor:pointer"><img src="Outdoor%20table.jpg" alt="Outdoor Dining" loading="eager" onerror="this.src='pietra-table.jpg'"><div class="strip-cap" data-cap="dining">Outdoor Dining</div></div>
+    <div class="strip-item" onclick="stripOpen('cielo',0)" style="cursor:pointer"><img src="cielo-main.jpg" alt="Suite Cielo" loading="eager"><div class="strip-cap" data-cap="cielo">Suite Cielo</div></div>
+    <div class="strip-item" onclick="stripOpen('cielo',5)" style="cursor:pointer"><img src="cielo-terrace.jpg" alt="Terrace" loading="eager"><div class="strip-cap" data-cap="terrace">La Terrazza</div></div>
+    <div class="strip-item" onclick="stripOpen('cielo',6)" style="cursor:pointer"><img src="cielo-view.jpg" alt="View" loading="eager"><div class="strip-cap" data-cap="view">Vista Palme</div></div>
+    <div class="strip-item" onclick="stripOpen('cielo',7)" style="cursor:pointer"><img src="cielo-sunset.jpg" alt="Sunset" loading="eager"><div class="strip-cap" data-cap="sunset">Il Tramonto</div></div>
+    <div class="strip-item" onclick="stripOpen('cielo',2)" style="cursor:pointer"><img src="cielo-bedroom.jpg" alt="Bedroom" loading="eager"><div class="strip-cap" data-cap="bedroom">Camera da Letto</div></div>
     <!-- duplicate for seamless loop -->
     <div class="strip-item" onclick="stripOpen('villa',0)" style="cursor:pointer"><img src="hero_new.jpeg" alt="Exterior" loading="lazy"><div class="strip-cap" data-cap="exterior">La Facciata</div></div>
     <div class="strip-item" onclick="stripOpen('pietra',0)" style="cursor:pointer"><img src="Living%20room_p.jpg" alt="Living Room" loading="lazy" onerror="this.src='pietra-main.jpg'"><div class="strip-cap" data-cap="livingroom">Soggiorno</div></div>
