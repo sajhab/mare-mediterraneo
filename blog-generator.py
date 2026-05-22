@@ -429,6 +429,69 @@ def update_articles_index(new_articles):
     log("articles.json updated — added " + str(added) + " new entries")
 
 
+# ── BLOG INDEX STATIC LINKS (SEO) ────────────────────────────
+
+def rebuild_blog_index():
+    """
+    Injects a hidden <div> with static <a href> links to every article
+    into blog/index.html, replacing any previous injection.
+    This makes all article URLs visible to Google without JS execution,
+    while leaving the existing JS-rendered card layout completely untouched.
+    """
+    index_path = os.path.join(BLOG_DIR, "index.html")
+    if not os.path.exists(index_path):
+        log("blog/index.html not found — skipping static link injection")
+        return
+
+    articles = load_json(ARTICLES_JSON, [])
+    if not articles:
+        log("articles.json empty — skipping static link injection")
+        return
+
+    # Build one <a> per article
+    links = []
+    for a in articles:
+        slug  = a.get("slug", "")
+        title = a.get("title", slug)
+        lang  = a.get("lang_label", "")
+        if not slug:
+            continue
+        url = "https://maremediterraneo.com/blog/" + slug + ".html"
+        links.append('    <a href="' + url + '">' + title + ' (' + lang + ')</a>')
+
+    static_block = (
+        '\n<!-- SEO_STATIC_LINKS_START -->\n'
+        '<div style="position:absolute;width:1px;height:1px;overflow:hidden;'
+        'clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="true">\n'
+        + "\n".join(links) + "\n"
+        "</div>\n"
+        "<!-- SEO_STATIC_LINKS_END -->\n"
+    )
+
+    with open(index_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Remove any previous injection
+    content = re.sub(
+        r"\n<!-- SEO_STATIC_LINKS_START -->.*?<!-- SEO_STATIC_LINKS_END -->\n",
+        "",
+        content,
+        flags=re.DOTALL
+    )
+
+    # Inject just before </body>
+    if "</body>" in content:
+        content = content.replace("</body>", static_block + "</body>")
+    else:
+        # Fallback: append at end of file
+        content = content + static_block
+
+    with open(index_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    log("blog/index.html updated with " + str(len(links)) + " static SEO links")
+
+
 # ── MAIN ─────────────────────────────────────────────────────
 
 def main():
@@ -602,6 +665,7 @@ def main():
     if new_articles:
         update_articles_index(new_articles)
         update_sitemap(new_slugs, today)
+        rebuild_blog_index()
         log("Done. Generated " + str(len(new_articles)) + "/4 articles.")
         if errors:
             log("WARNING: Failed languages (non-fatal): " + ", ".join(errors))
