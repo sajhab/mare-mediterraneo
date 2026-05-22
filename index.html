@@ -578,58 +578,86 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 
 /* ── DESKTOP ENHANCEMENTS (1024px+) ── */
 @media(min-width:1024px){
-  /* Global body text 20px, headlines 45px */
-  html{font-size:20px}
-  body{font-size:20px!important;line-height:1.8}
 
-  /* All paragraph-level text */
-  .about-body,.pol-text,.exp-desc,.rev-text,.dist-sub,.am-name,
-  .feat,.suite-note,.book-note,.clean-note,.bs-feat,.bs-note,
-  .bs-direct-text,.exp-hl-item,.bk-sum-val,.bk-field input,
-  .bk-field textarea,.f-input,.suite-badge,.suite-sub,
-  .price-from,.price-per,.ps-label,.ps-val{font-size:20px!important;line-height:1.8!important}
+  /* ── TYPE SCALE ─────────────────────────────────────
+     Hero title      : 130px  (display, unchanged)
+     Section titles  : 42px   (h2.sec-title)
+     Suite names     : 26px
+     Large body text : 17px   (about, reviews, policies, explore card)
+     Standard body   : 15px   (features, booking, amenities)
+     Small labels    : 10px   (badges, tabs, uppercase tags)
+     Tiny labels     : 9px    (letter-spaced uppercase, sec-label)
+  ─────────────────────────────────────────────────── */
 
-  /* Section titles */
-  .sec-title{font-size:45px!important;line-height:1.1}
-  h2.sec-title{font-size:45px!important}
+  html{font-size:16px}
+  body{font-size:16px;line-height:1.75}
 
-  /* Suite name — compact */
-  .suite-name{font-size:26px!important}
+  /* Section headings — consistent across all sections */
+  .sec-title{font-size:42px!important;line-height:1.1!important}
+  h2.sec-title{font-size:42px!important;line-height:1.1!important}
+  #reviews .sec-title{font-size:42px!important}
+  #explore .sec-title{font-size:40px!important;padding:0;margin-bottom:8px}
 
-  /* Distance names */
-  .dist-name{font-size:22px!important}
+  /* Section labels (small caps above headings) */
+  .sec-label{font-size:9px;letter-spacing:4px}
 
-  /* Review text */
-  .rev-text{font-size:20px!important;line-height:1.85!important}
-  .rev-by{font-size:13px!important}
+  /* Suite names */
+  .suite-name{font-size:26px!important;line-height:1!important}
 
-  /* Explore card */
-  .exp-title{font-size:32px!important}
-  .exp-desc{font-size:20px!important}
+  /* Large body — long-form reading text */
+  .about-body{font-size:17px!important;line-height:1.85!important;max-width:680px}
+  .rev-text{font-size:16px!important;line-height:1.8!important}
+  .pol-text{font-size:15px!important;line-height:1.7!important}
+  .exp-desc{font-size:16px!important;line-height:1.75!important}
+  .exp-title{font-size:30px!important}
 
-  /* Booking summary right panel */
-  .bs-feat{font-size:20px!important}
-  .bs-title{font-size:28px!important}
+  /* Standard body — feature lists, booking, forms */
+  .feat{font-size:13px!important;padding:6px 0}
+  .suite-note{font-size:12px!important}
+  .book-note{font-size:12px!important}
+  .clean-note{font-size:13px!important}
+  .bs-feat{font-size:15px!important;line-height:1.5!important}
+  .bs-note{font-size:13px!important}
+  .bs-direct-text{font-size:13px!important}
+  .bs-title{font-size:24px!important}
+  .exp-hl-item{font-size:13px!important}
 
-  /* About body */
-  .about-body{font-size:20px!important;max-width:680px;line-height:1.9!important}
+  /* Form & booking */
+  .bk-sum-val{font-size:14px!important}
+  .bk-field input,.bk-field textarea,.f-input{font-size:16px!important}
+  .price-from,.price-per{font-size:11px!important}
+  .ps-label{font-size:12px!important}
+  .ps-val{font-size:14px!important}
+  .price-big{font-size:48px}
 
-  /* Policies */
-  .pol-text{font-size:20px!important}
+  /* Amenity names */
+  .am-name{font-size:11px!important;letter-spacing:1px}
 
-  /* Hero mare stays large */
-  .hero-mare{font-size:130px!important}
+  /* Distance section */
+  .dist-name{font-size:18px!important}
+  .dist-sub{font-size:10px!important}
 
-  /* Hero — full viewport, bigger title */
+  /* Small caps labels */
+  .suite-badge{font-size:8px!important}
+  .suite-sub{font-size:9px!important;letter-spacing:4px}
+
+  /* Reviews meta */
+  .rev-by{font-size:11px!important;letter-spacing:2px}
+  .rev-suite{font-size:10px!important}
+  .rev-stars{font-size:15px;letter-spacing:3px;margin-bottom:14px}
+
+  /* Hero stays large */
+  .hero-mare{font-size:130px!important;line-height:0.95}
+  .hero-med{font-size:13px;letter-spacing:13px;margin-top:8px;margin-bottom:6px}
+  .hero-eyebrow{font-size:10px;letter-spacing:6px;margin-bottom:14px}
+  .hero-sub{font-size:18px;line-height:1.75;margin-bottom:28px}
+
+  /* Hero — full viewport */
   #hero{height:100svh;max-height:none;align-items:center;padding-bottom:0}
   .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.55) 0%,rgba(10,10,18,0.3) 30%,rgba(10,10,18,0.3) 55%,rgba(10,10,18,0.95) 100%),url('hero_new.jpeg') center 35%/cover no-repeat}
-  .hero-mare{font-size:130px;line-height:0.95}
-  .hero-med{font-size:14px;letter-spacing:14px;margin-top:8px;margin-bottom:6px}
-  .hero-eyebrow{font-size:11px;letter-spacing:6px;margin-bottom:14px}
-  .hero-sub{font-size:20px;line-height:1.75;margin-bottom:28px}
   .hero-content{padding:40px 80px;max-width:860px;background:linear-gradient(to right,rgba(10,10,18,0.45) 0%,rgba(10,10,18,0.2) 70%,transparent 100%);border-radius:4px}
-  .btn-gold{font-size:11px;padding:16px 32px;letter-spacing:3px}
-  .btn-outline{font-size:11px;padding:16px 28px;letter-spacing:3px}
+  .btn-gold{font-size:10px;padding:14px 28px;letter-spacing:3px}
+  .btn-outline{font-size:10px;padding:14px 24px;letter-spacing:3px}
   .hero-ctas{gap:14px}
 
   /* Explore / Gateway — side by side on desktop */
@@ -643,19 +671,16 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .explore-right .map-svg-wrap{padding:0;margin:0;height:100%;display:block;background:transparent}
   .explore-right #salento-svg{width:100%;height:100%;border:none;border-radius:0;box-shadow:none;display:block;background:transparent}
   #explore .sec-label{padding:0;margin-bottom:12px}
-  #explore .sec-title{padding:0;font-size:44px;margin-bottom:8px}
-  .explore-sub{font-size:16px;max-width:100%;padding:0;margin-bottom:20px}
+  .explore-sub{font-size:15px;max-width:100%;padding:0;margin-bottom:20px}
   .map-tabs{padding:0;flex-wrap:wrap;gap:5px;margin-bottom:0}
   .map-legend-row{padding:16px 0 0;flex-wrap:wrap;gap:10px 16px}
 
   /* Suites — compact desktop layout */
   .suites-header{padding:0 64px 40px}
-  .suite-name{font-size:26px!important}
   .suite-sub{font-size:9px;letter-spacing:4px}
   .suite-badge{font-size:8px;padding:3px 8px}
   .suite-thumb-wrap{height:280px}
   .suite-features{grid-template-columns:repeat(3,1fr);gap:6px}
-  .feat{font-size:13px!important;padding:6px 0}
   .feat-icon ion-icon{font-size:16px}
   .photo-grid{grid-template-columns:repeat(4,1fr);gap:4px}
   .photo-thumb{border-width:1px}
@@ -666,8 +691,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .suite-header{padding:12px 16px 16px}
   .suite-details{padding:16px}
   .photos-label{font-size:8px;margin-bottom:8px}
-  .suite-note{font-size:11px!important}
-  .book-suite-btn{padding:11px 20px;font-size:8px}
+  .book-suite-btn{padding:11px 20px;font-size:9px}
   #card-villa{grid-column:1/-1;display:block!important}
   #card-villa .suite-thumb-wrap{height:380px}
   #card-villa .suite-thumb{object-position:center 55%}
@@ -675,12 +699,12 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   /* About */
   #about{padding:90px 64px}
   .stats{grid-template-columns:repeat(4,1fr)}
-  .stat-n{font-size:46px}
+  .stat-n{font-size:40px}
+  .stat-l{font-size:9px}
 
   /* Amenities */
   #amenities{padding:90px 64px}
   .am-grid{grid-template-columns:repeat(3,1fr);gap:10px}
-  .am-name{font-size:11px}
 
   /* Location */
   #location{padding:90px 64px}
@@ -690,32 +714,21 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   #booking{padding:90px 64px}
   .booking-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-top:32px}
   .book-card{max-width:100%}
-  .price-big{font-size:54px}
-  .booking-summary{padding:36px;background:rgba(200,185,154,0.04);border:1px solid var(--border);border-radius:6px}
-  .bs-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--sabbia);margin-bottom:6px}
-  .bs-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block}
-  .bs-feat{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(200,185,154,0.07);font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text)}
-  .bs-feat:last-child{border-bottom:none}
-  .bs-feat ion-icon{font-size:17px;color:var(--gold);flex-shrink:0;width:22px}
-  .bs-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);line-height:1.75;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
-  .bs-direct{display:flex;align-items:center;gap:10px;margin-top:16px;padding:14px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:4px}
-  .bs-direct ion-icon{font-size:20px;color:var(--gold);flex-shrink:0}
-  .bs-direct-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);line-height:1.6}
-  .sec-title{font-size:44px}
+  .booking-summary{padding:32px;background:rgba(200,185,154,0.04);border:1px solid var(--border);border-radius:6px}
+  .bs-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .bs-feat ion-icon{font-size:16px;color:var(--gold);flex-shrink:0;width:20px}
+  .bs-direct{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:4px}
+  .bs-direct ion-icon{font-size:18px;color:var(--gold);flex-shrink:0}
 
   /* Reviews */
   #reviews{padding:90px 64px}
-  #reviews .sec-title{font-size:48px}
   .rev-track{gap:24px;padding-bottom:16px}
-  .rev-card{width:420px;padding:36px}
-  .rev-text{font-size:19px;line-height:1.85}
-  .rev-by{font-size:12px;letter-spacing:2px}
-  .rev-suite{font-size:10px;letter-spacing:2px}
-  .rev-stars{font-size:16px;letter-spacing:3px;margin-bottom:16px}
+  .rev-card{width:380px;padding:32px}
 
   /* Policies */
   #policies{padding:90px 64px}
   .pol-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px}
+  .pol-title{font-size:10px}
 
   /* Gallery strip */
   .strip-item{width:240px;height:300px}
@@ -723,6 +736,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   /* Footer */
   footer{padding:60px 64px 48px}
   .ft-links{flex-direction:row;flex-wrap:wrap;gap:6px 24px}
+  .ft-logo{font-size:24px}
+  .ft-loc{font-size:9px}
+  .ft-copy{font-size:10px}
 
   /* Scroll top */
   .scroll-top{bottom:36px;right:36px;width:50px;height:50px}
@@ -732,15 +748,14 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
 @media(min-width:1440px){
   .hero-mare{font-size:136px}
   .hero-content{max-width:1100px}
-  #explore .sec-title,.sec-title{font-size:52px}
-  .suite-name{font-size:50px}
+  .sec-title{font-size:46px!important}
+  #explore .sec-title{font-size:44px!important}
+  .suite-name{font-size:28px!important}
   #about,#amenities,#location,#booking,#reviews,#policies,footer{padding-left:96px;padding-right:96px}
   .explore-left{padding:70px 48px 48px}
-  #explore .sec-title{font-size:50px}
   .explore-layout{grid-template-columns:420px 1fr}
   .suites-header{padding:0 96px 48px}
   .suite-thumb-wrap{height:300px}
-  .suite-name{font-size:28px!important}
   .am-grid{grid-template-columns:repeat(4,1fr)}
 }
 
