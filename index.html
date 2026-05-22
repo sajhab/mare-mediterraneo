@@ -665,7 +665,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .photo-thumb{border-width:1px}
   #card-villa .photo-grid{grid-template-columns:repeat(6,1fr)}
   #card-villa .suite-thumb-wrap{height:260px}
-  #card-villa .suite-thumb{object-position:center 55%}
+  #card-villa .suite-thumb{object-position:center 20%}
+  #card-villa .suite-thumb-wrap{background:url('hero_rightangle.PNG') center 20%/cover no-repeat}
+  #card-villa .suite-thumb{opacity:0}
   .expand-btn{padding:8px 12px;font-size:8px}
   .suite-header{padding:12px 16px 16px}
   .suite-details{padding:16px}
@@ -674,7 +676,9 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .book-suite-btn{padding:11px 20px;font-size:8px}
   #card-villa{grid-column:1/-1;display:block!important}
   #card-villa .suite-thumb-wrap{height:380px}
-  #card-villa .suite-thumb{object-position:center 55%}
+  #card-villa .suite-thumb{object-position:center 20%}
+  #card-villa .suite-thumb-wrap{background:url('hero_rightangle.PNG') center 20%/cover no-repeat}
+  #card-villa .suite-thumb{opacity:0}
 
   /* About */
   #about{padding:90px 64px}
@@ -1239,7 +1243,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <!-- VILLA COMPLETA -->
     <div class="suite-card" id="card-villa">
       <div class="suite-thumb-wrap">
-        <img class="suite-thumb" src="hero_rightangle.PNG" alt="Villa Completa" style="object-position:center 40%">
+        <img class="suite-thumb" src="hero.jpg" alt="Villa Completa" id="villa-thumb" style="object-position:center 40%">
         <div class="suite-thumb-overlay"></div>
       </div>
       <div class="suite-header">
@@ -1805,7 +1809,7 @@ var photos={
     'cielo-terrace.jpg','cielo-view.jpg','cielo-sunset.jpg'
   ],
   villa:[
-    'hero_rightangle.PNG',
+    'hero_rightangle.PNG','hero.jpg',
     'Living%20room_p.jpg','Living%20room_p1.jpg',
     'Main%20bedroom_p1.jpg','Main%20bedroom_p2.jpg',
     'Kitchen_p.jpg',
