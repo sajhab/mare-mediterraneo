@@ -196,7 +196,7 @@ nav.scrolled .nav-logo{opacity:1}
 .suites-grid{display:flex;flex-direction:column;gap:2px}
 
 /* Suite card — CLOSED state */
-.suite-card{position:relative;overflow:hidden;background:var(--notte)}
+.suite-card{position:relative;overflow:hidden;background:var(--notte);display:block}
 .suite-thumb-wrap{position:relative;width:100%;height:260px;overflow:hidden}
 .suite-thumb{width:100%;height:100%;object-fit:cover;object-position:center 35%;
   display:block;transition:transform 0.6s ease}
@@ -501,8 +501,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   #hero{height:60vw;max-height:700px;margin-top:72px}
   .hero-mare{font-size:80px}
   .suite-thumb-wrap{height:420px}
-  .suites-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-  #card-villa{grid-column:1/-1}
+  .suites-grid{display:flex!important;flex-direction:column!important;gap:2px}
   .suite-features{gap:8px}
   #about,#amenities,#location,#booking,#reviews,#policies{padding:80px 48px}
   .suites-header{padding:0 48px 36px}
@@ -652,33 +651,42 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .map-tabs{padding:0;flex-wrap:wrap;gap:5px;margin-bottom:0}
   .map-legend-row{padding:16px 0 0;flex-wrap:wrap;gap:10px 16px}
 
-  /* Suites — compact desktop layout */
+  /* Suites — horizontal card layout on desktop */
   .suites-header{padding:0 64px 40px}
-  .suite-name{font-size:26px!important}
-  .suite-sub{font-size:9px;letter-spacing:4px}
-  .suite-badge{font-size:7px!important;padding:2px 7px;letter-spacing:2px}
-  .suite-thumb-wrap{height:280px}
-  .suite-features{grid-template-columns:repeat(3,1fr);gap:6px}
-  .feat{font-size:13px!important;padding:6px 0}
-  .feat-icon ion-icon{font-size:16px}
-  .photo-grid{grid-template-columns:repeat(4,1fr);gap:4px}
-  .photo-thumb{border-width:1px}
-  #card-villa .photo-grid{grid-template-columns:repeat(6,1fr)}
-  #card-villa .suite-thumb-wrap{height:260px}
-  #card-villa .suite-thumb{object-position:center 20%}
-  #card-villa .suite-thumb-wrap{background:url('hero_rightangle.PNG') center 20%/cover no-repeat}
-  #card-villa .suite-thumb{opacity:0}
-  .expand-btn{padding:8px 12px;font-size:8px}
-  .suite-header{padding:12px 16px 16px}
-  .suite-details{padding:16px}
-  .photos-label{font-size:8px;margin-bottom:8px}
-  .suite-note{font-size:11px!important}
-  .book-suite-btn{padding:11px 20px;font-size:8px}
-  #card-villa{grid-column:1/-1;display:block!important}
-  #card-villa .suite-thumb-wrap{height:380px}
-  #card-villa .suite-thumb{object-position:center 20%}
-  #card-villa .suite-thumb-wrap{background:url('hero_rightangle.PNG') center 20%/cover no-repeat}
-  #card-villa .suite-thumb{opacity:0}
+
+  /* Each suite card: flex row — photo left, content right */
+  .suite-card{display:flex!important;flex-direction:row!important;min-height:400px;overflow:hidden}
+  .suite-thumb-wrap{width:42%!important;flex-shrink:0;height:auto!important;min-height:400px}
+  .suite-thumb{object-position:center 40%!important}
+
+  /* Right side wraps header + details */
+  .suite-right{flex:1;display:flex;flex-direction:column;min-width:0}
+  .suite-header{padding:28px 32px 16px!important;background:var(--notte);flex-shrink:0}
+  .suite-details{padding:16px 32px 28px!important;background:var(--notte2);border-top:none;flex:1}
+  .suite-card.open .suite-details{display:block}
+
+  /* Text sizes */
+  .suite-badge{font-size:7px!important;letter-spacing:2px;padding:2px 8px;margin-bottom:8px}
+  .suite-name{font-size:22px!important;line-height:1.2;margin-bottom:2px}
+  .suite-sub{font-size:7px!important;letter-spacing:4px;opacity:0.45;margin-bottom:12px}
+  .expand-btn{font-size:8px!important;padding:9px 14px}
+
+  /* Features: 2 columns */
+  .suite-features{grid-template-columns:1fr 1fr!important;gap:3px 16px;margin-bottom:16px}
+  .feat{font-size:13px!important;padding:4px 0}
+  .feat-icon ion-icon{font-size:14px}
+
+  /* Photos */
+  .photos-label{font-size:8px;margin-bottom:6px}
+  .photo-grid{grid-template-columns:repeat(4,1fr)!important;gap:4px;margin-bottom:12px}
+  .suite-note{font-size:11px!important;margin-bottom:10px}
+  .book-suite-btn{padding:11px 20px!important;font-size:8px!important}
+
+  /* Villa Completa — reversed: photo right, content left */
+  #card-villa{flex-direction:row-reverse!important}
+  #card-villa .suite-thumb-wrap{width:48%!important;background-image:none!important}
+  #card-villa .suite-thumb{opacity:1!important;object-position:center 50%!important}
+  #card-villa .photo-grid{grid-template-columns:repeat(3,1fr)!important}
 
   /* About */
   #about{padding:90px 64px}
@@ -1146,6 +1154,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <img class="suite-thumb" src="pietra-main.jpg" alt="Suite Pietra — Living Room">
         <div class="suite-thumb-overlay"></div>
       </div>
+      <div class="suite-right">
       <div class="suite-header">
         <div class="suite-badge"><span data-lang="en" class="al">Ground Floor · Garden</span><span data-lang="it">Piano Terra · Giardino</span><span data-lang="de">Erdgeschoss · Garten</span><span data-lang="fr">Rez-de-chaussée · Jardin</span></div>
         <div class="suite-name">Suite Pietra</div>
@@ -1196,6 +1205,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <img class="suite-thumb" src="cielo-main.jpg" alt="Suite Cielo — Kitchen Living">
         <div class="suite-thumb-overlay"></div>
       </div>
+      <div class="suite-right">
       <div class="suite-header">
         <div class="suite-badge"><span data-lang="en" class="al">First Floor · Terrace</span><span data-lang="it">Primo Piano · Terrazza</span><span data-lang="de">Erstes Stockwerk · Terrasse</span><span data-lang="fr">Premier Étage · Terrasse</span></div>
         <div class="suite-name">Suite Cielo</div>
@@ -1246,6 +1256,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
         <img class="suite-thumb" src="hero.jpg" alt="Villa Completa" id="villa-thumb" style="object-position:center 40%">
         <div class="suite-thumb-overlay"></div>
       </div>
+      <div class="suite-right">
       <div class="suite-header">
         <div class="suite-badge"><span data-lang="en" class="al">Entire Property · Best Value</span><span data-lang="it">Proprietà Intera · Miglior Valore</span><span data-lang="de">Gesamtes Anwesen · Bestes Preis-Leistung</span><span data-lang="fr">Propriété Entière · Meilleur Rapport</span></div>
         <div class="suite-name">Villa Completa</div>
@@ -1531,7 +1542,8 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
         <span class="g-num" id="gnum">2</span>
         <button class="g-btn" onclick="bkChg(1)">+</button>
       </div>
-    </div>
+      </div><!-- suite-right -->
+
     <div class="psummary" id="psummary">
       <div class="ps-row"><span class="ps-label">Nightly rate</span><span class="ps-val" id="ptotal"></span></div>
       <div class="ps-row"><span class="ps-label">Cleaning fee</span><span class="ps-val" id="ctotal"></span></div>
