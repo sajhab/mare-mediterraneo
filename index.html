@@ -159,9 +159,6 @@ nav.scrolled .nav-logo{opacity:1}
 /* ── HERO ── */
 #hero{position:relative;height:100svh;min-height:600px;overflow:hidden;
   display:flex;align-items:flex-end;padding-bottom:40px;margin-top:0}
-.hero-bg{position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,10,18,0.35) 0%,rgba(10,10,18,0.0) 30%,rgba(10,10,18,0.0) 55%,rgba(10,10,18,0.95) 100%),
-  url('hero-mobile.jpg') center top/cover no-repeat}
 @media(min-width:768px){
   #hero{height:100svh}
   .hero-bg{background:linear-gradient(180deg,rgba(10,10,18,0.2) 0%,rgba(10,10,18,0.0) 35%,rgba(10,10,18,0.0) 55%,rgba(10,10,18,0.92) 100%),url('hero_new.jpeg') center 40%/cover no-repeat}
@@ -329,11 +326,6 @@ nav.scrolled .nav-logo{opacity:1}
 .pin-grp:hover .pin-ring{animation:mmPulseFast 1s ease-in-out infinite}
 @keyframes mmPulse{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.6;transform:scale(1.45)}}
 @keyframes mmPulseFast{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.55)}}
-.ml{font-family:'Tenor Sans',sans-serif;font-size:5.5px;fill:rgba(240,232,216,0.5);letter-spacing:0.04em;pointer-events:none}
-.ml-g{fill:#E8B86D;font-size:6px}
-.ml-r{fill:#E8534A;font-size:6.5px}
-.ml-b{fill:#5BC4D8;font-size:5.5px}
-.ml-ap{fill:rgba(126,184,212,0.9)}
 .wn{font-family:'Cormorant Garamond',serif;font-size:7.5px;font-style:italic;
   fill:rgba(100,160,200,0.32);letter-spacing:0.16em;pointer-events:none}
 .map-legend-row{padding:16px 20px 0;display:flex;flex-wrap:wrap;gap:12px 18px}
@@ -759,6 +751,79 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   font-family:'Tenor Sans',sans-serif;text-transform:uppercase;
   opacity:0;transition:opacity 0.2s}
 .photo-thumb:hover .photo-thumb-cap{opacity:1}
+
+/* ── MOBILE FIXES ── */
+
+/* Fix: booking summary section — proper card layout on mobile */
+.booking-summary{
+  margin-top:24px;
+  padding:20px;
+  background:rgba(200,185,154,0.04);
+  border:1px solid rgba(200,185,154,0.12);
+  border-radius:6px;
+}
+.bs-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:300;
+  color:var(--sabbia);margin-bottom:4px;
+}
+.bs-sub{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;display:block;
+}
+.bs-feat{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(200,185,154,0.07);
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;color:var(--text);line-height:1.5;
+}
+.bs-feat:last-child{border-bottom:none}
+.bs-feat ion-icon{
+  font-size:18px;color:var(--gold);
+  flex-shrink:0;width:20px;margin-top:2px;
+}
+.bs-direct{
+  display:flex;align-items:flex-start;gap:10px;
+  margin-top:14px;padding:14px;
+  background:rgba(200,150,62,0.06);
+  border:1px solid rgba(200,150,62,0.2);border-radius:4px;
+}
+.bs-direct ion-icon{font-size:18px;color:var(--gold);flex-shrink:0;margin-top:2px}
+.bs-direct-text{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:14px;
+  color:var(--muted);line-height:1.6;
+}
+.bs-note{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:13px;
+  color:var(--muted);line-height:1.75;
+  margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--border);
+}
+
+/* Fix: map pin label font sizes — mobile */
+.ml{font-family:'Tenor Sans',sans-serif;font-size:7px;fill:rgba(240,232,216,0.55);letter-spacing:0.04em;pointer-events:none}
+.ml-g{fill:#E8B86D;font-size:7.5px}
+.ml-r{fill:#E8534A;font-size:8px}
+.ml-b{fill:#5BC4D8;font-size:7px}
+.ml-ap{fill:rgba(126,184,212,0.9)}
+
+/* Fix: hero mobile — fallback to hero_new.jpeg if hero-mobile.jpg missing */
+.hero-bg{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,10,18,0.35) 0%,rgba(10,10,18,0.0) 30%,rgba(10,10,18,0.0) 55%,rgba(10,10,18,0.95) 100%),
+  url('hero_new.jpeg') center top/cover no-repeat,
+  url('hero-mobile.jpg') center top/cover no-repeat;
+  background-color:var(--notte);}
+
+/* Fix: map pin font sizes — desktop */
+@media(min-width:768px){
+  .ml{font-size:8px}
+  .ml-g{font-size:8.5px}
+  .ml-r{font-size:9px}
+  .ml-b{font-size:8px}
+}
 </style>
 </head>
 <body>
