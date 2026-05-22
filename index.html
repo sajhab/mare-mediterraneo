@@ -198,7 +198,7 @@ nav.scrolled .nav-logo{opacity:1}
 
 /* Suite card — CLOSED state */
 .suite-card{position:relative;overflow:hidden;background:var(--notte)}
-.suite-thumb-wrap{position:relative;width:100%;height:260px;overflow:hidden}
+.suite-thumb-wrap{position:relative;width:100%;height:260px;overflow:hidden;background:var(--notte2)}
 .suite-thumb{width:100%;height:100%;object-fit:cover;object-position:center 35%;
   display:block;transition:transform 0.6s ease}
 .suite-card:hover .suite-thumb{transform:scale(1.03)}
@@ -476,7 +476,7 @@ footer{background:var(--notte);padding:48px 20px 36px;border-top:1px solid rgba(
   color:rgba(232,221,208,0.4);text-decoration:none;transition:color 0.2s}
 .ft-links a:hover{color:var(--gold)}
 .ft-copy{font-size:9px;color:rgba(200,185,154,0.2);letter-spacing:0.5px;line-height:1.8}
-.scroll-top{position:fixed;bottom:24px;right:20px;z-index:150;
+.scroll-top{position:fixed;bottom:24px;right:86px;z-index:401;
   width:44px;height:44px;background:var(--gold);border:none;border-radius:50%;
   color:var(--notte);cursor:pointer;display:none;align-items:center;justify-content:center;
   box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:all 0.3s;font-size:18px}
@@ -741,7 +741,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
   .ft-copy{font-size:10px}
 
   /* Scroll top */
-  .scroll-top{bottom:36px;right:36px;width:50px;height:50px}
+  .scroll-top{bottom:36px;right:96px;width:50px;height:50px}
 }
 
 /* Large desktop (1440px+) */
@@ -1216,7 +1216,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <!-- SUITE PIETRA -->
     <div class="suite-card" id="card-pietra">
       <div class="suite-thumb-wrap">
-        <img class="suite-thumb" src="pietra-main.jpg" alt="Suite Pietra — Living Room">
+        <img class="suite-thumb" src="pietra-main.jpg" alt="Suite Pietra — Living Room" onerror="this.onerror=null">
         <div class="suite-thumb-overlay"></div>
       </div>
       <div class="suite-header">
@@ -1266,7 +1266,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <!-- SUITE CIELO -->
     <div class="suite-card" id="card-cielo">
       <div class="suite-thumb-wrap">
-        <img class="suite-thumb" src="cielo-main.jpg" alt="Suite Cielo — Kitchen Living">
+        <img class="suite-thumb" src="cielo-main.jpg" alt="Suite Cielo — Kitchen Living" onerror="this.onerror=null">
         <div class="suite-thumb-overlay"></div>
       </div>
       <div class="suite-header">
@@ -1316,7 +1316,7 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <!-- VILLA COMPLETA -->
     <div class="suite-card" id="card-villa">
       <div class="suite-thumb-wrap">
-        <img class="suite-thumb" src="hero.jpg" alt="Villa Completa" style="object-position:center 40%">
+        <img class="suite-thumb" src="hero.jpg" alt="Villa Completa" style="object-position:center 40%" onerror="this.src='hero_new.jpeg'">
         <div class="suite-thumb-overlay"></div>
       </div>
       <div class="suite-header">
