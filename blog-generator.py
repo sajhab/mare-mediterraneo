@@ -17,6 +17,7 @@ import json
 import re
 import sys
 import datetime
+import random
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -95,6 +96,36 @@ RSS_FEEDS = [
     "https://www.italia.it/en/rss.xml",
 ]
 
+# ── ARTICLE FORMAT ROTATION ──────────────────────────────────
+# One format is picked randomly each day to vary article structure.
+# This keeps content natural and avoids repetitive patterns.
+ARTICLE_FORMATS = [
+    {
+        "name": "standard",
+        "instruction": "Write a well-structured article with H2 subheadings covering the topic in depth."
+    },
+    {
+        "name": "listicle",
+        "instruction": "Write as a numbered list article (e.g. '7 reasons...', '5 best...', '10 things...'). Use a numbered H2 for each point with a short paragraph underneath each one."
+    },
+    {
+        "name": "qa",
+        "instruction": "Write as a Q&A article. Open with a brief intro, then structure the body as a series of questions (in bold or H2) with helpful answers. Use questions a real tourist would ask."
+    },
+    {
+        "name": "personal_story",
+        "instruction": "Write in a first-person narrative style, as if a knowledgeable local is telling the story of a real experience or visit. Warm, personal, anecdotal — with practical tips woven in naturally."
+    },
+    {
+        "name": "comparison",
+        "instruction": "Write as a comparison article (e.g. 'A vs B', 'Option 1 vs Option 2'). Use H2s for each option, cover pros and cons, and end with a clear recommendation for different types of travellers."
+    },
+    {
+        "name": "seasonal_guide",
+        "instruction": "Write as a seasonal or month-by-month guide. Structure around time of year — what to expect, what to do, weather, crowds, prices. Practical and specific to Salento."
+    },
+]
+
 ARTICLE_PROMPT = """You are a warm, knowledgeable local travel writer for Mare Mediterraneo, a vacation rental in Torre Chianca, Salento, 15 minutes from Lecce.
 
 Write a {word_count} word article in {language} about: {topic}
@@ -115,6 +146,7 @@ REQUIREMENTS:
 - Mention direct booking saves 12-15% versus Airbnb fees
 - Write in {language} — native quality, NOT translated, freshly written for {language}-speaking readers
 - Structure with H2 subheadings for readability
+- ARTICLE FORMAT: {format_instruction}
 - Total article word count: approximately {word_count} words
 
 OUTPUT FORMAT — return only a JSON object with these exact fields, no markdown fences, no backticks:
@@ -538,12 +570,16 @@ def main():
     log("Generating master article (EN) to extract image prompt...")
     lang_names = {"it": "Italian", "de": "German", "fr": "French", "en": "English"}
 
+    article_format = random.choice(ARTICLE_FORMATS)
+    log("Article format for today: " + article_format["name"])
+
     master_prompt = ARTICLE_PROMPT.format(
         word_count=topic.get("word_count", 900),
         language="English",
         topic=topic["topic"],
         angle=write_angle,
-        keywords=topic.get("target_keywords", "")
+        keywords=topic.get("target_keywords", ""),
+        format_instruction=article_format["instruction"]
     )
     master_data = call_claude(master_prompt, "en")
     if not master_data:
@@ -613,7 +649,8 @@ def main():
             language=lang_names[lang],
             topic=topic["topic"],
             angle=write_angle,
-            keywords=topic.get("target_keywords", "")
+            keywords=topic.get("target_keywords", ""),
+            format_instruction=article_format["instruction"]
         )
         data = call_claude(prompt, lang)
         if data:
