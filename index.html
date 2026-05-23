@@ -3687,30 +3687,55 @@ if(!localStorage.getItem('mm_lang_chosen')){
       const newNightlyTotal = newNights * sr.price;
       const newTotal        = newNightlyTotal + sr.cleaning;
       function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
-      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px">'
+      function eRowOld(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>'; }
+      function eRowNew(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>'; }
+
+      // Original booking totals
+      const origSuiteRates = suiteRates[b.suite] || suiteRates.pietra;
+      const origNights     = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
+      const origTotal      = b.total_price || (origNights * origSuiteRates.price + origSuiteRates.cleaning);
+      const origSuiteName  = sn[b.suite] || b.suite;
+
+      // ── OWNER EMAIL ──
+      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
         + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Booking Updated — ' + ref + '</h2>'
-        + '<table style="border-collapse:collapse;width:100%">'
-        + eRow('Reference', ref)
-        + (suiteChanged
-            ? '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Suite (old)</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;text-align:right;text-decoration:line-through">' + (sn[b.suite]||b.suite) + '</td></tr><tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">Suite (new)</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right">' + displaySuite + '</td></tr>'
-            : eRow('Suite', displaySuite))
-        + eRow('Guest', b.guest) + eRow('Email', b.email)
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">Old dates</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;text-align:right;text-decoration:line-through">' + b.checkin + ' → ' + b.checkout + '</td></tr>'
-        + '<tr><td style="padding:7px 0;color:#27ae60;font-size:11px;text-transform:uppercase">New dates</td><td style="padding:7px 0;color:#27ae60;text-align:right">' + newCi + ' → ' + newCo + ' (' + newNights + ' nights)</td></tr>'
+        + eRow('Reference', ref) + eRow('Guest', b.guest) + eRow('Email', b.email) + eRow('Phone', b.phone||'—')
+        + '<tr><td colspan="2" style="padding:14px 0 6px;color:#888;font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #1a1a2e">Original Booking</td></tr>'
+        + eRowOld('Suite', origSuiteName)
+        + eRowOld('Check-in', b.checkin)
+        + eRowOld('Check-out', b.checkout)
+        + eRowOld('Nights', origNights)
+        + eRowOld('Total', '€' + origTotal)
+        + '<tr><td colspan="2" style="padding:14px 0 6px;color:#27ae60;font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #1a1a2e">Updated Booking</td></tr>'
+        + (suiteChanged ? eRowNew('Suite', displaySuite) : eRow('Suite', displaySuite))
+        + eRowNew('Check-in', newCi + ' · from 15:00')
+        + eRowNew('Check-out', newCo + ' · by 10:00')
+        + eRowNew('Nights', newNights)
         + eRow('Nightly rate', '€' + sr.price + ' × ' + newNights + ' = €' + newNightlyTotal)
         + eRow('Cleaning fee', '€' + sr.cleaning)
-        + '<tr><td style="padding:7px 0;color:#C8963E;font-size:11px;text-transform:uppercase;font-weight:bold">New total</td><td style="padding:7px 0;color:#C8963E;font-size:18px;font-family:Georgia,serif;text-align:right">€' + newTotal + '</td></tr>'
+        + '<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase;font-weight:bold">New total</td><td style="padding:10px 0;color:#C8963E;font-size:20px;font-family:Georgia,serif;text-align:right">€' + newTotal + '</td></tr>'
         + '</table></div>';
+
+      // ── GUEST EMAIL ──
       const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
         + '<p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p>'
         + '<p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p>'
-        + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking dates have been updated ✅</h2>'
+        + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking has been updated ✅</h2>'
         + '<p style="color:#666;margin:0 0 22px;font-size:13px">Reference: ' + ref + '</p>'
+        + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">Original booking</p>'
+        + '<table style="border-collapse:collapse;width:100%;margin-bottom:20px">'
+        + eRowOld('Suite', origSuiteName)
+        + eRowOld('Check-in', b.checkin)
+        + eRowOld('Check-out', b.checkout)
+        + eRowOld('Nights', origNights)
+        + eRowOld('Total', '€' + origTotal)
+        + '</table>'
+        + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#27ae60;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">Updated booking</p>'
         + '<table style="border-collapse:collapse;width:100%">'
-        + eRow('Suite', sn[b.suite]||b.suite)
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">New check-in</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right">' + newCi + ' · from 15:00</td></tr>'
-        + '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">New check-out</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right">' + newCo + ' · by 10:00</td></tr>'
-        + eRow('Nights', newNights)
+        + (suiteChanged ? eRowNew('Suite', displaySuite) : eRow('Suite', displaySuite))
+        + eRowNew('Check-in', newCi + ' · from 15:00')
+        + eRowNew('Check-out', newCo + ' · by 10:00')
+        + eRowNew('Nights', newNights)
         + eRow('Nightly rate', '€' + sr.price + ' × ' + newNights + ' = €' + newNightlyTotal)
         + eRow('Cleaning fee', '€' + sr.cleaning)
         + '<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">New total</td><td style="padding:12px 0 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€' + newTotal + '</td></tr>'
