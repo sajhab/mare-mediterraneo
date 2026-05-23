@@ -2289,9 +2289,16 @@ window.bkOpenPanel=function(){
   if(BK.nights<CFG.MIN_NIGHTS){msg.textContent='Minimum stay is '+CFG.MIN_NIGHTS+' nights.';msg.className='bk-msg warn';return;}
   if(isConflict(BK.suite,BK.checkin,BK.checkout)){msg.textContent=SUITES[BK.suite].name+' is not available for these dates.';msg.className='bk-msg err';return;}
   var s=SUITES[BK.suite];var ep=effPrice(s);
-  BK.price=ep;BK.cleaning=s.cleaning;BK.total=BK.nights*ep+s.cleaning;
+  BK.price=ep;BK.cleaning=s.cleaning;
+  // Base total without coupon
+  var baseNights=BK.nights*ep;
+  // Apply coupon if one is active — discount on nights only, NOT cleaning
+  var coupon=window._BK_COUPON||null;
+  var discountAmt=coupon?Math.round(baseNights*coupon.pct/100):0;
+  BK.total=baseNights-discountAmt+s.cleaning;
+  BK.coupon=coupon||null;
   qs('bkR_suite').textContent=s.name;qs('bkR_in').textContent=fmtDate(BK.checkin);qs('bkR_out').textContent=fmtDate(BK.checkout);
-  qs('bkR_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');qs('bkR_total').textContent='€'+BK.total;
+  qs('bkR_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');qs('bkR_total').textContent='€'+BK.total+(coupon?' ('+coupon.pct+'% discount applied)':'');
   qs('bkPanelSuite').textContent=s.name;qs('bkPanelTitle').textContent='Your Details';
   ['bkName','bkEmail','bkPhone','bkMsg'].forEach(function(id){qs(id).value='';});
   qs('bkStep2Err').className='bk-msg';
@@ -2311,7 +2318,15 @@ window.bkToSummary=function(){
   qs('bkS_suite').textContent=s.name;qs('bkS_in').textContent=fmtDate(BK.checkin);qs('bkS_out').textContent=fmtDate(BK.checkout);
   qs('bkS_nights').textContent=BK.nights+' nights';qs('bkS_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');
   var rateLabel=disc>0?'€'+ep+' ('+disc+'% off €'+s.price+') × '+BK.nights:'€'+ep+' × '+BK.nights;
-  qs('bkS_rate').textContent=rateLabel;qs('bkS_cleaning').textContent='€'+s.cleaning;qs('bkS_total').textContent='€'+BK.total;
+  qs('bkS_rate').textContent=rateLabel;qs('bkS_cleaning').textContent='€'+s.cleaning;
+  // Show coupon discount row if applied
+  var coupon=BK.coupon||null;
+  var discountAmt=coupon?Math.round(BK.nights*ep*coupon.pct/100):0;
+  var bkSDiscount=document.getElementById('bkS_discountRow');
+  if(bkSDiscount){bkSDiscount.style.display=coupon?'flex':'none';}
+  var bkSDiscountVal=document.getElementById('bkS_discountVal');
+  if(bkSDiscountVal&&coupon){bkSDiscountVal.textContent='−€'+discountAmt+' ('+coupon.pct+'% off nights)';}
+  qs('bkS_total').textContent='€'+BK.total;
   qs('bkS_name').textContent=name;qs('bkS_email').textContent=email;qs('bkS_phone').textContent=phone;
   qs('bkPanelTitle').textContent='Confirm Booking';
   window._bkDraft=JSON.parse(JSON.stringify(BK));
@@ -2329,10 +2344,14 @@ window.bkSubmit=async function(){
   try{await sbInsert('bookings',rows);_bookings=_bookings.concat(rows);}catch(e){console.error('[MM]',e);}
   var s=SUITES[BK.suite];var disc=s.discount||0;var ep=effPrice(s);
   var rateLabel=disc>0?'€'+ep+' ('+disc+'% off €'+s.price+') × '+BK.nights:'€'+ep+' × '+BK.nights;
+  var coupon=BK.coupon||null;
+  var discountAmt=coupon?Math.round(BK.nights*ep*coupon.pct/100):0;
+  var couponRow=coupon?row('Discount ('+coupon.pct+'% off nights)','−€'+discountAmt+' [code: '+coupon.code+']'):'';
+  var couponRowG=coupon?gRow('Discount ('+coupon.pct+'% off nights)','−€'+discountAmt,false):'';
   function row(k,v){return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">'+v+'</td></tr>';}
   function gRow(k,v,gold){return '<tr><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:'+(gold?'#C8963E':'#F5EFE6')+';text-align:right">'+v+'</td></tr>';}
-  var ownerHtml='<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">New booking — '+ref+'</h2><table style="border-collapse:collapse;width:100%">'+row('Suite',s.name)+row('Check-in',BK.checkin)+row('Check-out',BK.checkout)+row('Nights',BK.nights)+row('Guests',BK.guests)+row('Rate',rateLabel)+row('Cleaning','€'+s.cleaning)+'<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase">TOTAL</td><td style="padding:10px 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr>'+row('Name',BK.name)+row('Email',BK.email)+row('Phone',BK.phone)+(BK.message?row('Message',BK.message):'')+'</table></div>';
-  var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking request is received</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">Reference: '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow('Suite',s.name,true)+gRow('Check-in',BK.checkin+' · from 15:00',false)+gRow('Check-out',BK.checkout+' · by 10:00',false)+gRow('Nights',BK.nights,false)+gRow('Guests',BK.guests,false)+gRow('Rate',rateLabel,false)+gRow('Cleaning','€'+s.cleaning,false)+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">TOTAL</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table><div style="margin:24px 0;padding:18px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.2);border-radius:4px"><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">We will confirm your booking within 24 hours. Questions? <a href="https://wa.me/35699699184" style="color:#C8963E">WhatsApp +356 9969 9184</a></p></div><p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
+  var ownerHtml='<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">New booking — '+ref+'</h2><table style="border-collapse:collapse;width:100%">'+row('Suite',s.name)+row('Check-in',BK.checkin)+row('Check-out',BK.checkout)+row('Nights',BK.nights)+row('Guests',BK.guests)+row('Rate',rateLabel)+row('Cleaning','€'+s.cleaning)+couponRow+'<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase">TOTAL</td><td style="padding:10px 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr>'+row('Name',BK.name)+row('Email',BK.email)+row('Phone',BK.phone)+(BK.message?row('Message',BK.message):'')+'</table></div>';
+  var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking request is received</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">Reference: '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow('Suite',s.name,true)+gRow('Check-in',BK.checkin+' · from 15:00',false)+gRow('Check-out',BK.checkout+' · by 10:00',false)+gRow('Nights',BK.nights,false)+gRow('Guests',BK.guests,false)+gRow('Rate',rateLabel,false)+gRow('Cleaning','€'+s.cleaning,false)+couponRowG+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">TOTAL</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table><div style="margin:24px 0;padding:18px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.2);border-radius:4px"><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">We will confirm your booking within 24 hours. Questions? <a href="https://wa.me/35699699184" style="color:#C8963E">WhatsApp +356 9969 9184</a></p></div><p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
   var emails=[{to:CFG.OWNER_EMAIL,subject:'[Mare Med] New booking — '+ref+' — '+BK.name,html:ownerHtml},{to:BK.email,subject:'Booking received — '+s.name+' — '+ref,html:guestHtml}];
   try{
     // Calls Supabase Edge Function — avoids browser CORS block on api.resend.com
@@ -2596,6 +2615,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
         <div class="bk-sum-row"><span class="bk-sum-key">Guests</span><span class="bk-sum-val" id="bkS_guests">—</span></div>
         <div class="bk-sum-row"><span class="bk-sum-key">Nightly rate</span><span class="bk-sum-val" id="bkS_rate">—</span></div>
         <div class="bk-sum-row"><span class="bk-sum-key">Cleaning fee</span><span class="bk-sum-val" id="bkS_cleaning">—</span></div>
+        <div class="bk-sum-row" id="bkS_discountRow" style="display:none"><span class="bk-sum-key" style="color:#27ae60">Discount</span><span class="bk-sum-val" id="bkS_discountVal" style="color:#27ae60">—</span></div>
         <div class="bk-sum-total-row"><span class="bk-sum-total-key">Total</span><span class="bk-sum-total-val" id="bkS_total">—</span></div>
       </div>
       <div class="bk-divider"></div>
