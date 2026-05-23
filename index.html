@@ -485,8 +485,9 @@ footer{background:var(--notte);padding:48px 20px 36px;border-top:1px solid rgba(
 
 /* ── COUPON BANNER ── */
 #couponBanner{display:none;background:linear-gradient(90deg,rgba(200,150,62,0.12),rgba(200,150,62,0.06),rgba(200,150,62,0.12));border-bottom:1px solid rgba(200,150,62,0.25);padding:0;overflow:hidden;position:relative;z-index:190}
-#couponBanner.visible{display:block;animation:bannerSlide 0.5s ease}
-@keyframes bannerSlide{from{height:0;opacity:0}to{height:auto;opacity:1}}
+#couponBanner.visible{display:block}
+#couponBanner .banner-inner{animation:bannerFadeIn 0.5s ease}
+@keyframes bannerFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .banner-inner{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 48px 10px 16px;flex-wrap:wrap;text-align:center}
 .banner-text{font-size:11px;letter-spacing:1px;color:var(--pietra)}
 .banner-em{color:var(--gold);font-weight:600}
