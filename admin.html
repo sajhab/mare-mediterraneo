@@ -1441,12 +1441,19 @@ async function saveCouponSettings() {
   var pct     = parseInt(document.getElementById('cpPct').value) || 10;
   var text    = document.getElementById('cpBannerText').value.trim() || 'Subscribe & get '+pct+'% off your booking';
   try {
-    var r = await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1', {
-      method:'PATCH', headers:{...sbHeaders(),'Prefer':'return=minimal'},
-      body: JSON.stringify({active:active, show_banner:banner, discount_pct:pct, banner_text:text, updated_at:new Date().toISOString()})
+    // Use UPSERT so it works even if row doesn't exist
+    var r = await fetch(SB_URL+'/rest/v1/coupon_settings', {
+      method:'POST',
+      headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates,return=minimal'}),
+      body: JSON.stringify({id:1, active:active, show_banner:banner, discount_pct:pct, banner_text:text, updated_at:new Date().toISOString()})
     });
-    if(r.ok) showToast('Coupon settings saved ✓');
-    else showToast('Error saving settings');
+    if(r.ok || r.status===204 || r.status===200) {
+      showToast('Coupon settings saved ✓');
+    } else {
+      var errBody = await r.text();
+      console.error('[Coupon] save error:', r.status, errBody);
+      showToast('Error saving — check console (status '+r.status+')');
+    }
   } catch(e) { showToast('Error: '+e.message); }
 }
 
