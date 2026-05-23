@@ -3263,6 +3263,12 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     const r = reply.toLowerCase();
 
+    // ── If we're in a tokiBooking step, route through handleBookingStep ──
+    if (tokiBooking) {
+      handleBookingStep(reply);
+      return;
+    }
+
     // Booking lookup triggers
     if (['my booking / reservation','la mia prenotazione','meine buchung','ma réservation',
          'my booking details'].some(k => r.includes(k)) || r === 'my booking' || r === 'my reservation') {
