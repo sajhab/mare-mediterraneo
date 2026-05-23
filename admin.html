@@ -204,6 +204,8 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <button class="tab-btn" data-tab="photos">Photos</button>
     <button class="tab-btn" data-tab="reviews">Reviews</button>
     <button class="tab-btn" data-tab="coupons">Coupons</button>
+    <button class="tab-btn" data-tab="analytics">Analytics</button>
+    <button class="tab-btn" data-tab="finances">Finances</button>
     <button class="tab-btn" data-tab="settings">Settings</button>
   </div>
 
@@ -250,9 +252,112 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <!-- BOOKINGS -->
     <div id="panel-bookings" class="tab-panel">
       <div class="sec-title">All Bookings</div>
-      <div class="sec-sub">Manage all reservations</div>
+      <div class="sec-sub">Manage all reservations · click a booking to see its full journey</div>
       <div style="margin-bottom:20px"><button class="btn btn-gold" id="openAddBtn2">+ Add Booking</button></div>
       <div id="allBookingsList"></div>
+      <!-- FUNNEL DRAWER -->
+      <div id="funnelDrawer" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;padding:20px">
+        <div style="background:var(--notte2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:28px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--sabbia)" id="funnelRef">—</div>
+              <div style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:2px" id="funnelGuest">—</div>
+            </div>
+            <button onclick="document.getElementById('funnelDrawer').style.display='none'" style="background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer;font-family:'Tenor Sans',sans-serif;font-size:10px">Close</button>
+          </div>
+          <div id="funnelTimeline"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="panel-analytics" class="tab-panel">
+      <div class="sec-title">Analytics</div>
+      <div class="sec-sub">Toki conversations · guest behaviour · top questions</div>
+      <div class="stats-row" id="analyticsStats">
+        <div class="stat-card"><div class="stat-num" id="anTotal">—</div><div class="stat-label">Total Chats</div></div>
+        <div class="stat-card"><div class="stat-num" id="anBooked">—</div><div class="stat-label">Chats that Booked</div></div>
+        <div class="stat-card"><div class="stat-num" id="anAnon">—</div><div class="stat-label">Anonymous</div></div>
+        <div class="stat-card"><div class="stat-num" id="anLangs">—</div><div class="stat-label">Languages</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Recent Conversations</span>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="anSearch" placeholder="Search topics…" class="form-input" style="width:180px;padding:6px 10px;font-size:12px">
+            <button class="btn btn-outline" style="font-size:8px;padding:6px 12px" onclick="loadAnalytics()">↻ Refresh</button>
+          </div>
+        </div>
+        <div id="anList"><div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div></div>
+      </div>
+      <!-- CHAT DETAIL DRAWER -->
+      <div id="chatDrawer" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;padding:20px">
+        <div style="background:var(--notte2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:28px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--sabbia)" id="chatDrawerTitle">Chat</div>
+            <button onclick="document.getElementById('chatDrawer').style.display='none'" style="background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:2px;cursor:pointer;font-family:'Tenor Sans',sans-serif;font-size:10px">Close</button>
+          </div>
+          <div id="chatDrawerMessages"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCES -->
+    <div id="panel-finances" class="tab-panel">
+      <div class="sec-title">Finances</div>
+      <div class="sec-sub">Revenue overview · cleaning costs · net income</div>
+      <!-- FILTER -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
+        <select class="form-select" id="finYear" style="width:100px" onchange="loadFinances()">
+          <option value="all">All time</option>
+        </select>
+        <select class="form-select" id="finMonth" style="width:120px" onchange="loadFinances()">
+          <option value="all">All months</option>
+          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select>
+        <select class="form-select" id="finSuite" style="width:140px" onchange="loadFinances()">
+          <option value="all">All suites</option>
+          <option value="pietra">Suite Pietra</option>
+          <option value="cielo">Suite Cielo</option>
+          <option value="villa">Villa Completa</option>
+        </select>
+      </div>
+      <!-- SUMMARY CARDS -->
+      <div class="stats-row" style="grid-template-columns:repeat(2,1fr)" id="finCards">
+        <div class="stat-card"><div class="stat-num" id="finRevenue">—</div><div class="stat-label">Reservation Revenue</div><div style="font-size:9px;color:var(--muted);margin-top:4px">nightly totals from bookings</div></div>
+        <div class="stat-card"><div class="stat-num" id="finCleaningIn">—</div><div class="stat-label">Cleaning Fees Charged</div><div style="font-size:9px;color:var(--muted);margin-top:4px">cleaning fees paid by guests</div></div>
+        <div class="stat-card"><div class="stat-num" id="finCleaningOut">—</div><div class="stat-label">Cleaning Costs Paid</div><div style="font-size:9px;color:var(--muted);margin-top:4px">your actual cleaning expenses</div></div>
+        <div class="stat-card" style="border-color:rgba(200,150,62,0.3)"><div class="stat-num" style="color:var(--gold)" id="finNet">—</div><div class="stat-label">Net Income</div><div style="font-size:9px;color:var(--muted);margin-top:4px">revenue + cleaning fees − costs</div></div>
+      </div>
+      <!-- ADD CLEANING COST -->
+      <div class="card" style="margin-top:20px">
+        <div class="card-title">Add Cleaning Cost</div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">Suite</label>
+            <select class="form-select" id="fcSuite">
+              <option value="pietra">Suite Pietra</option>
+              <option value="cielo">Suite Cielo</option>
+              <option value="villa">Villa Completa</option>
+              <option value="all">All / General</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Amount (€)</label><input type="number" class="form-input" id="fcAmount" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="fcDate"></div>
+          <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-input" id="fcNotes" placeholder="Cleaner name, extra items…"></div>
+        </div>
+        <button class="btn btn-gold" style="margin-top:12px" onclick="addCleaningCost()">Add Cost</button>
+      </div>
+      <!-- CLEANING COSTS LIST -->
+      <div class="card">
+        <div class="card-title" style="display:flex;justify-content:space-between">
+          <span>Cleaning Cost Entries</span>
+          <button class="btn btn-outline" style="font-size:8px;padding:6px 12px" onclick="loadFinances()">↻ Refresh</button>
+        </div>
+        <div id="finCostList"><div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div></div>
+      </div>
     </div>
 
     <!-- TOKI -->
@@ -700,7 +805,17 @@ function renderAllBookings() {
     .sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; });
   if (all.length === 0) { el.innerHTML = '<p style="color:var(--muted);padding:20px 0">No bookings yet.</p>'; return; }
   el.innerHTML = all.map(function(b) {
-    return '<div class="booking-item"><div><div class="booking-suite">' + (SUITES[b.suite]||b.suite) + '</div><div class="booking-dates">' + fmtDate(b.checkin) + ' to ' + fmtDate(b.checkout) + '</div><div class="booking-guest">' + (b.guest||'') + (b.notes ? ' - ' + b.notes : '') + '</div></div><div style="display:flex;gap:8px;align-items:center"><span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span><button class="btn btn-red" onclick="deleteEntry(' + b.id + ',\'' + (b.isBlock ? 'block' : 'booking') + '\')">X</button></div></div>';
+    return '<div class="booking-item" style="flex-wrap:wrap;gap:8px">'
+      + '<div style="flex:1;min-width:180px">'
+      + '<div class="booking-suite">' + (SUITES[b.suite]||b.suite) + '</div>'
+      + '<div class="booking-dates">' + fmtDate(b.checkin) + ' → ' + fmtDate(b.checkout) + '</div>'
+      + '<div class="booking-guest">' + (b.guest||'') + (b.total_price ? ' · €'+b.total_price : '') + (b.notes ? ' · ' + b.notes : '') + '</div>'
+      + '</div>'
+      + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
+      + '<span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span>'
+      + (b.reference_id ? '<button class="btn btn-outline" style="font-size:8px;padding:4px 8px" onclick="openFunnel(\'' + b.reference_id + '\',\'' + (b.guest||'').replace(/'/g,'') + '\')">Journey</button>' : '')
+      + '<button class="btn btn-red" onclick="deleteEntry(' + b.id + ',\'' + (b.isBlock ? 'block' : 'booking') + '\')">X</button>'
+      + '</div></div>';
   }).join('');
 }
 
@@ -1335,6 +1450,8 @@ for (var ti = 0; ti < tabBtns.length; ti++) {
     if (tab === 'photos') loadPhotos();
     if (tab === 'reviews') loadReviews();
     if (tab === 'coupons') { loadCouponSettings(); loadCouponSignups(); }
+    if (tab === 'analytics') loadAnalytics();
+    if (tab === 'finances')  loadFinances();
   });
 }
 
@@ -1381,6 +1498,208 @@ document.getElementById('newCheckin').addEventListener('change', function() {
 document.getElementById('blockFrom').addEventListener('change', function() {
   document.getElementById('blockTo').min = addDays(this.value, 1);
 });
+
+// ── FUNNEL ──────────────────────────────────────────────────
+async function openFunnel(ref, guest) {
+  document.getElementById('funnelRef').textContent = ref;
+  document.getElementById('funnelGuest').textContent = guest;
+  document.getElementById('funnelTimeline').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div>';
+  document.getElementById('funnelDrawer').style.display = 'flex';
+  try {
+    var r = await fetch(SB_URL + '/rest/v1/booking_events?booking_ref=eq.' + encodeURIComponent(ref) + '&order=created_at.asc&select=*', {headers: sbHeaders()});
+    var events = await r.json();
+    if (!events || !events.length) {
+      document.getElementById('funnelTimeline').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">No events recorded for this booking.</div>';
+      return;
+    }
+    var icons = {created:'🌊', changed:'✏️', cancelled:'❌', coupon_applied:'🎟️'};
+    var colors = {created:'var(--gold)', changed:'#5BC4D8', cancelled:'#e74c3c', coupon_applied:'#27ae60'};
+    document.getElementById('funnelTimeline').innerHTML = events.map(function(ev) {
+      var d = new Date(ev.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      var color = colors[ev.event_type] || 'var(--muted)';
+      var icon  = icons[ev.event_type]  || '•';
+      var body  = '';
+      if (ev.new_data) {
+        var n = ev.new_data;
+        if (n.suite)    body += '<div style="font-size:11px;color:var(--text);margin-top:4px">Suite: ' + (SUITES[n.suite]||n.suite) + '</div>';
+        if (n.checkin)  body += '<div style="font-size:11px;color:var(--text)">Dates: ' + n.checkin + ' → ' + n.checkout + ' (' + n.nights + ' nights)</div>';
+        if (n.total)    body += '<div style="font-size:11px;color:var(--gold)">Total: €' + n.total + '</div>';
+        if (n.coupon)   body += '<div style="font-size:11px;color:#27ae60">Coupon: ' + n.coupon.code + ' (−' + n.coupon.pct + '%)</div>';
+      }
+      if (ev.old_data && ev.event_type === 'changed') {
+        var o = ev.old_data;
+        body += '<div style="font-size:10px;color:var(--muted);margin-top:4px;text-decoration:line-through">Was: ' + (o.checkin||'') + ' → ' + (o.checkout||'') + ' · €' + (o.total||'—') + '</div>';
+      }
+      if (ev.notes) body += '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + ev.notes + '</div>';
+      return '<div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)">'
+        + '<div style="font-size:20px;flex-shrink:0;width:28px;text-align:center">' + icon + '</div>'
+        + '<div style="flex:1">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center">'
+        + '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + color + '">' + ev.event_type.replace('_',' ') + '</span>'
+        + '<span style="font-size:10px;color:var(--muted)">' + d + '</span>'
+        + '</div>' + body + '</div></div>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('funnelTimeline').innerHTML = '<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading journey.</div>';
+  }
+}
+
+// ── ANALYTICS ───────────────────────────────────────────────
+async function loadAnalytics() {
+  try {
+    var r = await fetch(SB_URL + '/rest/v1/toki_chats?order=created_at.desc&select=*', {headers: sbHeaders()});
+    var chats = await r.json();
+    document.getElementById('anTotal').textContent   = chats.length;
+    document.getElementById('anBooked').textContent  = chats.filter(function(c){return c.booked;}).length;
+    document.getElementById('anAnon').textContent    = chats.filter(function(c){return !c.email;}).length;
+    var langs = {};
+    chats.forEach(function(c){ langs[c.lang||'en'] = (langs[c.lang||'en']||0)+1; });
+    document.getElementById('anLangs').textContent  = Object.keys(langs).map(function(l){ return l.toUpperCase()+':'+langs[l]; }).join(' ');
+
+    var search = (document.getElementById('anSearch').value||'').toLowerCase();
+    var filtered = search ? chats.filter(function(c){
+      return JSON.stringify(c.messages||[]).toLowerCase().includes(search);
+    }) : chats;
+
+    if (!filtered.length) { document.getElementById('anList').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">No conversations found.</div>'; return; }
+
+    document.getElementById('anList').innerHTML = filtered.map(function(c) {
+      var date = new Date(c.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      var msgs = c.messages || [];
+      var preview = msgs.filter(function(m){return m.role==='user';}).map(function(m){return m.content;}).slice(0,2).join(' · ').substring(0,120);
+      return '<div class="booking-item" style="flex-wrap:wrap;gap:8px;cursor:pointer" onclick="openChat(\'' + c.id + '\')">'
+        + '<div style="flex:1;min-width:200px">'
+        + '<div style="font-size:10px;color:var(--gold);margin-bottom:2px">' + (c.email||'Anonymous') + ' · ' + (c.lang||'en').toUpperCase() + (c.booked?' · ✅ Booked':'') + '</div>'
+        + '<div style="font-size:12px;color:var(--text);line-height:1.5">' + (preview||'No messages') + '</div>'
+        + '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + date + ' · ' + msgs.length + ' messages</div>'
+        + '</div>'
+        + '<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 8px;border:1px solid var(--border);border-radius:2px">View →</div>'
+        + '</div>';
+    }).join('');
+  } catch(e) { document.getElementById('anList').innerHTML = '<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading chats.</div>'; }
+}
+
+function openChat(id) {
+  var drawer = document.getElementById('chatDrawer');
+  var msgsEl = document.getElementById('chatDrawerMessages');
+  msgsEl.innerHTML = '<div style="color:var(--muted);font-size:12px">Loading…</div>';
+  drawer.style.display = 'flex';
+  fetch(SB_URL + '/rest/v1/toki_chats?id=eq.' + id + '&select=*', {headers: sbHeaders()})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      if (!rows||!rows[0]) return;
+      var c = rows[0];
+      document.getElementById('chatDrawerTitle').textContent = (c.email||'Anonymous') + ' · ' + new Date(c.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      var msgs = c.messages||[];
+      msgsEl.innerHTML = msgs.map(function(m){
+        var isUser = m.role==='user';
+        return '<div style="margin-bottom:12px;text-align:' + (isUser?'right':'left') + '">'
+          + '<div style="display:inline-block;max-width:80%;background:' + (isUser?'rgba(200,150,62,0.15)':'rgba(200,185,154,0.06)') + ';border:1px solid ' + (isUser?'rgba(200,150,62,0.3)':'var(--border)') + ';border-radius:6px;padding:10px 14px">'
+          + '<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">' + (isUser?'Guest':'Toki') + '</div>'
+          + '<div style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">' + (m.content||'').substring(0,500) + '</div>'
+          + '</div></div>';
+      }).join('');
+    });
+}
+
+document.getElementById('anSearch').addEventListener('input', function(){ clearTimeout(this._t); this._t = setTimeout(loadAnalytics, 400); });
+
+// ── FINANCES ────────────────────────────────────────────────
+async function loadFinances() {
+  var year  = document.getElementById('finYear').value;
+  var month = document.getElementById('finMonth').value;
+  var suite = document.getElementById('finSuite').value;
+
+  try {
+    // Populate year filter from bookings
+    var allBookings = bookings.filter(function(b){ return !b.linked_to_villa; });
+    var years = [...new Set(allBookings.map(function(b){ return (b.checkin||'').substring(0,4); }).filter(Boolean))].sort();
+    var yrSel = document.getElementById('finYear');
+    if (yrSel.options.length <= 1 && years.length) {
+      years.forEach(function(y){ var o=document.createElement('option'); o.value=y; o.textContent=y; yrSel.appendChild(o); });
+    }
+
+    // Filter bookings
+    var filtered = allBookings.filter(function(b){
+      if (!b.total_price) return false;
+      if (suite !== 'all' && b.suite !== suite) return false;
+      if (year !== 'all'  && (b.checkin||'').substring(0,4) !== year) return false;
+      if (month !== 'all' && parseInt((b.checkin||'').substring(5,7)) !== parseInt(month)) return false;
+      return true;
+    });
+
+    // Calculate nightly revenue (total - cleaning)
+    var cleaningByS = {pietra:150,cielo:150,villa:250};
+    var revenue = 0, cleaningIn = 0;
+    filtered.forEach(function(b){
+      var cl = cleaningByS[b.suite]||0;
+      cleaningIn += cl;
+      revenue += (b.total_price - cl);
+    });
+
+    // Cleaning costs from DB
+    var cUrl = SB_URL + '/rest/v1/cleaning_costs?select=*&order=date.desc';
+    if (suite !== 'all') cUrl += '&or=(suite.eq.' + suite + ',suite.eq.all)';
+    if (year  !== 'all') cUrl += '&date=gte.' + year + '-01-01&date=lte.' + year + '-12-31';
+    if (month !== 'all') {
+      var m = parseInt(month); var y2 = year==='all'?new Date().getFullYear():parseInt(year);
+      var lastDay = new Date(y2, m, 0).getDate();
+      cUrl += '&date=gte.' + y2+'-'+(m<10?'0'+m:m)+'-01&date=lte.' + y2+'-'+(m<10?'0'+m:m)+'-'+lastDay;
+    }
+    var cr = await fetch(cUrl + '&apikey=' + SB_KEY, {headers: sbHeaders()});
+    var costs = await cr.json();
+    var cleaningOut = costs.reduce(function(s,c){ return s+(parseFloat(c.amount)||0); }, 0);
+
+    document.getElementById('finRevenue').textContent    = '€' + revenue.toLocaleString();
+    document.getElementById('finCleaningIn').textContent = '€' + cleaningIn.toLocaleString();
+    document.getElementById('finCleaningOut').textContent= '€' + cleaningOut.toLocaleString();
+    document.getElementById('finNet').textContent        = '€' + (revenue + cleaningIn - cleaningOut).toLocaleString();
+
+    // Render cost list
+    if (!costs.length) {
+      document.getElementById('finCostList').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">No cleaning costs recorded.</div>';
+    } else {
+      document.getElementById('finCostList').innerHTML = costs.map(function(c){
+        return '<div class="booking-item" style="flex-wrap:wrap;gap:8px">'
+          + '<div style="flex:1"><div style="font-size:10px;color:var(--gold)">' + (SUITES[c.suite]||c.suite||'General') + ' · ' + c.date + '</div>'
+          + '<div style="font-size:13px;color:var(--sabbia)">€' + parseFloat(c.amount).toFixed(2) + '</div>'
+          + (c.notes?'<div style="font-size:10px;color:var(--muted)">'+c.notes+'</div>':'') + '</div>'
+          + '<button class="btn btn-red" onclick="deleteCleaningCost(\''+c.id+'\')">X</button>'
+          + '</div>';
+      }).join('');
+    }
+  } catch(e) { console.error('[Finances]', e); }
+}
+
+async function addCleaningCost() {
+  var suite  = document.getElementById('fcSuite').value;
+  var amount = parseFloat(document.getElementById('fcAmount').value);
+  var date   = document.getElementById('fcDate').value;
+  var notes  = document.getElementById('fcNotes').value.trim();
+  if (!amount || !date) { showToast('Please enter amount and date'); return; }
+  try {
+    await fetch(SB_URL + '/rest/v1/cleaning_costs?apikey=' + SB_KEY, {
+      method: 'POST', headers: Object.assign({}, sbHeaders(), {'Prefer':'return=minimal'}),
+      body: JSON.stringify({suite:suite, amount:amount, date:date, notes:notes})
+    });
+    document.getElementById('fcAmount').value = '';
+    document.getElementById('fcNotes').value  = '';
+    showToast('Cleaning cost added ✓');
+    loadFinances();
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+
+async function deleteCleaningCost(id) {
+  if (!confirm('Delete this entry?')) return;
+  await fetch(SB_URL + '/rest/v1/cleaning_costs?id=eq.' + id + '&apikey=' + SB_KEY, {
+    method: 'DELETE', headers: sbHeaders()
+  });
+  showToast('Deleted ✓');
+  loadFinances();
+}
+
+// Set today as default cleaning date
+document.getElementById('fcDate').value = new Date().toISOString().split('T')[0];
 
 // ══════════════════════════════════════════════════════
 // COUPON ADMIN
