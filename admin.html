@@ -197,12 +197,13 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     </div>
   </div>
   <div class="tabs">
-    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="dashboard">Dashboard</button>
     <button class="tab-btn" data-tab="calendar">Calendar</button>
     <button class="tab-btn" data-tab="bookings">Bookings</button>
     <button class="tab-btn" data-tab="toki">Toki</button>
     <button class="tab-btn" data-tab="photos">Photos</button>
     <button class="tab-btn" data-tab="reviews">Reviews</button>
+    <button class="tab-btn" data-tab="coupons">Coupons</button>
     <button class="tab-btn" data-tab="settings">Settings</button>
   </div>
 
@@ -384,6 +385,62 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         <button class="btn btn-outline" id="revFilterAll" onclick="revSetFilter('all')">All</button>
       </div>
       <div id="revList"><div style="color:var(--muted);font-size:13px;padding:20px 0">Loading reviews...</div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <!-- COUPONS -->
+    <div id="panel-coupons" class="tab-panel">
+      <div class="sec-title">Coupon System</div>
+      <div class="sec-sub">Manage discount codes for new subscribers</div>
+
+      <!-- CONTROLS -->
+      <div class="card">
+        <div class="card-title">Controls</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">System Active</label>
+            <select class="form-select" id="cpActive">
+              <option value="true">✓ Active — accepting signups & validating codes</option>
+              <option value="false">✗ Inactive — feature completely off</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Show Banner on Website</label>
+            <select class="form-select" id="cpBanner">
+              <option value="true">✓ Show banner</option>
+              <option value="false">✗ Hide banner</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Discount %</label>
+            <input type="number" class="form-input" id="cpPct" min="1" max="50" value="10" style="max-width:120px">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Banner Text (shown on website)</label>
+            <input type="text" class="form-input" id="cpBannerText" placeholder="Subscribe & get 10% off your booking">
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="btn btn-gold" onclick="saveCouponSettings()">Save Settings</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row" id="cpStats">
+        <div class="stat-card"><div class="stat-num" id="cpTotal">—</div><div class="stat-label">Total Signups</div></div>
+        <div class="stat-card"><div class="stat-num" id="cpVerified">—</div><div class="stat-label">Verified</div></div>
+        <div class="stat-card"><div class="stat-num" id="cpUsed">—</div><div class="stat-label">Codes Used</div></div>
+        <div class="stat-card"><div class="stat-num" id="cpPending">—</div><div class="stat-label">Pending Verification</div></div>
+      </div>
+
+      <!-- SIGNUPS LIST -->
+      <div class="card">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
+          <span>All Signups</span>
+          <button class="btn btn-outline" style="font-size:8px;padding:6px 12px" onclick="loadCouponSignups()">↻ Refresh</button>
+        </div>
+        <div id="cpList"><div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div></div>
+      </div>
     </div>
 
     <!-- SETTINGS -->
@@ -1323,6 +1380,92 @@ document.getElementById('newCheckin').addEventListener('change', function() {
 document.getElementById('blockFrom').addEventListener('change', function() {
   document.getElementById('blockTo').min = addDays(this.value, 1);
 });
-</script>
+
+// ══════════════════════════════════════════════════════
+// COUPON ADMIN
+// ══════════════════════════════════════════════════════
+async function loadCouponSettings() {
+  try {
+    var r = await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1&select=*', {headers: sbHeaders()});
+    var rows = await r.json();
+    if(!rows||!rows[0]) return;
+    var s = rows[0];
+    document.getElementById('cpActive').value     = s.active ? 'true' : 'false';
+    document.getElementById('cpBanner').value     = s.show_banner ? 'true' : 'false';
+    document.getElementById('cpPct').value        = s.discount_pct;
+    document.getElementById('cpBannerText').value = s.banner_text || '';
+  } catch(e) { console.log('[Coupon] load settings error', e); }
+}
+
+async function loadCouponSignups() {
+  var listEl = document.getElementById('cpList');
+  listEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div>';
+  try {
+    var r = await fetch(SB_URL+'/rest/v1/coupon_signups?select=*&order=created_at.desc', {headers: sbHeaders()});
+    var rows = await r.json();
+    // Stats
+    var total    = rows.length;
+    var verified = rows.filter(function(r){ return r.verified; }).length;
+    var used     = rows.filter(function(r){ return r.used; }).length;
+    var pending  = rows.filter(function(r){ return !r.verified; }).length;
+    document.getElementById('cpTotal').textContent    = total;
+    document.getElementById('cpVerified').textContent = verified;
+    document.getElementById('cpUsed').textContent     = used;
+    document.getElementById('cpPending').textContent  = pending;
+
+    if(!rows.length){ listEl.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">No signups yet.</div>'; return; }
+
+    listEl.innerHTML = rows.map(function(r) {
+      var statusColor = r.used ? '#27ae60' : r.verified ? 'var(--gold)' : 'var(--muted)';
+      var statusLabel = r.used ? 'Used' : r.verified ? 'Active' : 'Pending';
+      var date = new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      return '<div class="booking-item" style="flex-wrap:wrap;gap:8px">'+
+        '<div style="flex:1;min-width:200px">'+
+          '<div style="font-size:10px;letter-spacing:1px;color:var(--gold);margin-bottom:2px">'+r.email+'</div>'+
+          '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:var(--sabbia);letter-spacing:2px">'+r.code+'</div>'+
+          '<div style="font-size:10px;color:var(--muted);margin-top:2px">'+date+'</div>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:8px">'+
+          '<span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid '+statusColor+';color:'+statusColor+'">'+statusLabel+'</span>'+
+          '<button class="btn btn-red" onclick="deleteCoupon(\''+r.id+'\')">Delete</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  } catch(e) { listEl.innerHTML='<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading signups.</div>'; }
+}
+
+async function saveCouponSettings() {
+  var active  = document.getElementById('cpActive').value === 'true';
+  var banner  = document.getElementById('cpBanner').value === 'true';
+  var pct     = parseInt(document.getElementById('cpPct').value) || 10;
+  var text    = document.getElementById('cpBannerText').value.trim() || 'Subscribe & get '+pct+'% off your booking';
+  try {
+    var r = await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1', {
+      method:'PATCH', headers:{...sbHeaders(),'Prefer':'return=minimal'},
+      body: JSON.stringify({active:active, show_banner:banner, discount_pct:pct, banner_text:text, updated_at:new Date().toISOString()})
+    });
+    if(r.ok) showToast('Coupon settings saved ✓');
+    else showToast('Error saving settings');
+  } catch(e) { showToast('Error: '+e.message); }
+}
+
+async function deleteCoupon(id) {
+  if(!confirm('Delete this signup and code? This cannot be undone.')) return;
+  try {
+    await fetch(SB_URL+'/rest/v1/coupon_signups?id=eq.'+id, {method:'DELETE', headers:sbHeaders()});
+    showToast('Deleted ✓');
+    loadCouponSignups();
+  } catch(e) { showToast('Error deleting'); }
+}
+
+// Load coupons when tab is clicked
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    if(this.dataset.tab === 'coupons'){
+      loadCouponSettings();
+      loadCouponSignups();
+    }
+  });
+});</script>
 </body>
 </html>
