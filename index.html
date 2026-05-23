@@ -483,8 +483,35 @@ footer{background:var(--notte);padding:48px 20px 36px;border-top:1px solid rgba(
 .scroll-top.visible{display:flex}
 .scroll-top:hover{background:var(--sabbia);transform:translateY(-2px)}
 
-/* ── REVEAL ── */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.8s ease,transform 0.8s ease}
+/* ── COUPON BANNER ── */
+#couponBanner{display:none;background:linear-gradient(90deg,rgba(200,150,62,0.12),rgba(200,150,62,0.06),rgba(200,150,62,0.12));border-bottom:1px solid rgba(200,150,62,0.25);padding:0;overflow:hidden;position:relative;z-index:190}
+#couponBanner.visible{display:block;animation:bannerSlide 0.5s ease}
+@keyframes bannerSlide{from{height:0;opacity:0}to{height:auto;opacity:1}}
+.banner-inner{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 48px 10px 16px;flex-wrap:wrap;text-align:center}
+.banner-text{font-size:11px;letter-spacing:1px;color:var(--pietra)}
+.banner-em{color:var(--gold);font-weight:600}
+.banner-form{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+.banner-input{background:rgba(200,185,154,0.08);border:1px solid rgba(200,150,62,0.3);border-radius:3px;padding:7px 12px;font-family:'Tenor Sans',sans-serif;font-size:12px;color:var(--text);outline:none;width:200px;max-width:100%}
+.banner-input::placeholder{color:rgba(200,185,154,0.35)}
+.banner-btn{background:var(--gold);color:var(--notte);border:none;border-radius:3px;padding:7px 16px;font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity 0.2s}
+.banner-btn:hover{opacity:0.85}
+.banner-btn:disabled{opacity:0.45;cursor:not-allowed}
+.banner-close{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(200,185,154,0.4);font-size:18px;cursor:pointer;line-height:1;padding:4px}
+.banner-close:hover{color:var(--pietra)}
+.banner-msg{font-size:11px;color:var(--gold);letter-spacing:1px}
+/* Coupon field in booking form */
+.coupon-wrap{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+.coupon-toggle{background:none;border:none;color:rgba(200,185,154,0.5);font-family:'Tenor Sans',sans-serif;font-size:10px;letter-spacing:1px;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+.coupon-toggle:hover{color:var(--pietra)}
+.coupon-field{display:none;margin-top:10px;display:none;flex-direction:column;gap:6px}
+.coupon-field.open{display:flex}
+.coupon-row{display:flex;gap:6px}
+.coupon-input{flex:1;background:rgba(200,185,154,0.06);border:1px solid var(--border);border-radius:3px;padding:10px 12px;font-family:'Tenor Sans',sans-serif;font-size:13px;color:var(--text);outline:none;text-transform:uppercase;letter-spacing:2px}
+.coupon-input::placeholder{text-transform:none;letter-spacing:0;color:rgba(200,185,154,0.3)}
+.coupon-apply-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:3px;padding:10px 14px;font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all 0.2s}
+.coupon-apply-btn:hover{background:rgba(200,150,62,0.1)}
+.coupon-msg{font-size:11px;letter-spacing:0.5px}
+.coupon-msg.ok{color:#27ae60}.coupon-msg.err{color:#e74c3c}
 .reveal.visible{opacity:1;transform:translateY(0)}
 .rd1{transition-delay:0.1s}.rd2{transition-delay:0.2s}
 
@@ -922,6 +949,19 @@ span[data-lang]{display:none}span[data-lang].al{display:inline}
     <span data-lang="fr">Réserver</span>
   </a>
 </nav>
+
+<!-- COUPON ANNOUNCEMENT BANNER -->
+<div id="couponBanner">
+  <div class="banner-inner">
+    <span class="banner-text"><span id="bannerText">Subscribe &amp; get </span><span class="banner-em" id="bannerPct">10%</span><span id="bannerText2"> off your booking</span></span>
+    <div class="banner-form" id="bannerForm">
+      <input class="banner-input" type="email" id="bannerEmail" placeholder="your@email.com" autocomplete="email">
+      <button class="banner-btn" id="bannerBtn" onclick="couponSignup()">Get My Code</button>
+    </div>
+    <div class="banner-msg" id="bannerMsg" style="display:none"></div>
+  </div>
+  <button class="banner-close" onclick="document.getElementById('couponBanner').style.display='none'" title="Close">×</button>
+</div>
 
 <!-- HERO — full landscape photo -->
 <section id="hero">
@@ -1657,7 +1697,19 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
     <div class="psummary" id="psummary">
       <div class="ps-row"><span class="ps-label">Nightly rate</span><span class="ps-val" id="ptotal"></span></div>
       <div class="ps-row"><span class="ps-label">Cleaning fee</span><span class="ps-val" id="ctotal"></span></div>
+      <div class="ps-row" id="couponRow" style="display:none"><span class="ps-label" style="color:#27ae60">Discount</span><span class="ps-val" id="couponDiscount" style="color:#27ae60"></span></div>
       <div class="ps-total"><span class="ps-total-label">Total</span><span class="ps-total-val" id="gtotal"></span></div>
+    </div>
+    <!-- COUPON CODE FIELD (shown when coupon system is active) -->
+    <div class="coupon-wrap" id="couponWrap" style="display:none">
+      <button class="coupon-toggle" onclick="document.getElementById('couponField').classList.toggle('open')">Have a discount code?</button>
+      <div class="coupon-field" id="couponField">
+        <div class="coupon-row">
+          <input class="coupon-input" type="text" id="couponInput" placeholder="Enter code" maxlength="12">
+          <button class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+        </div>
+        <div class="coupon-msg" id="couponMsg"></div>
+      </div>
     </div>
     <button class="submit-btn" id="bkRequestBtn" onclick="bkOpenPanel()">
       <span data-lang="en" class="al">Request Booking</span>
@@ -4153,7 +4205,176 @@ window.setLang = function(l) {
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// SUPABASE PHOTO LOADER
+// COUPON SYSTEM
+// ═══════════════════════════════════════════════════════════
+(function(){
+  var SB  = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+  function hdrs(){ return {'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'}; }
+
+  var couponSettings = null;
+  var appliedCoupon  = null; // {code, pct}
+
+  // ── Load settings & show/hide banner + coupon field ──
+  async function loadCouponSettings(){
+    try {
+      var r = await fetch(SB+'/rest/v1/coupon_settings?id=eq.1&select=*',{headers:hdrs()});
+      var rows = await r.json();
+      if(!rows||!rows[0]) return;
+      couponSettings = rows[0];
+
+      // Banner
+      if(couponSettings.active && couponSettings.show_banner){
+        var dismissed = sessionStorage.getItem('mm_banner_dismissed');
+        if(!dismissed){
+          var pctEl = document.getElementById('bannerPct');
+          if(pctEl) pctEl.textContent = couponSettings.discount_pct+'%';
+          var banner = document.getElementById('couponBanner');
+          if(banner){ banner.classList.add('visible'); }
+        }
+      }
+
+      // Coupon field in booking form
+      if(couponSettings.active){
+        var wrap = document.getElementById('couponWrap');
+        if(wrap) wrap.style.display = 'block';
+      }
+    } catch(e){ console.log('[Coupon] settings load failed:', e.message); }
+  }
+
+  // ── Banner signup ──
+  window.couponSignup = async function(){
+    var emailEl = document.getElementById('bannerEmail');
+    var btn     = document.getElementById('bannerBtn');
+    var msgEl   = document.getElementById('bannerMsg');
+    var formEl  = document.getElementById('bannerForm');
+    var email   = emailEl ? emailEl.value.trim() : '';
+
+    if(!email||!email.includes('@')||!email.includes('.')){
+      emailEl.style.borderColor='#e74c3c'; emailEl.focus(); return;
+    }
+    emailEl.style.borderColor='';
+    btn.disabled = true; btn.textContent = 'Sending…';
+
+    try {
+      // Check if already signed up
+      var check = await fetch(SB+'/rest/v1/coupon_signups?email=eq.'+encodeURIComponent(email)+'&select=verified',{headers:hdrs()});
+      var existing = await check.json();
+      if(existing && existing[0]){
+        formEl.style.display='none';
+        msgEl.textContent = existing[0].verified ? '✓ Check your email — your code was already sent!' : '✓ Check your inbox to verify your email first.';
+        msgEl.style.display='block';
+        sessionStorage.setItem('mm_banner_dismissed','1');
+        return;
+      }
+
+      // Generate code MM-XXXXX
+      var code = 'MM-' + Math.random().toString(36).substr(2,5).toUpperCase();
+      var token = crypto.randomUUID ? crypto.randomUUID() : ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+
+      // Insert signup row
+      var ins = await fetch(SB+'/rest/v1/coupon_signups',{
+        method:'POST', headers:{...hdrs(),'Prefer':'return=minimal'},
+        body: JSON.stringify({email:email, code:code, verify_token:token, verified:false, used:false})
+      });
+      if(!ins.ok){ var e2=await ins.json(); throw new Error(e2.message||'Insert failed'); }
+
+      // Send verification email
+      await fetch(SB+'/functions/v1/send-coupon-email',{
+        method:'POST', headers:hdrs(),
+        body: JSON.stringify({type:'verify', email:email, token:token, discount_pct: couponSettings?couponSettings.discount_pct:10})
+      });
+
+      formEl.style.display='none';
+      msgEl.textContent = '✓ Check your inbox — click the link to get your code!';
+      msgEl.style.display='block';
+      sessionStorage.setItem('mm_banner_dismissed','1');
+
+    } catch(e){
+      btn.disabled=false; btn.textContent='Get My Code';
+      msgEl.textContent = e.message==='duplicate key value violates unique constraint "coupon_signups_email_key"'
+        ? '✓ Already signed up — check your email!'
+        : 'Something went wrong. Please try again.';
+      msgEl.style.color='#e74c3c';
+      msgEl.style.display='block';
+    }
+  };
+
+  // ── Apply coupon in booking form ──
+  window.applyCoupon = async function(){
+    var input  = document.getElementById('couponInput');
+    var msgEl  = document.getElementById('couponMsg');
+    var code   = input ? input.value.trim().toUpperCase() : '';
+    if(!code){ msgEl.textContent='Please enter a code.'; msgEl.className='coupon-msg err'; return; }
+
+    msgEl.textContent='Checking…'; msgEl.className='coupon-msg';
+
+    try {
+      var r = await fetch(SB+'/rest/v1/coupon_signups?code=eq.'+encodeURIComponent(code)+'&select=*',{headers:hdrs()});
+      var rows = await r.json();
+      if(!rows||!rows[0]){ msgEl.textContent='Code not found.'; msgEl.className='coupon-msg err'; return; }
+      var row = rows[0];
+      if(!row.verified){ msgEl.textContent='Please verify your email first.'; msgEl.className='coupon-msg err'; return; }
+      if(row.used){ msgEl.textContent='This code has already been used.'; msgEl.className='coupon-msg err'; return; }
+
+      var pct = couponSettings ? couponSettings.discount_pct : 10;
+      appliedCoupon = {code:code, pct:pct};
+      input.disabled = true;
+
+      msgEl.textContent='✓ '+pct+'% discount applied!'; msgEl.className='coupon-msg ok';
+
+      // Update price display
+      recalcWithCoupon(pct);
+
+    } catch(e){ msgEl.textContent='Error checking code. Try again.'; msgEl.className='coupon-msg err'; }
+  };
+
+  // ── Recalculate price with coupon ──
+  function recalcWithCoupon(pct){
+    // Access BK from booking engine (it's in outer scope via window)
+    var nights = window._BK_NIGHTS || 0;
+    var rate   = window._BK_RATE   || 0;
+    if(!nights||!rate) return;
+    var nightsTotal  = nights * rate;
+    var discountAmt  = Math.round(nightsTotal * pct / 100);
+    var discountRow  = document.getElementById('couponRow');
+    var discountVal  = document.getElementById('couponDiscount');
+    var totalEl      = document.getElementById('gtotal');
+    var cleanEl      = document.getElementById('ctotal');
+
+    if(discountRow) discountRow.style.display='flex';
+    if(discountVal) discountVal.textContent = '−€'+discountAmt;
+
+    // Recalc total
+    var cleanFee = 0;
+    if(cleanEl){ var cv=cleanEl.textContent.replace(/[^0-9]/g,''); cleanFee=parseInt(cv)||0; }
+    if(totalEl) totalEl.textContent = '€'+(nightsTotal - discountAmt + cleanFee);
+
+    // Store on BK for email
+    window._BK_COUPON = {code:appliedCoupon.code, pct:pct, discount:discountAmt};
+  }
+
+  // Expose for booking engine to call after price calc
+  window.getCouponApplied = function(){ return appliedCoupon; };
+  window.recalcCoupon = function(nights, rate){ 
+    window._BK_NIGHTS=nights; window._BK_RATE=rate;
+    if(appliedCoupon) recalcWithCoupon(appliedCoupon.pct);
+  };
+
+  // Banner close — remember dismissal for session
+  var closeBtn = document.querySelector('.banner-close');
+  if(closeBtn){ closeBtn.addEventListener('click',function(){ sessionStorage.setItem('mm_banner_dismissed','1'); }); }
+
+  // Banner email — submit on Enter
+  var bannerEmailEl = document.getElementById('bannerEmail');
+  if(bannerEmailEl){ bannerEmailEl.addEventListener('keydown',function(e){ if(e.key==='Enter') couponSignup(); }); }
+
+  // Init
+  loadCouponSettings();
+})();
+</script>
+
+
 // Loads photos dynamically from Supabase Storage
 // Replaces static GitHub file references
 // ═══════════════════════════════════════════════════════════
