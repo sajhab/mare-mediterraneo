@@ -1334,6 +1334,7 @@ for (var ti = 0; ti < tabBtns.length; ti++) {
     if (tab === 'bookings') renderAllBookings();
     if (tab === 'photos') loadPhotos();
     if (tab === 'reviews') loadReviews();
+    if (tab === 'coupons') { loadCouponSettings(); loadCouponSignups(); }
   });
 }
 
@@ -1458,14 +1459,6 @@ async function deleteCoupon(id) {
   } catch(e) { showToast('Error deleting'); }
 }
 
-// Load coupons when tab is clicked
-document.querySelectorAll('.tab-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    if(this.dataset.tab === 'coupons'){
-      loadCouponSettings();
-      loadCouponSignups();
-    }
-  });
-});</script>
+// End of admin script</script>
 </body>
 </html>
