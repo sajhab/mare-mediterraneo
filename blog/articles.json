@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-05-23-en-why-puglias-olive-oil-is-the-best-in-italy-a-seasonal-travelers-guide",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "Why Puglia's Olive Oil is the Best in Italy: A Seasonal Traveler's Guide",
+    "excerpt": "Experience the richness of Salento with Puglia's renowned olive oil. Explore its history, visit local groves, and enjoy a comfortable stay at Mare Mediterraneo.",
+    "date": "May 23, 2026",
+    "date_iso": "2026-05-23",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1632153630866-f45b76cc58e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjBvbGl2ZSUyMHRyZWVzfGVufDF8MHx8fDE3Nzk1MjcyMDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-05-23-fr-lhuile-dolive-en-pouilles-pourquoi-cest-la-meilleure-ditalie",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "L'huile d'olive en Pouilles : pourquoi c'est la meilleure d'Italie",
+    "excerpt": "La région des Pouilles, et notamment le Salento, est mondialement reconnue pour la qualité exceptionnelle de son huile d'olive. Découvrez pourquoi cette région ",
+    "date": "May 23, 2026",
+    "date_iso": "2026-05-23",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1632153630866-f45b76cc58e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjBvbGl2ZSUyMHRyZWVzfGVufDF8MHx8fDE3Nzk1MjcyMDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-05-23-de-olivenöl-aus-apulien-warum-es-das-beste-italiens-ist",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Olivenöl aus Apulien – Warum es das Beste Italiens ist",
+    "excerpt": "Erfahren Sie, warum Olivenöl aus Apulien berühmt für Qualität ist und entdecken Sie Salento, von malerischen Olivenhainen bis zu charmanten Städten.",
+    "date": "May 23, 2026",
+    "date_iso": "2026-05-23",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1632153630866-f45b76cc58e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjBvbGl2ZSUyMHRyZWVzfGVufDF8MHx8fDE3Nzk1MjcyMDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-05-23-it-lolio-doliva-pugliese-il-tesoro-di-salento",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "L'olio d'oliva pugliese: il tesoro di Salento",
+    "excerpt": "Esplora il Salento e scopri perché l'olio d'oliva pugliese è considerato il migliore d'Italia. Scopri località, frantoi e il comfort di Mare Mediterraneo.",
+    "date": "May 23, 2026",
+    "date_iso": "2026-05-23",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1632153630866-f45b76cc58e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjBvbGl2ZSUyMHRyZWVzfGVufDF8MHx8fDE3Nzk1MjcyMDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
     "slug": "2026-05-22-en-exploring-puglia-wine-primitivo-negroamaro-and-where-to-taste-them",
     "lang": "EN",
     "lang_label": "English",
