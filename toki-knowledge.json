@@ -89,8 +89,11 @@
     "parties": "No parties or events"
   },
   "cancellation": {
-    "lowSeason": "October to May: Full refund if cancelled 5+ days before. No refund under 5 days.",
-    "highSeason": "June to September: 50% refund if cancelled 7+ days before. No refund under 7 days."
+    "lowSeason": "October to May: Full refund if cancelled 14+ days before arrival. No refund under 14 days.",
+    "highSeason": "June to September: 50% refund if cancelled 14+ days before arrival. No refund under 14 days."
+  },
+  "dateChange": {
+    "policy": "Date changes are possible up to 30 days before arrival, subject to availability. Within 30 days of arrival, changes cannot be guaranteed and require owner approval. Guests can request date or suite changes directly via Toki."
   },
   "local": {
     "beach": "The sea is just 400 metres away — a 5 minute walk from the property",
@@ -103,10 +106,10 @@
     "airport": "Brindisi airport is the closest at 40 minutes. Bari airport is 90 minutes away."
   },
   "booking": {
-    "howToBook": "You can check availability on our website and send a booking request via WhatsApp. We confirm within a few hours and arrange secure payment via Stripe.",
+    "howToBook": "Check availability on our website and send a booking request directly via the booking form. We confirm within 24 hours. You can also ask Toki — our AI concierge — to book directly via chat.",
     "payment": "Secure payment via Stripe — all major cards accepted.",
-    "directBookingAdvantage": "Booking directly with us means no platform fees — you save compared to Airbnb or Booking.com.",
-    "whatsapp": "+35699699184"
+    "directBookingAdvantage": "Booking directly with us means no platform fees — you save 12–15% compared to Airbnb or Booking.com.",
+    "support": "For any questions, changes or cancellations, use Toki — our AI concierge available 24/7 on the website."
   },
   "personality": {
     "name": "Toki",
