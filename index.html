@@ -2259,6 +2259,8 @@ function bkCalcTotal(){
   qs('ptotal').innerHTML=rateHtml;
   qs('ctotal').textContent='€'+s.cleaning;
   qs('gtotal').textContent='€'+BK.total;
+  // Reset coupon discount row before reapplying
+  var cRow=qs('couponRow'); if(cRow) cRow.style.display='none';
   if(disc>0){qs('psummary').style.borderColor='rgba(200,150,62,0.4)';qs('psummary').style.background='rgba(200,150,62,0.09)';}
   else{qs('psummary').style.borderColor='';qs('psummary').style.background='';}
   qs('psummary').style.display='block';
@@ -4275,10 +4277,10 @@ window.setLang = function(l) {
       var code = 'MM-' + Math.random().toString(36).substr(2,5).toUpperCase();
       var token = crypto.randomUUID ? crypto.randomUUID() : ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
 
-      // Insert signup row
+      // Insert signup row — lock in current discount % at signup time
       var ins = await fetch(SB+'/rest/v1/coupon_signups',{
         method:'POST', headers:{...hdrs(),'Prefer':'return=minimal'},
-        body: JSON.stringify({email:email, code:code, verify_token:token, verified:false, used:false})
+        body: JSON.stringify({email:email, code:code, verify_token:token, verified:false, used:false, discount_pct: couponSettings?couponSettings.discount_pct:10})
       });
       if(!ins.ok){ var e2=await ins.json(); throw new Error(e2.message||'Insert failed'); }
 
@@ -4320,7 +4322,7 @@ window.setLang = function(l) {
       if(!row.verified){ msgEl.textContent='Please verify your email first.'; msgEl.className='coupon-msg err'; return; }
       if(row.used){ msgEl.textContent='This code has already been used.'; msgEl.className='coupon-msg err'; return; }
 
-      var pct = couponSettings ? couponSettings.discount_pct : 10;
+      var pct = row.discount_pct || (couponSettings ? couponSettings.discount_pct : 10);
       appliedCoupon = {code:code, pct:pct};
       input.disabled = true;
 
@@ -4334,7 +4336,6 @@ window.setLang = function(l) {
 
   // ── Recalculate price with coupon ──
   function recalcWithCoupon(pct){
-    // Access BK from booking engine (it's in outer scope via window)
     var nights = window._BK_NIGHTS || 0;
     var rate   = window._BK_RATE   || 0;
     if(!nights||!rate) return;
@@ -4348,12 +4349,14 @@ window.setLang = function(l) {
     if(discountRow) discountRow.style.display='flex';
     if(discountVal) discountVal.textContent = '−€'+discountAmt;
 
-    // Recalc total
     var cleanFee = 0;
     if(cleanEl){ var cv=cleanEl.textContent.replace(/[^0-9]/g,''); cleanFee=parseInt(cv)||0; }
-    if(totalEl) totalEl.textContent = '€'+(nightsTotal - discountAmt + cleanFee);
+    var newTotal = nightsTotal - discountAmt + cleanFee;
+    if(totalEl) totalEl.textContent = '€'+newTotal;
 
-    // Store on BK for email
+    // ── UPDATE BK.total so booking email + DB record use discounted price ──
+    if(typeof BK !== 'undefined') BK.total = newTotal;
+
     window._BK_COUPON = {code:appliedCoupon.code, pct:pct, discount:discountAmt};
   }
 
