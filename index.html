@@ -2262,6 +2262,8 @@ function bkCalcTotal(){
   if(disc>0){qs('psummary').style.borderColor='rgba(200,150,62,0.4)';qs('psummary').style.background='rgba(200,150,62,0.09)';}
   else{qs('psummary').style.borderColor='';qs('psummary').style.background='';}
   qs('psummary').style.display='block';
+  // Pass to coupon engine so discount recalcs if a code is applied
+  if(window.recalcCoupon) window.recalcCoupon(n, ep);
 }
 
 window.bkSelTab=function(s){
