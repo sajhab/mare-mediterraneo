@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Email — Mare Mediterraneo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#C8963E;--notte:#0A0A12;--notte2:#111120;--sabbia:#F5EFE6;--pietra:#C8B99A;--text:#E8DDD0;--border:rgba(200,185,154,0.15)}
+body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{width:100%;max-width:420px;background:var(--notte2);border:1px solid var(--border);border-radius:8px;padding:40px 32px;text-align:center}
+.logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:var(--pietra);margin-bottom:4px}
+.logo-sub{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:rgba(200,185,154,0.4);margin-bottom:36px}
+.icon{font-size:48px;margin-bottom:20px}
+.title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--sabbia);margin-bottom:12px;line-height:1.2}
+.msg{font-size:14px;color:rgba(232,221,208,0.6);line-height:1.7;margin-bottom:28px}
+.code-box{background:rgba(200,150,62,0.06);border:2px dashed rgba(200,150,62,0.3);border-radius:6px;padding:20px;margin-bottom:24px}
+.code-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:8px}
+.code-val{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--gold);letter-spacing:4px}
+.code-note{font-size:11px;color:rgba(200,185,154,0.4);margin-top:8px}
+.btn{display:inline-block;background:var(--gold);color:var(--notte);text-decoration:none;padding:14px 32px;font-family:'Tenor Sans',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:700;border-radius:3px;margin-top:8px}
+.err{color:#e74c3c;font-size:13px}
+#loading .icon{animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">Mare Mediterraneo</div>
+  <div class="logo-sub">Torre Chianca · Salento</div>
+
+  <!-- LOADING -->
+  <div id="loading">
+    <div class="icon">⏳</div>
+    <div class="title">Verifying your email…</div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success" style="display:none">
+    <div class="icon">🎉</div>
+    <div class="title">Email verified!</div>
+    <p class="msg">Your discount code has been sent to your email. Here it is too — save it!</p>
+    <div class="code-box">
+      <div class="code-label">Your discount code</div>
+      <div class="code-val" id="codeDisplay">—</div>
+      <div class="code-note" id="pctDisplay">10% off · one use per booking</div>
+    </div>
+    <a href="/#booking" class="btn">Book Now</a>
+  </div>
+
+  <!-- ERROR -->
+  <div id="errState" style="display:none">
+    <div class="icon">⚠️</div>
+    <div class="title">Something went wrong</div>
+    <p class="msg err" id="errMsg">This link may have expired or already been used.</p>
+    <a href="/" class="btn" style="margin-top:16px">Back to website</a>
+  </div>
+</div>
+
+<script>
+var SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+
+function show(id){ ['loading','success','errState'].forEach(function(i){ document.getElementById(i).style.display = i===id?'block':'none'; }); }
+function hdrs(){ return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}; }
+
+(async function(){
+  var params = new URLSearchParams(location.search);
+  var token  = params.get('token');
+  var email  = params.get('email');
+
+  if(!token || !email){ show('errState'); document.getElementById('errMsg').textContent='Invalid verification link.'; return; }
+
+  try {
+    // 1. Find the signup by token
+    var r = await fetch(SB_URL+'/rest/v1/coupon_signups?verify_token=eq.'+token+'&email=eq.'+encodeURIComponent(email)+'&select=*',{headers:hdrs()});
+    var rows = await r.json();
+    if(!rows||!rows.length){ show('errState'); return; }
+    var signup = rows[0];
+    if(signup.verified){ 
+      // Already verified — just show code
+      document.getElementById('codeDisplay').textContent = signup.code;
+      show('success'); return;
+    }
+
+    // 2. Mark as verified
+    await fetch(SB_URL+'/rest/v1/coupon_signups?id=eq.'+signup.id, {
+      method:'PATCH', headers:{...hdrs(),'Prefer':'return=minimal'},
+      body: JSON.stringify({verified:true})
+    });
+
+    // 3. Get discount % from settings
+    var sr = await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1&select=discount_pct',{headers:hdrs()});
+    var settings = await sr.json();
+    var pct = (settings&&settings[0]) ? settings[0].discount_pct : 10;
+
+    // 4. Send the code email via edge function
+    await fetch(SB_URL+'/functions/v1/send-coupon-email', {
+      method:'POST', headers:hdrs(),
+      body: JSON.stringify({ type:'code', email:signup.email, code:signup.code, discount_pct:pct })
+    });
+
+    // 5. Show success
+    document.getElementById('codeDisplay').textContent = signup.code;
+    document.getElementById('pctDisplay').textContent  = pct+'% off · one use per booking';
+    show('success');
+
+  } catch(e) {
+    show('errState');
+    document.getElementById('errMsg').textContent = e.message || 'Unexpected error.';
+  }
+})();
+</script>
+</body>
+</html>
