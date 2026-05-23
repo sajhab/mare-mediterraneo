@@ -2442,7 +2442,17 @@ window.bkSubmit=async function(){
   var base={id:id,suite:BK.suite,source:'direct',checkin:BK.checkin,checkout:BK.checkout,guest:BK.name,email:BK.email,phone:BK.phone,notes:BK.message,status:'pending',guests:BK.guests,nights:BK.nights,total_price:BK.total,reference_id:ref,linked_to_villa:false};
   var rows=[base];
   if(BK.suite==='villa'){rows.push(Object.assign({},base,{id:id+1,suite:'pietra',linked_to_villa:true}));rows.push(Object.assign({},base,{id:id+2,suite:'cielo',linked_to_villa:true}));}
-  try{await sbInsert('bookings',rows);_bookings=_bookings.concat(rows);}catch(e){console.error('[MM]',e);}
+  try{
+    await sbInsert('bookings',rows);
+    _bookings=_bookings.concat(rows);
+    // Log funnel event
+    await sbInsert('booking_events',[{
+      booking_ref: ref,
+      event_type: 'created',
+      new_data: {suite:BK.suite,checkin:BK.checkin,checkout:BK.checkout,nights:BK.nights,guests:BK.guests,total:BK.total,coupon:BK.coupon||null},
+      notes: 'Booked via website'
+    }]);
+  }catch(e){console.error('[MM]',e);}
   var s=SUITES[BK.suite];var disc=s.discount||0;var ep=effPrice(s);
   var rateLabel=disc>0?'€'+ep+' ('+disc+'% off €'+s.price+') × '+BK.nights:'€'+ep+' × '+BK.nights;
   var coupon=BK.coupon||null;
@@ -2930,6 +2940,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   </div>
 
   <div class="toki-messages" id="tokiMessages"></div>
+  <div style="padding:6px 14px;font-size:9px;color:rgba(200,185,154,0.3);text-align:center;letter-spacing:0.5px;border-top:1px solid rgba(200,185,154,0.06)">Conversations may be saved to improve our service</div>
 
   <div class="toki-input-wrap">
     <textarea class="toki-input" id="tokiInput" 
@@ -2966,6 +2977,44 @@ if(!localStorage.getItem('mm_lang_chosen')){
   let conversationHistory = [];
   let availabilityData    = null;
   let tokiKnowledge       = null;
+
+  // Chat session tracking
+  const tokiSessionId = 'toki_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+  let tokiChatDbId    = null; // Supabase row ID once created
+  let tokiBooked      = false;
+
+  // ── SAVE TOKI CHAT TO DB ──
+  async function saveTokiChat() {
+    const sl = typeof siteLang === 'function' ? siteLang() : 'en';
+    const email = verifiedGuest ? verifiedGuest.email : null;
+    const payload = {
+      session_id: tokiSessionId,
+      email:      email,
+      messages:   conversationHistory,
+      lang:       sl,
+      booked:     tokiBooked,
+      updated_at: new Date().toISOString()
+    };
+    try {
+      if (!tokiChatDbId) {
+        // First save — INSERT
+        const r = await fetch(SB_URL + '/rest/v1/toki_chats?apikey=' + SB_KEY, {
+          method: 'POST',
+          headers: Object.assign({}, sbHdrs(), {'Prefer':'return=representation'}),
+          body: JSON.stringify(payload)
+        });
+        const rows = await r.json();
+        if (rows && rows[0]) tokiChatDbId = rows[0].id;
+      } else {
+        // Subsequent saves — UPDATE
+        await fetch(SB_URL + '/rest/v1/toki_chats?id=eq.' + tokiChatDbId + '&apikey=' + SB_KEY, {
+          method: 'PATCH',
+          headers: Object.assign({}, sbHdrs(), {'Prefer':'return=minimal'}),
+          body: JSON.stringify(payload)
+        });
+      }
+    } catch(e) { /* non-critical, fail silently */ }
+  }
 
   // Verification state (persisted in sessionStorage across refresh)
   let verifiedGuest    = null;
@@ -3661,7 +3710,21 @@ if(!localStorage.getItem('mm_lang_chosen')){
         });
       }
 
-      // 3. Update verifiedGuest cache so session reflects new dates
+      // 3. Log funnel event
+      const changeType = (newSuite !== b.suite && newSuite) ? 'changed_suite_and_dates' : 'changed_dates';
+      await fetch(SB_URL + '/rest/v1/booking_events?apikey=' + SB_KEY, {
+        method: 'POST',
+        headers: Object.assign({}, sbHdrs(), {'Prefer':'return=minimal'}),
+        body: JSON.stringify({
+          booking_ref: ref,
+          event_type: 'changed',
+          old_data: {suite:b.suite, checkin:b.checkin, checkout:b.checkout, nights:b.nights, total:b.total_price},
+          new_data: {suite:newSuite||b.suite, checkin:newCi, checkout:newCo, nights:newNights, total:newTotal},
+          notes: changeType
+        })
+      });
+
+      // 4. Update verifiedGuest cache so session reflects new dates
       if (verifiedGuest) {
         verifiedGuest.bookings = verifiedGuest.bookings.map(bk => {
           if (bk.id !== b.id) return bk;
@@ -3896,8 +3959,15 @@ if(!localStorage.getItem('mm_lang_chosen')){
         rows.push(Object.assign({}, base, { id: id+2, suite:'cielo',  linked_to_villa:true }));
       }
       await sbInsert('bookings', rows);
-
-      // Emails
+      // Log funnel event
+      await sbInsert('booking_events', [{
+        booking_ref: ref,
+        event_type: 'created',
+        new_data: {suite:bk.suite,checkin:bk.checkin,checkout:bk.checkout,nights:bk.nights,guests:bk.guests,total:bk.total},
+        notes: 'Booked via Toki chat'
+      }]);
+      tokiBooked = true;
+      saveTokiChat();
       function row(k,v){ return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
       const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">🌊 New Toki Booking — ' + ref + '</h2><table style="border-collapse:collapse;width:100%">' + row('Suite',bk.suiteName) + row('Check-in',bk.checkin) + row('Check-out',bk.checkout) + row('Nights',bk.nights) + row('Guests',bk.guests) + row('Total','€'+bk.total) + row('Name',bk.name) + row('Email',bk.email) + row('Phone',bk.phone) + '</table></div>';
       const tokiEmailBlock = '<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Questions? Ask Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Our AI concierge <strong style="color:#C8B99A">Toki</strong> is available 24/7 on our website and can help you with bookings, check-in &amp; check-out, suite changes, cancellations, local recommendations and more.</p><a href="https://maremediterraneo.com/?lang=en#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chat with Toki →</a></div>';
@@ -3934,12 +4004,18 @@ if(!localStorage.getItem('mm_lang_chosen')){
     let availContext = '';
     if (availabilityData) {
       const today = new Date().toISOString().split('T')[0];
-      availContext = '\n\nCURRENT AVAILABILITY (today: ' + today + '):\n';
+      availContext = '\n\nCURRENT AVAILABILITY (today is ' + today + '):\n';
+      availContext += 'IMPORTANT: Only the specific date ranges listed as BOOKED below are unavailable. ALL other dates are available.\n';
       Object.entries(availabilityData.suites).forEach(([key, suite]) => {
-        const booked = suite.bookings.filter(b => b.checkout >= today)
-          .map(b => b.checkin + ' to ' + b.checkout).join(', ');
-        availContext += suite.name + ': ' + (booked ? 'BOOKED: ' + booked : 'AVAILABLE') + '. Price: €' + suite.price + '/night + €' + suite.cleaningFee + ' cleaning fee.\n';
+        const upcoming = suite.bookings.filter(b => b.checkout >= today);
+        if (upcoming.length === 0) {
+          availContext += suite.name + ': FULLY AVAILABLE (no bookings). Price: €' + suite.price + '/night + €' + suite.cleaningFee + ' cleaning fee.\n';
+        } else {
+          const bookedRanges = upcoming.map(b => '  - BOOKED from ' + b.checkin + ' to ' + b.checkout + ' (unavailable)').join('\n');
+          availContext += suite.name + ': AVAILABLE except:\n' + bookedRanges + '\n  Price: €' + suite.price + '/night + €' + suite.cleaningFee + ' cleaning fee.\n';
+        }
       });
+      availContext += '\nRULE: If a guest asks about a date range, check ONLY against the BOOKED ranges above. If the dates do not overlap any booked range, they ARE available. Never say dates are unavailable unless they overlap a listed booking.\n';
     }
 
     let tokiContext = tokiKnowledge ? JSON.stringify(tokiKnowledge, null, 2) :
@@ -4032,6 +4108,8 @@ IMPORTANT:
         else if (lower.includes('book') || lower.includes('prenot') || lower.includes('buch') || lower.includes('réserv')) qr = qrSet.book;
         else qr = qrSet.def;
         addMessage('toki', reply, qr);
+        conversationHistory.push({ role:'assistant', content:reply, timestamp:new Date().toISOString() });
+        saveTokiChat();
       } else { throw new Error('No response'); }
     } catch(e) {
       hideTyping();
