@@ -2086,11 +2086,102 @@ document.getElementById('lb').addEventListener('touchend',function(e){
 
 // ── LANGUAGE ──
 let lang='en';
+var BK_LABELS={
+  en:{
+    yourDetails:'Your Details', reviewBooking:'Review Booking',
+    confirmBooking:'Confirm Booking', bookingReceived:'Booking Received!',
+    fullName:'Full name *', email:'Email address *', phone:'Phone number *',
+    message:'Message (optional)', msgPh:'Special requests, arrival time…',
+    reviewBtn:'Review Booking', confirmBtn:'Confirm Booking',
+    backBtn:'← Back & edit', closeBtn:'Close',
+    bookingSummary:'Booking Summary', guestInfo:'Guest Information',
+    confirmNote:'Please check your booking details above. Confirming sends your request — we\'ll reply within 24 hours to confirm dates.',
+    suite:'Suite', checkin:'Check-in', checkout:'Check-out',
+    nights:'Nights', guests:'Guests', nightlyRate:'Nightly rate',
+    cleaningFee:'Cleaning fee', discount:'Discount', total:'Total',
+    name:'Name', discountLabel:'{pct}% off nights',
+    receivedMsg:'Thank you, {name}! We\'ve received your request and will confirm within 24 hours.',
+    emailSent:'A confirmation email is on its way to {email}.',
+    discountRow:'Discount ({pct}% off nights)',
+  },
+  it:{
+    yourDetails:'I Tuoi Dati', reviewBooking:'Riepilogo Prenotazione',
+    confirmBooking:'Conferma Prenotazione', bookingReceived:'Prenotazione Ricevuta!',
+    fullName:'Nome completo *', email:'Indirizzo email *', phone:'Numero di telefono *',
+    message:'Messaggio (opzionale)', msgPh:'Richieste speciali, orario di arrivo…',
+    reviewBtn:'Riepilogo Prenotazione', confirmBtn:'Conferma Prenotazione',
+    backBtn:'← Torna e modifica', closeBtn:'Chiudi',
+    bookingSummary:'Riepilogo Prenotazione', guestInfo:'Informazioni Ospite',
+    confirmNote:'Controlla i dettagli della prenotazione. Confermando invii la tua richiesta — risponderemo entro 24 ore.',
+    suite:'Suite', checkin:'Check-in', checkout:'Check-out',
+    nights:'Notti', guests:'Ospiti', nightlyRate:'Tariffa per notte',
+    cleaningFee:'Pulizie', discount:'Sconto', total:'Totale',
+    name:'Nome', discountLabel:'{pct}% sulle notti',
+    receivedMsg:'Grazie, {name}! Abbiamo ricevuto la tua richiesta e confermeremo entro 24 ore.',
+    emailSent:'Un\'email di conferma è in arrivo a {email}.',
+    discountRow:'Sconto ({pct}% sulle notti)',
+  },
+  de:{
+    yourDetails:'Ihre Daten', reviewBooking:'Buchungsübersicht',
+    confirmBooking:'Buchung bestätigen', bookingReceived:'Buchung erhalten!',
+    fullName:'Vollständiger Name *', email:'E-Mail-Adresse *', phone:'Telefonnummer *',
+    message:'Nachricht (optional)', msgPh:'Sonderwünsche, Ankunftszeit…',
+    reviewBtn:'Buchungsübersicht', confirmBtn:'Buchung bestätigen',
+    backBtn:'← Zurück & bearbeiten', closeBtn:'Schließen',
+    bookingSummary:'Buchungsübersicht', guestInfo:'Gastinformationen',
+    confirmNote:'Bitte prüfen Sie Ihre Buchungsdetails. Mit der Bestätigung senden Sie Ihre Anfrage — wir antworten innerhalb von 24 Stunden.',
+    suite:'Suite', checkin:'Anreise', checkout:'Abreise',
+    nights:'Nächte', guests:'Gäste', nightlyRate:'Nachtpreis',
+    cleaningFee:'Reinigungsgebühr', discount:'Rabatt', total:'Gesamt',
+    name:'Name', discountLabel:'{pct}% auf Nächte',
+    receivedMsg:'Vielen Dank, {name}! Wir haben Ihre Anfrage erhalten und werden innerhalb von 24 Stunden bestätigen.',
+    emailSent:'Eine Bestätigungs-E-Mail ist auf dem Weg an {email}.',
+    discountRow:'Rabatt ({pct}% auf Nächte)',
+  },
+  fr:{
+    yourDetails:'Vos Coordonnées', reviewBooking:'Récapitulatif',
+    confirmBooking:'Confirmer la Réservation', bookingReceived:'Réservation Reçue !',
+    fullName:'Nom complet *', email:'Adresse email *', phone:'Numéro de téléphone *',
+    message:'Message (optionnel)', msgPh:'Demandes spéciales, heure d\'arrivée…',
+    reviewBtn:'Récapitulatif', confirmBtn:'Confirmer la Réservation',
+    backBtn:'← Retour & modifier', closeBtn:'Fermer',
+    bookingSummary:'Récapitulatif de Réservation', guestInfo:'Informations Client',
+    confirmNote:'Veuillez vérifier vos détails. En confirmant vous envoyez votre demande — nous répondrons sous 24 heures.',
+    suite:'Suite', checkin:'Arrivée', checkout:'Départ',
+    nights:'Nuits', guests:'Voyageurs', nightlyRate:'Tarif par nuit',
+    cleaningFee:'Frais de ménage', discount:'Réduction', total:'Total',
+    name:'Nom', discountLabel:'{pct}% sur les nuits',
+    receivedMsg:'Merci, {name} ! Nous avons reçu votre demande et confirmerons sous 24 heures.',
+    emailSent:'Un email de confirmation est en route vers {email}.',
+    discountRow:'Réduction ({pct}% sur les nuits)',
+  }
+};
+function bkL(key){ var l=BK_LABELS[lang]||BK_LABELS.en; return l[key]||BK_LABELS.en[key]||key; }
+function updateBkPanelLang(){
+  var l=lang;
+  // Labels in step 2
+  var n=document.querySelector('#bkStep2 label[for=bkName]'); if(n)n.textContent=bkL('fullName');
+  var e=document.querySelector('#bkStep2 label[for=bkEmail]'); if(e)e.textContent=bkL('email');
+  var p=document.querySelector('#bkStep2 label[for=bkPhone]'); if(p)p.textContent=bkL('phone');
+  var m=document.querySelector('#bkStep2 label[for=bkMsg]'); if(m)m.textContent=bkL('message');
+  var mp=document.getElementById('bkMsg'); if(mp)mp.placeholder=bkL('msgPh');
+  var rb=document.querySelector('#bkStep2 .bk-btn-gold'); if(rb)rb.childNodes[0].textContent=bkL('reviewBtn')+' ';
+  // Labels in step 3
+  var sb=document.querySelector('#bkStep3 .bk-sum-lbl-hd'); if(sb)sb.textContent=bkL('bookingSummary');
+  var gi=document.querySelectorAll('#bkStep3 .bk-sum-lbl-hd'); if(gi[1])gi[1].textContent=bkL('guestInfo');
+  var cn=document.querySelector('#bkStep3 > p'); if(cn)cn.textContent=bkL('confirmNote');
+  var cb=document.getElementById('bkConfirmBtn'); if(cb)cb.childNodes[0].textContent=bkL('confirmBtn')+' ';
+  var bk=document.querySelector('#bkStep3 .bk-btn-ghost'); if(bk)bk.textContent=bkL('backBtn');
+  // Step 4
+  var bt=document.querySelector('#bkStep4 .bk-confirm-title'); if(bt)bt.textContent=bkL('bookingReceived');
+  var cl=document.querySelector('#bkStep4 .bk-btn-ghost'); if(cl)cl.textContent=bkL('closeBtn');
+}
 function setLang(l){
   lang=l;
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
   document.querySelectorAll('[data-lang]').forEach(el=>el.classList.toggle('al',el.getAttribute('data-lang')===l));
+  updateBkPanelLang();
 }
 // Apply saved language choice immediately on page load
 (function(){var saved=localStorage.getItem('mm_lang_chosen');if(saved&&saved!=='en')setLang(saved);})();
@@ -2148,6 +2239,7 @@ var CFG={
   SB_URL:'https://wbosfegdgizkygxjxjiz.supabase.co',
   SB_KEY:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg',
   FROM_EMAIL:'hello@maremediterraneo.com',
+  REPLY_EMAIL:'hello@maremediterraneo.com',
   OWNER_EMAIL:'online.mmarts@gmail.com',
   OWNER_WA:'35699699184',
   MIN_NIGHTS:4,
@@ -2298,8 +2390,8 @@ window.bkOpenPanel=function(){
   BK.total=baseNights-discountAmt+s.cleaning;
   BK.coupon=coupon||null;
   qs('bkR_suite').textContent=s.name;qs('bkR_in').textContent=fmtDate(BK.checkin);qs('bkR_out').textContent=fmtDate(BK.checkout);
-  qs('bkR_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');qs('bkR_total').textContent='€'+BK.total+(coupon?' ('+coupon.pct+'% discount applied)':'');
-  qs('bkPanelSuite').textContent=s.name;qs('bkPanelTitle').textContent='Your Details';
+  qs('bkR_guests').textContent=BK.guests+' guest'+(BK.guests>1?'s':'');qs('bkR_total').textContent='€'+BK.total+(coupon?' ('+coupon.pct+'% '+bkL('discountLabel').replace('{pct}',coupon.pct)+')':'');
+  qs('bkPanelSuite').textContent=s.name;qs('bkPanelTitle').textContent=bkL('yourDetails');
   ['bkName','bkEmail','bkPhone','bkMsg'].forEach(function(id){qs(id).value='';});
   qs('bkStep2Err').className='bk-msg';
   bkShowStep(2);_panelOpen=true;qs('bk-overlay').classList.add('open');document.body.style.overflow='hidden';
@@ -2325,10 +2417,10 @@ window.bkToSummary=function(){
   var bkSDiscount=document.getElementById('bkS_discountRow');
   if(bkSDiscount){bkSDiscount.style.display=coupon?'flex':'none';}
   var bkSDiscountVal=document.getElementById('bkS_discountVal');
-  if(bkSDiscountVal&&coupon){bkSDiscountVal.textContent='−€'+discountAmt+' ('+coupon.pct+'% off nights)';}
+  if(bkSDiscountVal&&coupon){bkSDiscountVal.textContent='−€'+discountAmt+' ('+bkL('discountLabel').replace('{pct}',coupon.pct)+')';}
   qs('bkS_total').textContent='€'+BK.total;
   qs('bkS_name').textContent=name;qs('bkS_email').textContent=email;qs('bkS_phone').textContent=phone;
-  qs('bkPanelTitle').textContent='Confirm Booking';
+  qs('bkPanelTitle').textContent=bkL('confirmBooking');
   window._bkDraft=JSON.parse(JSON.stringify(BK));
   bkShowStep(3);qs('bk-panel').scrollTop=0;
 };
@@ -2347,26 +2439,37 @@ window.bkSubmit=async function(){
   var coupon=BK.coupon||null;
   var discountAmt=coupon?Math.round(BK.nights*ep*coupon.pct/100):0;
   var couponRow=coupon?row('Discount ('+coupon.pct+'% off nights)','−€'+discountAmt+' [code: '+coupon.code+']'):'';
-  var couponRowG=coupon?gRow('Discount ('+coupon.pct+'% off nights)','−€'+discountAmt,false):'';
+  var couponRowG=coupon?gRow(bkL('discountRow').replace('{pct}',coupon.pct),'−€'+discountAmt,false):'';
+  // Guest email translated labels
+  var gL=BK_LABELS[lang]||BK_LABELS.en;
+  var gSubject={en:'Booking received',it:'Prenotazione ricevuta',de:'Buchungsanfrage erhalten',fr:'Réservation reçue'}[lang]||'Booking received';
+  var gCheckinNote={en:' · from 15:00',it:' · dalle 15:00',de:' · ab 15:00 Uhr',fr:' · à partir de 15h00'}[lang]||' · from 15:00';
+  var gCheckoutNote={en:' · by 10:00',it:' · entro le 10:00',de:' · bis 10:00 Uhr',fr:' · avant 10h00'}[lang]||' · by 10:00';
+  var gConfirmNote={en:'We will confirm your booking within 24 hours. Questions? ',it:'Confermeremo la tua prenotazione entro 24 ore. Domande? ',de:'Wir bestätigen Ihre Buchung innerhalb von 24 Stunden. Fragen? ',fr:'Nous confirmerons votre réservation dans les 24 heures. Questions ? '}[lang]||'We will confirm your booking within 24 hours. Questions? ';
   function row(k,v){return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">'+v+'</td></tr>';}
   function gRow(k,v,gold){return '<tr><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:'+(gold?'#C8963E':'#F5EFE6')+';text-align:right">'+v+'</td></tr>';}
+  // Owner email always English
   var ownerHtml='<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">New booking — '+ref+'</h2><table style="border-collapse:collapse;width:100%">'+row('Suite',s.name)+row('Check-in',BK.checkin)+row('Check-out',BK.checkout)+row('Nights',BK.nights)+row('Guests',BK.guests)+row('Rate',rateLabel)+row('Cleaning','€'+s.cleaning)+couponRow+'<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase">TOTAL</td><td style="padding:10px 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr>'+row('Name',BK.name)+row('Email',BK.email)+row('Phone',BK.phone)+(BK.message?row('Message',BK.message):'')+'</table></div>';
-  var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Your booking request is received</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">Reference: '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow('Suite',s.name,true)+gRow('Check-in',BK.checkin+' · from 15:00',false)+gRow('Check-out',BK.checkout+' · by 10:00',false)+gRow('Nights',BK.nights,false)+gRow('Guests',BK.guests,false)+gRow('Rate',rateLabel,false)+gRow('Cleaning','€'+s.cleaning,false)+couponRowG+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">TOTAL</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table><div style="margin:24px 0;padding:18px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.2);border-radius:4px"><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">We will confirm your booking within 24 hours. Questions? <a href="https://wa.me/35699699184" style="color:#C8963E">WhatsApp +356 9969 9184</a></p></div><p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
-  var emails=[{to:CFG.OWNER_EMAIL,subject:'[Mare Med] New booking — '+ref+' — '+BK.name,html:ownerHtml},{to:BK.email,subject:'Booking received — '+s.name+' — '+ref,html:guestHtml}];
+  // Guest email in guest's language
+  var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">'+{en:'Your booking request is received',it:'La tua richiesta di prenotazione è stata ricevuta',de:'Ihre Buchungsanfrage ist eingegangen',fr:'Votre demande de réservation a été reçue'}[lang]+'</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">'+{en:'Reference',it:'Riferimento',de:'Referenz',fr:'Référence'}[lang]+': '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow(gL.suite,s.name,true)+gRow(gL.checkin,BK.checkin+gCheckinNote,false)+gRow(gL.checkout,BK.checkout+gCheckoutNote,false)+gRow(gL.nights,BK.nights,false)+gRow(gL.guests,BK.guests,false)+gRow(gL.nightlyRate,rateLabel,false)+gRow(gL.cleaningFee,'€'+s.cleaning,false)+couponRowG+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">'+gL.total+'</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table><div style="margin:24px 0;padding:18px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.2);border-radius:4px"><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">'+gConfirmNote+'<a href="https://wa.me/35699699184" style="color:#C8963E">WhatsApp +356 9969 9184</a></p></div><p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
+  var emails=[{to:CFG.OWNER_EMAIL,subject:'[Mare Med] New booking — '+ref+' — '+BK.name,html:ownerHtml},{to:BK.email,subject:gSubject+' — '+s.name+' — '+ref,html:guestHtml}];
   try{
     // Calls Supabase Edge Function — avoids browser CORS block on api.resend.com
     await fetch(CFG.SB_URL+'/functions/v1/send-booking-email',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':CFG.SB_KEY,'Authorization':'Bearer '+CFG.SB_KEY},
-      body:JSON.stringify({emails:emails.map(function(e){return{from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:e.to,subject:e.subject,html:e.html,reply_to:CFG.OWNER_EMAIL};})})
+      body:JSON.stringify({emails:[
+        {from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:CFG.OWNER_EMAIL,subject:emails[0].subject,html:emails[0].html,reply_to:BK.email},
+        {from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:BK.email,subject:emails[1].subject,html:emails[1].html,reply_to:CFG.REPLY_EMAIL}
+      ]})
     });
   }catch(e){console.log('[MM] Email edge function error:',e.message);}
   var waText=encodeURIComponent('🌊 New booking — '+ref+'\n\nSuite: '+s.name+'\nCheck-in: '+BK.checkin+'\nCheck-out: '+BK.checkout+'\nNights: '+BK.nights+'  |  Guests: '+BK.guests+'\nTotal: €'+BK.total+'\n\nGuest: '+BK.name+'\nEmail: '+BK.email+'\nPhone: '+BK.phone+(BK.message?'\nMessage: '+BK.message:''));
   // WhatsApp auto-open removed — email confirmation only
   qs('bkD_suite').textContent=s.name;qs('bkD_in').textContent=fmtDate(BK.checkin);qs('bkD_out').textContent=fmtDate(BK.checkout);qs('bkD_total').textContent='€'+BK.total;
-  qs('bkRef').textContent='Reference: '+ref;
-  qs('bkConfirmMsg').innerHTML='Thank you, <strong>'+BK.name.split(' ')[0]+'</strong>! We\'ve received your request and will confirm within 24 hours.<br><br>A confirmation email is on its way to <em>'+BK.email+'</em>.';
-  qs('bkPanelTitle').textContent='Booking Received';
+  qs('bkRef').textContent=({en:'Reference',it:'Riferimento',de:'Referenz',fr:'Référence'}[lang]||'Reference')+': '+ref;
+  qs('bkConfirmMsg').innerHTML=bkL('receivedMsg').replace('{name}','<strong>'+BK.name.split(' ')[0]+'</strong>')+'<br><br>'+bkL('emailSent').replace('{email}','<em>'+BK.email+'</em>');
+  qs('bkPanelTitle').textContent=bkL('bookingReceived');
   bkShowStep(4);qs('bk-panel').scrollTop=0;
 };
 
@@ -3582,7 +3685,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       await sendEmail([
         { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL, subject: '[Mare Med] Booking updated — '+ref+' — '+b.guest, html: ownerHtml, reply_to: b.email },
-        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: b.email, subject: 'Your booking dates are updated — '+ref, html: guestHtml, reply_to: OWNER_EMAIL }
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: b.email, subject: 'Your booking dates are updated — '+ref, html: guestHtml, reply_to: 'hello@maremediterraneo.com' }
       ]);
 
       hideTyping();
@@ -3741,7 +3844,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       await sendEmail([
         { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL, subject: '[Mare Med] New Toki booking — '+ref+' — '+bk.name, html: ownerHtml, reply_to: bk.email },
-        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: bk.email,    subject: 'Booking request received — '+bk.suiteName+' — '+ref, html: guestHtml, reply_to: OWNER_EMAIL }
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: bk.email,    subject: 'Booking request received — '+bk.suiteName+' — '+ref, html: guestHtml, reply_to: 'hello@maremediterraneo.com' }
       ]);
 
       hideTyping();
@@ -4237,8 +4340,112 @@ window.setLang = function(l) {
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
   function hdrs(){ return {'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'}; }
 
-  var couponSettings = null;
-  var appliedCoupon  = null; // {code, pct}
+  // ── TRANSLATIONS ──
+  var T = {
+    en: {
+      bannerPre:    'Subscribe & get ',
+      bannerPost:   ' off your booking',
+      bannerBtn:    'Get My Code',
+      bannerSent:   '✓ Check your inbox — click the link to get your code!',
+      bannerExists: '✓ Check your email — your code was already sent!',
+      bannerVerify: '✓ Check your inbox to verify your email first.',
+      bannerErr:    'Something went wrong. Please try again.',
+      couponToggle: 'Have a discount code?',
+      couponPh:     'Enter code',
+      couponApply:  'Apply',
+      couponCheck:  'Checking…',
+      couponOk:     '✓ {pct}% discount applied!',
+      couponNotFound:'Code not found.',
+      couponUnverified:'Please verify your email first.',
+      couponUsed:   'This code has already been used.',
+      couponErr:    'Error checking code. Try again.',
+    },
+    it: {
+      bannerPre:    'Iscriviti e ottieni il ',
+      bannerPost:   ' di sconto sulla tua prenotazione',
+      bannerBtn:    'Ottieni il codice',
+      bannerSent:   '✓ Controlla la tua email — clicca il link per ottenere il codice!',
+      bannerExists: '✓ Controlla la tua email — il codice è già stato inviato!',
+      bannerVerify: '✓ Prima verifica la tua email.',
+      bannerErr:    'Qualcosa è andato storto. Riprova.',
+      couponToggle: 'Hai un codice sconto?',
+      couponPh:     'Inserisci il codice',
+      couponApply:  'Applica',
+      couponCheck:  'Verifica…',
+      couponOk:     '✓ Sconto del {pct}% applicato!',
+      couponNotFound:'Codice non trovato.',
+      couponUnverified:'Prima verifica la tua email.',
+      couponUsed:   'Questo codice è già stato utilizzato.',
+      couponErr:    'Errore. Riprova.',
+    },
+    de: {
+      bannerPre:    'Jetzt anmelden und ',
+      bannerPost:   ' Rabatt auf Ihre Buchung erhalten',
+      bannerBtn:    'Code anfordern',
+      bannerSent:   '✓ E-Mail prüfen — Link klicken für Ihren Code!',
+      bannerExists: '✓ Ihr Code wurde bereits gesendet — E-Mail prüfen!',
+      bannerVerify: '✓ Bitte zuerst E-Mail bestätigen.',
+      bannerErr:    'Etwas ist schiefgelaufen. Bitte erneut versuchen.',
+      couponToggle: 'Haben Sie einen Rabattcode?',
+      couponPh:     'Code eingeben',
+      couponApply:  'Anwenden',
+      couponCheck:  'Prüfen…',
+      couponOk:     '✓ {pct}% Rabatt angewendet!',
+      couponNotFound:'Code nicht gefunden.',
+      couponUnverified:'Bitte zuerst E-Mail bestätigen.',
+      couponUsed:   'Dieser Code wurde bereits verwendet.',
+      couponErr:    'Fehler. Bitte erneut versuchen.',
+    },
+    fr: {
+      bannerPre:    'Inscrivez-vous et obtenez ',
+      bannerPost:   ' de réduction sur votre réservation',
+      bannerBtn:    'Obtenir mon code',
+      bannerSent:   '✓ Vérifiez votre email — cliquez le lien pour obtenir votre code !',
+      bannerExists: '✓ Votre code a déjà été envoyé — vérifiez votre email !',
+      bannerVerify: '✓ Vérifiez d\'abord votre email.',
+      bannerErr:    'Une erreur est survenue. Veuillez réessayer.',
+      couponToggle: 'Vous avez un code de réduction ?',
+      couponPh:     'Entrer le code',
+      couponApply:  'Appliquer',
+      couponCheck:  'Vérification…',
+      couponOk:     '✓ Réduction de {pct}% appliquée !',
+      couponNotFound:'Code introuvable.',
+      couponUnverified:'Veuillez d\'abord vérifier votre email.',
+      couponUsed:   'Ce code a déjà été utilisé.',
+      couponErr:    'Erreur. Veuillez réessayer.',
+    }
+  };
+
+  function t(key){ var l=T[lang]||T.en; return (l[key]||T.en[key]||key); }
+
+  // ── Update coupon UI text when language changes ──
+  function updateCouponLang(){
+    var l = lang || 'en';
+    var tr = T[l] || T.en;
+    var pct = couponSettings ? couponSettings.discount_pct : 10;
+    // Banner
+    var pre = document.getElementById('bannerText');
+    var post = document.getElementById('bannerText2');
+    var btn = document.getElementById('bannerBtn');
+    if(pre)  pre.textContent  = tr.bannerPre;
+    if(post) post.textContent = tr.bannerPost;
+    if(btn && !btn.disabled)  btn.textContent  = tr.bannerBtn;
+    // Coupon toggle
+    var toggle = document.querySelector('.coupon-toggle');
+    if(toggle) toggle.textContent = tr.couponToggle;
+    // Coupon input placeholder + apply button
+    var inp = document.getElementById('couponInput');
+    var applyBtn = document.querySelector('.coupon-apply-btn');
+    if(inp)     inp.placeholder  = tr.couponPh;
+    if(applyBtn) applyBtn.textContent = tr.couponApply;
+  }
+
+  // Hook into setLang
+  var _origSetLangCoupon = window.setLang;
+  window.setLang = function(l){
+    if(_origSetLangCoupon) _origSetLangCoupon(l);
+    updateCouponLang();
+  };
 
   // ── Load settings & show/hide banner + coupon field ──
   async function loadCouponSettings(){
@@ -4264,6 +4471,7 @@ window.setLang = function(l) {
         var wrap = document.getElementById('couponWrap');
         if(wrap) wrap.style.display = 'block';
       }
+      updateCouponLang();
     } catch(e){ console.log('[Coupon] settings load failed:', e.message); }
   }
 
@@ -4287,7 +4495,7 @@ window.setLang = function(l) {
       var existing = await check.json();
       if(existing && existing[0]){
         formEl.style.display='none';
-        msgEl.textContent = existing[0].verified ? '✓ Check your email — your code was already sent!' : '✓ Check your inbox to verify your email first.';
+        msgEl.textContent = existing[0].verified ? t('bannerExists') : t('bannerVerify');
         msgEl.style.display='block';
         sessionStorage.setItem('mm_banner_dismissed','1');
         return;
@@ -4304,22 +4512,22 @@ window.setLang = function(l) {
       });
       if(!ins.ok){ var e2=await ins.json(); throw new Error(e2.message||'Insert failed'); }
 
-      // Send verification email
+      // Send verification email — pass language
       await fetch(SB+'/functions/v1/send-coupon-email',{
         method:'POST', headers:hdrs(),
-        body: JSON.stringify({type:'verify', email:email, token:token, discount_pct: couponSettings?couponSettings.discount_pct:10})
+        body: JSON.stringify({type:'verify', email:email, token:token, discount_pct: couponSettings?couponSettings.discount_pct:10, lang:lang})
       });
 
       formEl.style.display='none';
-      msgEl.textContent = '✓ Check your inbox — click the link to get your code!';
+      msgEl.textContent = t('bannerSent');
       msgEl.style.display='block';
       sessionStorage.setItem('mm_banner_dismissed','1');
 
     } catch(e){
-      btn.disabled=false; btn.textContent='Get My Code';
+      btn.disabled=false; btn.textContent=t('bannerBtn');
       msgEl.textContent = e.message==='duplicate key value violates unique constraint "coupon_signups_email_key"'
-        ? '✓ Already signed up — check your email!'
-        : 'Something went wrong. Please try again.';
+        ? t('bannerExists')
+        : t('bannerErr');
       msgEl.style.color='#e74c3c';
       msgEl.style.display='block';
     }
@@ -4330,28 +4538,27 @@ window.setLang = function(l) {
     var input  = document.getElementById('couponInput');
     var msgEl  = document.getElementById('couponMsg');
     var code   = input ? input.value.trim().toUpperCase() : '';
-    if(!code){ msgEl.textContent='Please enter a code.'; msgEl.className='coupon-msg err'; return; }
+    if(!code){ msgEl.textContent=t('couponNotFound'); msgEl.className='coupon-msg err'; return; }
 
-    msgEl.textContent='Checking…'; msgEl.className='coupon-msg';
+    msgEl.textContent=t('couponCheck'); msgEl.className='coupon-msg';
 
     try {
       var r = await fetch(SB+'/rest/v1/coupon_signups?code=eq.'+encodeURIComponent(code)+'&select=*',{headers:hdrs()});
       var rows = await r.json();
-      if(!rows||!rows[0]){ msgEl.textContent='Code not found.'; msgEl.className='coupon-msg err'; return; }
+      if(!rows||!rows[0]){ msgEl.textContent=t('couponNotFound'); msgEl.className='coupon-msg err'; return; }
       var row = rows[0];
-      if(!row.verified){ msgEl.textContent='Please verify your email first.'; msgEl.className='coupon-msg err'; return; }
-      if(row.used){ msgEl.textContent='This code has already been used.'; msgEl.className='coupon-msg err'; return; }
+      if(!row.verified){ msgEl.textContent=t('couponUnverified'); msgEl.className='coupon-msg err'; return; }
+      if(row.used){ msgEl.textContent=t('couponUsed'); msgEl.className='coupon-msg err'; return; }
 
       var pct = row.discount_pct || (couponSettings ? couponSettings.discount_pct : 10);
       appliedCoupon = {code:code, pct:pct};
       input.disabled = true;
 
-      msgEl.textContent='✓ '+pct+'% discount applied!'; msgEl.className='coupon-msg ok';
+      msgEl.textContent=t('couponOk').replace('{pct}',pct); msgEl.className='coupon-msg ok';
 
-      // Update price display
       recalcWithCoupon(pct);
 
-    } catch(e){ msgEl.textContent='Error checking code. Try again.'; msgEl.className='coupon-msg err'; }
+    } catch(e){ msgEl.textContent=t('couponErr'); msgEl.className='coupon-msg err'; }
   };
 
   // ── Recalculate price with coupon ──
