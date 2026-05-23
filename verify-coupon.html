@@ -69,6 +69,17 @@ function hdrs(){ return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Conte
   var params = new URLSearchParams(location.search);
   var token  = params.get('token');
   var email  = params.get('email');
+  var lang   = params.get('lang') || 'en';
+  if(!['en','it','de','fr'].includes(lang)) lang = 'en';
+
+  // Translate verify page text
+  var VT = {
+    en:{ title:'Email verified!', msg:'Your discount code has been sent to your email. Here it is too — save it!', label:'Your discount code', note:'% off · one use per booking', btn:'Book Now', err:'Something went wrong' },
+    it:{ title:'Email verificata!', msg:'Il tuo codice sconto è stato inviato alla tua email. Eccolo anche qui — salvalo!', label:'Il tuo codice sconto', note:'% di sconto · un solo utilizzo', btn:'Prenota ora', err:'Qualcosa è andato storto' },
+    de:{ title:'E-Mail bestätigt!', msg:'Ihr Rabattcode wurde an Ihre E-Mail gesendet. Hier ist er auch — speichern Sie ihn!', label:'Ihr Rabattcode', note:'% Rabatt · einmalig', btn:'Jetzt buchen', err:'Ein Fehler ist aufgetreten' },
+    fr:{ title:'Email confirmé !', msg:'Votre code de réduction a été envoyé à votre email. Le voici aussi — sauvegardez-le !', label:'Votre code de réduction', note:'% de réduction · usage unique', btn:'Réserver maintenant', err:'Une erreur est survenue' },
+  };
+  var vt = VT[lang] || VT.en;
 
   if(!token || !email){ show('errState'); document.getElementById('errMsg').textContent='Invalid verification link.'; return; }
 
@@ -90,23 +101,26 @@ function hdrs(){ return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Conte
       body: JSON.stringify({verified:true})
     });
 
-    // 3. Get discount % from settings
-    var sr = await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1&select=discount_pct',{headers:hdrs()});
-    var settings = await sr.json();
-    var pct = (settings&&settings[0]) ? settings[0].discount_pct : 10;
+    // 3. Use the discount % locked in at signup time
+    var pct = signup.discount_pct || 10;
 
-    // 4. Send the code email via edge function
+    // 4. Send the code email via edge function — in user's language
     await fetch(SB_URL+'/functions/v1/send-coupon-email', {
       method:'POST', headers:hdrs(),
-      body: JSON.stringify({ type:'code', email:signup.email, code:signup.code, discount_pct:pct })
+      body: JSON.stringify({ type:'code', email:signup.email, code:signup.code, discount_pct:pct, lang:lang })
     });
 
-    // 5. Show success
+    // 5. Show success in user's language
+    var st = document.querySelector('#success .title'); if(st) st.textContent = vt.title;
+    var sm = document.querySelector('#success .msg');   if(sm) sm.textContent = vt.msg;
+    var sl = document.querySelector('.code-label');     if(sl) sl.textContent = vt.label;
+    var sn = document.getElementById('pctDisplay');     if(sn) sn.textContent = pct+vt.note;
+    var sb = document.querySelector('#success .btn');   if(sb) sb.textContent = vt.btn;
     document.getElementById('codeDisplay').textContent = signup.code;
-    document.getElementById('pctDisplay').textContent  = pct+'% off · one use per booking';
     show('success');
 
   } catch(e) {
+    var et = document.querySelector('#errState .title'); if(et) et.textContent = vt.err;
     show('errState');
     document.getElementById('errMsg').textContent = e.message || 'Unexpected error.';
   }
