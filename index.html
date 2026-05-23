@@ -3462,12 +3462,23 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   // ── VERIFICATION ──
   async function handleEmailVerification(email) {
-    if (!email.includes('@') || !email.includes('.')) {
-      addMessage('toki', t('badEmail'));
+    const trimmed = email.trim();
+    // If clearly not an email attempt — user wants to do something else
+    const notAnEmail = !trimmed.includes('@') && !trimmed.includes('.com') && !trimmed.includes('.it') && !trimmed.includes('.de') && !trimmed.includes('.fr');
+    const cancelPhrases = ['sorry','cancel','nevermind','never mind','something else','no','stop','exit','quit','help','back'];
+    const isCancelling = cancelPhrases.some(p => trimmed.toLowerCase().includes(p));
+    if (notAnEmail && isCancelling) {
+      awaitingEmail = false;
+      pendingEmail  = null;
+      addMessage('toki', 'No problem! How can I help you? 🌊', ['Check availability','Prices & suites','Location & distances','House rules']);
+      return;
+    }
+    if (!trimmed.includes('@') || !trimmed.includes('.')) {
+      addMessage('toki', t('badEmail') + '\n\n*(Or type "cancel" to go back)*');
       awaitingEmail = true;
       return;
     }
-    pendingEmail = email.trim().toLowerCase();
+    pendingEmail = trimmed.toLowerCase();
     awaitingRef  = true;
     addMessage('toki', t('askRef'));
   }
@@ -3884,20 +3895,22 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const bk = tokiBooking;
     if (!bk) { conversationHistory.push({ role:'user', content: text }); getAIResponse(text); return; }
 
-    const lower = text.toLowerCase();
+    const lower = text.toLowerCase().trim();
 
     // Confirmation step
-    if (lower.includes('yes') || lower.includes('send') || lower === 'yes, send it!') {
-      await confirmTokiBooking();
-      return;
-    }
-    if (lower.includes('no') || lower.includes('change') || text === 'No, change something') {
-      tokiBooking = null;
-      addMessage('toki', 'No worries! You can scroll up to the booking form to start fresh, or tell me what you\'d like to change.');
-      return;
+    if (bk.guests && bk.name && bk.email && bk.phone) {
+      if (lower.includes('yes') || lower.includes('send') || lower.includes('confirm') || lower.includes('ok') || lower === 'yes, send it!') {
+        await confirmTokiBooking();
+        return;
+      }
+      if (lower.includes('no') || lower.includes('change') || text === 'No, change something') {
+        tokiBooking = null;
+        addMessage('toki', 'No worries! You can scroll up to the booking form to start fresh, or tell me what you\'d like to change.');
+        return;
+      }
     }
 
-    // Collect missing fields in order
+    // Collect guests
     if (!bk.guests) {
       const n = parseInt(text);
       if (isNaN(n) || n < 1 || n > bk.maxG) {
@@ -3908,24 +3921,43 @@ if(!localStorage.getItem('mm_lang_chosen')){
       advanceBookingStep();
       return;
     }
+
+    // Collect name — also try to extract email if given in same message
     if (!bk.name) {
-      bk.name = text.trim();
+      // Check if message contains both name and email
+      const emailMatch = text.match(/[\w.+-]+@[\w-]+\.[a-z]{2,}/i);
+      if (emailMatch) {
+        bk.email = emailMatch[0].toLowerCase();
+        bk.name  = text.replace(emailMatch[0], '').trim().replace(/\s+/g, ' ') || text;
+      } else {
+        bk.name = text.trim();
+      }
       advanceBookingStep();
       return;
     }
+
+    // Collect email
     if (!bk.email) {
-      if (!text.includes('@') || !text.includes('.')) {
+      const emailMatch = text.match(/[\w.+-]+@[\w-]+\.[a-z]{2,}/i);
+      if (!emailMatch) {
         addMessage('toki', 'That doesn\'t look like a valid email. Please try again:');
         return;
       }
-      bk.email = text.trim().toLowerCase();
+      bk.email = emailMatch[0].toLowerCase();
       advanceBookingStep();
       return;
     }
+
+    // Collect phone
     if (!bk.phone) {
       bk.phone = text.trim();
       advanceBookingStep();
       return;
+    }
+
+    // Already have everything — treat as confirmation
+    if (lower.includes('yes') || lower.includes('send') || lower.includes('confirm') || lower.includes('ok')) {
+      await confirmTokiBooking();
     }
   }
 
