@@ -3331,14 +3331,47 @@ if(!localStorage.getItem('mm_lang_chosen')){
   }
 
   function routeMessage(msg) {
-    // Unverified booking query → verify first
+    const lower = msg.toLowerCase();
+
+    // ── NEW BOOKING INTENT → structured flow, never AI ──
+    const bookIntentKw = ['i want to book','i\'d like to book','book for me','book it','can you book',
+      'make a booking','make a reservation','reserve','voglio prenotare','prenota per me',
+      'ich möchte buchen','je voudrais réserver','buchen'];
+    const hasBookIntent = bookIntentKw.some(k => lower.includes(k));
+
+    if (hasBookIntent || tokiBooking) {
+      // Extract suite if mentioned
+      let suiteKey = null;
+      if (lower.includes('pietra'))                            suiteKey = 'pietra';
+      else if (lower.includes('cielo'))                        suiteKey = 'cielo';
+      else if (lower.includes('villa') || lower.includes('completa') || lower.includes('entire') || lower.includes('whole') || lower.includes('both')) suiteKey = 'villa';
+
+      if (hasBookIntent && !tokiBooking) {
+        if (suiteKey) {
+          startTokiBooking(suiteKey);
+        } else {
+          // Ask which suite
+          addMessage('toki',
+            'Perfetto! 🌊 Which suite would you like to book?\n\n• **Suite Pietra** — ground floor, garden, €200/night\n• **Suite Cielo** — first floor, terrace, €200/night\n• **Villa Completa** — entire property, €350/night',
+            ['Suite Pietra', 'Suite Cielo', 'Villa Completa']);
+        }
+        return;
+      }
+    }
+
+    // ── Suite quick-reply selection when waiting for suite choice ──
+    if (!tokiBooking && (lower === 'suite pietra' || lower === 'pietra')) { startTokiBooking('pietra'); return; }
+    if (!tokiBooking && (lower === 'suite cielo'  || lower === 'cielo'))  { startTokiBooking('cielo');  return; }
+    if (!tokiBooking && (lower === 'villa completa' || lower === 'villa')) { startTokiBooking('villa');  return; }
+
+    // ── Verified booking query → verify first ──
     if (isBookingQuery(msg) && !verifiedGuest) {
       awaitingEmail = true;
       addMessage('toki', t('askEmail'));
       return;
     }
 
-    // Verified guest making a change request → run real code, don't let AI handle it
+    // ── Verified guest making a change request → run real code ──
     if (verifiedGuest && isChangeRequest(msg)) {
       const suite = extractSuiteFromMessage(msg);
       startDateChange(suite);
@@ -4080,10 +4113,10 @@ PERSONALITY:
 - LANGUAGE: The guest has selected **${LANG_NAMES[sl] || 'English'}** as their language. Respond ENTIRELY in that language unless they write in a different one.
 
 BOOKING FLOW:
-- New bookings → direct to booking section OR Toki can book directly if guest says they want to book via chat.
-- Date changes for existing bookings → handled via Toki (email sent to owner).
-- NEVER push WhatsApp for bookings.
-- WhatsApp only as absolute last resort.
+- New bookings → the system handles this via a structured step-by-step form. NEVER say "I've booked" or "I'll finalize your booking" or pretend to process a booking yourself. If a guest wants to book, tell them you'll guide them through the steps and the system will collect their details.
+- Date changes for existing bookings → handled via Toki (email sent to owner). NEVER pretend to change dates yourself.
+- Coupon codes → collected during the booking step form. NEVER pretend to apply a discount yourself.
+- NEVER confirm, finalize, or complete any booking action in your text response. The system does this — not you.
 
 BOOKING SUPPORT (verified guests):
 - When you see [SYSTEM: Guest verified...], you have their booking data. Use it to answer questions.
