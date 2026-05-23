@@ -3721,16 +3721,18 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     showTyping();
     try {
-      // 1. Check availability for new dates
-      const avail = await checkAvailability(b.suite, newCi, newCo, b.reference_id);
+      // 1. Check availability for new dates — use newSuite if changed
+      const newSuite   = pendingDateChange.newSuite || b.suite;
+      const suiteToCheck = newSuite || b.suite;
+      const avail = await checkAvailability(suiteToCheck, newCi, newCo, b.reference_id);
       if (!avail) {
         hideTyping();
         const _sl2 = siteLang();
         const _nam = {
-          en: 'Mi dispiace! Those dates are **not available** for ' + (sn[b.suite]||b.suite) + ' 😔\n\nWould you like to try different dates?',
-          it: 'Mi dispiace! Quelle date **non sono disponibili** per ' + (sn[b.suite]||b.suite) + ' 😔\n\nVuoi provare date diverse?',
-          de: 'Mi dispiace! Diese Daten sind für ' + (sn[b.suite]||b.suite) + ' **nicht verfügbar** 😔\n\nAndere Daten probieren?',
-          fr: 'Mi dispiace! Ces dates ne sont **pas disponibles** pour ' + (sn[b.suite]||b.suite) + ' 😔\n\nEssayer d\'autres dates?',
+          en: 'Mi dispiace! Those dates are **not available** for ' + (sn[suiteToCheck]||suiteToCheck) + ' 😔\n\nWould you like to try different dates?',
+          it: 'Mi dispiace! Quelle date **non sono disponibili** per ' + (sn[suiteToCheck]||suiteToCheck) + ' 😔\n\nVuoi provare date diverse?',
+          de: 'Mi dispiace! Diese Daten sind für ' + (sn[suiteToCheck]||suiteToCheck) + ' **nicht verfügbar** 😔\n\nAndere Daten probieren?',
+          fr: 'Mi dispiace! Ces dates ne sont **pas disponibles** pour ' + (sn[suiteToCheck]||suiteToCheck) + ' 😔\n\nEssayer d\'autres dates?',
         };
         addMessage('toki', (_nam[_sl2]||_nam.en), [
           {en:'Try different dates',it:'Prova altre date',de:'Andere Daten',fr:'Autres dates'}[_sl2]||'Try different dates',
@@ -3742,8 +3744,11 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       // 2. Update the booking row in Supabase
       const newNights = Math.round((new Date(newCo) - new Date(newCi)) / 86400000);
-      const newSuite   = pendingDateChange.newSuite || b.suite;
-      const patchBody  = { checkin: newCi, checkout: newCo, nights: newNights };
+      const lp2 = window.LIVE_PRICES || {};
+      const sr2 = { pietra:{price:(lp2.pietra&&lp2.pietra.price)||200,cleaning:(lp2.pietra&&lp2.pietra.cleaning)||150}, cielo:{price:(lp2.cielo&&lp2.cielo.price)||200,cleaning:(lp2.cielo&&lp2.cielo.cleaning)||150}, villa:{price:(lp2.villa&&lp2.villa.price)||350,cleaning:(lp2.villa&&lp2.villa.cleaning)||250} };
+      const newRate = sr2[newSuite] || sr2[b.suite] || sr2.pietra;
+      const newTotalPrice = newNights * newRate.price + newRate.cleaning;
+      const patchBody  = { checkin: newCi, checkout: newCo, nights: newNights, total_price: newTotalPrice };
       if (newSuite !== b.suite) patchBody.suite = newSuite;
 
       await fetch(SB_URL + '/rest/v1/bookings?id=eq.' + b.id + '&apikey=' + SB_KEY, {
@@ -3869,7 +3874,11 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     } catch(e) {
       hideTyping();
-      addMessage('toki', 'Mi dispiace, something went wrong. Please email **' + OWNER_EMAIL + '** with reference **' + ref + '** and your new dates.');
+      console.error('[Toki date change error]', e);
+      addMessage('toki',
+        'Mi dispiace, something went wrong processing your change 😔\n\nError: ' + (e.message||'unknown') + '\n\nWould you like to try again?',
+        ['Try again', 'I have a question']);
+      awaitingDateChange = true;
     }
     pendingDateChange = null;
   }
