@@ -1721,7 +1721,7 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
     </button>
 
     <p class="book-note">
-      <span data-lang="en" class="al">Free to enquire · Secure payment · Min 4 nights</span>
+      <span data-lang="en" class="al">Free to enquire · Secure payment · Min 4 nights · Min 4 nights</span>
       <span data-lang="it">Richiesta gratuita · Min 4 notti</span>
       <span data-lang="de">Kostenlose Anfrage · Min 4 Nächte</span>
       <span data-lang="fr">Demande gratuite · Min 4 nuits</span>
@@ -2109,7 +2109,7 @@ var BK_LABELS={
     confirmBooking:'Conferma Prenotazione', bookingReceived:'Prenotazione Ricevuta!',
     fullName:'Nome completo *', email:'Indirizzo email *', phone:'Numero di telefono *',
     message:'Messaggio (opzionale)', msgPh:'Richieste speciali, orario di arrivo…',
-    reviewBtn:'Riepilogo Prenotazione', confirmBtn:'Paga Ora — Checkout Sicuro',
+    reviewBtn:'Riepilogo Prenotazione', confirmBtn:'Paga Ora — Pagamento Sicuro',
     backBtn:'← Torna e modifica', closeBtn:'Chiudi',
     bookingSummary:'Riepilogo Prenotazione', guestInfo:'Informazioni Ospite',
     confirmNote:'Controlla i dettagli della prenotazione. Confermando invii la tua richiesta — risponderemo entro 24 ore.',
@@ -2440,12 +2440,11 @@ window.bkBack=function(){qs('bkPanelTitle').textContent='Your Details';bkShowSte
 window.bkSubmit=async function(){
   var btn=qs('bkConfirmBtn');
   btn.disabled=true;
-  btn.innerHTML='<span class="bk-spin"></span>&nbsp;'+({en:'Redirecting to payment…',it:'Reindirizzamento al pagamento…',de:'Weiterleitung zur Zahlung…',fr:'Redirection vers le paiement…'}[lang]||'Redirecting…');
-
+  var loadingLabels={en:'Redirecting to payment...',it:'Reindirizzamento al pagamento...',de:'Weiterleitung zur Zahlung...',fr:'Redirection vers le paiement...'};
+  btn.textContent=loadingLabels[lang]||'Redirecting...';
   var id=Date.now();
   var ref='MM-'+id.toString(36).toUpperCase();
   var s=SUITES[BK.suite];
-
   var bookingData={
     id:id, ref:ref,
     suite:BK.suite, suiteName:s.name,
@@ -2456,7 +2455,6 @@ window.bkSubmit=async function(){
     message:BK.message||'',
     lang:lang, source:'direct'
   };
-
   try{
     var resp=await fetch(CFG.SB_URL+'/functions/v1/create-checkout-session',{
       method:'POST',
@@ -2464,16 +2462,13 @@ window.bkSubmit=async function(){
       body:JSON.stringify({booking:bookingData})
     });
     var result=await resp.json();
-    if(!resp.ok||!result.url){
-      throw new Error(result.error||'Failed to create payment session');
-    }
-    // Redirect to Stripe Checkout
+    if(!resp.ok||!result.url) throw new Error(result.error||'Failed to create payment session');
     window.location.href=result.url;
   }catch(e){
     console.error('[MM] Stripe error:',e.message);
     btn.disabled=false;
-    btn.innerHTML=({en:'Confirm Booking',it:'Conferma Prenotazione',de:'Buchung bestätigen',fr:'Confirmer la Réservation'}[lang]||'Confirm Booking')+' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 13 4 10"/><line x1="4" y1="10" x2="4" y2="20"/><polyline points="9 13 9 20"/></svg>';
-    alert('Payment error: '+e.message+'. Please try again or contact us directly.');
+    btn.textContent='Pay Now';
+    alert('Payment error: '+e.message+'. Please try again.');
   }
 };
 
@@ -2484,34 +2479,33 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&_panelOpen)
 function bkShowStep(n){['bkStep2','bkStep3','bkStep4'].forEach(function(id,i){qs(id).style.display=(i+2===n)?'':'none';});bkDots(n);}
 function bkDots(step){var dots=[qs('bkDot1'),qs('bkDot2'),qs('bkDot3')];var lines=[qs('bkLine1'),qs('bkLine2')];var idx=step-2;dots.forEach(function(d,i){d.classList.remove('active','done');if(i<idx)d.classList.add('done');else if(i===idx)d.classList.add('active');});lines.forEach(function(l,i){l.classList.toggle('done',i<idx);});}
 
-// ── Handle Stripe redirect back ──
+// Handle Stripe redirect back
+function mmCloseOverlay(){var el=document.getElementById('mm-po');if(el)el.remove();history.replaceState(null,'',location.pathname);}
 (function(){
-  var params=new URLSearchParams(location.search);
-  var payment=params.get('payment');
-  var ref=params.get('ref');
-  var pLang=params.get('lang')||'en';
-  if(payment==='success'&&ref){
-    // Show success overlay
-    var msg={
-      en:'Your booking is confirmed! Reference: <strong>'+ref+'</strong><br><br>A confirmation email is on its way to your inbox.',
-      it:'La tua prenotazione è confermata! Riferimento: <strong>'+ref+'</strong><br><br>Un'email di conferma è in arrivo.',
-      de:'Ihre Buchung ist bestätigt! Referenz: <strong>'+ref+'</strong><br><br>Eine Bestätigungs-E-Mail ist unterwegs.',
-      fr:'Votre réservation est confirmée! Référence: <strong>'+ref+'</strong><br><br>Un email de confirmation est en route.'
-    }[pLang]||('Booking confirmed! Reference: <strong>'+ref+'</strong>');
-    var overlay=document.createElement('div');
-    overlay.style.cssText='position:fixed;inset:0;background:rgba(10,10,18,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
-    overlay.innerHTML='<div style="background:#0F0F1A;border:1px solid rgba(39,174,96,0.4);border-radius:8px;padding:40px 32px;max-width:480px;text-align:center;font-family:Arial,sans-serif">'
-      +'<div style="font-size:40px;margin-bottom:16px">🌊</div>'
-      +'<h2 style="font-family:Georgia,serif;color:#27ae60;font-size:22px;font-weight:300;margin:0 0 14px">'+{en:'Booking Confirmed',it:'Prenotazione Confermata',de:'Buchung Bestätigt',fr:'Réservation Confirmée'}[pLang]+'</h2>'
-      +'<p style="color:#E8DDD0;font-size:14px;line-height:1.7;margin:0 0 24px">'+msg+'</p>'
-      +'<button onclick="this.closest('div[style]').remove();history.replaceState(null,'',location.pathname)" style="padding:12px 28px;background:#C8963E;color:#0A0A12;border:none;border-radius:3px;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:700">'
-      +{en:'Close',it:'Chiudi',de:'Schließen',fr:'Fermer'}[pLang]
-      +'</button></div>';
-    document.body.appendChild(overlay);
-    history.replaceState(null,'',location.pathname+(location.hash||''));
-  } else if(payment==='cancelled'){
-    // Quietly remove param, booking panel stays closed
-    history.replaceState(null,'',location.pathname+'#booking'+(location.hash?'':'')); 
+  var p=new URLSearchParams(location.search);
+  var pay=p.get('payment'), ref=p.get('ref'), pl=p.get('lang')||'en';
+  if(pay==='success'&&ref){
+    var msgs={
+      en:'Your booking is confirmed! Reference: <strong>'+ref+'</strong><br><br>A confirmation email is on its way.',
+      it:'La tua prenotazione e confermata! Riferimento: <strong>'+ref+'</strong><br><br>Una email di conferma e in arrivo.',
+      de:'Ihre Buchung ist bestaetigt! Referenz: <strong>'+ref+'</strong><br><br>Eine E-Mail ist unterwegs.',
+      fr:'Votre reservation est confirmee! Reference: <strong>'+ref+'</strong><br><br>Un email de confirmation est en route.'
+    };
+    var titles={en:'Booking Confirmed',it:'Prenotazione Confermata',de:'Buchung Bestaetigt',fr:'Reservation Confirmee'};
+    var closes={en:'Close',it:'Chiudi',de:'Schliessen',fr:'Fermer'};
+    var ov=document.createElement('div');
+    ov.id='mm-po';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(10,10,18,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    ov.innerHTML='<div style="background:#0F0F1A;border:1px solid rgba(39,174,96,0.4);border-radius:8px;padding:40px 32px;max-width:480px;text-align:center;font-family:Arial,sans-serif">'
+      +'<div style="font-size:40px;margin-bottom:16px">&#127882;</div>'
+      +'<h2 style="font-family:Georgia,serif;color:#27ae60;font-size:22px;font-weight:300;margin:0 0 14px">'+(titles[pl]||titles.en)+'</h2>'
+      +'<p style="color:#E8DDD0;font-size:14px;line-height:1.7;margin:0 0 24px">'+(msgs[pl]||msgs.en)+'</p>'
+      +'<button onclick="mmCloseOverlay()" style="padding:12px 28px;background:#C8963E;color:#0A0A12;border:none;border-radius:3px;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:700">'+(closes[pl]||'Close')+'</button>'
+      +'</div>';
+    document.body.appendChild(ov);
+    history.replaceState(null,'',location.pathname);
+  } else if(pay==='cancelled'){
+    history.replaceState(null,'',location.pathname+'#booking');
   }
 })();
 
@@ -4048,7 +4042,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
         rows.push(Object.assign({}, base, { id: id+1, suite:'pietra', linked_to_villa:true }));
         rows.push(Object.assign({}, base, { id: id+2, suite:'cielo',  linked_to_villa:true }));
       }
-      // Create Stripe checkout session instead of inserting booking directly
+      // Get Stripe payment link instead of inserting booking
       const stripeResp = await fetch(SB_URL + '/functions/v1/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
@@ -4079,12 +4073,11 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       addMessage('toki',
-        '✅ **Your booking is ready to confirm!**\n\n' +
+        '🌊 **Booking request sent!**\n\nReference: **' + ref + '**\n\n' +
         bk.suiteName + ' · ' + bk.checkin + ' → ' + bk.checkout + '\n' +
         bk.nights + ' nights · ' + bk.guests + ' guests · **€' + bk.total + '**\n\n' +
-        '👉 **[Click here to pay and confirm your booking](' + paymentUrl + ')**\n\n' +
-        'You will be redirected to our secure Stripe checkout. After payment, you will receive a confirmation email at **' + bk.email + '**.',
-        ['I have a question']);
+        'The owner will confirm within 24 hours. A confirmation email is on its way to **' + bk.email + '**.',
+        ['Check-in info', 'I have a question']);
 
       tokiBooking = null;
 
