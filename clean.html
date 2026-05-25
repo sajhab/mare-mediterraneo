@@ -70,6 +70,15 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .btn-done{padding:10px 18px;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.3);border-radius:3px;color:var(--green);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
 .btn-undo{padding:10px 18px;background:rgba(200,185,154,0.05);border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
 .stamp{font-size:9px;color:var(--muted);margin-top:10px}
+.cleaner-picker{margin-top:12px;padding:12px 14px;background:rgba(200,185,154,0.04);border:1px solid var(--border);border-radius:4px;display:none}
+.cleaner-picker.show{display:block}
+.cleaner-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.cleaner-btns{display:flex;gap:8px;flex-wrap:wrap}
+.cleaner-num{width:44px;height:44px;border-radius:4px;border:1px solid var(--border);background:rgba(200,185,154,0.04);color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.cleaner-num.selected{background:rgba(200,150,62,0.15);border-color:var(--gold);color:var(--gold)}
+.cleaner-confirm{margin-top:10px;width:100%;padding:10px;background:rgba(102,119,255,0.12);border:1px solid rgba(102,119,255,0.3);border-radius:3px;color:var(--blue);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.num-cleaners-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.num-cleaners-badge span{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold)}
 
 /* UPCOMING CARDS */
 .upcoming-card{background:var(--notte2);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start}
@@ -199,7 +208,7 @@ var TXT = {
     needsClean:'Da Pulire', inProgress:'In Corso', done:'Completata', free:'Libera',
     checkout:'Check-out oggi', checkin:'Check-in domani',
     nextGuest:'Prossimo ospite', noNext:'Nessun prossimo ospite',
-    start:'Inizia', markDone:'Fatto', undo:'Annulla',
+    start:'Inizia', markDone:'Fatto', undo:'Annulla', howMany:'Quante persone puliscono?', confirmStart:'Conferma e Inizia',
     started:'Iniziato', completed:'Completato',
     noToday:'Nessuna pulizia prevista oggi',
     noUpcoming:'Nessun evento nel periodo selezionato',
@@ -216,7 +225,7 @@ var TXT = {
     needsClean:'Clean Now', inProgress:'In Progress', done:'Done', free:'Free',
     checkout:'Check-out today', checkin:'Check-in tomorrow',
     nextGuest:'Next guest', noNext:'No next guest',
-    start:'Start', markDone:'Mark Done', undo:'Undo',
+    start:'Start', markDone:'Mark Done', undo:'Undo', howMany:'How many cleaners?', confirmStart:'Confirm & Start',
     started:'Started', completed:'Completed',
     noToday:'No cleanings scheduled today',
     noUpcoming:'No events in selected period',
@@ -345,6 +354,9 @@ function renderToday(){
     h += '<div class="clean-info">'+reason+'</div>';
 
     // Timestamps
+    if(sess && sess.num_cleaners){
+      h += '<div class="num-cleaners-badge">'+(lang==='it'?'Pulitrici:':'Cleaners:')+' <span>'+sess.num_cleaners+'</span></div>';
+    }
     if(sess && sess.started_at){
       var stamp = tx('started')+': '+fmtTime(sess.started_at);
       if(sess.completed_at) stamp += '  ·  '+tx('completed')+': '+fmtTime(sess.completed_at);
@@ -360,7 +372,7 @@ function renderToday(){
     // Buttons
     h += '<div class="btn-row">';
     if(!sess || sess.status==='needs'){
-      h += '<button class="btn-start" onclick="startCleaning(\''+suite+'\')">▶ '+tx('start')+'</button>';
+      h += '<button class="btn-start" onclick="openCleanerPicker(\''+suite+'\')">▶ '+tx('start')+'</button>';
     }
     if(sess && sess.status==='in_progress'){
       h += '<button class="btn-done" onclick="markDone(\''+suite+'\')">✓ '+tx('markDone')+'</button>';
@@ -369,6 +381,16 @@ function renderToday(){
       h += '<button class="btn-undo" onclick="undoDone(\''+suite+'\')">↩ '+tx('undo')+'</button>';
     }
     h += '</div>';
+    // Cleaner count picker (hidden until Start clicked)
+    h += '<div class="cleaner-picker" id="picker-'+suite+'">';
+    h += '<div class="cleaner-label">'+tx('howMany')+'</div>';
+    h += '<div class="cleaner-btns">';
+    for(var n=1;n<=6;n++){
+      h += '<div class="cleaner-num" data-suite="'+suite+'" data-n="'+n+'" onclick="selectCleanerNum(\''+suite+'\','+n+')">'+n+'</div>';
+    }
+    h += '</div>';
+    h += '<button class="cleaner-confirm" id="confirmStart-'+suite+'" onclick="confirmStartCleaning(\''+suite+'\')">'+tx('confirmStart')+'</button>';
+    h += '</div>';
     h += '</div></div>'; // body + card
   });
 
@@ -376,15 +398,39 @@ function renderToday(){
 }
 
 // ── SESSION ACTIONS ───────────────────────────────────────────
-async function startCleaning(suite){
+var _pickerSelection = {}; // { suite: numCleaners }
+
+function openCleanerPicker(suite){
+  var picker = document.getElementById('picker-'+suite);
+  if(!picker) return;
+  picker.classList.toggle('show');
+  // default select 1
+  if(!_pickerSelection[suite]){
+    _pickerSelection[suite] = 1;
+    var first = picker.querySelector('[data-n="1"]');
+    if(first) first.classList.add('selected');
+  }
+}
+
+function selectCleanerNum(suite, n){
+  _pickerSelection[suite] = n;
+  var picker = document.getElementById('picker-'+suite);
+  if(!picker) return;
+  picker.querySelectorAll('.cleaner-num').forEach(function(el){
+    el.classList.toggle('selected', parseInt(el.getAttribute('data-n'))===n);
+  });
+}
+
+async function confirmStartCleaning(suite){
   var today = dStr(new Date());
   if(getSession(suite, today)){ renderToday(); return; }
-  var row = {suite:suite, date:today, status:'in_progress', started_at:new Date().toISOString(), cleaner:CLEANER, checklist:{}, notes:''};
+  var n = _pickerSelection[suite] || 1;
+  var row = {suite:suite, date:today, status:'in_progress', started_at:new Date().toISOString(), cleaner:CLEANER, num_cleaners:n, checklist:{}, notes:''};
   var result = await sbPost('cleaning_sessions', row);
   var s = Array.isArray(result) ? result[0] : result;
   if(!sessions[suite]) sessions[suite]=[];
   sessions[suite].unshift(s);
-  showToast(lang==='it'?'Pulizia iniziata!':'Cleaning started!');
+  showToast(lang==='it'?'Pulizia iniziata con '+n+(n===1?' persona':' persone')+'!':'Started with '+n+(n===1?' cleaner':' cleaners')+'!');
   renderToday();
 }
 
@@ -493,6 +539,7 @@ function renderHistory(){
     if(s.started_at)   h+='<span>'+tx('started')+': '+fmtTime(s.started_at)+'</span>';
     if(s.completed_at) h+='<span>'+tx('completed')+': '+fmtTime(s.completed_at)+'</span>';
     if(dur)            h+='<span>'+tx('duration')+': '+dur+'</span>';
+    if(s.num_cleaners) h+='<span>'+(lang==='it'?'Pulitrici':'Cleaners')+': '+s.num_cleaners+'</span>';
     h+='</div>';
     h+='<span class="hist-badge '+(isDone?'badge-done':'badge-progress')+'">'+tx(isDone?'done':'inProgress')+'</span>';
     h+='</div>';
