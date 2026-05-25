@@ -733,6 +733,13 @@ function loadAll(callback) {
         if (row.key === 'property' && row.value) {
           document.getElementById('waNumber').value = row.value.whatsapp || '+35699699184';
         }
+        if (row.key === 'ical' && row.value) {
+          var ic = row.value;
+          document.getElementById('icalPietraAirbnb').value  = (ic.pietra && ic.pietra.airbnb)      || '';
+          document.getElementById('icalCieloAirbnb').value   = (ic.cielo  && ic.cielo.airbnb)       || '';
+          document.getElementById('icalPietraBooking').value = (ic.pietra && ic.pietra.bookingCom)   || '';
+          document.getElementById('icalCieloBooking').value  = (ic.cielo  && ic.cielo.bookingCom)    || '';
+        }
       }
       setSyncStatus(true);
       if (callback) callback();
