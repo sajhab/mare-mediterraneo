@@ -152,6 +152,14 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
           <option value="pending">Pending</option>
         </select>
       </div>
+      <div class="form-group"><label class="form-label">Email Language</label>
+        <select class="form-select" id="newLang">
+          <option value="en">🇬🇧 English</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="fr">🇫🇷 Français</option>
+        </select>
+      </div>
       <div class="form-group full" style="background:rgba(200,150,62,0.05);border:1px solid rgba(200,150,62,0.15);border-radius:4px;padding:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <div>
           <div class="form-label" style="margin-bottom:4px">Nights</div>
@@ -867,93 +875,144 @@ function updateBookingCalc() {
 // Auto-calc wiring handled by event listeners below
 
 // ── EMAIL TEMPLATE (same as website booking flow) ─────────────
+// ── BK_LABELS (same as index.html) ──────────────────────────
+var BK_LABELS={
+  en:{
+    suite:'Suite', checkin:'Check-in', checkout:'Check-out',
+    nights:'Nights', guests:'Guests', nightlyRate:'Nightly rate',
+    cleaningFee:'Cleaning fee', total:'Total',
+    bookingReceived:'Your booking request is received',
+    bookingConfirmed:'Your booking is confirmed',
+    reference:'Reference',
+    toki:'Questions? Ask Toki',
+    tokiDesc:'Our AI concierge <b>Toki</b> is available 24/7 on our website and can help you with bookings, check-in &amp; check-out, suite changes, cancellations, local recommendations and more.',
+    tokiBtn:'Chat with Toki &rarr;',
+    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
+    from:'from', by:'by',
+  },
+  it:{
+    suite:'Suite', checkin:'Check-in', checkout:'Check-out',
+    nights:'Notti', guests:'Ospiti', nightlyRate:'Tariffa per notte',
+    cleaningFee:'Pulizie', total:'Totale',
+    bookingReceived:'La tua richiesta di prenotazione è stata ricevuta',
+    bookingConfirmed:'La tua prenotazione è confermata',
+    reference:'Riferimento',
+    toki:'Domande? Chiedi a Toki',
+    tokiDesc:'Il nostro concierge AI <b>Toki</b> è disponibile 24/7 sul nostro sito e può aiutarti con prenotazioni, check-in &amp; check-out, cambi di suite, cancellazioni, consigli locali e altro.',
+    tokiBtn:'Chatta con Toki &rarr;',
+    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
+    from:'dalle', by:'entro le',
+  },
+  de:{
+    suite:'Suite', checkin:'Anreise', checkout:'Abreise',
+    nights:'Nächte', guests:'Gäste', nightlyRate:'Nachtpreis',
+    cleaningFee:'Reinigungsgebühr', total:'Gesamt',
+    bookingReceived:'Ihre Buchungsanfrage ist eingegangen',
+    bookingConfirmed:'Ihre Buchung ist bestätigt',
+    reference:'Referenz',
+    toki:'Fragen? Frag Toki',
+    tokiDesc:'Unser KI-Concierge <b>Toki</b> ist 24/7 auf unserer Website verfügbar und hilft bei Buchungen, Check-in &amp; Check-out, Suite-Wechseln, Stornierungen, lokalen Empfehlungen und mehr.',
+    tokiBtn:'Mit Toki chatten &rarr;',
+    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
+    from:'ab', by:'bis',
+  },
+  fr:{
+    suite:'Suite', checkin:'Arrivée', checkout:'Départ',
+    nights:'Nuits', guests:'Voyageurs', nightlyRate:'Tarif par nuit',
+    cleaningFee:'Frais de ménage', total:'Total',
+    bookingReceived:'Votre demande de réservation est reçue',
+    bookingConfirmed:'Votre réservation est confirmée',
+    reference:'Référence',
+    toki:'Questions ? Demandez à Toki',
+    tokiDesc:'Notre concierge IA <b>Toki</b> est disponible 24h/24 sur notre site et peut vous aider avec les réservations, check-in &amp; check-out, changements de suite, annulations, recommandations locales et plus.',
+    tokiBtn:'Discuter avec Toki &rarr;',
+    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
+    from:'à partir de', by:'avant',
+  }
+};
+function bkEmailL(key, lang) {
+  var l = BK_LABELS[lang] || BK_LABELS.en;
+  return l[key] || BK_LABELS.en[key] || key;
+}
+
 function buildBookingEmailHtml(data) {
-  // data: { guest, suite, checkin, checkout, nights, guests, totalPrice, status, referenceId }
+  // data: { guest, suite, checkin, checkout, nights, guests, nightlyRate, totalPrice, status, referenceId, lang }
+  var lang       = data.lang || 'en';
+  var L          = function(k) { return bkEmailL(k, lang); };
   var suiteLabel = { pietra: 'Suite Pietra', cielo: 'Suite Cielo', villa: 'Villa Completa' }[data.suite] || data.suite;
-  var statusLabel = data.status === 'confirmed' ? 'Confirmed' : 'Pending';
-  var statusColor = data.status === 'confirmed' ? '#27ae60' : '#C8963E';
-  var fmtD = function(s) { return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'}); };
 
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-  '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">' +
-  '</head><body style="margin:0;padding:0;background:#0A0A12;font-family:\'Tenor Sans\',Arial,sans-serif">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A12;padding:40px 20px">' +
+  // Nightly rate: derive from totalPrice and nights if not passed explicitly
+  var nightlyRate = data.nightlyRate || (data.nights > 0 ? Math.round((parseFloat(data.totalPrice) - (data.cleaningFee || 0)) / data.nights) : 0);
+  var cleaningFee = data.cleaningFee || ({ pietra:150, cielo:150, villa:250 }[data.suite] || 150);
+
+  var headline = data.status === 'confirmed' ? L('bookingConfirmed') : L('bookingReceived');
+
+  // Date formatter — short numeric for email table rows (matches screenshot)
+  var fmtShort = function(s) { return s; }; // keep YYYY-MM-DD, looks clean
+  var fmtLong  = function(s) {
+    try { return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'}); }
+    catch(e) { return s; }
+  };
+
+  var ROW = function(label, value, gold) {
+    return '<tr style="border-bottom:1px solid rgba(200,185,154,0.08)">' +
+      '<td style="padding:12px 32px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);width:40%">' + label + '</td>' +
+      '<td style="padding:12px 32px;font-size:13px;color:' + (gold ? '#C8963E' : '#E8DDD0') + ';text-align:right;font-family:\'Cormorant Garamond\',Georgia,serif;font-size:15px">' + value + '</td>' +
+      '</tr>';
+  };
+
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
+  '<body style="margin:0;padding:0;background:#111118;font-family:Arial,sans-serif">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="background:#111118;padding:32px 16px">' +
   '<tr><td align="center">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#0F0F1A;border:1px solid rgba(200,185,154,0.12);border-radius:8px;overflow:hidden">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;background:#16161F;border:1px solid rgba(200,185,154,0.1);border-radius:4px;overflow:hidden">' +
 
-  // Header
-  '<tr><td style="background:linear-gradient(135deg,#0F0F1A 0%,#1a1a2e 100%);padding:36px 40px;text-align:center;border-bottom:1px solid rgba(200,185,154,0.08)">' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:32px;color:#C8B99A;letter-spacing:1px">Mare Mediterraneo</div>' +
-  '<div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-top:6px">Torre Chianca · Salento · Puglia</div>' +
+  // ── Header ──
+  '<tr><td style="padding:36px 32px 28px;border-bottom:1px solid rgba(200,185,154,0.08)">' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:30px;color:#C8B99A;letter-spacing:1px;margin-bottom:4px">Mare Mediterraneo</div>' +
+  '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,185,154,0.4)">TORRE CHIANCA &middot; SALENTO &middot; PUGLIA</div>' +
   '</td></tr>' +
 
-  // Status banner
-  '<tr><td style="padding:0">' +
-  '<div style="background:rgba(200,185,154,0.04);border-bottom:1px solid rgba(200,185,154,0.08);padding:20px 40px;text-align:center">' +
-  '<div style="display:inline-block;padding:6px 18px;border-radius:20px;border:1px solid '+statusColor+';color:'+statusColor+';font-size:9px;letter-spacing:3px;text-transform:uppercase">'+statusLabel+'</div>' +
-  (data.referenceId ? '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#F5EFE6;letter-spacing:3px;margin-top:10px">'+data.referenceId+'</div>' : '') +
-  '</div></td></tr>' +
-
-  // Greeting
-  '<tr><td style="padding:32px 40px 0">' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;font-weight:300;color:#F5EFE6;margin-bottom:10px">Dear ' + data.guest + ',</div>' +
-  (data.status === 'confirmed'
-    ? '<p style="font-size:13px;color:rgba(232,221,208,0.7);line-height:1.8;margin:0">Your reservation at Mare Mediterraneo has been confirmed. We look forward to welcoming you to our corner of Salento.</p>'
-    : '<p style="font-size:13px;color:rgba(232,221,208,0.7);line-height:1.8;margin:0">Thank you for your reservation request at Mare Mediterraneo. We have received your booking and will confirm it shortly.</p>') +
+  // ── Headline + Reference ──
+  '<tr><td style="padding:28px 32px 8px">' +
+  '<div style="font-size:22px;color:#E8DDD0;font-weight:400;margin-bottom:8px">' + headline + '</div>' +
+  (data.referenceId
+    ? '<div style="font-size:11px;color:rgba(200,185,154,0.45);letter-spacing:1px">' + L('reference') + ': <span style="color:rgba(200,185,154,0.7)">' + data.referenceId + '</span></div>'
+    : '') +
   '</td></tr>' +
 
-  // Booking details card
-  '<tr><td style="padding:24px 40px">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(200,185,154,0.04);border:1px solid rgba(200,185,154,0.12);border-radius:6px;overflow:hidden">' +
-  '<tr><td style="padding:20px 24px;border-bottom:1px solid rgba(200,185,154,0.08)">' +
-  '<div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#C8963E;margin-bottom:6px">Your Suite</div>' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:20px;color:#F5EFE6">'+suiteLabel+'</div>' +
-  '</td></tr>' +
-  '<tr><td style="padding:0">' +
+  // ── Booking table ──
+  '<tr><td style="padding:16px 0 0">' +
   '<table width="100%" cellpadding="0" cellspacing="0">' +
-  '<tr>' +
-  '<td style="padding:16px 24px;border-bottom:1px solid rgba(200,185,154,0.08);border-right:1px solid rgba(200,185,154,0.08);width:50%;vertical-align:top">' +
-  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Check-in</div>' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:15px;color:#F5EFE6;line-height:1.4">'+fmtD(data.checkin)+'</div>' +
-  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:4px">After 15:00</div>' +
-  '</td>' +
-  '<td style="padding:16px 24px;border-bottom:1px solid rgba(200,185,154,0.08);width:50%;vertical-align:top">' +
-  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Check-out</div>' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:15px;color:#F5EFE6;line-height:1.4">'+fmtD(data.checkout)+'</div>' +
-  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:4px">Before 10:00</div>' +
-  '</td>' +
-  '</tr>' +
-  '<tr>' +
-  '<td style="padding:16px 24px;border-right:1px solid rgba(200,185,154,0.08);width:50%;vertical-align:top">' +
-  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Guests</div>' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:18px;color:#F5EFE6">'+data.guests+' guest'+(data.guests!==1?'s':'')+'</div>' +
-  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:2px">'+data.nights+' night'+(data.nights!==1?'s':'')+'</div>' +
-  '</td>' +
-  '<td style="padding:16px 24px;width:50%;vertical-align:top">' +
-  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Total</div>' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#C8963E">€'+data.totalPrice+'</div>' +
-  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:2px">Incl. cleaning fee</div>' +
-  '</td>' +
-  '</tr>' +
-  '</table></td></tr>' +
+  ROW(L('suite'),    suiteLabel) +
+  ROW(L('checkin'),  fmtShort(data.checkin)  + ' &middot; ' + L('from') + ' 15:00') +
+  ROW(L('checkout'), fmtShort(data.checkout) + ' &middot; ' + L('by')   + ' 10:00') +
+  ROW(L('nights'),   data.nights) +
+  ROW(L('guests'),   data.guests) +
+  ROW(L('nightlyRate'), '&euro;' + nightlyRate + ' &times; ' + data.nights) +
+  ROW(L('cleaningFee'), '&euro;' + cleaningFee) +
+  // Total row — bigger, gold
+  '<tr><td style="padding:16px 32px" colspan="2">' +
+  '<table width="100%" cellpadding="0" cellspacing="0"><tr>' +
+  '<td style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5)">' + L('total') + '</td>' +
+  '<td style="text-align:right;font-family:\'Cormorant Garamond\',Georgia,serif;font-size:26px;color:#C8963E">&euro;' + data.totalPrice + '</td>' +
+  '</tr></table></td></tr>' +
   '</table>' +
   '</td></tr>' +
 
-  // Contact section
-  '<tr><td style="padding:0 40px 24px">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(200,185,154,0.03);border:1px solid rgba(200,185,154,0.08);border-radius:6px;padding:20px 24px">' +
-  '<tr><td>' +
-  '<div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#C8963E;margin-bottom:10px">Questions?</div>' +
-  '<p style="font-size:12px;color:rgba(200,185,154,0.6);line-height:1.7;margin:0">Write us on WhatsApp or reply to this email — we\'re happy to help with anything you need before your arrival.</p>' +
-  '<a href="https://wa.me/35699699184" style="display:inline-block;margin-top:12px;padding:8px 20px;background:rgba(200,150,62,0.12);border:1px solid rgba(200,150,62,0.3);border-radius:3px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C8963E;text-decoration:none">WhatsApp Us</a>' +
+  // ── Toki CTA ──
+  '<tr><td style="padding:8px 32px 28px">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0F0F18;border:1px solid rgba(200,150,62,0.2);border-radius:3px">' +
+  '<tr><td style="padding:20px 24px">' +
+  '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C8963E;margin-bottom:8px">' + L('toki') + '</div>' +
+  '<div style="font-size:12px;color:rgba(200,185,154,0.55);line-height:1.7;margin-bottom:14px">' + L('tokiDesc') + '</div>' +
+  '<a href="https://maremediterraneo.com/?toki=1" style="display:inline-block;padding:9px 20px;background:rgba(200,150,62,0.15);border:1px solid rgba(200,150,62,0.4);border-radius:2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C8963E;text-decoration:none">' + L('tokiBtn') + '</a>' +
   '</td></tr></table>' +
   '</td></tr>' +
 
-  // Footer
-  '<tr><td style="padding:24px 40px;border-top:1px solid rgba(200,185,154,0.08);text-align:center">' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:16px;color:rgba(200,185,154,0.4)">Mare Mediterraneo</div>' +
-  '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.25);margin-top:4px">Torre Chianca · Salento · Italy</div>' +
-  '<div style="font-size:10px;color:rgba(200,185,154,0.25);margin-top:12px">This email was sent because a reservation was made at Mare Mediterraneo.</div>' +
+  // ── Footer ──
+  '<tr><td style="padding:16px 32px;border-top:1px solid rgba(200,185,154,0.08);text-align:center">' +
+  '<div style="font-size:10px;color:rgba(200,185,154,0.3)">' + L('footer') + '</div>' +
   '</td></tr>' +
 
   '</table></td></tr></table></body></html>';
@@ -965,7 +1024,14 @@ async function sendBookingEmail(bookingData) {
   try {
     var html = buildBookingEmailHtml(bookingData);
     var suiteLabel = { pietra: 'Suite Pietra', cielo: 'Suite Cielo', villa: 'Villa Completa' }[bookingData.suite] || bookingData.suite;
-    var subjectPrefix = bookingData.status === 'confirmed' ? 'Booking Confirmed' : 'Booking Request Received';
+    var subjectLang = bookingData.lang || 'en';
+    var subjectMap = {
+      en: { confirmed: 'Booking Confirmed', pending: 'Booking Request Received' },
+      it: { confirmed: 'Prenotazione Confermata', pending: 'Richiesta di Prenotazione Ricevuta' },
+      de: { confirmed: 'Buchung Bestätigt', pending: 'Buchungsanfrage Erhalten' },
+      fr: { confirmed: 'Réservation Confirmée', pending: 'Demande de Réservation Reçue' }
+    };
+    var subjectPrefix = (subjectMap[subjectLang] || subjectMap.en)[bookingData.status] || 'Booking Request Received';
     var payload = {
       emails: [
         // Guest email
@@ -1016,6 +1082,7 @@ async function saveBooking() {
   var totalPrice = document.getElementById('newTotalPrice').value || '0';
   var notes      = document.getElementById('newNotes').value;
   var sendEmail  = document.getElementById('newSendEmail').checked;
+  var emailLang  = document.getElementById('newLang').value || 'en';
 
   if (!checkin || !checkout || !guest) { showToast('Please fill all required fields'); return; }
   if (checkin >= checkout) { showToast('Check-out must be after check-in'); return; }
@@ -1072,7 +1139,8 @@ async function saveBooking() {
         guests: guestsNum,
         totalPrice: totalPrice,
         status: status,
-        referenceId: refId
+        referenceId: refId,
+        lang: emailLang
       });
     }
 
@@ -1085,6 +1153,7 @@ async function saveBooking() {
     document.getElementById('newStatus').value = 'confirmed';
     document.getElementById('newNightsDisplay').textContent = '—';
     document.getElementById('newSendEmail').checked = true;
+    document.getElementById('newLang').value = 'en';
     document.getElementById('addModal').classList.remove('open');
 
     await loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
