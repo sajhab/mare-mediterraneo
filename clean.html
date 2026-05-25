@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--gold:#C8963E;--pietra:#C8B99A;--notte:#0A0A12;--notte2:#0F0F1A;--sabbia:#F5EFE6;--text:#E8DDD0;--muted:rgba(232,221,208,0.5);--border:rgba(200,185,154,0.15);--green:#27ae60;--red:#e74c3c}
+:root{--gold:#C8963E;--pietra:#C8B99A;--notte:#0A0A12;--notte2:#0F0F1A;--sabbia:#F5EFE6;--text:#E8DDD0;--muted:rgba(232,221,208,0.5);--border:rgba(200,185,154,0.15);--green:#27ae60;--red:#e74c3c;--blue:#6677ff}
 body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-serif;min-height:100vh}
 
 /* LOGIN */
@@ -22,7 +22,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .login-btn{width:100%;padding:14px;background:var(--gold);color:var(--notte);border:none;border-radius:3px;font-family:'Tenor Sans',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:600}
 .login-error{color:var(--red);font-size:11px;margin-top:8px;display:none}
 
-/* HEADER */
+/* APP */
 #app{display:none}
 .header{background:var(--notte2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
 .greeting{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--sabbia)}
@@ -30,102 +30,83 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .header-right{display:flex;gap:8px;align-items:center}
 .lang-sm{padding:4px 10px;border-radius:20px;border:1px solid var(--border);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif}
 .lang-sm.active{background:var(--gold);color:var(--notte);border-color:var(--gold)}
-.exit-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:6px 12px;border-radius:2px;cursor:pointer}
+.exit-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:6px 12px;border-radius:2px;cursor:pointer;font-family:'Tenor Sans',sans-serif}
 
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--notte2)}
-.tab{flex:1;padding:12px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab{flex:1;padding:13px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Tenor Sans',sans-serif}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 
-/* CONTENT */
 .content{padding:16px;max-width:640px;margin:0 auto}
 
-/* FILTERS */
-.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.filter-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif;white-space:nowrap}
+/* FILTER BAR */
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;font-family:'Tenor Sans',sans-serif}
 .filter-pill.active{background:rgba(200,150,62,0.15);border-color:var(--gold);color:var(--gold)}
+.date-input{background:rgba(200,185,154,0.05);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:1px;color:var(--muted);outline:none;cursor:pointer}
+.date-input:focus{border-color:var(--gold);color:var(--text)}
 
-/* SECTION TITLES */
+/* SECTION */
 .sec-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
-.sec-title::after{content:'';flex:1;height:0.5px;background:rgba(200,185,154,0.15)}
+.sec-title::after{content:'';flex:1;height:0.5px;background:var(--border)}
 
-/* SUITE STATUS CARDS */
-.suite-card{border-radius:6px;overflow:hidden;margin-bottom:12px}
-.s-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
-.s-head.clean{background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.25)}
-.s-head.dirty{background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.25)}
-.s-head.occupied{background:rgba(200,150,62,0.12);border:1px solid rgba(200,150,62,0.25)}
-.s-head.in_progress{background:rgba(100,100,255,0.12);border:1px solid rgba(100,100,255,0.3)}
-.s-label{font-size:10px;letter-spacing:3px;text-transform:uppercase}
-.s-label.clean{color:var(--green)}
-.s-label.dirty{color:var(--red)}
-.s-label.occupied{color:var(--gold)}
-.s-label.in_progress{color:#8888ff}
-.s-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:2px}
-.b-clean{background:rgba(39,174,96,0.2);color:var(--green)}
-.b-dirty{background:rgba(231,76,60,0.2);color:var(--red)}
-.b-occupied{background:rgba(200,150,62,0.2);color:var(--gold)}
-.b-in_progress{background:rgba(100,100,255,0.15);color:#8888ff}
-.s-body{background:var(--notte2);border:1px solid var(--border);border-top:none;padding:14px 16px}
-.s-main{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia);margin-bottom:4px}
-.s-sub{font-size:10px;color:var(--muted);margin-bottom:2px}
+/* TODAY CARDS */
+.clean-card{background:var(--notte2);border-radius:6px;overflow:hidden;margin-bottom:10px}
+.clean-card-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.clean-card-head.needs{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.2)}
+.clean-card-head.in_progress{background:rgba(102,119,255,0.1);border:1px solid rgba(102,119,255,0.25)}
+.clean-card-head.done{background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.2)}
+.clean-card-head.free{background:rgba(200,185,154,0.04);border:1px solid var(--border)}
+.suite-name{font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.suite-name.needs{color:var(--red)}
+.suite-name.in_progress{color:var(--blue)}
+.suite-name.done{color:var(--green)}
+.suite-name.free{color:var(--muted)}
+.clean-card-body{border:1px solid var(--border);border-top:none;padding:14px 16px}
+.clean-info{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--sabbia);margin-bottom:3px}
+.clean-sub{font-size:10px;color:var(--muted);margin-bottom:12px}
+.btn-row{display:flex;gap:8px}
+.btn-start{padding:10px 18px;background:rgba(102,119,255,0.12);border:1px solid rgba(102,119,255,0.3);border-radius:3px;color:var(--blue);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-done{padding:10px 18px;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.3);border-radius:3px;color:var(--green);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-undo{padding:10px 18px;background:rgba(200,185,154,0.05);border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.stamp{font-size:9px;color:var(--muted);margin-top:10px}
 
-/* CHECKLIST */
-.cl-title{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin:14px 0 8px}
-.cl-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(200,185,154,0.06);cursor:pointer;user-select:none}
-.cl-item:last-child{border-bottom:none}
-.cl-box{width:22px;height:22px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.15s}
-.cl-item.done .cl-box{background:var(--green);border-color:var(--green);color:white}
-.cl-item.done .cl-txt{text-decoration:line-through;opacity:0.5}
-.cl-txt{font-size:13px;color:var(--text);line-height:1.4}
-.cl-progress{height:3px;background:rgba(200,185,154,0.1);border-radius:2px;margin:8px 0 14px;overflow:hidden}
-.cl-progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.3s}
-
-/* ACTION BUTTONS */
-.action-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.btn-start{flex:1;padding:12px;background:rgba(100,100,255,0.12);border:1px solid rgba(100,100,255,0.3);border-radius:3px;color:#8888ff;font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;min-width:120px}
-.btn-done{flex:1;padding:12px;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.3);border-radius:3px;color:var(--green);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;min-width:120px}
-.btn-done:disabled,.btn-start:disabled{opacity:0.4;cursor:not-allowed}
-.btn-notes{padding:12px;background:rgba(200,185,154,0.05);border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'Tenor Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
-.notes-input{width:100%;background:rgba(200,185,154,0.05);border:1px solid var(--border);border-radius:3px;padding:10px 12px;font-family:'Tenor Sans',sans-serif;font-size:12px;color:var(--text);margin-top:8px;outline:none;resize:vertical;min-height:60px;display:none}
-.session-stamp{font-size:9px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
-
-/* UPCOMING */
+/* UPCOMING CARDS */
 .upcoming-card{background:var(--notte2);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start}
-.upcoming-date-block{text-align:center;min-width:40px}
-.upcoming-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gold);line-height:1}
-.upcoming-month{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:2px}
-.upcoming-body{flex:1}
-.upcoming-suite{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
-.upcoming-action{font-size:15px;color:var(--sabbia);font-family:'Cormorant Garamond',serif;margin-bottom:3px}
-.upcoming-sub{font-size:10px;color:var(--muted)}
-.upcoming-tag{display:inline-block;font-size:7px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:5px}
+.date-block{text-align:center;min-width:44px}
+.date-num{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--gold);line-height:1}
+.date-month{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.date-day{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.ev-body{flex:1}
+.ev-suite{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.ev-action{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sabbia);margin-bottom:2px}
+.ev-sub{font-size:10px;color:var(--muted)}
+.ev-tag{display:inline-block;font-size:7px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:5px}
 .tag-out{background:rgba(231,76,60,0.15);color:var(--red)}
 .tag-in{background:rgba(39,174,96,0.15);color:var(--green)}
-.tag-cl{background:rgba(200,150,62,0.15);color:var(--gold)}
-.tag-today{background:rgba(200,150,62,0.25);color:var(--gold);font-weight:bold}
+.tag-today{background:rgba(200,150,62,0.2);color:var(--gold)}
+.tag-tomorrow{background:rgba(200,150,62,0.1);color:var(--gold)}
 
 /* HISTORY */
 .hist-card{background:var(--notte2);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:8px}
-.hist-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.hist-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
 .hist-suite{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
 .hist-date{font-size:10px;color:var(--muted)}
 .hist-cleaner{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--sabbia);margin-bottom:4px}
 .hist-meta{font-size:10px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
-.hist-check{display:inline-block;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:4px}
-.hist-done{background:rgba(39,174,96,0.15);color:var(--green)}
-.hist-partial{background:rgba(200,150,62,0.15);color:var(--gold)}
-.hist-notes{font-size:11px;color:var(--muted);margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border);font-style:italic}
+.hist-badge{display:inline-block;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-top:5px}
+.badge-done{background:rgba(39,174,96,0.15);color:var(--green)}
+.badge-progress{background:rgba(102,119,255,0.15);color:var(--blue)}
 
-/* MISC */
-.empty{text-align:center;padding:32px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px}
-.loading{text-align:center;padding:20px;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid var(--gold);color:var(--sabbia);padding:10px 20px;border-radius:4px;font-size:11px;letter-spacing:1px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px}
+.loading{text-align:center;padding:24px;color:var(--muted);font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid var(--gold);color:var(--sabbia);padding:10px 22px;border-radius:4px;font-size:11px;letter-spacing:1px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">Mare Mediterraneo</div>
@@ -135,11 +116,12 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
       <button class="lang-pill" id="lLangEn">EN</button>
     </div>
     <input type="password" class="login-input" id="loginPass" placeholder="••••••••">
-    <button class="login-btn" id="loginBtn" id="loginBtn">Entra</button>
+    <button class="login-btn" id="loginBtn">Entra</button>
     <div class="login-error" id="loginError">Password errata</div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div class="header">
     <div>
@@ -154,51 +136,42 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
   </div>
 
   <div class="tabs">
-    <div class="tab active" id="tabToday" onclick="switchTab('today')">
-      <span id="tabTodayLbl">Oggi</span>
-    </div>
-    <div class="tab" id="tabUpcoming" onclick="switchTab('upcoming')">
-      <span id="tabUpcomingLbl">Prossime</span>
-    </div>
-    <div class="tab" id="tabHistory" onclick="switchTab('history')">
-      <span id="tabHistoryLbl">Storico</span>
-    </div>
+    <div class="tab active" id="tabToday"    onclick="switchTab('today')"><span id="lblToday">Oggi</span></div>
+    <div class="tab"        id="tabUpcoming" onclick="switchTab('upcoming')"><span id="lblUpcoming">Prossime</span></div>
+    <div class="tab"        id="tabHistory"  onclick="switchTab('history')"><span id="lblHistory">Storico</span></div>
   </div>
 
   <div class="content">
-    <!-- TODAY TAB -->
+
+    <!-- TODAY -->
     <div id="panelToday">
-      <div id="suiteStatuses"><div class="loading">Caricamento...</div></div>
+      <div id="todayContent"><div class="loading">Caricamento...</div></div>
     </div>
 
-    <!-- UPCOMING TAB -->
+    <!-- UPCOMING -->
     <div id="panelUpcoming" style="display:none">
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-pill active" data-filter="all" onclick="setFilter('all')">
-          <span id="fAll">Tutte</span>
-        </button>
-        <button class="filter-pill" data-filter="pietra" onclick="setFilter('pietra')">Pietra</button>
-        <button class="filter-pill" data-filter="cielo" onclick="setFilter('cielo')">Cielo</button>
-        <button class="filter-pill" data-filter="villa" onclick="setFilter('villa')">Villa</button>
-        <button class="filter-pill" data-filter="cl" onclick="setFilter('cl')">
-          <span id="fClean">Solo Pulizie</span>
-        </button>
+      <div class="filter-bar" id="upcomingFilters">
+        <button class="filter-pill active" data-uf="all"    onclick="setUF('all')"><span id="ufAll">Tutte</span></button>
+        <button class="filter-pill"        data-uf="pietra" onclick="setUF('pietra')">Pietra</button>
+        <button class="filter-pill"        data-uf="cielo"  onclick="setUF('cielo')">Cielo</button>
+        <button class="filter-pill"        data-uf="villa"  onclick="setUF('villa')">Villa</button>
+        <input type="date" class="date-input" id="upcomingFrom" title="From">
+        <input type="date" class="date-input" id="upcomingTo"   title="To">
       </div>
-      <div id="upcomingList"><div class="loading">Caricamento...</div></div>
+      <div id="upcomingContent"><div class="loading">Caricamento...</div></div>
     </div>
 
-    <!-- HISTORY TAB -->
+    <!-- HISTORY -->
     <div id="panelHistory" style="display:none">
       <div class="filter-bar">
-        <button class="filter-pill active" data-hfilter="all" onclick="setHFilter('all')">
-          <span id="hfAll">Tutto</span>
-        </button>
-        <button class="filter-pill" data-hfilter="pietra" onclick="setHFilter('pietra')">Pietra</button>
-        <button class="filter-pill" data-hfilter="cielo" onclick="setHFilter('cielo')">Cielo</button>
-        <button class="filter-pill" data-hfilter="villa" onclick="setHFilter('villa')">Villa</button>
+        <button class="filter-pill active" data-hf="all"    onclick="setHF('all')"><span id="hfAll">Tutto</span></button>
+        <button class="filter-pill"        data-hf="pietra" onclick="setHF('pietra')">Pietra</button>
+        <button class="filter-pill"        data-hf="cielo"  onclick="setHF('cielo')">Cielo</button>
+        <button class="filter-pill"        data-hf="villa"  onclick="setHF('villa')">Villa</button>
       </div>
-      <div id="historyList"><div class="loading">Caricamento...</div></div>
+      <div id="historyContent"><div class="loading">Caricamento...</div></div>
     </div>
+
   </div>
 </div>
 
@@ -210,40 +183,47 @@ var SB_URL  = 'https://wbosfegdgizkygxjxjiz.supabase.co';
 var SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
 var lang    = 'it';
 var bookings = [];
-var sessions = {}; // keyed by suite
+var sessions = {}; // { suite: [session,...] }
 var currentTab = 'today';
 var upcomingFilter = 'all';
 var historyFilter  = 'all';
 
-var CL_ITEMS = {
-  it: ['Cambiare lenzuola e federe','Pulire e igienizzare il bagno','Lavare i pavimenti','Pulire cucina - piano cottura, lavello, superfici','Lavare i piatti rimasti','Svuotare tutti i cestini','Pulire mobili giardino/terrazza','Controllare la doccia esterna','Ricaricare i prodotti da bagno','Controllare i telecomandi del clima','Controllare che il WiFi funzioni','Controllo finale - chiudere tutte le finestre'],
-  en: ['Change all bed linen and pillowcases','Clean and sanitise bathroom','Mop all floors','Clean kitchen - hob, sink, surfaces','Wash up any dishes','Empty all bins','Wipe down garden/terrace furniture','Check outdoor shower area','Restock toiletries and soap','Check AC remotes are present','Check WiFi router is on','Final walkthrough - all windows closed']
-};
+var SUITE_NAMES = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
 
 var TXT = {
-  it:{sub:'Portale Pulizie',btn:'Entra',err:'Password errata',exit:'Esci',gm:'Buongiorno',ga:'Buon pomeriggio',ge:'Buonasera',
-    occupied:'Occupata',clean:'Pulita',dirty:'Da Pulire',in_progress:'In corso',
-    noAction:'Disponibile - Nessuna azione',checkTomorrow:'Check-out DOMANI alle 10:00',cleanToday:'PULIRE OGGI dopo le 10:00',
-    nextGuest:'Prossimo ospite',noNext:'Nessun prossimo ospite',
-    tout:'Check-out',tin:'Check-in',tcl:'Pulizia',today:'OGGI',tomorrow:'DOMANI',
-    clTitle:'Lista Pulizie',startCleaning:'Inizia Pulizia',markDone:'Pulizia Completata',addNotes:'Note',
-    confirmDone:'Confermi che la pulizia è completa?',saved:'Salvato',
-    tabToday:'Oggi',tabUpcoming:'Prossime',tabHistory:'Storico',
-    fAll:'Tutte',fClean:'Solo Pulizie',hfAll:'Tutto',
-    noUpcoming:'Nessun evento nei prossimi 30 giorni',noHistory:'Nessuna pulizia registrata',
-    duration:'Durata',items:'Voci',started:'Iniziato',completed:'Completato'
+  it:{
+    sub:'Portale Pulizie', btn:'Entra', err:'Password errata', exit:'Esci',
+    gm:'Buongiorno', ga:'Buon pomeriggio', ge:'Buonasera',
+    today:'Oggi', upcoming:'Prossime', history:'Storico',
+    all:'Tutte', allH:'Tutto',
+    needsClean:'Da Pulire', inProgress:'In Corso', done:'Completata', free:'Libera',
+    checkout:'Check-out oggi', checkin:'Check-in domani',
+    nextGuest:'Prossimo ospite', noNext:'Nessun prossimo ospite',
+    start:'Inizia', markDone:'Fatto', undo:'Annulla',
+    started:'Iniziato', completed:'Completato',
+    noToday:'Nessuna pulizia prevista oggi',
+    noUpcoming:'Nessun evento nel periodo selezionato',
+    noHistory:'Nessuna pulizia registrata',
+    tout:'Check-out', tin:'Check-in',
+    confirmDone:'Confermi che la pulizia è completata?',
+    duration:'Durata'
   },
-  en:{sub:'Cleaner Portal',btn:'Enter',err:'Wrong password',exit:'Exit',gm:'Good morning',ga:'Good afternoon',ge:'Good evening',
-    occupied:'Occupied',clean:'Clean',dirty:'Clean Now',in_progress:'In Progress',
-    noAction:'Available - No action needed',checkTomorrow:'Check-out TOMORROW at 10:00',cleanToday:'CLEAN TODAY after 10:00',
-    nextGuest:'Next guest',noNext:'No next guest yet',
-    tout:'Check-out',tin:'Check-in',tcl:'Clean',today:'TODAY',tomorrow:'TOMORROW',
-    clTitle:'Cleaning Checklist',startCleaning:'Start Cleaning',markDone:'Mark as Done',addNotes:'Notes',
-    confirmDone:'Confirm cleaning is complete?',saved:'Saved',
-    tabToday:'Today',tabUpcoming:'Upcoming',tabHistory:'History',
-    fAll:'All',fClean:'Cleans Only',hfAll:'All',
-    noUpcoming:'No events in next 30 days',noHistory:'No cleaning sessions recorded',
-    duration:'Duration',items:'Items',started:'Started',completed:'Completed'
+  en:{
+    sub:'Cleaner Portal', btn:'Enter', err:'Wrong password', exit:'Exit',
+    gm:'Good morning', ga:'Good afternoon', ge:'Good evening',
+    today:'Today', upcoming:'Upcoming', history:'History',
+    all:'All', allH:'All',
+    needsClean:'Clean Now', inProgress:'In Progress', done:'Done', free:'Free',
+    checkout:'Check-out today', checkin:'Check-in tomorrow',
+    nextGuest:'Next guest', noNext:'No next guest',
+    start:'Start', markDone:'Mark Done', undo:'Undo',
+    started:'Started', completed:'Completed',
+    noToday:'No cleanings scheduled today',
+    noUpcoming:'No events in selected period',
+    noHistory:'No cleaning sessions recorded',
+    tout:'Check-out', tin:'Check-in',
+    confirmDone:'Confirm cleaning is complete?',
+    duration:'Duration'
   }
 };
 function tx(k){ return (TXT[lang]&&TXT[lang][k]) ? TXT[lang][k] : (TXT.en[k]||k); }
@@ -252,416 +232,364 @@ function addDays(s,n){ var d=new Date(s+'T00:00:00'); d.setDate(d.getDate()+n); 
 function fmtDate(s){ return new Date(s+'T00:00:00').toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'short',day:'numeric',month:'short'}); }
 function fmtTime(ts){ if(!ts) return '—'; return new Date(ts).toLocaleTimeString(lang==='it'?'it-IT':'en-GB',{hour:'2-digit',minute:'2-digit'}); }
 function sbH(){ return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'}; }
+function showToast(m){ var t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2500); }
 
-function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2500); }
-
-// ── SUPABASE HELPERS ──────────────────────────────────────────
-function sbGet(table, query){
-  return fetch(SB_URL+'/rest/v1/'+table+'?'+query, {headers:sbH()})
+// ── SUPABASE ──────────────────────────────────────────────────
+function sbGet(table, q){
+  return fetch(SB_URL+'/rest/v1/'+table+'?'+q, {headers:sbH()})
     .then(function(r){ return r.json(); })
-    .then(function(d){ return Array.isArray(d) ? d : []; })
+    .then(function(d){ return Array.isArray(d)?d:[]; })
     .catch(function(){ return []; });
 }
 function sbPost(table, data){
-  return fetch(SB_URL+'/rest/v1/'+table, {method:'POST', headers:sbH(), body:JSON.stringify(data)})
+  return fetch(SB_URL+'/rest/v1/'+table, {method:'POST',headers:sbH(),body:JSON.stringify(data)})
     .then(function(r){ return r.json(); });
 }
-function sbPatch(table, query, data){
-  return fetch(SB_URL+'/rest/v1/'+table+'?'+query, {method:'PATCH', headers:Object.assign({},sbH(),{'Prefer':'return=representation'}), body:JSON.stringify(data)})
+function sbPatch(table, q, data){
+  return fetch(SB_URL+'/rest/v1/'+table+'?'+q, {method:'PATCH',headers:sbH(),body:JSON.stringify(data)})
     .then(function(r){ return r.json(); });
 }
 
-// ── DATA LOAD ─────────────────────────────────────────────────
+// ── LOAD ──────────────────────────────────────────────────────
 function loadData(cb){
   var today = dStr(new Date());
-  var future = addDays(today, 60);
+  var far   = addDays(today, 365);
   Promise.all([
-    sbGet('bookings', 'order=checkin.asc&checkin=lte.'+future+'&checkout=gte.'+today),
+    sbGet('bookings',  'order=checkin.asc&checkout=gte.'+addDays(today,-1)+'&checkin=lte.'+far),
     sbGet('cleaning_sessions', 'order=date.desc')
-  ]).then(function(results){
-    bookings = results[0];
-    // Index sessions by suite — keep the most recent per suite for "today"
+  ]).then(function(res){
+    bookings = res[0];
     sessions = {};
-    var allSessions = results[1];
-    allSessions.forEach(function(s){
-      if (!sessions[s.suite]) sessions[s.suite] = [];
+    res[1].forEach(function(s){
+      if(!sessions[s.suite]) sessions[s.suite]=[];
       sessions[s.suite].push(s);
     });
-    if (cb) cb();
+    if(cb) cb();
   });
 }
 
-// ── SUITE STATUS ──────────────────────────────────────────────
-function getSuiteStatus(suite){
+function getSession(suite, date){
+  return (sessions[suite]||[]).find(function(s){ return s.date===date; }) || null;
+}
+
+// ── TODAY LOGIC ───────────────────────────────────────────────
+// A suite needs cleaning on date D if:
+//   - there is a checkout on D  (clean same day after 10:00)
+//   - there is a checkin on D+1 (clean day before so it's ready)
+// Both cases: clean window = D
+function getTodayCleans(){
   var today    = dStr(new Date());
   var tomorrow = addDays(today, 1);
-  // For villa, include all bookings (linked ones too) to detect occupancy
-  var sb = bookings.filter(function(b){ return b.suite===suite; });
-  var todaySess = getTodaySession(suite);
+  var result   = {}; // keyed by suite, value = { reason, nextCheckin }
 
-  for (var i=0; i<sb.length; i++){
-    var b = sb[i];
+  bookings.forEach(function(b){
+    if(b.linked_to_villa) return;
+    var suite = b.suite;
 
-    // Checkout today — needs cleaning
-    if (b.checkout===today){
-      if (todaySess && todaySess.status==='done'){
-        return {st:'clean', main:tx('clean'), sub:tx('noAction'), needClean:true, session:todaySess};
-      }
-      var nextIn = null;
-      for (var j=0; j<sb.length; j++){
-        if (sb[j].checkin>=today && sb[j].id!==b.id){
-          if (!nextIn || sb[j].checkin<nextIn.checkin) nextIn=sb[j];
-        }
-      }
-      var st = todaySess && todaySess.status==='in_progress' ? 'in_progress' : 'dirty';
-      return {st:st, main:tx('cleanToday'),
-        sub: nextIn ? tx('nextGuest')+': '+fmtDate(nextIn.checkin)+' 15:00' : tx('noNext'),
-        needClean:true, session:todaySess};
+    // checkout today
+    if(b.checkout === today){
+      if(!result[suite]) result[suite] = {};
+      result[suite].checkout = b.guest || b.suite;
+      // find next checkin
+      var next = bookings.filter(function(x){ return x.suite===suite && x.checkin>=today && x.id!==b.id; })
+        .sort(function(a,c){ return a.checkin>c.checkin?1:-1; })[0];
+      result[suite].nextCheckin = next ? next.checkin : null;
     }
 
-    // Checkout tomorrow — occupied, prepare
-    if (b.checkout===tomorrow && b.checkin<=today){
-      return {st:'occupied', main:b.guest||tx('occupied'), sub:tx('checkTomorrow'), needClean:false, session:todaySess};
+    // checkin tomorrow — need to clean today
+    if(b.checkin === tomorrow){
+      if(!result[suite]) result[suite] = {};
+      result[suite].checkinTomorrow = b.guest || b.suite;
+      result[suite].nextCheckin = b.checkin;
     }
+  });
 
-    // Currently occupied
-    if (b.checkin<=today && b.checkout>today){
-      return {st:'occupied', main:b.guest||tx('occupied'), sub:'Check-out: '+fmtDate(b.checkout)+' 10:00', needClean:false, session:todaySess};
-    }
-  }
-
-  // Free — always allow manual clean session
-  return {st: todaySess&&todaySess.status==='in_progress' ? 'in_progress' : todaySess&&todaySess.status==='done' ? 'clean' : 'clean',
-    main: todaySess&&todaySess.status==='done' ? tx('clean') : tx('noAction'),
-    sub:'', needClean:true, session:todaySess};
+  return result;
 }
 
-function getTodaySession(suite){
-  var today = dStr(new Date());
-  var list = sessions[suite] || [];
-  return list.find(function(s){ return s.date===today; }) || null;
-}
-
-// ── RENDER TODAY TAB ──────────────────────────────────────────
+// ── RENDER TODAY ──────────────────────────────────────────────
 function renderToday(){
-  var suites = [{k:'pietra',n:'Suite Pietra'},{k:'cielo',n:'Suite Cielo'},{k:'villa',n:'Villa Completa'}];
-  var h = '<div class="sec-title">'+(lang==='it'?'Stato Appartamenti':'Suite Status')+'</div>';
-  suites.forEach(function(s){
-    var st = getSuiteStatus(s.k);
-    var badge = tx(st.st);
-    h += '<div class="suite-card" id="card-'+s.k+'">';
-    h += '<div class="s-head '+st.st+'"><span class="s-label '+st.st+'">'+s.n+'</span>';
-    h += '<span class="s-badge b-'+st.st+'">'+badge+'</span></div>';
-    h += '<div class="s-body">';
-    h += '<div class="s-main">'+st.main+'</div>';
-    if (st.sub) h += '<div class="s-sub">'+st.sub+'</div>';
+  var today  = dStr(new Date());
+  var cleans = getTodayCleans();
+  var suites = Object.keys(cleans);
 
-    if (st.needClean || true){ // always show cleaning controls
-      var sess = st.session;
-      // Progress bar
-      var cl = buildChecklistHtml(s.k, sess);
-      h += cl;
-      // Action buttons
-      h += '<div class="action-row">';
-      if (!sess || sess.status==='pending'){
-        h += '<button class="btn-start" onclick="startCleaning(\''+s.k+'\')">▶ '+tx('startCleaning')+'</button>';
-      }
-      if (sess && sess.status==='in_progress'){
-        h += '<button class="btn-done" onclick="markDone(\''+s.k+'\')">✓ '+tx('markDone')+'</button>';
-      }
-      h += '<button class="btn-notes" onclick="toggleNotes(\''+s.k+'\')">'+tx('addNotes')+'</button>';
-      h += '</div>';
-      h += '<textarea class="notes-input" id="notesInput-'+s.k+'" placeholder="'+(lang==='it'?'Note aggiuntive...':'Additional notes...')+'" onblur="saveNotes(\''+s.k+'\')">'+(sess&&sess.notes||'')+'</textarea>';
-      if (sess){
-        h += '<div class="session-stamp">';
-        if (sess.started_at) h += tx('started')+': '+fmtTime(sess.started_at)+'&nbsp;&nbsp;';
-        if (sess.completed_at) h += '&nbsp;'+tx('completed')+': '+fmtTime(sess.completed_at);
-        h += '</div>';
-      }
-    }
-    h += '</div></div>';
-  });
-  document.getElementById('suiteStatuses').innerHTML = h;
-  attachChecklistHandlers();
-}
-
-function buildChecklistHtml(suite, sess){
-  var items = CL_ITEMS[lang] || CL_ITEMS.en;
-  var checked = sess && sess.checklist ? sess.checklist : {};
-  var doneCount = Object.values(checked).filter(Boolean).length;
-  var pct = items.length > 0 ? Math.round(doneCount/items.length*100) : 0;
-
-  var h = '<div class="cl-title">'+tx('clTitle')+'&nbsp;<span style="color:var(--muted);font-size:9px">('+doneCount+'/'+items.length+')</span></div>';
-  h += '<div class="cl-progress"><div class="cl-progress-fill" style="width:'+pct+'%"></div></div>';
-  for (var i=0; i<items.length; i++){
-    var done = !!checked[i];
-    h += '<div class="cl-item'+(done?' done':'')+'" data-suite="'+suite+'" data-i="'+i+'">';
-    h += '<div class="cl-box">'+(done?'✓':'')+'</div>';
-    h += '<span class="cl-txt">'+items[i]+'</span></div>';
+  if(!suites.length){
+    document.getElementById('todayContent').innerHTML =
+      '<div class="empty">'+tx('noToday')+'</div>';
+    return;
   }
-  return h;
-}
 
-function attachChecklistHandlers(){
-  document.querySelectorAll('.cl-item').forEach(function(el){
-    el.addEventListener('click', async function(){
-      var suite = this.getAttribute('data-suite');
-      var idx   = parseInt(this.getAttribute('data-i'));
-      var sess  = getTodaySession(suite);
-      if (!sess){ showToast(lang==='it'?'Avvia prima la pulizia':'Start cleaning first'); return; }
+  var h = '<div class="sec-title">'+(lang==='it'?'Pulizie di Oggi':'Today\'s Cleanings')+'</div>';
 
-      var checked = sess.checklist ? JSON.parse(JSON.stringify(sess.checklist)) : {};
-      checked[idx] = !checked[idx];
-      // Optimistic UI
-      this.classList.toggle('done', checked[idx]);
-      this.querySelector('.cl-box').textContent = checked[idx] ? '✓' : '';
-      updateProgressBar(suite, checked);
-      // Persist to Supabase
-      await sbPatch('cleaning_sessions', 'id=eq.'+sess.id, {checklist: checked});
-      sess.checklist = checked;
-    });
+  suites.forEach(function(suite){
+    var info = cleans[suite];
+    var sess = getSession(suite, today);
+    var status = sess ? sess.status : 'needs'; // needs | in_progress | done
+    var sName  = SUITE_NAMES[suite] || suite;
+
+    // Head
+    h += '<div class="clean-card">';
+    h += '<div class="clean-card-head '+status+'">';
+    h += '<span class="suite-name '+status+'">'+sName+'</span>';
+    h += '<span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">'+tx(status==='needs'?'needsClean':status==='in_progress'?'inProgress':'done')+'</span>';
+    h += '</div>';
+
+    // Body
+    h += '<div class="clean-card-body">';
+
+    // Reason
+    var reason = '';
+    if(info.checkout)       reason = lang==='it' ? 'Check-out: '+info.checkout : 'Check-out: '+info.checkout;
+    if(info.checkinTomorrow) reason += (reason?'  ·  ':'') + (lang==='it'?'Check-in domani: '+info.checkinTomorrow:'Check-in tomorrow: '+info.checkinTomorrow);
+    if(info.nextCheckin)    reason += (reason?' · ':'')+tx('nextGuest')+': '+fmtDate(info.nextCheckin)+' 15:00';
+    h += '<div class="clean-info">'+reason+'</div>';
+
+    // Timestamps
+    if(sess && sess.started_at){
+      var stamp = tx('started')+': '+fmtTime(sess.started_at);
+      if(sess.completed_at) stamp += '  ·  '+tx('completed')+': '+fmtTime(sess.completed_at);
+      if(sess.completed_at && sess.started_at){
+        var mins = Math.round((new Date(sess.completed_at)-new Date(sess.started_at))/60000);
+        stamp += '  ·  '+tx('duration')+': '+mins+'m';
+      }
+      h += '<div class="clean-sub">'+stamp+'</div>';
+    } else {
+      h += '<div class="clean-sub">'+(lang==='it'?'Pronta dopo le 10:00':'Ready after 10:00')+'</div>';
+    }
+
+    // Buttons
+    h += '<div class="btn-row">';
+    if(!sess || sess.status==='needs'){
+      h += '<button class="btn-start" onclick="startCleaning(\''+suite+'\')">▶ '+tx('start')+'</button>';
+    }
+    if(sess && sess.status==='in_progress'){
+      h += '<button class="btn-done" onclick="markDone(\''+suite+'\')">✓ '+tx('markDone')+'</button>';
+    }
+    if(sess && sess.status==='done'){
+      h += '<button class="btn-undo" onclick="undoDone(\''+suite+'\')">↩ '+tx('undo')+'</button>';
+    }
+    h += '</div>';
+    h += '</div></div>'; // body + card
   });
-}
 
-function updateProgressBar(suite, checked){
-  var items = CL_ITEMS[lang] || CL_ITEMS.en;
-  var done = Object.values(checked).filter(Boolean).length;
-  var pct = Math.round(done/items.length*100);
-  var card = document.getElementById('card-'+suite);
-  if (!card) return;
-  var fill = card.querySelector('.cl-progress-fill');
-  var title = card.querySelector('.cl-title');
-  if (fill) fill.style.width = pct+'%';
-  if (title) title.innerHTML = tx('clTitle')+'&nbsp;<span style="color:var(--muted);font-size:9px">('+done+'/'+items.length+')</span>';
-}
-
-function toggleNotes(suite){
-  var el = document.getElementById('notesInput-'+suite);
-  if (!el) return;
-  el.style.display = el.style.display==='none'||!el.style.display ? 'block' : 'none';
-  if (el.style.display==='block') el.focus();
-}
-
-async function saveNotes(suite){
-  var el = document.getElementById('notesInput-'+suite);
-  if (!el) return;
-  var sess = getTodaySession(suite);
-  if (!sess) return;
-  await sbPatch('cleaning_sessions', 'id=eq.'+sess.id, {notes: el.value});
-  sess.notes = el.value;
+  document.getElementById('todayContent').innerHTML = h;
 }
 
 // ── SESSION ACTIONS ───────────────────────────────────────────
 async function startCleaning(suite){
   var today = dStr(new Date());
-  var existing = getTodaySession(suite);
-  if (existing) return;
+  if(getSession(suite, today)){ renderToday(); return; }
   var row = {suite:suite, date:today, status:'in_progress', started_at:new Date().toISOString(), cleaner:CLEANER, checklist:{}, notes:''};
   var result = await sbPost('cleaning_sessions', row);
-  var newSess = Array.isArray(result) ? result[0] : result;
-  if (!sessions[suite]) sessions[suite] = [];
-  sessions[suite].unshift(newSess);
+  var s = Array.isArray(result) ? result[0] : result;
+  if(!sessions[suite]) sessions[suite]=[];
+  sessions[suite].unshift(s);
   showToast(lang==='it'?'Pulizia iniziata!':'Cleaning started!');
   renderToday();
 }
 
 async function markDone(suite){
-  if (!confirm(tx('confirmDone'))) return;
-  var sess = getTodaySession(suite);
-  if (!sess) return;
+  if(!confirm(tx('confirmDone'))) return;
+  var today = dStr(new Date());
+  var sess  = getSession(suite, today);
+  if(!sess) return;
   var now = new Date().toISOString();
   await sbPatch('cleaning_sessions', 'id=eq.'+sess.id, {status:'done', completed_at:now});
-  sess.status = 'done';
-  sess.completed_at = now;
-  showToast(lang==='it'?'Pulizia completata ✓':'Cleaning marked done ✓');
+  sess.status='done'; sess.completed_at=now;
+  showToast(lang==='it'?'Pulizia completata ✓':'Done ✓');
+  renderToday();
+}
+
+async function undoDone(suite){
+  var today = dStr(new Date());
+  var sess  = getSession(suite, today);
+  if(!sess) return;
+  await sbPatch('cleaning_sessions', 'id=eq.'+sess.id, {status:'in_progress', completed_at:null});
+  sess.status='in_progress'; sess.completed_at=null;
   renderToday();
 }
 
 // ── RENDER UPCOMING ───────────────────────────────────────────
 function renderUpcoming(){
-  var today  = dStr(new Date());
-  var limit  = addDays(today, 30);
-  var NAMES  = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
-  var events = [];
+  var today   = dStr(new Date());
+  var fromVal = document.getElementById('upcomingFrom').value || today;
+  var toVal   = document.getElementById('upcomingTo').value   || addDays(today, 30);
 
+  var events = [];
   bookings.forEach(function(b){
-    if (b.linked_to_villa) return; // skip pietra/cielo sub-rows of villa bookings
-    var sn = NAMES[b.suite] || b.suite;
-    if (b.checkout>=today && b.checkout<=limit){
+    if(b.linked_to_villa) return;
+    var sn = SUITE_NAMES[b.suite] || b.suite;
+    if(b.checkout >= fromVal && b.checkout <= toVal)
       events.push({date:b.checkout, type:'out', suite:b.suite, suiteName:sn, guest:b.guest||''});
-      events.push({date:b.checkout, type:'cl',  suite:b.suite, suiteName:sn, guest:b.guest||''});
-    }
-    if (b.checkin>=today && b.checkin<=limit){
+    if(b.checkin  >= fromVal && b.checkin  <= toVal)
       events.push({date:b.checkin,  type:'in',  suite:b.suite, suiteName:sn, guest:b.guest||''});
-    }
   });
 
   events.sort(function(a,b){ return a.date>b.date?1:a.date<b.date?-1:0; });
 
-  // Apply filter
-  if (upcomingFilter==='pietra') events = events.filter(function(e){ return e.suite==='pietra'; });
-  if (upcomingFilter==='cielo')  events = events.filter(function(e){ return e.suite==='cielo'; });
-  if (upcomingFilter==='villa')  events = events.filter(function(e){ return e.suite==='villa'; });
-  if (upcomingFilter==='cl')     events = events.filter(function(e){ return e.type==='cl'; });
+  if(upcomingFilter !== 'all')
+    events = events.filter(function(e){ return e.suite===upcomingFilter; });
 
-  if (!events.length){
-    document.getElementById('upcomingList').innerHTML = '<div class="empty">'+tx('noUpcoming')+'</div>';
+  if(!events.length){
+    document.getElementById('upcomingContent').innerHTML='<div class="empty">'+tx('noUpcoming')+'</div>';
     return;
   }
 
+  var tomorrow = addDays(today, 1);
   var h = '';
   events.forEach(function(e){
-    var d = new Date(e.date+'T00:00:00');
-    var isToday    = e.date===today;
-    var isTomorrow = e.date===addDays(today,1);
-    var dayLabel   = isToday ? tx('today') : isTomorrow ? tx('tomorrow') : d.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'short'}).toUpperCase();
-    var monthLabel = d.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{month:'short'}).toUpperCase();
-    var tagCls = e.type==='out' ? 'tag-out' : e.type==='in' ? 'tag-in' : 'tag-cl';
-    var tagLbl = e.type==='out' ? tx('tout') : e.type==='in' ? tx('tin') : tx('tcl');
-    var action, sub, time;
-    if (e.type==='out'){
-      action = e.guest ? e.guest+(lang==='it'?' lascia':' checks out') : (lang==='it'?'Check-out':'Check-out');
-      sub = '10:00';
-    } else if (e.type==='in'){
-      action = e.guest ? e.guest+(lang==='it'?' arriva':' arrives') : (lang==='it'?'Check-in':'Check-in');
-      sub = '15:00';
+    var d        = new Date(e.date+'T00:00:00');
+    var isToday  = e.date===today;
+    var isTomorrow = e.date===tomorrow;
+    var dayLabel = isToday ? tx('today') : isTomorrow ? (lang==='it'?'DOMANI':'TOMORROW') :
+      d.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'short'}).toUpperCase();
+    var monthLbl = d.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{month:'short'}).toUpperCase();
+    var tagCls   = isToday ? 'tag-today' : isTomorrow ? 'tag-tomorrow' : (e.type==='out'?'tag-out':'tag-in');
+    var tagLbl   = e.type==='out' ? tx('tout') : tx('tin');
+    var action, sub;
+    if(e.type==='out'){
+      action = e.guest ? e.guest+(lang==='it'?' lascia':' checks out') : tx('tout');
+      sub    = '10:00';
     } else {
-      action = lang==='it' ? 'Pulire '+e.suiteName : 'Clean '+e.suiteName;
-      sub = lang==='it' ? 'Dopo le 10:00 · Pronto entro le 15:00' : 'After 10:00 · Ready by 15:00';
+      action = e.guest ? e.guest+(lang==='it'?' arriva':' arrives') : tx('tin');
+      sub    = '15:00';
     }
     h += '<div class="upcoming-card">';
-    h += '<div class="upcoming-date-block"><div class="upcoming-num">'+d.getDate()+'</div><div class="upcoming-month">'+monthLabel+'</div><div class="upcoming-month" style="margin-top:1px">'+dayLabel+'</div></div>';
-    h += '<div class="upcoming-body"><div class="upcoming-suite">'+e.suiteName+'</div>';
-    h += '<div class="upcoming-action">'+action+'</div>';
-    h += '<div class="upcoming-sub">'+sub+'</div>';
-    h += '<span class="upcoming-tag '+(isToday?'tag-today':tagCls)+'">'+tagLbl+(isToday?' · '+tx('today'):'')+'</span>';
+    h += '<div class="date-block"><div class="date-num">'+d.getDate()+'</div><div class="date-month">'+monthLbl+'</div><div class="date-day">'+dayLabel+'</div></div>';
+    h += '<div class="ev-body"><div class="ev-suite">'+e.suiteName+'</div>';
+    h += '<div class="ev-action">'+action+'</div>';
+    h += '<div class="ev-sub">'+sub+'</div>';
+    h += '<span class="ev-tag '+tagCls+'">'+tagLbl+(isToday?' · '+tx('today').toUpperCase():'')+'</span>';
     h += '</div></div>';
   });
-  document.getElementById('upcomingList').innerHTML = h;
+  document.getElementById('upcomingContent').innerHTML = h;
 }
 
 // ── RENDER HISTORY ────────────────────────────────────────────
 function renderHistory(){
-  var allSessions = [];
-  Object.values(sessions).forEach(function(list){ allSessions = allSessions.concat(list); });
-  allSessions.sort(function(a,b){ return a.date<b.date?1:-1; });
+  var all = [];
+  Object.values(sessions).forEach(function(list){ all=all.concat(list); });
+  all.sort(function(a,b){ return a.date<b.date?1:-1; });
+  if(historyFilter!=='all') all=all.filter(function(s){ return s.suite===historyFilter; });
 
-  if (historyFilter==='pietra') allSessions = allSessions.filter(function(s){ return s.suite==='pietra'; });
-  if (historyFilter==='cielo')  allSessions = allSessions.filter(function(s){ return s.suite==='cielo'; });
-  if (historyFilter==='villa')  allSessions = allSessions.filter(function(s){ return s.suite==='villa'; });
-
-  if (!allSessions.length){
-    document.getElementById('historyList').innerHTML = '<div class="empty">'+tx('noHistory')+'</div>';
+  if(!all.length){
+    document.getElementById('historyContent').innerHTML='<div class="empty">'+tx('noHistory')+'</div>';
     return;
   }
 
-  var NAMES = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
-  var CLlen = (CL_ITEMS[lang]||CL_ITEMS.en).length;
-  var h = '';
-  allSessions.forEach(function(s){
-    var checked = s.checklist ? Object.values(s.checklist).filter(Boolean).length : 0;
-    var pct = Math.round(checked/CLlen*100);
+  var h='';
+  all.forEach(function(s){
     var isDone = s.status==='done';
-    var dur = '';
-    if (s.started_at && s.completed_at){
-      var mins = Math.round((new Date(s.completed_at)-new Date(s.started_at))/60000);
-      dur = mins+'m';
+    var dur='';
+    if(s.started_at && s.completed_at){
+      var mins=Math.round((new Date(s.completed_at)-new Date(s.started_at))/60000);
+      dur=mins+'m';
     }
-    h += '<div class="hist-card">';
-    h += '<div class="hist-top"><div><div class="hist-suite">'+(NAMES[s.suite]||s.suite)+'</div>';
-    h += '<div class="hist-cleaner">'+(s.cleaner||'—')+'</div></div>';
-    h += '<div class="hist-date">'+fmtDate(s.date)+'</div></div>';
-    h += '<div class="hist-meta">';
-    if (s.started_at)   h += '<span>'+tx('started')+': '+fmtTime(s.started_at)+'</span>';
-    if (s.completed_at) h += '<span>'+tx('completed')+': '+fmtTime(s.completed_at)+'</span>';
-    if (dur) h += '<span>'+tx('duration')+': '+dur+'</span>';
-    h += '</div>';
-    h += '<span class="hist-check '+(pct===100?'hist-done':'hist-partial')+'">'+tx('items')+': '+checked+'/'+CLlen+' ('+pct+'%)</span>';
-    if (isDone) h += ' <span class="hist-check hist-done">✓ Done</span>';
-    if (s.notes) h += '<div class="hist-notes">'+s.notes+'</div>';
-    h += '</div>';
+    h+='<div class="hist-card">';
+    h+='<div class="hist-top"><div><div class="hist-suite">'+(SUITE_NAMES[s.suite]||s.suite)+'</div>';
+    h+='<div class="hist-cleaner">'+(s.cleaner||'—')+'</div></div>';
+    h+='<div class="hist-date">'+fmtDate(s.date)+'</div></div>';
+    h+='<div class="hist-meta">';
+    if(s.started_at)   h+='<span>'+tx('started')+': '+fmtTime(s.started_at)+'</span>';
+    if(s.completed_at) h+='<span>'+tx('completed')+': '+fmtTime(s.completed_at)+'</span>';
+    if(dur)            h+='<span>'+tx('duration')+': '+dur+'</span>';
+    h+='</div>';
+    h+='<span class="hist-badge '+(isDone?'badge-done':'badge-progress')+'">'+tx(isDone?'done':'inProgress')+'</span>';
+    h+='</div>';
   });
-  document.getElementById('historyList').innerHTML = h;
+  document.getElementById('historyContent').innerHTML=h;
 }
 
-// ── TAB + FILTER CONTROL ──────────────────────────────────────
-function switchTab(tab){
-  currentTab = tab;
-  ['today','upcoming','history'].forEach(function(t){
-    document.getElementById('panel'+t.charAt(0).toUpperCase()+t.slice(1)).style.display = t===tab?'block':'none';
-    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tab);
-  });
-  if (tab==='upcoming') renderUpcoming();
-  if (tab==='history')  renderHistory();
-}
-
-function setFilter(f){
-  upcomingFilter = f;
-  document.querySelectorAll('[data-filter]').forEach(function(el){
-    el.classList.toggle('active', el.getAttribute('data-filter')===f);
+// ── FILTERS ───────────────────────────────────────────────────
+function setUF(f){
+  upcomingFilter=f;
+  document.querySelectorAll('[data-uf]').forEach(function(el){
+    el.classList.toggle('active', el.getAttribute('data-uf')===f);
   });
   renderUpcoming();
 }
-
-function setHFilter(f){
-  historyFilter = f;
-  document.querySelectorAll('[data-hfilter]').forEach(function(el){
-    el.classList.toggle('active', el.getAttribute('data-hfilter')===f);
+function setHF(f){
+  historyFilter=f;
+  document.querySelectorAll('[data-hf]').forEach(function(el){
+    el.classList.toggle('active', el.getAttribute('data-hf')===f);
   });
   renderHistory();
 }
 
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(tab){
+  currentTab=tab;
+  ['today','upcoming','history'].forEach(function(t){
+    var cap=t.charAt(0).toUpperCase()+t.slice(1);
+    document.getElementById('panel'+cap).style.display=t===tab?'block':'none';
+    document.getElementById('tab'+cap).classList.toggle('active',t===tab);
+  });
+  if(tab==='upcoming') renderUpcoming();
+  if(tab==='history')  renderHistory();
+}
+
 // ── LANGUAGE ─────────────────────────────────────────────────
 function setLang(l, isLogin){
-  lang = l;
-  if (isLogin){
-    document.getElementById('lLangIt').classList.toggle('active', l==='it');
-    document.getElementById('lLangEn').classList.toggle('active', l==='en');
-    document.getElementById('lSub').textContent = tx('sub');
-    document.getElementById('loginBtn').textContent = tx('btn');
-    document.getElementById('loginError').textContent = tx('err');
+  lang=l;
+  if(isLogin){
+    document.getElementById('lLangIt').classList.toggle('active',l==='it');
+    document.getElementById('lLangEn').classList.toggle('active',l==='en');
+    document.getElementById('lSub').textContent=tx('sub');
+    document.getElementById('loginBtn').textContent=tx('btn');
   } else {
-    document.getElementById('aLangIt').classList.toggle('active', l==='it');
-    document.getElementById('aLangEn').classList.toggle('active', l==='en');
-    document.getElementById('exitBtn').textContent = tx('exit');
-    document.getElementById('tabTodayLbl').textContent = tx('tabToday');
-    document.getElementById('tabUpcomingLbl').textContent = tx('tabUpcoming');
-    document.getElementById('tabHistoryLbl').textContent = tx('tabHistory');
+    document.getElementById('aLangIt').classList.toggle('active',l==='it');
+    document.getElementById('aLangEn').classList.toggle('active',l==='en');
+    document.getElementById('exitBtn').textContent=tx('exit');
+    document.getElementById('lblToday').textContent=tx('today');
+    document.getElementById('lblUpcoming').textContent=tx('upcoming');
+    document.getElementById('lblHistory').textContent=tx('history');
+    document.getElementById('ufAll').textContent=tx('all');
+    document.getElementById('hfAll').textContent=tx('allH');
     renderHeader();
-    if (currentTab==='today')    renderToday();
-    if (currentTab==='upcoming') renderUpcoming();
-    if (currentTab==='history')  renderHistory();
+    if(currentTab==='today')    renderToday();
+    if(currentTab==='upcoming') renderUpcoming();
+    if(currentTab==='history')  renderHistory();
   }
 }
 
 function renderHeader(){
-  var now = new Date();
-  var h = now.getHours();
-  var gr = h<12 ? tx('gm') : h<17 ? tx('ga') : tx('ge');
-  document.getElementById('greeting').textContent = gr+', '+CLEANER+'!';
-  document.getElementById('hDate').textContent = now.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'long',day:'numeric',month:'long'});
+  var now=new Date(); var h=now.getHours();
+  document.getElementById('greeting').textContent=(h<12?tx('gm'):h<17?tx('ga'):tx('ge'))+', '+CLEANER+'!';
+  document.getElementById('hDate').textContent=now.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'long',day:'numeric',month:'long'});
+}
+
+// ── DATE FILTER INIT ──────────────────────────────────────────
+function initDateFilters(){
+  var today=dStr(new Date());
+  var f=document.getElementById('upcomingFrom');
+  var t=document.getElementById('upcomingTo');
+  f.value=today;
+  t.value=addDays(today,30);
+  f.addEventListener('change', renderUpcoming);
+  t.addEventListener('change', renderUpcoming);
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────
 document.getElementById('loginBtn').addEventListener('click', async function(){
-  var pass = document.getElementById('loginPass').value;
-  if (!pass) return;
-  var btn = this, errEl = document.getElementById('loginError');
-  btn.disabled = true; errEl.style.display = 'none';
-  try {
-    var res = await fetch(SB_URL+'/rest/v1/settings?key=eq.clean_password&select=value&apikey='+SB_KEY);
-    var rows = await res.json();
-    var stored = rows&&rows[0]&&rows[0].value ? rows[0].value.hash : null;
-    if (!stored){ errEl.textContent='Password not configured'; errEl.style.display='block'; }
-    else {
-      var enc = new TextEncoder();
-      var buf = await crypto.subtle.digest('SHA-256', enc.encode(pass));
-      var hex = Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
-      if (hex===stored){
+  var pass=document.getElementById('loginPass').value;
+  if(!pass) return;
+  var btn=this, errEl=document.getElementById('loginError');
+  btn.disabled=true; errEl.style.display='none';
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/settings?key=eq.clean_password&select=value&apikey='+SB_KEY);
+    var rows=await res.json();
+    var stored=rows&&rows[0]&&rows[0].value?rows[0].value.hash:null;
+    if(!stored){ errEl.textContent='Password not configured'; errEl.style.display='block'; }
+    else{
+      var enc=new TextEncoder();
+      var buf=await crypto.subtle.digest('SHA-256',enc.encode(pass));
+      var hex=Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+      if(hex===stored){
         document.getElementById('loginPass').value='';
         document.getElementById('loginScreen').style.display='none';
         document.getElementById('app').style.display='block';
         renderHeader();
+        initDateFilters();
         loadData(function(){ renderToday(); });
       } else {
         errEl.style.display='block'; errEl.textContent=tx('err');
@@ -669,15 +597,15 @@ document.getElementById('loginBtn').addEventListener('click', async function(){
       }
     }
   } catch(e){ errEl.textContent='Connection error'; errEl.style.display='block'; }
-  btn.disabled = false;
+  btn.disabled=false;
 });
 
-document.getElementById('loginPass').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginBtn').click(); });
-document.getElementById('exitBtn').addEventListener('click', function(){ document.getElementById('loginScreen').style.display='flex'; document.getElementById('app').style.display='none'; });
-document.getElementById('lLangIt').addEventListener('click', function(){ setLang('it', true); });
-document.getElementById('lLangEn').addEventListener('click', function(){ setLang('en', true); });
-document.getElementById('aLangIt').addEventListener('click', function(){ setLang('it', false); });
-document.getElementById('aLangEn').addEventListener('click', function(){ setLang('en', false); });
+document.getElementById('loginPass').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('loginBtn').click(); });
+document.getElementById('exitBtn').addEventListener('click',function(){ document.getElementById('loginScreen').style.display='flex'; document.getElementById('app').style.display='none'; });
+document.getElementById('lLangIt').addEventListener('click',function(){ setLang('it',true); });
+document.getElementById('lLangEn').addEventListener('click',function(){ setLang('en',true); });
+document.getElementById('aLangIt').addEventListener('click',function(){ setLang('it',false); });
+document.getElementById('aLangEn').addEventListener('click',function(){ setLang('en',false); });
 </script>
 </body>
 </html>
