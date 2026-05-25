@@ -2480,7 +2480,7 @@ function bkShowStep(n){['bkStep2','bkStep3','bkStep4'].forEach(function(id,i){qs
 function bkDots(step){var dots=[qs('bkDot1'),qs('bkDot2'),qs('bkDot3')];var lines=[qs('bkLine1'),qs('bkLine2')];var idx=step-2;dots.forEach(function(d,i){d.classList.remove('active','done');if(i<idx)d.classList.add('done');else if(i===idx)d.classList.add('active');});lines.forEach(function(l,i){l.classList.toggle('done',i<idx);});}
 
 // Handle Stripe redirect back
-function mmCloseOverlay(){var el=document.getElementById('mm-po');if(el)el.remove();history.replaceState(null,'',location.pathname);}
+window.mmCloseOverlay=function(){var el=document.getElementById('mm-po');if(el)el.remove();history.replaceState(null,'',location.pathname);};
 (function(){
   var p=new URLSearchParams(location.search);
   var pay=p.get('payment'), ref=p.get('ref'), pl=p.get('lang')||'en';
