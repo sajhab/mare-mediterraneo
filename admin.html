@@ -602,7 +602,11 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb - Suite Cielo</label><input type="text" class="form-input" id="icalCieloAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
         <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com - Suite Pietra</label><input type="text" class="form-input" id="icalPietraBooking" placeholder="https://ical.booking.com/..."></div>
         <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com - Suite Cielo</label><input type="text" class="form-input" id="icalCieloBooking" placeholder="https://ical.booking.com/..."></div>
-        <button class="btn btn-gold" id="saveIcalBtn">Save iCal Links</button>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-gold" id="saveIcalBtn">Save iCal Links</button>
+          <button class="btn btn-outline" id="syncIcalBtn" onclick="syncIcal()">↻ Sync Now</button>
+        </div>
+        <div id="icalSyncResult" style="display:none;margin-top:14px;padding:12px 14px;border-radius:4px;font-size:11px;line-height:1.7;border:1px solid rgba(200,185,154,0.15);background:rgba(200,185,154,0.04);color:var(--muted)"></div>
       </div>
       <div class="card">
         <div class="card-title">Contact</div>
@@ -2101,6 +2105,87 @@ async function deleteCoupon(id) {
     showToast('Deleted ✓');
     loadCouponSignups();
   } catch(e) { showToast('Error deleting'); }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// ICAL SYNC
+// ══════════════════════════════════════════════════════════════
+async function syncIcal() {
+  var btn = document.getElementById('syncIcalBtn');
+  var resultEl = document.getElementById('icalSyncResult');
+  btn.textContent = '↻ Syncing…';
+  btn.disabled = true;
+  resultEl.style.display = 'none';
+
+  // Read saved iCal URLs from settings in Supabase
+  try {
+    var r = await fetch(SB_URL + '/rest/v1/settings?key=eq.ical&select=value&apikey=' + SB_KEY, {headers: sbHeaders()});
+    var rows = await r.json();
+    var ical = rows && rows[0] && rows[0].value ? rows[0].value : null;
+
+    if (!ical || (!ical.pietra?.airbnb && !ical.cielo?.airbnb && !ical.pietra?.bookingCom && !ical.cielo?.bookingCom)) {
+      showResult('No iCal URLs saved. Add them above and click Save iCal Links first.', 'warn');
+      return;
+    }
+
+    // Build feeds list: { url, suite, source }
+    var feeds = [];
+    if (ical.pietra?.airbnb)    feeds.push({ url: ical.pietra.airbnb,    suite: 'pietra', source: 'airbnb' });
+    if (ical.cielo?.airbnb)     feeds.push({ url: ical.cielo.airbnb,     suite: 'cielo',  source: 'airbnb' });
+    if (ical.pietra?.bookingCom) feeds.push({ url: ical.pietra.bookingCom, suite: 'pietra', source: 'booking' });
+    if (ical.cielo?.bookingCom)  feeds.push({ url: ical.cielo.bookingCom,  suite: 'cielo',  source: 'booking' });
+
+    // Call edge function with all feeds
+    var resp = await fetch(SB_URL + '/functions/v1/sync-ical', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SB_KEY,
+        'apikey': SB_KEY
+      },
+      body: JSON.stringify({ feeds: feeds })
+    });
+
+    var result = await resp.json();
+
+    if (!resp.ok) {
+      showResult('Edge function error (' + resp.status + '): ' + JSON.stringify(result), 'error');
+      return;
+    }
+
+    // Display per-feed results
+    var lines = [];
+    if (result.results) {
+      result.results.forEach(function(r) {
+        var icon = r.error ? '✕' : '✓';
+        var msg  = r.error ? r.error : (r.inserted + ' new · ' + r.skipped + ' already existed');
+        lines.push(icon + ' ' + r.suite + ' (' + r.source + '): ' + msg);
+      });
+    }
+    if (result.total_inserted !== undefined) {
+      lines.push('');
+      lines.push('Total new bookings added: ' + result.total_inserted);
+    }
+    showResult(lines.join('<br>'), result.total_inserted > 0 ? 'ok' : 'info');
+
+    // Reload bookings so calendar reflects changes
+    await loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
+
+  } catch(e) {
+    showResult('Error: ' + e.message, 'error');
+  }
+
+  btn.textContent = '↻ Sync Now';
+  btn.disabled = false;
+
+  function showResult(msg, type) {
+    var colors = { ok: '#27ae60', error: '#e74c3c', warn: '#C8963E', info: 'var(--muted)' };
+    resultEl.style.borderColor = 'rgba(200,185,154,0.15)';
+    resultEl.style.color = colors[type] || 'var(--muted)';
+    resultEl.innerHTML = msg;
+    resultEl.style.display = 'block';
+  }
 }
 
 // End of admin script</script>
