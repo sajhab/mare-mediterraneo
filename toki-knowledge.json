@@ -89,8 +89,8 @@
     "parties": "No parties or events"
   },
   "cancellation": {
-    "lowSeason": "October to May: Full refund if cancelled 5+ days before. No refund under 5 days.",
-    "highSeason": "June to September: 50% refund if cancelled 7+ days before. No refund under 7 days."
+    "lowSeason": "October to May: Full refund if cancelled 14+ days before arrival. No refund under 14 days.",
+    "highSeason": "June to September: 50% refund if cancelled 14+ days before arrival. No refund under 14 days."
   },
   "local": {
     "beach": "The sea is just 400 metres away — a 5 minute walk from the property",
