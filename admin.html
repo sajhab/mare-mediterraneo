@@ -143,7 +143,31 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
       <div class="form-group"><label class="form-label">Check-in</label><input type="date" class="form-input" id="newCheckin"></div>
       <div class="form-group"><label class="form-label">Check-out</label><input type="date" class="form-input" id="newCheckout"></div>
       <div class="form-group full"><label class="form-label">Guest Name</label><input type="text" class="form-input" id="newGuest" placeholder="e.g. Sophie Martin"></div>
+      <div class="form-group"><label class="form-label">Email (for confirmation)</label><input type="email" class="form-input" id="newEmail" placeholder="guest@example.com"></div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="text" class="form-input" id="newPhone" placeholder="+39 333 000 0000"></div>
+      <div class="form-group"><label class="form-label">Guests</label><input type="number" class="form-input" id="newGuests" min="1" max="10" value="2"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-select" id="newStatus">
+          <option value="confirmed">Confirmed</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="form-group full" style="background:rgba(200,150,62,0.05);border:1px solid rgba(200,150,62,0.15);border-radius:4px;padding:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div>
+          <div class="form-label" style="margin-bottom:4px">Nights</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--sabbia)" id="newNightsDisplay">—</div>
+        </div>
+        <div style="flex:1">
+          <div class="form-label" style="margin-bottom:4px">Total Price (€)</div>
+          <input type="number" class="form-input" id="newTotalPrice" placeholder="Auto-calculated" min="0">
+        </div>
+        <div style="font-size:9px;color:var(--muted);align-self:flex-end;padding-bottom:2px">Edit to override</div>
+      </div>
       <div class="form-group full"><label class="form-label">Notes (optional)</label><textarea class="form-textarea" id="newNotes"></textarea></div>
+    </div>
+    <div style="margin-top:14px;padding:10px 12px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.15);border-radius:4px;display:flex;align-items:center;gap:10px">
+      <input type="checkbox" id="newSendEmail" checked style="accent-color:var(--gold);width:15px;height:15px;cursor:pointer">
+      <label for="newSendEmail" style="font-size:10px;letter-spacing:1px;color:var(--muted);cursor:pointer">Send confirmation email to guest <span style="color:var(--gold)">(only if email is provided)</span></label>
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" id="cancelAddBtn">Cancel</button>
@@ -819,37 +843,251 @@ function renderAllBookings() {
   }).join('');
 }
 
-// SAVE BOOKING
-function saveBooking() {
-  var suite = document.getElementById('newSuite').value;
-  var source = document.getElementById('newSource').value;
-  var checkin = document.getElementById('newCheckin').value;
+// ── BOOKING PRICE AUTO-CALC ───────────────────────────────────
+function updateBookingCalc() {
+  var suite    = document.getElementById('newSuite').value;
+  var checkin  = document.getElementById('newCheckin').value;
   var checkout = document.getElementById('newCheckout').value;
-  var guest = document.getElementById('newGuest').value;
-  var notes = document.getElementById('newNotes').value;
-  if (!checkin || !checkout || !guest) { showToast('Please fill all fields'); return; }
+  var nightsEl = document.getElementById('newNightsDisplay');
+  var priceEl  = document.getElementById('newTotalPrice');
+  if (!checkin || !checkout || checkin >= checkout) {
+    nightsEl.textContent = '—';
+    return;
+  }
+  var nights = daysBetween(checkin, checkout);
+  nightsEl.textContent = nights;
+  // Only auto-fill price if user hasn't typed their own value
+  if (!priceEl.dataset.userEdited) {
+    var nightlyRates = { pietra: prices.pietra||200, cielo: prices.cielo||180, villa: prices.villa||350 };
+    var cleaningFees = { pietra: prices.cleaningPietra||150, cielo: prices.cleaningCielo||150, villa: prices.cleaningVilla||250 };
+    var total = (nightlyRates[suite]||200) * nights + (cleaningFees[suite]||150);
+    priceEl.value = total;
+  }
+}
+// Auto-calc wiring handled by event listeners below
+
+// ── EMAIL TEMPLATE (same as website booking flow) ─────────────
+function buildBookingEmailHtml(data) {
+  // data: { guest, suite, checkin, checkout, nights, guests, totalPrice, status, referenceId }
+  var suiteLabel = { pietra: 'Suite Pietra', cielo: 'Suite Cielo', villa: 'Villa Completa' }[data.suite] || data.suite;
+  var statusLabel = data.status === 'confirmed' ? 'Confirmed' : 'Pending';
+  var statusColor = data.status === 'confirmed' ? '#27ae60' : '#C8963E';
+  var fmtD = function(s) { return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'}); };
+
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+  '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">' +
+  '</head><body style="margin:0;padding:0;background:#0A0A12;font-family:\'Tenor Sans\',Arial,sans-serif">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A12;padding:40px 20px">' +
+  '<tr><td align="center">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#0F0F1A;border:1px solid rgba(200,185,154,0.12);border-radius:8px;overflow:hidden">' +
+
+  // Header
+  '<tr><td style="background:linear-gradient(135deg,#0F0F1A 0%,#1a1a2e 100%);padding:36px 40px;text-align:center;border-bottom:1px solid rgba(200,185,154,0.08)">' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:32px;color:#C8B99A;letter-spacing:1px">Mare Mediterraneo</div>' +
+  '<div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-top:6px">Torre Chianca · Salento · Puglia</div>' +
+  '</td></tr>' +
+
+  // Status banner
+  '<tr><td style="padding:0">' +
+  '<div style="background:rgba(200,185,154,0.04);border-bottom:1px solid rgba(200,185,154,0.08);padding:20px 40px;text-align:center">' +
+  '<div style="display:inline-block;padding:6px 18px;border-radius:20px;border:1px solid '+statusColor+';color:'+statusColor+';font-size:9px;letter-spacing:3px;text-transform:uppercase">'+statusLabel+'</div>' +
+  (data.referenceId ? '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#F5EFE6;letter-spacing:3px;margin-top:10px">'+data.referenceId+'</div>' : '') +
+  '</div></td></tr>' +
+
+  // Greeting
+  '<tr><td style="padding:32px 40px 0">' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;font-weight:300;color:#F5EFE6;margin-bottom:10px">Dear ' + data.guest + ',</div>' +
+  (data.status === 'confirmed'
+    ? '<p style="font-size:13px;color:rgba(232,221,208,0.7);line-height:1.8;margin:0">Your reservation at Mare Mediterraneo has been confirmed. We look forward to welcoming you to our corner of Salento.</p>'
+    : '<p style="font-size:13px;color:rgba(232,221,208,0.7);line-height:1.8;margin:0">Thank you for your reservation request at Mare Mediterraneo. We have received your booking and will confirm it shortly.</p>') +
+  '</td></tr>' +
+
+  // Booking details card
+  '<tr><td style="padding:24px 40px">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(200,185,154,0.04);border:1px solid rgba(200,185,154,0.12);border-radius:6px;overflow:hidden">' +
+  '<tr><td style="padding:20px 24px;border-bottom:1px solid rgba(200,185,154,0.08)">' +
+  '<div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#C8963E;margin-bottom:6px">Your Suite</div>' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:20px;color:#F5EFE6">'+suiteLabel+'</div>' +
+  '</td></tr>' +
+  '<tr><td style="padding:0">' +
+  '<table width="100%" cellpadding="0" cellspacing="0">' +
+  '<tr>' +
+  '<td style="padding:16px 24px;border-bottom:1px solid rgba(200,185,154,0.08);border-right:1px solid rgba(200,185,154,0.08);width:50%;vertical-align:top">' +
+  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Check-in</div>' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:15px;color:#F5EFE6;line-height:1.4">'+fmtD(data.checkin)+'</div>' +
+  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:4px">After 15:00</div>' +
+  '</td>' +
+  '<td style="padding:16px 24px;border-bottom:1px solid rgba(200,185,154,0.08);width:50%;vertical-align:top">' +
+  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Check-out</div>' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:15px;color:#F5EFE6;line-height:1.4">'+fmtD(data.checkout)+'</div>' +
+  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:4px">Before 10:00</div>' +
+  '</td>' +
+  '</tr>' +
+  '<tr>' +
+  '<td style="padding:16px 24px;border-right:1px solid rgba(200,185,154,0.08);width:50%;vertical-align:top">' +
+  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Guests</div>' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:18px;color:#F5EFE6">'+data.guests+' guest'+(data.guests!==1?'s':'')+'</div>' +
+  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:2px">'+data.nights+' night'+(data.nights!==1?'s':'')+'</div>' +
+  '</td>' +
+  '<td style="padding:16px 24px;width:50%;vertical-align:top">' +
+  '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);margin-bottom:6px">Total</div>' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;color:#C8963E">€'+data.totalPrice+'</div>' +
+  '<div style="font-size:10px;color:rgba(200,185,154,0.5);margin-top:2px">Incl. cleaning fee</div>' +
+  '</td>' +
+  '</tr>' +
+  '</table></td></tr>' +
+  '</table>' +
+  '</td></tr>' +
+
+  // Contact section
+  '<tr><td style="padding:0 40px 24px">' +
+  '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(200,185,154,0.03);border:1px solid rgba(200,185,154,0.08);border-radius:6px;padding:20px 24px">' +
+  '<tr><td>' +
+  '<div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#C8963E;margin-bottom:10px">Questions?</div>' +
+  '<p style="font-size:12px;color:rgba(200,185,154,0.6);line-height:1.7;margin:0">Write us on WhatsApp or reply to this email — we\'re happy to help with anything you need before your arrival.</p>' +
+  '<a href="https://wa.me/35699699184" style="display:inline-block;margin-top:12px;padding:8px 20px;background:rgba(200,150,62,0.12);border:1px solid rgba(200,150,62,0.3);border-radius:3px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C8963E;text-decoration:none">WhatsApp Us</a>' +
+  '</td></tr></table>' +
+  '</td></tr>' +
+
+  // Footer
+  '<tr><td style="padding:24px 40px;border-top:1px solid rgba(200,185,154,0.08);text-align:center">' +
+  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:16px;color:rgba(200,185,154,0.4)">Mare Mediterraneo</div>' +
+  '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.25);margin-top:4px">Torre Chianca · Salento · Italy</div>' +
+  '<div style="font-size:10px;color:rgba(200,185,154,0.25);margin-top:12px">This email was sent because a reservation was made at Mare Mediterraneo.</div>' +
+  '</td></tr>' +
+
+  '</table></td></tr></table></body></html>';
+}
+
+// ── SEND EMAIL VIA EDGE FUNCTION ─────────────────────────────
+async function sendBookingEmail(bookingData) {
+  if (!bookingData.email) return; // No email — skip silently
+  try {
+    var html = buildBookingEmailHtml(bookingData);
+    var suiteLabel = { pietra: 'Suite Pietra', cielo: 'Suite Cielo', villa: 'Villa Completa' }[bookingData.suite] || bookingData.suite;
+    var subjectPrefix = bookingData.status === 'confirmed' ? 'Booking Confirmed' : 'Booking Request Received';
+    var payload = {
+      emails: [
+        // Guest email
+        {
+          from: 'Mare Mediterraneo <booking@maremediterraneo.it>',
+          to: bookingData.email,
+          subject: subjectPrefix + ' — ' + suiteLabel + ' · ' + fmtDate(bookingData.checkin) + ' – ' + fmtDate(bookingData.checkout),
+          html: html,
+          reply_to: 'info@maremediterraneo.it'
+        }
+      ]
+    };
+    var r = await fetch(SB_URL + '/functions/v1/send-booking-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SB_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+    var result = await r.json();
+    console.log('[Email] sent to', bookingData.email, result);
+    return result;
+  } catch(e) {
+    console.error('[Email] failed:', e.message);
+    // Don't surface this error to the admin — booking is already saved
+  }
+}
+
+// SAVE BOOKING
+async function saveBooking() {
+  var suite      = document.getElementById('newSuite').value;
+  var source     = document.getElementById('newSource').value;
+  var checkin    = document.getElementById('newCheckin').value;
+  var checkout   = document.getElementById('newCheckout').value;
+  var guest      = document.getElementById('newGuest').value.trim();
+  var email      = document.getElementById('newEmail').value.trim();
+  var phone      = document.getElementById('newPhone').value.trim();
+  var guestsNum  = parseInt(document.getElementById('newGuests').value) || 2;
+  var status     = document.getElementById('newStatus').value;
+  var totalPrice = document.getElementById('newTotalPrice').value || '0';
+  var notes      = document.getElementById('newNotes').value;
+  var sendEmail  = document.getElementById('newSendEmail').checked;
+
+  if (!checkin || !checkout || !guest) { showToast('Please fill all required fields'); return; }
   if (checkin >= checkout) { showToast('Check-out must be after check-in'); return; }
 
+  var nights = daysBetween(checkin, checkout);
   var id = Date.now();
-  var rows = [{id:id, suite:suite, source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, linked_to_villa:false}];
 
-  // If villa - also add linked rows for pietra and cielo
+  // Generate reference ID for direct bookings (same format as website)
+  var refId = 'MM-' + Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8);
+
+  var baseRow = {
+    id: id,
+    suite: suite,
+    source: source,
+    checkin: checkin,
+    checkout: checkout,
+    guest: guest,
+    email: email,
+    phone: phone,
+    guests: guestsNum,
+    nights: nights,
+    total_price: totalPrice,
+    status: status,
+    notes: notes,
+    linked_to_villa: false,
+    reference_id: refId
+  };
+
+  var rows = [baseRow];
+
+  // If villa — also add linked rows for pietra and cielo
   if (suite === 'villa') {
-    rows.push({id:id+1, suite:'pietra', source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, linked_to_villa:true});
-    rows.push({id:id+2, suite:'cielo',  source:source, checkin:checkin, checkout:checkout, guest:guest, notes:notes, linked_to_villa:true});
+    rows.push(Object.assign({}, baseRow, {id:id+1, suite:'pietra', linked_to_villa:true}));
+    rows.push(Object.assign({}, baseRow, {id:id+2, suite:'cielo',  linked_to_villa:true}));
   }
 
-  sbInsert('bookings', rows)
-    .then(function() {
-      document.getElementById('addModal').classList.remove('open');
-      document.getElementById('newGuest').value = '';
-      document.getElementById('newNotes').value = '';
-      document.getElementById('newCheckin').value = '';
-      document.getElementById('newCheckout').value = '';
-      return loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
-    })
-    .then(function() { showToast('Booking saved'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
+  var btn = document.getElementById('saveBookingBtn');
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+
+  try {
+    await sbInsert('bookings', rows);
+
+    // Fire confirmation email if checkbox is ticked and email is present
+    if (sendEmail && email) {
+      showToast('Booking saved — sending email…');
+      await sendBookingEmail({
+        guest: guest,
+        email: email,
+        suite: suite,
+        checkin: checkin,
+        checkout: checkout,
+        nights: nights,
+        guests: guestsNum,
+        totalPrice: totalPrice,
+        status: status,
+        referenceId: refId
+      });
+    }
+
+    // Reset modal fields
+    ['newGuest','newEmail','newPhone','newNotes','newCheckin','newCheckout','newTotalPrice'].forEach(function(fid) {
+      var el = document.getElementById(fid);
+      if (el) { el.value = ''; if (el.dataset) el.dataset.userEdited = ''; }
+    });
+    document.getElementById('newGuests').value = 2;
+    document.getElementById('newStatus').value = 'confirmed';
+    document.getElementById('newNightsDisplay').textContent = '—';
+    document.getElementById('newSendEmail').checked = true;
+    document.getElementById('addModal').classList.remove('open');
+
+    await loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
+    showToast(sendEmail && email ? 'Booking saved · email sent ✓' : 'Booking saved ✓');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
+
+  btn.textContent = 'Save Booking';
+  btn.disabled = false;
 }
 
 // SAVE BLOCK
@@ -1494,7 +1732,11 @@ document.getElementById('newCheckin').min = todayStr;
 document.getElementById('blockFrom').min = todayStr;
 document.getElementById('newCheckin').addEventListener('change', function() {
   document.getElementById('newCheckout').min = addDays(this.value, 4);
+  updateBookingCalc();
 });
+document.getElementById('newCheckout').addEventListener('change', updateBookingCalc);
+document.getElementById('newSuite').addEventListener('change', updateBookingCalc);
+document.getElementById('newTotalPrice').addEventListener('input', function() { this.dataset.userEdited = '1'; });
 document.getElementById('blockFrom').addEventListener('change', function() {
   document.getElementById('blockTo').min = addDays(this.value, 1);
 });
