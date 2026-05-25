@@ -179,6 +179,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         </button>
         <button class="filter-pill" data-filter="pietra" onclick="setFilter('pietra')">Pietra</button>
         <button class="filter-pill" data-filter="cielo" onclick="setFilter('cielo')">Cielo</button>
+        <button class="filter-pill" data-filter="villa" onclick="setFilter('villa')">Villa</button>
         <button class="filter-pill" data-filter="cl" onclick="setFilter('cl')">
           <span id="fClean">Solo Pulizie</span>
         </button>
@@ -194,6 +195,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         </button>
         <button class="filter-pill" data-hfilter="pietra" onclick="setHFilter('pietra')">Pietra</button>
         <button class="filter-pill" data-hfilter="cielo" onclick="setHFilter('cielo')">Cielo</button>
+        <button class="filter-pill" data-hfilter="villa" onclick="setHFilter('villa')">Villa</button>
       </div>
       <div id="historyList"><div class="loading">Caricamento...</div></div>
     </div>
@@ -291,17 +293,19 @@ function loadData(cb){
 
 // ── SUITE STATUS ──────────────────────────────────────────────
 function getSuiteStatus(suite){
-  var today = dStr(new Date());
+  var today    = dStr(new Date());
   var tomorrow = addDays(today, 1);
-  var sb = bookings.filter(function(b){ return b.suite===suite && !b.linked_to_villa; });
+  // For villa, include all bookings (linked ones too) to detect occupancy
+  var sb = bookings.filter(function(b){ return b.suite===suite; });
+  var todaySess = getTodaySession(suite);
 
   for (var i=0; i<sb.length; i++){
     var b = sb[i];
+
+    // Checkout today — needs cleaning
     if (b.checkout===today){
-      // Check if there's an active cleaning session today
-      var todaySess = getTodaySession(suite);
       if (todaySess && todaySess.status==='done'){
-        return {st:'clean', main:tx('clean'), sub:tx('noAction'), needClean:false, session:todaySess};
+        return {st:'clean', main:tx('clean'), sub:tx('noAction'), needClean:true, session:todaySess};
       }
       var nextIn = null;
       for (var j=0; j<sb.length; j++){
@@ -309,18 +313,27 @@ function getSuiteStatus(suite){
           if (!nextIn || sb[j].checkin<nextIn.checkin) nextIn=sb[j];
         }
       }
-      return {st: todaySess&&todaySess.status==='in_progress' ? 'in_progress' : 'dirty',
-        main:tx('cleanToday'), sub: nextIn ? tx('nextGuest')+': '+fmtDate(nextIn.checkin)+' 15:00' : tx('noNext'),
+      var st = todaySess && todaySess.status==='in_progress' ? 'in_progress' : 'dirty';
+      return {st:st, main:tx('cleanToday'),
+        sub: nextIn ? tx('nextGuest')+': '+fmtDate(nextIn.checkin)+' 15:00' : tx('noNext'),
         needClean:true, session:todaySess};
     }
+
+    // Checkout tomorrow — occupied, prepare
     if (b.checkout===tomorrow && b.checkin<=today){
-      return {st:'occupied', main:b.guest||tx('occupied'), sub:tx('checkTomorrow')};
+      return {st:'occupied', main:b.guest||tx('occupied'), sub:tx('checkTomorrow'), needClean:false, session:todaySess};
     }
+
+    // Currently occupied
     if (b.checkin<=today && b.checkout>today){
-      return {st:'occupied', main:b.guest||tx('occupied'), sub:'Check-out: '+fmtDate(b.checkout)+' 10:00'};
+      return {st:'occupied', main:b.guest||tx('occupied'), sub:'Check-out: '+fmtDate(b.checkout)+' 10:00', needClean:false, session:todaySess};
     }
   }
-  return {st:'clean', main:tx('noAction'), sub:''};
+
+  // Free — always allow manual clean session
+  return {st: todaySess&&todaySess.status==='in_progress' ? 'in_progress' : todaySess&&todaySess.status==='done' ? 'clean' : 'clean',
+    main: todaySess&&todaySess.status==='done' ? tx('clean') : tx('noAction'),
+    sub:'', needClean:true, session:todaySess};
 }
 
 function getTodaySession(suite){
@@ -331,7 +344,7 @@ function getTodaySession(suite){
 
 // ── RENDER TODAY TAB ──────────────────────────────────────────
 function renderToday(){
-  var suites = [{k:'pietra',n:'Suite Pietra'},{k:'cielo',n:'Suite Cielo'}];
+  var suites = [{k:'pietra',n:'Suite Pietra'},{k:'cielo',n:'Suite Cielo'},{k:'villa',n:'Villa Completa'}];
   var h = '<div class="sec-title">'+(lang==='it'?'Stato Appartamenti':'Suite Status')+'</div>';
   suites.forEach(function(s){
     var st = getSuiteStatus(s.k);
@@ -343,7 +356,7 @@ function renderToday(){
     h += '<div class="s-main">'+st.main+'</div>';
     if (st.sub) h += '<div class="s-sub">'+st.sub+'</div>';
 
-    if (st.needClean){
+    if (st.needClean || true){ // always show cleaning controls
       var sess = st.session;
       // Progress bar
       var cl = buildChecklistHtml(s.k, sess);
@@ -472,7 +485,7 @@ function renderUpcoming(){
   var events = [];
 
   bookings.forEach(function(b){
-    if (b.linked_to_villa) return;
+    if (b.linked_to_villa) return; // skip pietra/cielo sub-rows of villa bookings
     var sn = NAMES[b.suite] || b.suite;
     if (b.checkout>=today && b.checkout<=limit){
       events.push({date:b.checkout, type:'out', suite:b.suite, suiteName:sn, guest:b.guest||''});
@@ -488,6 +501,7 @@ function renderUpcoming(){
   // Apply filter
   if (upcomingFilter==='pietra') events = events.filter(function(e){ return e.suite==='pietra'; });
   if (upcomingFilter==='cielo')  events = events.filter(function(e){ return e.suite==='cielo'; });
+  if (upcomingFilter==='villa')  events = events.filter(function(e){ return e.suite==='villa'; });
   if (upcomingFilter==='cl')     events = events.filter(function(e){ return e.type==='cl'; });
 
   if (!events.length){
@@ -534,13 +548,14 @@ function renderHistory(){
 
   if (historyFilter==='pietra') allSessions = allSessions.filter(function(s){ return s.suite==='pietra'; });
   if (historyFilter==='cielo')  allSessions = allSessions.filter(function(s){ return s.suite==='cielo'; });
+  if (historyFilter==='villa')  allSessions = allSessions.filter(function(s){ return s.suite==='villa'; });
 
   if (!allSessions.length){
     document.getElementById('historyList').innerHTML = '<div class="empty">'+tx('noHistory')+'</div>';
     return;
   }
 
-  var NAMES = {pietra:'Suite Pietra', cielo:'Suite Cielo'};
+  var NAMES = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
   var CLlen = (CL_ITEMS[lang]||CL_ITEMS.en).length;
   var h = '';
   allSessions.forEach(function(s){
