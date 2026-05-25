@@ -1721,7 +1721,7 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
     </button>
 
     <p class="book-note">
-      <span data-lang="en" class="al">Free to enquire · Stripe payment coming soon · Min 4 nights</span>
+      <span data-lang="en" class="al">Free to enquire · Secure payment · Min 4 nights</span>
       <span data-lang="it">Richiesta gratuita · Min 4 notti</span>
       <span data-lang="de">Kostenlose Anfrage · Min 4 Nächte</span>
       <span data-lang="fr">Demande gratuite · Min 4 nuits</span>
@@ -1757,10 +1757,10 @@ window.setLang=function(l){if(_slOrig)_slOrig(l);updateStripCaptions();};
       <span data-lang="fr">Dates flexibles et arrangements personnalisés</span>
     </div>
     <div class="bs-feat"><ion-icon name="shield-checkmark-outline"></ion-icon>
-      <span data-lang="en" class="al">Secure payment · Stripe coming soon</span>
-      <span data-lang="it">Pagamento sicuro · Stripe presto disponibile</span>
-      <span data-lang="de">Sichere Zahlung · Stripe demnächst</span>
-      <span data-lang="fr">Paiement sécurisé · Stripe bientôt disponible</span>
+      <span data-lang="en" class="al">Secure payment via Stripe</span>
+      <span data-lang="it">Pagamento sicuro via Stripe</span>
+      <span data-lang="de">Sichere Zahlung via Stripe</span>
+      <span data-lang="fr">Paiement sécurisé via Stripe</span>
     </div>
     <div class="bs-feat"><ion-icon name="home-outline"></ion-icon>
       <span data-lang="en" class="al">400m from the sea · 20 min from Lecce</span>
@@ -2092,7 +2092,7 @@ var BK_LABELS={
     confirmBooking:'Confirm Booking', bookingReceived:'Booking Received!',
     fullName:'Full name *', email:'Email address *', phone:'Phone number *',
     message:'Message (optional)', msgPh:'Special requests, arrival time…',
-    reviewBtn:'Review Booking', confirmBtn:'Confirm Booking',
+    reviewBtn:'Review Booking', confirmBtn:'Pay Now — Secure Checkout',
     backBtn:'← Back & edit', closeBtn:'Close',
     bookingSummary:'Booking Summary', guestInfo:'Guest Information',
     confirmNote:'Please check your booking details above. Confirming sends your request — we\'ll reply within 24 hours to confirm dates.',
@@ -2109,7 +2109,7 @@ var BK_LABELS={
     confirmBooking:'Conferma Prenotazione', bookingReceived:'Prenotazione Ricevuta!',
     fullName:'Nome completo *', email:'Indirizzo email *', phone:'Numero di telefono *',
     message:'Messaggio (opzionale)', msgPh:'Richieste speciali, orario di arrivo…',
-    reviewBtn:'Riepilogo Prenotazione', confirmBtn:'Conferma Prenotazione',
+    reviewBtn:'Riepilogo Prenotazione', confirmBtn:'Paga Ora — Checkout Sicuro',
     backBtn:'← Torna e modifica', closeBtn:'Chiudi',
     bookingSummary:'Riepilogo Prenotazione', guestInfo:'Informazioni Ospite',
     confirmNote:'Controlla i dettagli della prenotazione. Confermando invii la tua richiesta — risponderemo entro 24 ore.',
@@ -2126,7 +2126,7 @@ var BK_LABELS={
     confirmBooking:'Buchung bestätigen', bookingReceived:'Buchung erhalten!',
     fullName:'Vollständiger Name *', email:'E-Mail-Adresse *', phone:'Telefonnummer *',
     message:'Nachricht (optional)', msgPh:'Sonderwünsche, Ankunftszeit…',
-    reviewBtn:'Buchungsübersicht', confirmBtn:'Buchung bestätigen',
+    reviewBtn:'Buchungsübersicht', confirmBtn:'Jetzt Bezahlen — Sicherer Checkout',
     backBtn:'← Zurück & bearbeiten', closeBtn:'Schließen',
     bookingSummary:'Buchungsübersicht', guestInfo:'Gastinformationen',
     confirmNote:'Bitte prüfen Sie Ihre Buchungsdetails. Mit der Bestätigung senden Sie Ihre Anfrage — wir antworten innerhalb von 24 Stunden.',
@@ -2143,7 +2143,7 @@ var BK_LABELS={
     confirmBooking:'Confirmer la Réservation', bookingReceived:'Réservation Reçue !',
     fullName:'Nom complet *', email:'Adresse email *', phone:'Numéro de téléphone *',
     message:'Message (optionnel)', msgPh:'Demandes spéciales, heure d\'arrivée…',
-    reviewBtn:'Récapitulatif', confirmBtn:'Confirmer la Réservation',
+    reviewBtn:'Récapitulatif', confirmBtn:'Payer Maintenant — Paiement Sécurisé',
     backBtn:'← Retour & modifier', closeBtn:'Fermer',
     bookingSummary:'Récapitulatif de Réservation', guestInfo:'Informations Client',
     confirmNote:'Veuillez vérifier vos détails. En confirmant vous envoyez votre demande — nous répondrons sous 24 heures.',
@@ -2245,6 +2245,7 @@ function selectSuite(n){
    RESEND_API_KEY lives in Supabase → Edge Functions → Secrets (not here)
    ──────────────────────────────────────────────────────────────────── */
 var CFG={
+  STRIPE_PK:'pk_live_51Tayna7Ji9k4aEK37skkNg9XtxgzDzNW6dSCZu1o9k4nYPYgWfPbYBTG0JVKjhjcrbeOlmf1XtLjM3f6ArUJt6R100PJLJN1Kx',
   SB_URL:'https://wbosfegdgizkygxjxjiz.supabase.co',
   SB_KEY:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg',
   FROM_EMAIL:'hello@maremediterraneo.com',
@@ -2437,65 +2438,43 @@ window.bkToSummary=function(){
 window.bkBack=function(){qs('bkPanelTitle').textContent='Your Details';bkShowStep(2);qs('bk-panel').scrollTop=0;};
 
 window.bkSubmit=async function(){
-  var btn=qs('bkConfirmBtn');btn.disabled=true;btn.innerHTML='<span class="bk-spin"></span>&nbsp;Confirming…';
-  var id=Date.now();var ref='MM-'+id.toString(36).toUpperCase();
-  var base={id:id,suite:BK.suite,source:'direct',checkin:BK.checkin,checkout:BK.checkout,guest:BK.name,email:BK.email,phone:BK.phone,notes:BK.message,status:'pending',guests:BK.guests,nights:BK.nights,total_price:BK.total,reference_id:ref,linked_to_villa:false};
-  var rows=[base];
-  if(BK.suite==='villa'){rows.push(Object.assign({},base,{id:id+1,suite:'pietra',linked_to_villa:true}));rows.push(Object.assign({},base,{id:id+2,suite:'cielo',linked_to_villa:true}));}
+  var btn=qs('bkConfirmBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="bk-spin"></span>&nbsp;'+({en:'Redirecting to payment…',it:'Reindirizzamento al pagamento…',de:'Weiterleitung zur Zahlung…',fr:'Redirection vers le paiement…'}[lang]||'Redirecting…');
+
+  var id=Date.now();
+  var ref='MM-'+id.toString(36).toUpperCase();
+  var s=SUITES[BK.suite];
+
+  var bookingData={
+    id:id, ref:ref,
+    suite:BK.suite, suiteName:s.name,
+    checkin:BK.checkin, checkout:BK.checkout,
+    nights:BK.nights, guests:BK.guests,
+    total:BK.total, cleaning:s.cleaning,
+    name:BK.name, email:BK.email, phone:BK.phone,
+    message:BK.message||'',
+    lang:lang, source:'direct'
+  };
+
   try{
-    await sbInsert('bookings',rows);
-    _bookings=_bookings.concat(rows);
-    // Log funnel event
-    await sbInsert('booking_events',[{
-      booking_ref: ref,
-      event_type: 'created',
-      new_data: {suite:BK.suite,checkin:BK.checkin,checkout:BK.checkout,nights:BK.nights,guests:BK.guests,total:BK.total,coupon:BK.coupon||null},
-      notes: 'Booked via website'
-    }]);
-  }catch(e){console.error('[MM]',e);}
-  var s=SUITES[BK.suite];var disc=s.discount||0;var ep=effPrice(s);
-  var rateLabel=disc>0?'€'+ep+' ('+disc+'% off €'+s.price+') × '+BK.nights:'€'+ep+' × '+BK.nights;
-  var coupon=BK.coupon||null;
-  var discountAmt=coupon?Math.round(BK.nights*ep*coupon.pct/100):0;
-  var couponRow=coupon?row('Discount ('+coupon.pct+'% off nights)','−€'+discountAmt+' [code: '+coupon.code+']'):'';
-  var couponRowG=coupon?gRow(bkL('discountRow').replace('{pct}',coupon.pct),'−€'+discountAmt,false):'';
-  // Guest email translated labels
-  var gL=BK_LABELS[lang]||BK_LABELS.en;
-  var gSubject={en:'Booking received',it:'Prenotazione ricevuta',de:'Buchungsanfrage erhalten',fr:'Réservation reçue'}[lang]||'Booking received';
-  var gCheckinNote={en:' · from 15:00',it:' · dalle 15:00',de:' · ab 15:00 Uhr',fr:' · à partir de 15h00'}[lang]||' · from 15:00';
-  var gCheckoutNote={en:' · by 10:00',it:' · entro le 10:00',de:' · bis 10:00 Uhr',fr:' · avant 10h00'}[lang]||' · by 10:00';
-  var gConfirmNote={en:'We will confirm your booking within 24 hours. Questions? ',it:'Confermeremo la tua prenotazione entro 24 ore. Domande? ',de:'Wir bestätigen Ihre Buchung innerhalb von 24 Stunden. Fragen? ',fr:'Nous confirmerons votre réservation dans les 24 heures. Questions ? '}[lang]||'We will confirm your booking within 24 hours. Questions? ';
-  var tokiBlock={
-    en:'<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Questions? Ask Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Our AI concierge <strong style="color:#C8B99A">Toki</strong> is available 24/7 on our website and can help you with bookings, check-in & check-out, suite changes, cancellations, local recommendations and more.</p><a href="https://maremediterraneo.com/?lang=en#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chat with Toki →</a></div>',
-    it:'<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Domande? Chiedi a Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Il nostro concierge AI <strong style="color:#C8B99A">Toki</strong> è disponibile 24/7 sul nostro sito e può aiutarti con prenotazioni, check-in & check-out, cambio suite, cancellazioni, consigli locali e molto altro.</p><a href="https://maremediterraneo.com/?lang=it#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chatta con Toki →</a></div>',
-    de:'<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Fragen? Fragen Sie Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Unser KI-Concierge <strong style="color:#C8B99A">Toki</strong> ist rund um die Uhr auf unserer Website verfügbar und hilft Ihnen bei Buchungen, Check-in & Check-out, Suite-Wechsel, Stornierungen, lokalen Empfehlungen und mehr.</p><a href="https://maremediterraneo.com/?lang=de#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Mit Toki chatten →</a></div>',
-    fr:'<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Questions ? Demandez à Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Notre concierge IA <strong style="color:#C8B99A">Toki</strong> est disponible 24h/24 sur notre site et peut vous aider pour les réservations, l\'arrivée & le départ, les changements de suite, les annulations, les recommandations locales et bien plus.</p><a href="https://maremediterraneo.com/?lang=fr#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chatter avec Toki →</a></div>',
-  }[lang]||'';
-  function row(k,v){return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">'+v+'</td></tr>';}
-  function gRow(k,v,gold){return '<tr><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:1px">'+k+'</td><td style="padding:8px 0;border-bottom:1px solid #1a1a2e;color:'+(gold?'#C8963E':'#F5EFE6')+';text-align:right">'+v+'</td></tr>';}
-  // Owner email always English
-  var ownerHtml='<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">New booking — '+ref+'</h2><table style="border-collapse:collapse;width:100%">'+row('Suite',s.name)+row('Check-in',BK.checkin)+row('Check-out',BK.checkout)+row('Nights',BK.nights)+row('Guests',BK.guests)+row('Rate',rateLabel)+row('Cleaning','€'+s.cleaning)+couponRow+'<tr><td style="padding:10px 0;color:#C8963E;font-size:11px;text-transform:uppercase">TOTAL</td><td style="padding:10px 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr>'+row('Name',BK.name)+row('Email',BK.email)+row('Phone',BK.phone)+(BK.message?row('Message',BK.message):'')+'</table></div>';
-  // Guest email in guest's language
-  var guestHtml='<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">'+{en:'Your booking request is received',it:'La tua richiesta di prenotazione è stata ricevuta',de:'Ihre Buchungsanfrage ist eingegangen',fr:'Votre demande de réservation a été reçue'}[lang]+'</h2><p style="font-style:italic;color:#666;margin:0 0 22px;font-size:13px">'+{en:'Reference',it:'Riferimento',de:'Referenz',fr:'Référence'}[lang]+': '+ref+'</p><table style="border-collapse:collapse;width:100%">'+gRow(gL.suite,s.name,true)+gRow(gL.checkin,BK.checkin+gCheckinNote,false)+gRow(gL.checkout,BK.checkout+gCheckoutNote,false)+gRow(gL.nights,BK.nights,false)+gRow(gL.guests,BK.guests,false)+gRow(gL.nightlyRate,rateLabel,false)+gRow(gL.cleaningFee,'€'+s.cleaning,false)+couponRowG+'<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">'+gL.total+'</td><td style="padding:12px 0 0;color:#C8963E;font-size:26px;font-family:Georgia,serif;text-align:right">€'+BK.total+'</td></tr></table>'+tokiBlock+'<p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
-  var emails=[{to:CFG.OWNER_EMAIL,subject:'[Mare Med] New booking — '+ref+' — '+BK.name,html:ownerHtml},{to:BK.email,subject:gSubject+' — '+s.name+' — '+ref,html:guestHtml}];
-  try{
-    // Calls Supabase Edge Function — avoids browser CORS block on api.resend.com
-    await fetch(CFG.SB_URL+'/functions/v1/send-booking-email',{
+    var resp=await fetch(CFG.SB_URL+'/functions/v1/create-checkout-session',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':CFG.SB_KEY,'Authorization':'Bearer '+CFG.SB_KEY},
-      body:JSON.stringify({emails:[
-        {from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:CFG.OWNER_EMAIL,subject:emails[0].subject,html:emails[0].html,reply_to:BK.email},
-        {from:'Mare Mediterraneo <'+CFG.FROM_EMAIL+'>',to:BK.email,subject:emails[1].subject,html:emails[1].html,reply_to:CFG.REPLY_EMAIL}
-      ]})
+      body:JSON.stringify({booking:bookingData})
     });
-  }catch(e){console.log('[MM] Email edge function error:',e.message);}
-  var waText=encodeURIComponent('🌊 New booking — '+ref+'\n\nSuite: '+s.name+'\nCheck-in: '+BK.checkin+'\nCheck-out: '+BK.checkout+'\nNights: '+BK.nights+'  |  Guests: '+BK.guests+'\nTotal: €'+BK.total+'\n\nGuest: '+BK.name+'\nEmail: '+BK.email+'\nPhone: '+BK.phone+(BK.message?'\nMessage: '+BK.message:''));
-  // WhatsApp auto-open removed — email confirmation only
-  qs('bkD_suite').textContent=s.name;qs('bkD_in').textContent=fmtDate(BK.checkin);qs('bkD_out').textContent=fmtDate(BK.checkout);qs('bkD_total').textContent='€'+BK.total;
-  qs('bkRef').textContent=({en:'Reference',it:'Riferimento',de:'Referenz',fr:'Référence'}[lang]||'Reference')+': '+ref;
-  qs('bkConfirmMsg').innerHTML=bkL('receivedMsg').replace('{name}','<strong>'+BK.name.split(' ')[0]+'</strong>')+'<br><br>'+bkL('emailSent').replace('{email}','<em>'+BK.email+'</em>');
-  qs('bkPanelTitle').textContent=bkL('bookingReceived');
-  bkShowStep(4);qs('bk-panel').scrollTop=0;
+    var result=await resp.json();
+    if(!resp.ok||!result.url){
+      throw new Error(result.error||'Failed to create payment session');
+    }
+    // Redirect to Stripe Checkout
+    window.location.href=result.url;
+  }catch(e){
+    console.error('[MM] Stripe error:',e.message);
+    btn.disabled=false;
+    btn.innerHTML=({en:'Confirm Booking',it:'Conferma Prenotazione',de:'Buchung bestätigen',fr:'Confirmer la Réservation'}[lang]||'Confirm Booking')+' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 13 4 10"/><line x1="4" y1="10" x2="4" y2="20"/><polyline points="9 13 9 20"/></svg>';
+    alert('Payment error: '+e.message+'. Please try again or contact us directly.');
+  }
 };
 
 window.bkClosePanel=function(){qs('bk-overlay').classList.remove('open');document.body.style.overflow='';_panelOpen=false;setTimeout(function(){bkShowStep(2);},350);};
@@ -2504,6 +2483,37 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&_panelOpen)
 
 function bkShowStep(n){['bkStep2','bkStep3','bkStep4'].forEach(function(id,i){qs(id).style.display=(i+2===n)?'':'none';});bkDots(n);}
 function bkDots(step){var dots=[qs('bkDot1'),qs('bkDot2'),qs('bkDot3')];var lines=[qs('bkLine1'),qs('bkLine2')];var idx=step-2;dots.forEach(function(d,i){d.classList.remove('active','done');if(i<idx)d.classList.add('done');else if(i===idx)d.classList.add('active');});lines.forEach(function(l,i){l.classList.toggle('done',i<idx);});}
+
+// ── Handle Stripe redirect back ──
+(function(){
+  var params=new URLSearchParams(location.search);
+  var payment=params.get('payment');
+  var ref=params.get('ref');
+  var pLang=params.get('lang')||'en';
+  if(payment==='success'&&ref){
+    // Show success overlay
+    var msg={
+      en:'Your booking is confirmed! Reference: <strong>'+ref+'</strong><br><br>A confirmation email is on its way to your inbox.',
+      it:'La tua prenotazione è confermata! Riferimento: <strong>'+ref+'</strong><br><br>Un'email di conferma è in arrivo.',
+      de:'Ihre Buchung ist bestätigt! Referenz: <strong>'+ref+'</strong><br><br>Eine Bestätigungs-E-Mail ist unterwegs.',
+      fr:'Votre réservation est confirmée! Référence: <strong>'+ref+'</strong><br><br>Un email de confirmation est en route.'
+    }[pLang]||('Booking confirmed! Reference: <strong>'+ref+'</strong>');
+    var overlay=document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(10,10,18,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    overlay.innerHTML='<div style="background:#0F0F1A;border:1px solid rgba(39,174,96,0.4);border-radius:8px;padding:40px 32px;max-width:480px;text-align:center;font-family:Arial,sans-serif">'
+      +'<div style="font-size:40px;margin-bottom:16px">🌊</div>'
+      +'<h2 style="font-family:Georgia,serif;color:#27ae60;font-size:22px;font-weight:300;margin:0 0 14px">'+{en:'Booking Confirmed',it:'Prenotazione Confermata',de:'Buchung Bestätigt',fr:'Réservation Confirmée'}[pLang]+'</h2>'
+      +'<p style="color:#E8DDD0;font-size:14px;line-height:1.7;margin:0 0 24px">'+msg+'</p>'
+      +'<button onclick="this.closest('div[style]').remove();history.replaceState(null,'',location.pathname)" style="padding:12px 28px;background:#C8963E;color:#0A0A12;border:none;border-radius:3px;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:700">'
+      +{en:'Close',it:'Chiudi',de:'Schließen',fr:'Fermer'}[pLang]
+      +'</button></div>';
+    document.body.appendChild(overlay);
+    history.replaceState(null,'',location.pathname+(location.hash||''));
+  } else if(payment==='cancelled'){
+    // Quietly remove param, booking panel stays closed
+    history.replaceState(null,'',location.pathname+'#booking'+(location.hash?'':'')); 
+  }
+})();
 
 var todayStr=dStr(new Date());qs('checkin').min=todayStr;
 qs('checkin').addEventListener('change',function(){BK.checkin=this.value;var m=new Date(this.value+'T00:00:00');m.setDate(m.getDate()+CFG.MIN_NIGHTS);var ms=dStr(m);qs('checkout').min=ms;if(qs('checkout').value&&qs('checkout').value<ms)qs('checkout').value='';bkCalcTotal();});
@@ -2758,7 +2768,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       </p>
       <!-- STRIPE_HOOK -->
       <button class="bk-btn-gold" id="bkConfirmBtn" onclick="bkSubmit()">
-        Buchung bestätigen
+        Pay Now — Secure Checkout
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 13 4 10"/><line x1="4" y1="10" x2="4" y2="20"/><polyline points="9 13 9 20"/></svg>
       </button>
       <button class="bk-btn-ghost" onclick="bkBack()">← Zurück &amp; bearbeiten</button>
@@ -4038,15 +4048,24 @@ if(!localStorage.getItem('mm_lang_chosen')){
         rows.push(Object.assign({}, base, { id: id+1, suite:'pietra', linked_to_villa:true }));
         rows.push(Object.assign({}, base, { id: id+2, suite:'cielo',  linked_to_villa:true }));
       }
-      await sbInsert('bookings', rows);
-      // Log funnel event
-      await sbInsert('booking_events', [{
-        booking_ref: ref,
-        event_type: 'created',
-        new_data: {suite:bk.suite,checkin:bk.checkin,checkout:bk.checkout,nights:bk.nights,guests:bk.guests,total:bk.total},
-        notes: 'Booked via Toki chat'
-      }]);
+      // Create Stripe checkout session instead of inserting booking directly
+      const stripeResp = await fetch(SB_URL + '/functions/v1/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+        body: JSON.stringify({ booking: {
+          id, ref, suite: bk.suite, suiteName: bk.suiteName,
+          checkin: bk.checkin, checkout: bk.checkout,
+          nights: bk.nights, guests: bk.guests,
+          total: bk.total, cleaning: bk.cleaning || 150,
+          name: bk.name, email: bk.email, phone: bk.phone,
+          message: '', lang: 'en', source: 'toki'
+        }})
+      });
+      const stripeResult = await stripeResp.json();
+      if (!stripeResp.ok || !stripeResult.url) throw new Error(stripeResult.error || 'Payment session failed');
+      const paymentUrl = stripeResult.url;
       tokiBooked = true;
+      saveTokiChat()
       saveTokiChat();
       function row(k,v){ return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
       const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">🌊 New Toki Booking — ' + ref + '</h2><table style="border-collapse:collapse;width:100%">' + row('Suite',bk.suiteName) + row('Check-in',bk.checkin) + row('Check-out',bk.checkout) + row('Nights',bk.nights) + row('Guests',bk.guests) + row('Total','€'+bk.total) + row('Name',bk.name) + row('Email',bk.email) + row('Phone',bk.phone) + '</table></div>';
@@ -4060,11 +4079,12 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       addMessage('toki',
-        '🌊 **Booking request sent!**\n\nReference: **' + ref + '**\n\n' +
+        '✅ **Your booking is ready to confirm!**\n\n' +
         bk.suiteName + ' · ' + bk.checkin + ' → ' + bk.checkout + '\n' +
         bk.nights + ' nights · ' + bk.guests + ' guests · **€' + bk.total + '**\n\n' +
-        'The owner will confirm within 24 hours. A confirmation email is on its way to **' + bk.email + '**.',
-        ['Check-in info', 'I have a question']);
+        '👉 **[Click here to pay and confirm your booking](' + paymentUrl + ')**\n\n' +
+        'You will be redirected to our secure Stripe checkout. After payment, you will receive a confirmation email at **' + bk.email + '**.',
+        ['I have a question']);
 
       tokiBooking = null;
 
