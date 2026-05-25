@@ -982,16 +982,23 @@ async function sendBookingEmail(bookingData) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY
+        'Authorization': 'Bearer ' + SB_KEY,
+        'apikey': SB_KEY
       },
       body: JSON.stringify(payload)
     });
     var result = await r.json();
+    if (!r.ok) {
+      console.error('[Email] edge function error', r.status, JSON.stringify(result));
+      showToast('Booking saved — email failed (' + r.status + '), check console');
+      return null;
+    }
     console.log('[Email] sent to', bookingData.email, result);
     return result;
   } catch(e) {
     console.error('[Email] failed:', e.message);
-    // Don't surface this error to the admin — booking is already saved
+    showToast('Booking saved — email error: ' + e.message);
+    return null;
   }
 }
 
