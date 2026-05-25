@@ -970,7 +970,7 @@ async function sendBookingEmail(bookingData) {
       emails: [
         // Guest email
         {
-          from: 'Mare Mediterraneo <booking@maremediterraneo.it>',
+          from: 'Mare Mediterraneo <hello@maremediterraneo.com>',
           to: bookingData.email,
           subject: subjectPrefix + ' — ' + suiteLabel + ' · ' + fmtDate(bookingData.checkin) + ' – ' + fmtDate(bookingData.checkout),
           html: html,
