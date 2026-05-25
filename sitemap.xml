@@ -138,31 +138,6 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
-
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-25-it-scopri-le-migliori-masserie-ristoranti-nei-dintorni-di-lecce.html</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-25-de-die-besten-masseria-restaurants-nahe-lecce-ein-kulinarischer-leitfaden-durchs-ja.html</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-25-fr-découvrez-les-meilleurs-restaurants-masserie-près-de-lecce.html</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-25-en-the-best-masserie-restaurants-near-lecce-a-seasonal-guide.html</loc>
-    <lastmod>2026-05-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
