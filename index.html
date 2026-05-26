@@ -2931,7 +2931,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 </style>
 
 <!-- TOKI BUBBLE BUTTON -->
-<button class="toki-bubble" id="tokiBubble" onclick="if(typeof toggleToki==='function')toggleToki()">
+<button class="toki-bubble" id="tokiBubble" onclick="toggleToki()">
   🌊
   <div class="toki-notif" id="tokiNotif">1</div>
 </button>
@@ -2944,7 +2944,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       <div class="toki-name">Toki</div>
       <div class="toki-status">Online — Mare Mediterraneo</div>
     </div>
-    <button class="toki-close" onclick="if(typeof toggleToki==='function')toggleToki()">✕</button>
+    <button class="toki-close" onclick="toggleToki()">✕</button>
   </div>
 
   <div class="toki-messages" id="tokiMessages"></div>
@@ -3142,7 +3142,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   loadData();
 
   // ── TOGGLE ──
-  window._toggleToki = window.toggleToki = function() {
+  window._toggleToki = function() {
     isOpen = !isOpen;
     document.getElementById('tokiWindow').classList.toggle('open', isOpen);
     document.getElementById('tokiBubble').classList.toggle('open', isOpen);
