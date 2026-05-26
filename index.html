@@ -3821,6 +3821,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       const sr = suiteRates[finalSuite] || suiteRates.pietra;
       const newNightlyTotal = newNights * sr.price;
       const newTotal        = newNightlyTotal + sr.cleaning;
+      const priceDiff       = newTotal - parseFloat(origTotal);
       function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
       function eRowOld(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>'; }
       function eRowNew(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>'; }
@@ -3888,7 +3889,6 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       const suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
-      const priceDiff = newTotal - parseFloat(origTotal);
       const diffLine = priceDiff > 0
         ? '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link. Once paid, your new dates are confirmed.'
         : priceDiff < 0
