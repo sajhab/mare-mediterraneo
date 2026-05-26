@@ -14,99 +14,56 @@
     "pietra": {
       "name": "Suite Pietra",
       "floor": "Ground floor",
-      "price": 200,
-      "cleaningFee": 150,
-      "maxGuests": 4,
-      "minStay": 4,
       "description": "Ground floor suite with private garden, outdoor dining table, sun beds and private parking.",
-      "features": [
-        "2 bedrooms",
-        "1 bathroom",
-        "Living room",
-        "Full kitchen",
-        "Private garden",
-        "Outdoor dining table",
-        "Sun beds",
-        "Private parking",
-        "2 air conditioners",
-        "Outdoor shower",
-        "Washing machine",
-        "Fast WiFi",
-        "Private entrance"
-      ]
+      "maxGuests": 4,
+      "features": ["2 bedrooms","1 bathroom","Living room","Full kitchen","Private garden","Outdoor dining table","Sun beds","Private parking","2 air conditioners","Outdoor shower","Washing machine","Fast WiFi","Private entrance"]
     },
     "cielo": {
       "name": "Suite Cielo",
       "floor": "First floor",
-      "price": 180,
-      "cleaningFee": 150,
-      "maxGuests": 4,
-      "minStay": 4,
       "description": "First floor suite with large private terrace, terrace furniture and stunning views over the Salento landscape.",
-      "features": [
-        "2 bedrooms",
-        "1 bathroom",
-        "Open kitchen and living area",
-        "Large private terrace",
-        "Terrace furniture",
-        "Sun area",
-        "Parking on site",
-        "2 air conditioners",
-        "Outdoor shower",
-        "Washing machine",
-        "Fast WiFi",
-        "Private entrance"
-      ]
+      "maxGuests": 4,
+      "features": ["2 bedrooms","1 bathroom","Open kitchen and living area","Large private terrace","Terrace furniture","Sun area","Parking on site","2 air conditioners","Outdoor shower","Washing machine","Fast WiFi","Private entrance"]
     },
     "villa": {
       "name": "Villa Completa",
       "floor": "Both floors",
-      "price": 350,
-      "cleaningFee": 250,
-      "maxGuests": 8,
-      "minStay": 4,
       "description": "The entire property — both apartments together. Perfect for large families or two couples who want their own space but to holiday together.",
-      "features": [
-        "4 bedrooms total",
-        "2 bathrooms total",
-        "Garden + Terrace",
-        "4 air conditioners",
-        "Full parking",
-        "2 full kitchens",
-        "2 outdoor showers",
-        "2 washing machines",
-        "Fast WiFi throughout",
-        "Two private entrances"
-      ]
+      "maxGuests": 8,
+      "features": ["4 bedrooms total","2 bathrooms total","Garden + Terrace","4 air conditioners","Full parking","2 full kitchens","2 outdoor showers","2 washing machines","Fast WiFi throughout","Two private entrances"]
     }
   },
+  "pricing": {
+    "note": "Prices are set dynamically by the owner in the admin panel. Toki always reads live values.",
+    "payment": "100% upfront via Stripe. All major cards accepted. Booking is confirmed only after payment is completed.",
+    "directAdvantage": "Booking directly means no platform fees — guests save compared to Airbnb or Booking.com."
+  },
   "rules": {
-    "checkin": "3:00 PM",
+    "checkin": "15:00 (3:00 PM)",
     "checkout": "10:00 AM",
-    "minStay": "4 nights minimum",
     "smoking": "No smoking inside the apartments",
     "pets": "No pets allowed",
     "parties": "No parties or events"
   },
   "cancellation": {
-    "lowSeason": "October to May: Full refund up to 14 days",
-    "highSeason": "June to September: No refund under 30 days"
+    "highSeason": "June to September: Full refund if cancelled 30+ days before arrival. No refund within 30 days.",
+    "lowSeason": "October to May: Full refund if cancelled 14+ days before arrival. No refund within 14 days.",
+    "note": "Cancellations and date changes can be requested directly via Toki. Refunds are processed manually by the owner via Stripe."
+  },
+  "booking": {
+    "flow": "Toki collects suite, dates, guests, name, email and phone step by step. Then generates a Stripe payment link. Booking confirmed only after payment.",
+    "dateChanges": "Guests can request date changes via Toki. Toki checks availability, calculates the price difference, updates the booking and sends confirmation emails.",
+    "cancellations": "Guests can cancel via Toki. Toki applies the cancellation policy, confirms the refund amount, and notifies the owner to process it in Stripe.",
+    "whatsapp": "+35699699184"
   },
   "local": {
     "beach": "The sea is just 400 metres away — a 5 minute walk from the property",
-    "swimming": "The local beach is beautiful with clear water. Great for swimming and sunbathing.",
     "lecce": "Lecce is 15 minutes by car — a stunning baroque city known as the Florence of the South. A must visit.",
     "otranto": "Otranto is 35 minutes away — a beautiful medieval coastal town with a stunning castle and crystal clear water.",
     "gallipoli": "Gallipoli is 45 minutes away — famous for its beautiful beaches and historic centre.",
     "restaurants": "Torre Chianca has several excellent local restaurants within walking distance. Lecce has hundreds of options for all budgets.",
     "supermarket": "There is a supermarket in Torre Chianca village, 5 minutes by car.",
     "airport": "Brindisi airport is the closest at 40 minutes. Bari airport is 90 minutes away."
-  },
-  "booking": {
-    "howToBook": "You can check availability on our website and send a booking request via WhatsApp. We confirm within a few hours and arrange secure payment via Stripe.",
-    "payment": "Secure payment via Stripe — all major cards accepted.",
-    "directBookingAdvantage": "Booking directly with us means no platform fees — you save compared to Airbnb or Booking.com.",
-    "whatsapp": "+35699699184"
   },
   "personality": {
     "name": "Toki",
