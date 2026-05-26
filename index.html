@@ -3304,6 +3304,19 @@ if(!localStorage.getItem('mm_lang_chosen')){
       else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
       return;
     }
+    if (reply === 'Cancel my booking' || reply === 'Cancel reservation') {
+      if (verifiedGuest) { startCancellation(); }
+      else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
+      return;
+    }
+    if (reply === 'Yes, submit request') {
+      handleCancelConfirm('yes');
+      return;
+    }
+    if (reply === 'No, keep my booking') {
+      handleCancelConfirm('no');
+      return;
+    }
     // Suite selection quick replies during change flow
     if (reply === 'Just the dates' && awaitingSuiteChange) {
       awaitingSuiteChange = false;
@@ -3337,6 +3350,14 @@ if(!localStorage.getItem('mm_lang_chosen')){
                 'ändern','wechseln','verschieben','andere datum','neues datum',
                 'cambiare','modificare','spostare','diverse date',
                 'changer','modifier','déplacer','autres dates'];
+    const lower = msg.toLowerCase();
+    return kw.some(k => lower.includes(k));
+  }
+
+  function isCancelRequest(msg) {
+    const kw = ['cancel','cancellation','annul','stornieren','storno','cancella','annuler',
+                'want to cancel','would like to cancel','need to cancel','cancel my booking',
+                'cancel my reservation','voglio cancellare','möchte stornieren','annuler ma'];
     const lower = msg.toLowerCase();
     return kw.some(k => lower.includes(k));
   }
@@ -3397,6 +3418,19 @@ if(!localStorage.getItem('mm_lang_chosen')){
       return;
     }
 
+    // ── Verified guest making a cancel request → run real code ──
+    if (verifiedGuest && isCancelRequest(msg)) {
+      startCancellation();
+      return;
+    }
+
+    // ── Unverified guest asking to cancel → verify first ──
+    if (!verifiedGuest && isCancelRequest(msg)) {
+      awaitingEmail = true;
+      addMessage('toki', t('askEmail'));
+      return;
+    }
+
     getAIResponse(msg);
   }
 
@@ -3407,8 +3441,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
       ? t('verifiedSingle', { name: b[0].guest || '', booking: formatBooking(b[0]) })
       : t('verifiedMulti',  { n: count, booking: formatBooking(b[0]) });
     const qr = count > 1
-      ? ['Show all bookings','Change my dates','Check-in info','I have a question']
-      : ['Change my dates','Check-in info','What should I bring?','I have a question'];
+      ? ['Show all bookings','Change my dates','Cancel my booking','I have a question']
+      : ['Change my dates','Cancel my booking','Check-in info','I have a question'];
     addMessage('toki', intro, qr);
   }
 
@@ -3556,8 +3590,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
       content: '[SYSTEM: Guest verified by email + reference. Found ' + bookings.length + ' booking(s):\n\n' + bookingContext + '\n\nUse this data to answer their questions.]'
     });
     const qr = bookings.length > 1
-      ? ['Show all bookings','Change my dates','Check-in info','I have a question']
-      : ['Change my dates','Check-in info','What should I bring?','I have a question'];
+      ? ['Show all bookings','Change my dates','Cancel my booking','I have a question']
+      : ['Change my dates','Cancel my booking','Check-in info','I have a question'];
     addMessage('toki',
       bookings.length === 1
         ? t('verifiedSingle', { name: bookings[0].guest || '', booking: formatBooking(bookings[0]) })
@@ -3915,10 +3949,10 @@ if(!localStorage.getItem('mm_lang_chosen')){
       addMessage('toki', 'I need to verify your booking first. Could you share your reference number and email?');
       return;
     }
-    const b = verifiedGuest.bookings[0];
+    const b = verifiedGuest.bookings.find(bk => !bk.linked_to_villa) || verifiedGuest.bookings[0];
     const ref = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
-    if (b.status === 'cancelled') {
-      addMessage('toki', 'This booking (' + ref + ') has already been cancelled.');
+    if (b.status === 'cancelled' || b.status === 'cancellation_requested') {
+      addMessage('toki', b.status === 'cancellation_requested' ? 'A cancellation request for booking ' + ref + ' is already being processed. You will hear from us shortly.' : 'This booking (' + ref + ') has already been cancelled.');
       return;
     }
 
