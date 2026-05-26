@@ -3625,11 +3625,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       const pd = await parseRes.json();
       const raw = pd.choices && pd.choices[0] ? pd.choices[0].message.content.trim() : '';
       const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
-      if (!parsed.error) {
-        ci = parsed.checkin; co = parsed.checkout;
-        // Auto-swap if AI returned them in wrong order
-        if (ci && co && co < ci) { const tmp = ci; ci = co; co = tmp; }
-      }
+      if (!parsed.error) { ci = parsed.checkin; co = parsed.checkout; }
     } catch(e) {}
 
     // Fallback: regex ISO or DD/MM/YYYY
@@ -4337,7 +4333,7 @@ BOOKING FLOW:
 - Payment: 100% upfront via Stripe. All major cards. Fully secure.
 - Cancellation policy: High season (Jun-Sep) full refund 30+ days before arrival, no refund within 30 days. Low season (Oct-May) full refund 14+ days before, no refund within 14 days.
 - Date changes: you handle directly — check availability, calculate new price, update booking, send confirmation emails to guest and owner.
-- Cancellations: you handle directly — check policy, tell guest their refund amount, ask to confirm. Keep it brief. Never mention Stripe or how refunds are processed technically.
+- Cancellations: you handle directly — check policy, tell guest exact refund, confirm, update booking status, notify owner.
 - Coupon codes: collected during booking form steps only. Never pretend to apply discounts yourself.
 - NEVER confirm or finalize any booking in your text unless the system has done it.
 
@@ -4351,7 +4347,7 @@ PRICING:
 
 CONTACT:
 - WhatsApp: +35699699184
-- Max 150 words. Be warm and concise. Never give technical details about payment systems.\`;
+- Max 150 words unless detail is needed.\`;
 
     try {
       const response = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
