@@ -2258,11 +2258,13 @@ var CFG={
   OWNER_WA:'35699699184',
   MIN_NIGHTS:4,
 };
+window.CFG = CFG; // expose to other scripts
 var SUITES={
   pietra:{name:'Suite Pietra',   price:200,cleaning:150,maxG:4,discount:0},
   cielo: {name:'Suite Cielo',    price:200,cleaning:150,maxG:4,discount:0},
   villa: {name:'Villa Completa', price:350,cleaning:250,maxG:8,discount:0},
 };
+window.SUITES = SUITES; // expose to other scripts
 var BK={suite:'pietra',checkin:'',checkout:'',nights:0,guests:2,price:0,cleaning:0,total:0,name:'',email:'',phone:'',message:''};
 var _bookings=[],_blocked=[],_panelOpen=false;
 
@@ -2976,7 +2978,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   const SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
   const OWNER_EMAIL = 'online.mmarts@gmail.com';
   const FROM_EMAIL  = 'hello@maremediterraneo.com';
-  const MIN_NIGHTS  = CFG.MIN_NIGHTS || 4; // reads from Supabase settings
+  const MIN_NIGHTS  = (window.CFG && window.CFG.MIN_NIGHTS) ? window.CFG.MIN_NIGHTS : 4;
 
   // ── STATE ──
   let isOpen     = false;
@@ -4057,12 +4059,13 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   // ── TOKI DIRECT BOOKING FLOW ──
   // Step machine: suite → dates → guests → name → email → phone → confirm
-  // SUITES_CFG is a function so it always reads live values from SUITES (updated by loadLivePrices)
+  // getSuitesCfg reads live values from window.SUITES (updated by loadLivePrices)
   function getSuitesCfg() {
+    var S = window.SUITES || { pietra:{price:200,cleaning:150}, cielo:{price:200,cleaning:150}, villa:{price:350,cleaning:250} };
     return {
-      pietra: { name:'Suite Pietra',   price: SUITES.pietra.price, cleaning: SUITES.pietra.cleaning, maxG:4 },
-      cielo:  { name:'Suite Cielo',    price: SUITES.cielo.price,  cleaning: SUITES.cielo.cleaning,  maxG:4 },
-      villa:  { name:'Villa Completa', price: SUITES.villa.price,  cleaning: SUITES.villa.cleaning,  maxG:8 },
+      pietra: { name:'Suite Pietra',   price: S.pietra.price, cleaning: S.pietra.cleaning, maxG:4 },
+      cielo:  { name:'Suite Cielo',    price: S.cielo.price,  cleaning: S.cielo.cleaning,  maxG:4 },
+      villa:  { name:'Villa Completa', price: S.villa.price,  cleaning: S.villa.cleaning,  maxG:8 },
     };
   }
 
@@ -4284,10 +4287,10 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     let tokiContext = tokiKnowledge ? JSON.stringify(tokiKnowledge, null, 2) :
       'Property: Mare Mediterraneo, Torre Chianca, Salento, Puglia, Italy\nSea: 400m\nLecce: 20 min\nBrindisi: 40 min\n'
-      + 'Suite Pietra: Ground floor, garden, €'+SUITES.pietra.price+'/night + €'+SUITES.pietra.cleaning+' cleaning, max 4 guests\n'
-      + 'Suite Cielo: First floor, terrace, €'+SUITES.cielo.price+'/night + €'+SUITES.cielo.cleaning+' cleaning, max 4 guests\n'
-      + 'Villa Completa: Both suites, €'+SUITES.villa.price+'/night + €'+SUITES.villa.cleaning+' cleaning, max 8 guests\n'
-      + 'Min stay: '+(CFG.MIN_NIGHTS||4)+' nights. Check-in 15:00, check-out 10:00. No smoking, no pets, no parties.\n'
+      + 'Suite Pietra: Ground floor, garden, €'+(window.SUITES&&window.SUITES.pietra?window.SUITES.pietra.price:200)+'/night + €'+(window.SUITES&&window.SUITES.pietra?window.SUITES.pietra.cleaning:150)+' cleaning, max 4 guests\n'
+      + 'Suite Cielo: First floor, terrace, €'+(window.SUITES&&window.SUITES.cielo?window.SUITES.cielo.price:200)+'/night + €'+(window.SUITES&&window.SUITES.cielo?window.SUITES.cielo.cleaning:150)+' cleaning, max 4 guests\n'
+      + 'Villa Completa: Both suites, €'+(window.SUITES&&window.SUITES.villa?window.SUITES.villa.price:350)+'/night + €'+(window.SUITES&&window.SUITES.villa?window.SUITES.villa.cleaning:250)+' cleaning, max 8 guests\n'
+      + 'Min stay: '+((window.CFG&&window.CFG.MIN_NIGHTS)||4)+' nights. Check-in 15:00, check-out 10:00. No smoking, no pets, no parties.\n'
       + 'Cancellation: High season (Jun-Sep) full refund 30+ days before, no refund within 30 days. Low season (Oct-May) full refund 14+ days before, no refund within 14 days.\n'
       + 'Payment: 100% upfront via Stripe. Booking confirmed only after payment.\n'
       + 'Location: Torre Chianca, Salento, Puglia. Sea 400m. Lecce 15min. Brindisi airport 40min. Bari airport 90min.';
@@ -4332,7 +4335,7 @@ VERIFIED GUEST SUPPORT:
 - Check-in 15:00, check-out 10:00.
 
 PRICING:
-- Always use live values from property knowledge above. Minimum stay: ${CFG.MIN_NIGHTS || 4} nights.
+- Always use live values from property knowledge above. Minimum stay: ${(window.CFG&&window.CFG.MIN_NIGHTS)||4} nights.
 - Never invent prices or availability.
 
 CONTACT:
