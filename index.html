@@ -2946,6 +2946,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       <div class="toki-name">Toki</div>
       <div class="toki-status">Online — Mare Mediterraneo</div>
     </div>
+    <button class="toki-close" onclick="resetToki()" title="New conversation" style="margin-right:4px;font-size:14px">↺</button>
     <button class="toki-close" onclick="toggleToki()">✕</button>
   </div>
 
@@ -3144,6 +3145,27 @@ if(!localStorage.getItem('mm_lang_chosen')){
   loadData();
 
   // ── TOGGLE ──
+  window.resetToki = function() {
+    if (!confirm('Start a new conversation? Your current chat will be cleared.')) return;
+    // Clear state
+    conversationHistory = [];
+    verifiedGuest = null;
+    tokiBooking = null;
+    pendingDateChange = null;
+    pendingCancellation = null;
+    awaitingEmail = false;
+    awaitingRef = false;
+    awaitingDateChange = false;
+    awaitingCancelConfirm = false;
+    awaitingSuiteChange = false;
+    hasOpened = false;
+    try { sessionStorage.removeItem('mm_toki_session'); } catch(e) {}
+    // Clear messages and show greeting
+    var msgs = document.getElementById('tokiMessages');
+    if (msgs) msgs.innerHTML = '';
+    setTimeout(function() { sendGreeting(); }, 100);
+  };
+
   window._toggleToki = function() {
     isOpen = !isOpen;
     document.getElementById('tokiWindow').classList.toggle('open', isOpen);
@@ -3309,11 +3331,11 @@ if(!localStorage.getItem('mm_lang_chosen')){
       else { awaitingEmail = true; addMessage('toki', t('askEmail')); }
       return;
     }
-    if (reply === 'Yes, submit request') {
+    if (['Yes, submit request','Sì, invia richiesta','Ja, Anfrage stellen','Oui, soumettre la demande'].includes(reply)) {
       handleCancelConfirm('yes');
       return;
     }
-    if (reply === 'No, keep my booking') {
+    if (['No, keep my booking','No, mantieni la prenotazione','Nein, Buchung behalten','Non, garder ma réservation'].includes(reply)) {
       handleCancelConfirm('no');
       return;
     }
@@ -3530,19 +3552,31 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   // ── FORMAT BOOKING ──
   function formatBooking(b) {
+    const sl = siteLang();
     const suiteNames = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
     const suite  = suiteNames[b.suite] || b.suite;
     const ref    = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
-    const status = b.status === 'confirmed' ? '✅ Confirmed'
-                 : b.status === 'pending'   ? '⏳ Pending confirmation'
-                 : b.status === 'cancelled' ? '❌ Cancelled' : b.status;
+    const statusMap = {
+      confirmed: { en:'✅ Confirmed', it:'✅ Confermata', de:'✅ Bestätigt', fr:'✅ Confirmée' },
+      pending:   { en:'⏳ Pending',   it:'⏳ In attesa', de:'⏳ Ausstehend', fr:'⏳ En attente' },
+      cancelled: { en:'❌ Cancelled', it:'❌ Cancellata', de:'❌ Storniert',  fr:'❌ Annulée' },
+      cancellation_requested: { en:'🔄 Cancellation requested', it:'🔄 Cancellazione richiesta', de:'🔄 Stornierung beantragt', fr:'🔄 Annulation demandée' },
+    };
+    const status = (statusMap[b.status] && statusMap[b.status][sl]) || b.status;
     const nights = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
-    const notes  = b.notes ? '\nNotes: ' + b.notes : '';
-    const phone  = b.phone ? '\nPhone: ' + b.phone : '';
-    return '**' + suite + '**\nReference: ' + ref + '\nStatus: ' + status +
-           '\nCheck-in: ' + b.checkin + ' (from 15:00)' +
-           '\nCheck-out: ' + b.checkout + ' (by 10:00)' +
-           '\nNights: ' + nights + ' · Guests: ' + (b.guests || '—') +
+    const labels = {
+      en: { ref:'Reference', checkin:'Check-in', checkout:'Check-out', nights:'Nights', guests:'Guests', phone:'Phone', from:'from', by:'by' },
+      it: { ref:'Riferimento', checkin:'Check-in', checkout:'Check-out', nights:'Notti', guests:'Ospiti', phone:'Telefono', from:'dalle', by:'entro le' },
+      de: { ref:'Referenz', checkin:'Anreise', checkout:'Abreise', nights:'Nächte', guests:'Gäste', phone:'Telefon', from:'ab', by:'bis' },
+      fr: { ref:'Référence', checkin:'Arrivée', checkout:'Départ', nights:'Nuits', guests:'Voyageurs', phone:'Téléphone', from:'à partir de', by:'avant' },
+    };
+    const L = labels[sl] || labels.en;
+    const notes  = b.notes ? '\n' + L.ref + ': ' + b.notes : '';
+    const phone  = b.phone ? '\n' + L.phone + ': ' + b.phone : '';
+    return '**' + suite + '**\n' + L.ref + ': ' + ref + '\nStatus: ' + status +
+           '\n' + L.checkin + ': ' + b.checkin + ' (' + L.from + ' 15:00)' +
+           '\n' + L.checkout + ': ' + b.checkout + ' (' + L.by + ' 10:00)' +
+           '\n' + L.nights + ': ' + nights + ' · ' + L.guests + ': ' + (b.guests || '—') +
            '\nTotal: ' + (b.total_price ? '€' + b.total_price : '—') + phone + notes;
   }
 
@@ -3966,25 +4000,55 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const eligible  = daysOut >= threshold;
     const total     = parseFloat(b.total_price) || 0;
 
+    const _rsl = siteLang();
     let refundMsg, refundAmount;
     if (eligible) {
       refundAmount = total;
-      refundMsg = 'You are eligible for a **full refund of €' + total + '**.\n\nThe refund will be processed to your original payment method within 5-10 business days.';
+      const refundEligMsg = {
+        en: 'You are eligible for a **full refund of €' + total + '**. You will receive an email with the details.',
+        it: 'Hai diritto a un **rimborso completo di €' + total + '**. Riceverai un\'email con i dettagli.',
+        de: 'Sie haben Anspruch auf eine **vollständige Rückerstattung von €' + total + '**. Sie erhalten eine E-Mail mit den Details.',
+        fr: 'Vous avez droit à un **remboursement complet de €' + total + '**. Vous recevrez un email avec les détails.',
+      };
+      refundMsg = refundEligMsg[_rsl] || refundEligMsg.en;
     } else {
       refundAmount = 0;
-      refundMsg = 'Unfortunately, your check-in is in **' + daysOut + ' days** which is within our ' + threshold + '-day no-refund window for ' + (isHigh ? 'high season' : 'low season') + '.\n\n**No refund applies** for this cancellation.';
+      const season = isHigh ? { en:'high season', it:'alta stagione', de:'Hochsaison', fr:'haute saison' }[_rsl]||'high season'
+                             : { en:'low season',  it:'bassa stagione', de:'Nebensaison', fr:'basse saison' }[_rsl]||'low season';
+      const noRefundMsg = {
+        en: 'Your check-in is in **' + daysOut + ' days**, within our ' + threshold + '-day no-refund window for ' + season + '. **No refund applies.**',
+        it: 'Il tuo check-in è tra **' + daysOut + ' giorni**, nella finestra di ' + threshold + ' giorni senza rimborso per ' + season + '. **Nessun rimborso applicabile.**',
+        de: 'Ihre Anreise ist in **' + daysOut + ' Tagen**, innerhalb des ' + threshold + '-Tage-Stornofensters für die ' + season + '. **Keine Rückerstattung.**',
+        fr: 'Votre arrivée est dans **' + daysOut + ' jours**, dans la fenêtre de ' + threshold + ' jours sans remboursement pour la ' + season + '. **Aucun remboursement applicable.**',
+      };
+      refundMsg = noRefundMsg[_rsl] || noRefundMsg.en;
     }
 
     pendingCancellation = { booking: b, ref, refundAmount, eligible };
 
     const sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+    const _csl = siteLang();
+    const cancelFoundMsg = {
+      en: 'I found your booking:',
+      it: 'Ho trovato la tua prenotazione:',
+      de: 'Ich habe Ihre Buchung gefunden:',
+      fr: "J'ai trouvé votre réservation:",
+    }[_csl] || 'I found your booking:';
+    const cancelAskMsg = {
+      en: 'Would you like to submit a cancellation request?',
+      it: 'Vuoi inviare una richiesta di cancellazione?',
+      de: 'Möchten Sie eine Stornierungsanfrage stellen?',
+      fr: 'Souhaitez-vous soumettre une demande d'annulation?',
+    }[_csl] || 'Would you like to submit a cancellation request?';
+    const yesBtn = { en:'Yes, submit request', it:'Sì, invia richiesta', de:'Ja, Anfrage stellen', fr:'Oui, soumettre la demande' }[_csl] || 'Yes, submit request';
+    const noBtn  = { en:'No, keep my booking', it:'No, mantieni la prenotazione', de:'Nein, Buchung behalten', fr:'Non, garder ma réservation' }[_csl] || 'No, keep my booking';
     addMessage('toki',
-      'I found your booking:\n\n'
+      cancelFoundMsg + '\n\n'
       + '**' + (sn[b.suite]||b.suite) + '** · ' + b.checkin + ' → ' + b.checkout + '\n'
-      + 'Reference: **' + ref + '**\n\n'
+      + 'Ref: **' + ref + '**\n\n'
       + refundMsg + '\n\n'
-      + 'Would you like to submit a cancellation request?',
-      ['Yes, submit request', 'No, keep my booking']);
+      + cancelAskMsg,
+      [yesBtn, noBtn]);
     awaitingCancelConfirm = true;
   }
 
