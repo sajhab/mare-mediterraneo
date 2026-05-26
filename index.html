@@ -3571,7 +3571,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   function startDateChange(preselectedSuite) {
     if (!verifiedGuest || !verifiedGuest.bookings.length) return;
-    const booking = verifiedGuest.bookings[0];
+    const booking = verifiedGuest.bookings.find(b => !b.linked_to_villa) || verifiedGuest.bookings[0];
     pendingDateChange = { booking, newSuite: preselectedSuite || null };
     if (!preselectedSuite) {
       // Ask if they also want to change suite
@@ -3885,8 +3885,14 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       const suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
+      const priceDiff = newTotal - parseFloat(origTotal);
+      const diffLine = priceDiff > 0
+        ? '\n💳 Price difference: **+€' + priceDiff + '** — we will be in touch regarding the extra payment.'
+        : priceDiff < 0
+          ? '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — this will be refunded to your original payment method.'
+          : '';
       addMessage('toki',
-        'Perfetto! ✅ Booking updated and confirmed!\n\n**Updated details:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\n\nConfirmation emails sent to **' + b.email + '** and the owner.',
+        'Perfetto! ✅ Booking updated and confirmed!\n\n**Updated details:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\nNew total: **€' + newTotal + '**' + diffLine + '\n\nConfirmation emails sent to **' + b.email + '** and the owner.',
         ['I have another question', 'Check-in info']);
 
     } catch(e) {
