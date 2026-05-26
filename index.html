@@ -2972,7 +2972,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   const SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
   const OWNER_EMAIL = 'online.mmarts@gmail.com';
   const FROM_EMAIL  = 'hello@maremediterraneo.com';
-  const MIN_NIGHTS  = 4;
+  const MIN_NIGHTS  = CFG.MIN_NIGHTS || 4; // reads from Supabase settings
 
   // ── STATE ──
   let isOpen     = false;
@@ -4067,14 +4067,17 @@ A confirmation has been sent to **' + b.email + '**. Is there anything else I ca
 
   // ── TOKI DIRECT BOOKING FLOW ──
   // Step machine: suite → dates → guests → name → email → phone → confirm
-  const SUITES_CFG = {
-    pietra: { name:'Suite Pietra',   price:200, cleaning:150, maxG:4 },
-    cielo:  { name:'Suite Cielo',    price:200, cleaning:150, maxG:4 },
-    villa:  { name:'Villa Completa', price:350, cleaning:250, maxG:8 },
-  };
+  // SUITES_CFG is a function so it always reads live values from SUITES (updated by loadLivePrices)
+  function getSuitesCfg() {
+    return {
+      pietra: { name:'Suite Pietra',   price: SUITES.pietra.price, cleaning: SUITES.pietra.cleaning, maxG:4 },
+      cielo:  { name:'Suite Cielo',    price: SUITES.cielo.price,  cleaning: SUITES.cielo.cleaning,  maxG:4 },
+      villa:  { name:'Villa Completa', price: SUITES.villa.price,  cleaning: SUITES.villa.cleaning,  maxG:8 },
+    };
+  }
 
   function startTokiBooking(suiteKey) {
-    const s = SUITES_CFG[suiteKey];
+    const s = getSuitesCfg()[suiteKey];
     tokiBooking = { suite: suiteKey, suiteName: s.name, price: s.price, cleaning: s.cleaning, maxG: s.maxG };
     addMessage('toki',
       'Great choice — **' + s.name + '**! 🌊\n\nWhat dates are you thinking? Just tell me naturally:\n\n*"July 5 to July 12"* or *"5-12 August"*');
@@ -4290,7 +4293,14 @@ A confirmation has been sent to **' + b.email + '**. Is there anything else I ca
     }
 
     let tokiContext = tokiKnowledge ? JSON.stringify(tokiKnowledge, null, 2) :
-      'Property: Mare Mediterraneo, Torre Chianca, Salento, Puglia, Italy\nSea: 400m\nLecce: 20 min\nBrindisi: 40 min\nSuite Pietra: Ground floor, garden, €200/night + €150 cleaning\nSuite Cielo: First floor, terrace, €200/night + €150 cleaning\nVilla Completa: Both suites, €350/night + €250 cleaning\nMin stay: 4 nights. Check-in 15:00, check-out 10:00.\nNo smoking, no pets.';
+      'Property: Mare Mediterraneo, Torre Chianca, Salento, Puglia, Italy\nSea: 400m\nLecce: 20 min\nBrindisi: 40 min\n'
+      + 'Suite Pietra: Ground floor, garden, €'+SUITES.pietra.price+'/night + €'+SUITES.pietra.cleaning+' cleaning, max 4 guests\n'
+      + 'Suite Cielo: First floor, terrace, €'+SUITES.cielo.price+'/night + €'+SUITES.cielo.cleaning+' cleaning, max 4 guests\n'
+      + 'Villa Completa: Both suites, €'+SUITES.villa.price+'/night + €'+SUITES.villa.cleaning+' cleaning, max 8 guests\n'
+      + 'Min stay: '+(CFG.MIN_NIGHTS||4)+' nights. Check-in 15:00, check-out 10:00. No smoking, no pets, no parties.\n'
+      + 'Cancellation: High season (Jun-Sep) full refund 30+ days before, no refund within 30 days. Low season (Oct-May) full refund 14+ days before, no refund within 14 days.\n'
+      + 'Payment: 100% upfront via Stripe. Booking confirmed only after payment.\n'
+      + 'Location: Torre Chianca, Salento, Puglia. Sea 400m. Lecce 15min. Brindisi airport 40min. Bari airport 90min.';
 
     const saved = localStorage.getItem('mm_availability');
     let adminExtra = '';
@@ -4319,19 +4329,25 @@ PERSONALITY:
 - LANGUAGE: The guest has selected **${LANG_NAMES[sl] || 'English'}** as their language. Respond ENTIRELY in that language unless they write in a different one.
 
 BOOKING FLOW:
-- New bookings → the system handles this via a structured step-by-step form. NEVER say "I've booked" or "I'll finalize your booking" or pretend to process a booking yourself. If a guest wants to book, tell them you'll guide them through the steps and the system will collect their details.
-- Date changes for existing bookings → handled via Toki (email sent to owner). NEVER pretend to change dates yourself.
-- Coupon codes → collected during the booking step form. NEVER pretend to apply a discount yourself.
-- NEVER confirm, finalize, or complete any booking action in your text response. The system does this — not you.
+- New bookings: you collect suite, dates, guests, name, email, phone step by step. At the end the system generates a secure Stripe payment link. Booking is ONLY confirmed after payment. Never say booking is confirmed before payment.
+- Payment: 100% upfront via Stripe. All major cards. Fully secure.
+- Cancellation policy: High season (Jun-Sep) full refund 30+ days before arrival, no refund within 30 days. Low season (Oct-May) full refund 14+ days before, no refund within 14 days.
+- Date changes: you handle directly — check availability, calculate new price, update booking, send confirmation emails to guest and owner.
+- Cancellations: you handle directly — check policy, tell guest exact refund, confirm, update booking status, notify owner.
+- Coupon codes: collected during booking form steps only. Never pretend to apply discounts yourself.
+- NEVER confirm or finalize any booking in your text unless the system has done it.
 
-BOOKING SUPPORT (verified guests):
-- When you see [SYSTEM: Guest verified...], you have their booking data. Use it to answer questions.
-- For cancellations → direct to ${OWNER_EMAIL} with reference number.
+VERIFIED GUEST SUPPORT:
+- When you see [SYSTEM: Guest verified...] you have their booking data. Help with: date changes, cancellations, check-in info, local tips.
 - Check-in 15:00, check-out 10:00.
 
-IMPORTANT:
-- Max 150 words unless complex.
-- Never invent prices or facts.`;
+PRICING:
+- Always use live values from property knowledge above. Minimum stay: ${CFG.MIN_NIGHTS || 4} nights.
+- Never invent prices or availability.
+
+CONTACT:
+- WhatsApp: +35699699184
+- Max 150 words unless detail is needed.\`;
 
     try {
       const response = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
