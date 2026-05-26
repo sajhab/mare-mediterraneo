@@ -3924,34 +3924,20 @@ if(!localStorage.getItem('mm_lang_chosen')){
     let refundMsg, refundAmount;
     if (eligible) {
       refundAmount = total;
-      refundMsg = 'You are eligible for a **full refund of €' + total + '**.
-
-'
-        + 'The refund will be processed to your original payment method within 5–10 business days.';
+      refundMsg = 'You are eligible for a **full refund of €' + total + '**.\n\nThe refund will be processed to your original payment method within 5-10 business days.';
     } else {
       refundAmount = 0;
-      refundMsg = 'Unfortunately, your check-in is in **' + daysOut + ' days** which is within our '
-        + threshold + '-day no-refund window for ' + (isHigh ? 'high season' : 'low season') + '.
-
-'
-        + '**No refund applies** for this cancellation.';
+      refundMsg = 'Unfortunately, your check-in is in **' + daysOut + ' days** which is within our ' + threshold + '-day no-refund window for ' + (isHigh ? 'high season' : 'low season') + '.\n\n**No refund applies** for this cancellation.';
     }
 
     pendingCancellation = { booking: b, ref, refundAmount, eligible };
 
     const sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
     addMessage('toki',
-      'I found your booking:
-
-'
-      + '**' + (sn[b.suite]||b.suite) + '** · ' + b.checkin + ' → ' + b.checkout + '
-'
-      + 'Reference: **' + ref + '**
-
-'
-      + refundMsg + '
-
-'
+      'I found your booking:\n\n'
+      + '**' + (sn[b.suite]||b.suite) + '** · ' + b.checkin + ' → ' + b.checkout + '\n'
+      + 'Reference: **' + ref + '**\n\n'
+      + refundMsg + '\n\n'
       + 'Are you sure you want to cancel?',
       ['Yes, cancel my booking', 'No, keep my booking']);
     awaitingCancelConfirm = true;
@@ -4053,15 +4039,11 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       addMessage('toki',
-        '✅ Your booking has been cancelled.
-
-'
+        '✅ Your booking has been cancelled.\n\n'
         + (eligible
           ? 'A **full refund of €' + refundAmount + '** has been requested and will be returned to your original payment method within 5–10 business days.'
           : 'As per our cancellation policy, **no refund applies** for this cancellation.')
-        + '
-
-A confirmation has been sent to **' + b.email + '**. Is there anything else I can help with?',
+        + '\n\nA confirmation has been sent to **' + b.email + '**. Is there anything else I can help with?',
         ['I have a question']);
 
     } catch(e) {
