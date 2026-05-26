@@ -1936,7 +1936,7 @@ function revSubmit(){
   <div class="pol-grid reveal rd1">
     <div class="pol"><span class="pol-icon"><ion-icon name="time-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Check-in / Check-out</span><span data-lang="it">Check-in / Check-out</span><span data-lang="de">Check-in / Check-out</span><span data-lang="fr">Arrivée / Départ</span></div><p class="pol-text"><span data-lang="en" class="al">Check-in from 3:00 PM · Check-out by 10:00 AM</span><span data-lang="it">Check-in dalle 15:00 · Check-out entro le 10:00</span><span data-lang="de">Check-in ab 15:00 Uhr · Check-out bis 10:00 Uhr</span><span data-lang="fr">Arrivée à partir de 15h · Départ avant 10h</span></p></div></div>
     <div class="pol"><span class="pol-icon"><ion-icon name="close-circle-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — Low Season (Oct–May)</span><span data-lang="it">Cancellazione — Bassa Stagione (Ott–Mag)</span><span data-lang="de">Stornierung — Nebensaison (Okt–Mai)</span><span data-lang="fr">Annulation — Basse Saison (Oct–Mai)</span></div><p class="pol-text"><span data-lang="en" class="al">Full refund if cancelled 14+ days before arrival. No refund under 14 days.</span><span data-lang="it">Rimborso completo se cancellato 14+ giorni prima dell'arrivo. Nessun rimborso sotto i 14 giorni.</span><span data-lang="de">Volle Rückerstattung bei Stornierung 14+ Tage vor Anreise. Keine Rückerstattung unter 14 Tagen.</span><span data-lang="fr">Remboursement complet si annulé 14+ jours avant l'arrivée. Aucun remboursement en dessous de 14 jours.</span></p></div></div>
-    <div class="pol"><span class="pol-icon"><ion-icon name="document-text-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — High Season (Jun–Sep)</span><span data-lang="it">Cancellazione — Alta Stagione (Giu–Set)</span><span data-lang="de">Stornierung — Hochsaison (Jun–Sep)</span><span data-lang="fr">Annulation — Haute Saison (Juin–Sep)</span></div><p class="pol-text"><span data-lang="en" class="al">50% refund if cancelled 14+ days before arrival. No refund under 14 days.</span><span data-lang="it">Rimborso del 50% se cancellato 14+ giorni prima dell'arrivo. Nessun rimborso sotto i 14 giorni.</span><span data-lang="de">50% Rückerstattung bei Stornierung 14+ Tage vor Anreise. Keine Rückerstattung unter 14 Tagen.</span><span data-lang="fr">50% de remboursement si annulé 14+ jours avant l'arrivée. Aucun remboursement en dessous de 14 jours.</span></p></div></div>
+    <div class="pol"><span class="pol-icon"><ion-icon name="document-text-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Cancellation — High Season (Jun–Sep)</span><span data-lang="it">Cancellazione — Alta Stagione (Giu–Set)</span><span data-lang="de">Stornierung — Hochsaison (Jun–Sep)</span><span data-lang="fr">Annulation — Haute Saison (Juin–Sep)</span></div><p class="pol-text"><span data-lang="en" class="al">Full refund if cancelled 30+ days before arrival. No refund within 30 days.</span><span data-lang="it">Rimborso completo se cancellato 30+ giorni prima dell'arrivo. Nessun rimborso entro 30 giorni.</span><span data-lang="de">Volle Rückerstattung bei Stornierung 30+ Tage vor Anreise. Keine Rückerstattung innerhalb von 30 Tagen.</span><span data-lang="fr">Remboursement complet si annulé 30+ jours avant l'arrivée. Aucun remboursement dans les 30 jours.</span></p></div></div>
     <div class="pol"><span class="pol-icon"><ion-icon name="ban-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">No Smoking</span><span data-lang="it">Vietato Fumare</span><span data-lang="de">Rauchverbot</span><span data-lang="fr">Non Fumeur</span></div><p class="pol-text"><span data-lang="en" class="al">Strictly no smoking inside the apartments.</span><span data-lang="it">Assolutamente vietato fumare all'interno degli appartamenti.</span><span data-lang="de">Strenges Rauchverbot in den Apartments.</span><span data-lang="fr">Interdiction absolue de fumer dans les appartements.</span></p></div></div>
     <div class="pol"><span class="pol-icon"><ion-icon name="paw-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">No Pets</span><span data-lang="it">Nessun Animale</span><span data-lang="de">Keine Haustiere</span><span data-lang="fr">Animaux Interdits</span></div><p class="pol-text"><span data-lang="en" class="al">We do not accept pets in either apartment.</span><span data-lang="it">Non accettiamo animali domestici in nessuno dei due appartamenti.</span><span data-lang="de">Wir akzeptieren keine Haustiere in beiden Apartments.</span><span data-lang="fr">Nous n'acceptons pas les animaux dans aucun des appartements.</span></p></div></div>
     <div class="pol"><span class="pol-icon"><ion-icon name="moon-outline"></ion-icon></span><div><div class="pol-title"><span data-lang="en" class="al">Minimum Stay</span><span data-lang="it">Soggiorno Minimo</span><span data-lang="de">Mindestaufenthalt</span><span data-lang="fr">Séjour Minimum</span></div><p class="pol-text"><span data-lang="en" class="al">4 nights minimum for all apartments and the full villa.</span><span data-lang="it">Minimo 4 notti per tutti gli appartamenti e la villa completa.</span><span data-lang="de">Mindestens 4 Nächte für alle Apartments und die Villa.</span><span data-lang="fr">4 nuits minimum pour tous les appartements et la villa entière.</span></p></div></div>
@@ -3027,8 +3027,10 @@ if(!localStorage.getItem('mm_lang_chosen')){
   let pendingEmail     = null;
 
   // Date change state
-  let awaitingDateChange = false;
-  let pendingDateChange  = null;
+  let awaitingDateChange  = false;
+  let pendingDateChange   = null;
+  let awaitingCancelConfirm = false;
+  let pendingCancellation   = null;
 
   // New booking via Toki state
   let tokiBooking = null; // collecting new booking details step by step
@@ -3249,7 +3251,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
     if (awaitingEmail)      { awaitingEmail = false;      handleEmailVerification(text); return; }
     if (awaitingRef)        { awaitingRef = false;        handleReferenceVerification(text); return; }
     if (awaitingSuiteChange){ awaitingSuiteChange = false; handleSuiteTextInput(text); return; }
-    if (awaitingDateChange) { awaitingDateChange = false; handleDateInput(text); return; }
+    if (awaitingDateChange)     { awaitingDateChange = false; handleDateInput(text); return; }
+    if (awaitingCancelConfirm)  { awaitingCancelConfirm = false; handleCancelConfirm(text); return; }
     if (tokiBooking)        { handleBookingStep(text); return; }
 
     conversationHistory.push({ role:'user', content: text });
@@ -3885,6 +3888,181 @@ if(!localStorage.getItem('mm_lang_chosen')){
       awaitingDateChange = true;
     }
     pendingDateChange = null;
+  }
+
+  // ── CANCELLATION FLOW ──────────────────────────────────────────
+  function startCancellation() {
+    if (!verifiedGuest || !verifiedGuest.bookings.length) {
+      addMessage('toki', 'I need to verify your booking first. Could you share your reference number and email?');
+      return;
+    }
+    const b = verifiedGuest.bookings[0];
+    const ref = b.reference_id || ('MM-' + parseInt(b.id).toString(36).toUpperCase());
+    if (b.status === 'cancelled') {
+      addMessage('toki', 'This booking (' + ref + ') has already been cancelled.');
+      return;
+    }
+
+    // Calculate refund based on policy
+    const today     = new Date();
+    const checkin   = new Date(b.checkin + 'T00:00:00');
+    const daysOut   = Math.ceil((checkin - today) / 86400000);
+    const month     = checkin.getMonth() + 1;
+    const isHigh    = month >= 6 && month <= 9;
+    const threshold = isHigh ? 30 : 14;
+    const eligible  = daysOut >= threshold;
+    const total     = parseFloat(b.total_price) || 0;
+
+    let refundMsg, refundAmount;
+    if (eligible) {
+      refundAmount = total;
+      refundMsg = 'You are eligible for a **full refund of €' + total + '**.
+
+'
+        + 'The refund will be processed to your original payment method within 5–10 business days.';
+    } else {
+      refundAmount = 0;
+      refundMsg = 'Unfortunately, your check-in is in **' + daysOut + ' days** which is within our '
+        + threshold + '-day no-refund window for ' + (isHigh ? 'high season' : 'low season') + '.
+
+'
+        + '**No refund applies** for this cancellation.';
+    }
+
+    pendingCancellation = { booking: b, ref, refundAmount, eligible };
+
+    const sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+    addMessage('toki',
+      'I found your booking:
+
+'
+      + '**' + (sn[b.suite]||b.suite) + '** · ' + b.checkin + ' → ' + b.checkout + '
+'
+      + 'Reference: **' + ref + '**
+
+'
+      + refundMsg + '
+
+'
+      + 'Are you sure you want to cancel?',
+      ['Yes, cancel my booking', 'No, keep my booking']);
+    awaitingCancelConfirm = true;
+  }
+
+  async function handleCancelConfirm(text) {
+    const lower = text.toLowerCase();
+    const confirmed = lower.includes('yes') || lower.includes('cancel my') || lower.includes('confirm') ||
+                      lower.includes('sì') || lower.includes('si') || lower.includes('ja') || lower.includes('oui');
+    const declined  = lower.includes('no') || lower.includes('keep') || lower.includes('behalten') ||
+                      lower.includes('garder') || lower.includes('tengo');
+
+    if (declined || !confirmed) {
+      pendingCancellation = null;
+      addMessage('toki', 'No problem — your booking is still active. Is there anything else I can help with?',
+        ['I have a question', 'Change dates']);
+      return;
+    }
+
+    if (!pendingCancellation) return;
+    const { booking: b, ref, refundAmount, eligible } = pendingCancellation;
+
+    showTyping();
+    try {
+      // Update booking status to cancelled
+      await fetch(SB_URL + '/rest/v1/bookings?reference_id=eq.' + encodeURIComponent(ref) + '&apikey=' + SB_KEY, {
+        method: 'PATCH',
+        headers: Object.assign({}, sbHdrs(), { 'Prefer': 'return=minimal' }),
+        body: JSON.stringify({ status: 'cancelled' })
+      });
+
+      // Log event
+      await fetch(SB_URL + '/rest/v1/booking_events?apikey=' + SB_KEY, {
+        method: 'POST',
+        headers: Object.assign({}, sbHdrs(), { 'Prefer': 'return=minimal' }),
+        body: JSON.stringify({
+          booking_ref: ref,
+          event_type: 'cancelled',
+          old_data: { status: 'confirmed', checkin: b.checkin, checkout: b.checkout, total: b.total_price },
+          new_data: { status: 'cancelled', refund_amount: refundAmount, refund_eligible: eligible },
+          notes: eligible ? 'Full refund due: €' + refundAmount : 'No refund — within cancellation window'
+        })
+      });
+
+      // Send emails
+      const sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
+      const suiteName = sn[b.suite] || b.suite;
+
+      function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
+
+      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
+        + '<h2 style="font-family:Georgia,serif;color:#e74c3c;margin:0 0 16px">❌ Booking Cancelled — ' + ref + '</h2>'
+        + '<table style="border-collapse:collapse;width:100%">'
+        + eRow('Reference', ref) + eRow('Guest', b.guest) + eRow('Email', b.email) + eRow('Phone', b.phone||'—')
+        + eRow('Suite', suiteName) + eRow('Check-in', b.checkin) + eRow('Check-out', b.checkout)
+        + eRow('Total Paid', '€' + b.total_price)
+        + '</table>'
+        + '<div style="margin:20px 0;padding:16px;background:' + (eligible?'rgba(39,174,96,0.08)':'rgba(231,76,60,0.08)') + ';border:1px solid ' + (eligible?'rgba(39,174,96,0.3)':'rgba(231,76,60,0.3)') + ';border-radius:4px">'
+        + '<p style="margin:0;font-size:13px;color:' + (eligible?'#27ae60':'#e74c3c') + ';font-weight:600">'
+        + (eligible ? '✓ Refund due: €' + refundAmount + ' — please process in Stripe' : '✗ No refund — within cancellation window')
+        + '</p></div>'
+        + (eligible ? '<p style="font-size:11px;color:#888;margin:0">Go to <a href="https://dashboard.stripe.com/payments" style="color:#C8963E">Stripe dashboard</a> to process the refund.</p>' : '')
+        + '</div>';
+
+      const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
+        + '<p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p>'
+        + '<p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p>'
+        + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#e74c3c;margin:0 0 4px">Booking Cancelled</h2>'
+        + '<p style="color:#666;margin:0 0 22px;font-size:13px">Reference: <strong style="color:#C8B99A">' + ref + '</strong></p>'
+        + '<table style="border-collapse:collapse;width:100%">'
+        + eRow('Suite', suiteName) + eRow('Check-in', b.checkin) + eRow('Check-out', b.checkout)
+        + eRow('Total Paid', '€' + b.total_price)
+        + '</table>'
+        + '<div style="margin:20px 0;padding:16px;background:' + (eligible?'rgba(39,174,96,0.08)':'rgba(231,76,60,0.08)') + ';border:1px solid ' + (eligible?'rgba(39,174,96,0.3)':'rgba(231,76,60,0.3)') + ';border-radius:4px">'
+        + '<p style="margin:0;font-size:13px;color:' + (eligible?'#27ae60':'#e74c3c') + ';line-height:1.7">'
+        + (eligible
+            ? '✓ You are eligible for a full refund of <strong>€' + refundAmount + '</strong>.<br>This will be returned to your original payment method within 5–10 business days.'
+            : '✗ Unfortunately, no refund applies as the cancellation is within the ' + (b.checkin.split('-')[1]>=6&&b.checkin.split('-')[1]<=9?'30':'14') + '-day window.')
+        + '</p></div>'
+        + '<p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p>'
+        + '</div>';
+
+      await sendEmail([
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL,
+          subject: '[Mare Med] CANCELLED — ' + ref + ' — ' + b.guest + (eligible?' — REFUND €'+refundAmount:'— No refund'),
+          html: ownerHtml, reply_to: b.email },
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: b.email,
+          subject: 'Your booking has been cancelled — ' + ref,
+          html: guestHtml, reply_to: FROM_EMAIL }
+      ]);
+
+      // Update local session
+      if (verifiedGuest) {
+        verifiedGuest.bookings = verifiedGuest.bookings.map(bk =>
+          bk.id === b.id ? Object.assign({}, bk, { status: 'cancelled' }) : bk
+        );
+        saveSession();
+      }
+
+      hideTyping();
+      addMessage('toki',
+        '✅ Your booking has been cancelled.
+
+'
+        + (eligible
+          ? 'A **full refund of €' + refundAmount + '** has been requested and will be returned to your original payment method within 5–10 business days.'
+          : 'As per our cancellation policy, **no refund applies** for this cancellation.')
+        + '
+
+A confirmation has been sent to **' + b.email + '**. Is there anything else I can help with?',
+        ['I have a question']);
+
+    } catch(e) {
+      hideTyping();
+      console.error('[Toki cancel error]', e);
+      addMessage('toki', 'Mi dispiace, something went wrong 😔 Please contact us directly via WhatsApp and we'll sort it right away.',
+        ['I have a question']);
+    }
+    pendingCancellation = null;
   }
 
   // ── TOKI DIRECT BOOKING FLOW ──
