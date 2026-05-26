@@ -3827,9 +3827,9 @@ if(!localStorage.getItem('mm_lang_chosen')){
       const origTotal      = b.total_price || (origNights * origSuiteRates.price + origSuiteRates.cleaning);
       const origSuiteName  = sn[b.suite] || b.suite;
       const priceDiff       = newTotal - parseFloat(origTotal);
-      function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
-      function eRowOld(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>'; }
-      function eRowNew(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>'; }
+      const eRow    = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>';
+      const eRowOld = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>';
+      const eRowNew = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>';
 
 
       // ── OWNER EMAIL ──
@@ -3997,7 +3997,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       const sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
       const suiteName = sn[b.suite] || b.suite;
 
-      function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
+      const eRow = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>';
 
       const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
         + '<h2 style="font-family:Georgia,serif;color:#e74c3c;margin:0 0 16px">❌ Booking Cancelled — ' + ref + '</h2>'
