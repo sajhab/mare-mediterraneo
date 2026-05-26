@@ -3739,8 +3739,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
     showTyping();
     try {
       // 1. Check availability for new dates — use newSuite if changed
-      const newSuite   = pendingDateChange.newSuite || b.suite;
-      const suiteToCheck = newSuite || b.suite;
+      var newSuite   = pendingDateChange.newSuite || b.suite;
+      var suiteToCheck = newSuite || b.suite;
       const avail = await checkAvailability(suiteToCheck, newCi, newCo, b.reference_id);
       if (!avail) {
         hideTyping();
@@ -3760,12 +3760,12 @@ if(!localStorage.getItem('mm_lang_chosen')){
       }
 
       // 2. Update the booking row in Supabase
-      const newNights = Math.round((new Date(newCo) - new Date(newCi)) / 86400000);
-      const lp2 = window.LIVE_PRICES || {};
-      const sr2 = { pietra:{price:(lp2.pietra&&lp2.pietra.price)||200,cleaning:(lp2.pietra&&lp2.pietra.cleaning)||150}, cielo:{price:(lp2.cielo&&lp2.cielo.price)||200,cleaning:(lp2.cielo&&lp2.cielo.cleaning)||150}, villa:{price:(lp2.villa&&lp2.villa.price)||350,cleaning:(lp2.villa&&lp2.villa.cleaning)||250} };
-      const newRate = sr2[newSuite] || sr2[b.suite] || sr2.pietra;
-      const newTotalPrice = newNights * newRate.price + newRate.cleaning;
-      const patchBody  = { checkin: newCi, checkout: newCo, nights: newNights, total_price: newTotalPrice };
+      var newNights = Math.round((new Date(newCo) - new Date(newCi)) / 86400000);
+      var lp2 = window.LIVE_PRICES || {};
+      var sr2 = { pietra:{price:(lp2.pietra&&lp2.pietra.price)||200,cleaning:(lp2.pietra&&lp2.pietra.cleaning)||150}, cielo:{price:(lp2.cielo&&lp2.cielo.price)||200,cleaning:(lp2.cielo&&lp2.cielo.cleaning)||150}, villa:{price:(lp2.villa&&lp2.villa.price)||350,cleaning:(lp2.villa&&lp2.villa.cleaning)||250} };
+      var newRate = sr2[newSuite] || sr2[b.suite] || sr2.pietra;
+      var newTotalPrice = newNights * newRate.price + newRate.cleaning;
+      var patchBody  = { checkin: newCi, checkout: newCo, nights: newNights, total_price: newTotalPrice };
       if (newSuite !== b.suite) patchBody.suite = newSuite;
 
       await fetch(SB_URL + '/rest/v1/bookings?id=eq.' + b.id + '&apikey=' + SB_KEY, {
@@ -3783,7 +3783,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       }
 
       // 3. Log funnel event
-      const changeType = (newSuite !== b.suite && newSuite) ? 'changed_suite_and_dates' : 'changed_dates';
+      var changeType = (newSuite !== b.suite && newSuite) ? 'changed_suite_and_dates' : 'changed_dates';
       await fetch(SB_URL + '/rest/v1/booking_events?apikey=' + SB_KEY, {
         method: 'POST',
         headers: Object.assign({}, sbHdrs(), {'Prefer':'return=minimal'}),
@@ -3808,32 +3808,32 @@ if(!localStorage.getItem('mm_lang_chosen')){
       }
 
       // 4. Email owner (update notification) + guest (confirmation)
-      const displaySuite = sn[newSuite] || sn[b.suite] || b.suite;
-      const suiteChanged = newSuite && newSuite !== b.suite;
-      const finalSuite   = newSuite || b.suite;
+      var displaySuite = sn[newSuite] || sn[b.suite] || b.suite;
+      var suiteChanged = newSuite && newSuite !== b.suite;
+      var finalSuite   = newSuite || b.suite;
       // Calculate new price using live prices or fallback defaults
-      const lp = window.LIVE_PRICES || {};
-      const suiteRates = {
+      var lp = window.LIVE_PRICES || {};
+      var suiteRates = {
         pietra: { price: (lp.pietra&&lp.pietra.price) || 200, cleaning: (lp.pietra&&lp.pietra.cleaning) || 150 },
         cielo:  { price: (lp.cielo&&lp.cielo.price)   || 200, cleaning: (lp.cielo&&lp.cielo.cleaning)   || 150 },
         villa:  { price: (lp.villa&&lp.villa.price)    || 350, cleaning: (lp.villa&&lp.villa.cleaning)   || 250 },
       };
-      const sr = suiteRates[finalSuite] || suiteRates.pietra;
-      const newNightlyTotal = newNights * sr.price;
-      const newTotal        = newNightlyTotal + sr.cleaning;
+      var sr = suiteRates[finalSuite] || suiteRates.pietra;
+      var newNightlyTotal = newNights * sr.price;
+      var newTotal        = newNightlyTotal + sr.cleaning;
       // orig* must be declared before priceDiff
-      const origSuiteRates = suiteRates[b.suite] || suiteRates.pietra;
-      const origNights     = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
-      const origTotal      = b.total_price || (origNights * origSuiteRates.price + origSuiteRates.cleaning);
-      const origSuiteName  = sn[b.suite] || b.suite;
-      const priceDiff       = newTotal - parseFloat(origTotal);
-      const eRow    = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>';
-      const eRowOld = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>';
-      const eRowNew = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>';
+      var origSuiteRates = suiteRates[b.suite] || suiteRates.pietra;
+      var origNights     = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
+      var origTotal      = b.total_price || (origNights * origSuiteRates.price + origSuiteRates.cleaning);
+      var origSuiteName  = sn[b.suite] || b.suite;
+      var priceDiff       = newTotal - parseFloat(origTotal);
+      var eRow    = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>';
+      var eRowOld = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>';
+      var eRowNew = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>';
 
 
       // ── OWNER EMAIL ──
-      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
+      var ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
         + '<h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">📅 Booking Updated — ' + ref + '</h2>'
         + eRow('Reference', ref) + eRow('Guest', b.guest) + eRow('Email', b.email) + eRow('Phone', b.phone||'—')
         + '<tr><td colspan="2" style="padding:14px 0 6px;color:#888;font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #1a1a2e">Original Booking</td></tr>'
@@ -3853,7 +3853,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
         + '</table></div>';
 
       // ── GUEST EMAIL ──
-      const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
+      var guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
         + '<p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p>'
         + '<p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p>'
         + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#C8963E;margin:0 0 4px">Date Change Request Received ✅</h2>'
@@ -3888,8 +3888,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
       ]);
 
       hideTyping();
-      const suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
-      const diffLine = priceDiff > 0
+      var suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
+      var diffLine = priceDiff > 0
         ? '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link. Once paid, your new dates are confirmed.'
         : priceDiff < 0
           ? '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.'
@@ -3999,7 +3999,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       const eRow = (k,v) => '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>';
 
-      const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
+      var ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
         + '<h2 style="font-family:Georgia,serif;color:#e74c3c;margin:0 0 16px">❌ Booking Cancelled — ' + ref + '</h2>'
         + '<table style="border-collapse:collapse;width:100%">'
         + eRow('Reference', ref) + eRow('Guest', b.guest) + eRow('Email', b.email) + eRow('Phone', b.phone||'—')
@@ -4013,7 +4013,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
         + (eligible ? '<p style="font-size:11px;color:#888;margin:0">Go to <a href="https://dashboard.stripe.com/payments" style="color:#C8963E">Stripe dashboard</a> to process the refund.</p>' : '')
         + '</div>';
 
-      const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
+      var guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
         + '<p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p>'
         + '<p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p>'
         + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#C8963E;margin:0 0 4px">Cancellation Request Received</h2>'
