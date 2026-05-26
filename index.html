@@ -3821,16 +3821,16 @@ if(!localStorage.getItem('mm_lang_chosen')){
       const sr = suiteRates[finalSuite] || suiteRates.pietra;
       const newNightlyTotal = newNights * sr.price;
       const newTotal        = newNightlyTotal + sr.cleaning;
+      // orig* must be declared before priceDiff
+      const origSuiteRates = suiteRates[b.suite] || suiteRates.pietra;
+      const origNights     = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
+      const origTotal      = b.total_price || (origNights * origSuiteRates.price + origSuiteRates.cleaning);
+      const origSuiteName  = sn[b.suite] || b.suite;
       const priceDiff       = newTotal - parseFloat(origTotal);
       function eRow(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
       function eRowOld(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#555;text-align:right;text-decoration:line-through">' + v + '</td></tr>'; }
       function eRowNew(k,v) { return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#27ae60;text-align:right;font-weight:600">' + v + '</td></tr>'; }
 
-      // Original booking totals
-      const origSuiteRates = suiteRates[b.suite] || suiteRates.pietra;
-      const origNights     = b.nights || Math.round((new Date(b.checkout) - new Date(b.checkin)) / 86400000);
-      const origTotal      = b.total_price || (origNights * origSuiteRates.price + origSuiteRates.cleaning);
-      const origSuiteName  = sn[b.suite] || b.suite;
 
       // ── OWNER EMAIL ──
       const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px">'
