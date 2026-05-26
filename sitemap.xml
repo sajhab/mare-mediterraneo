@@ -138,56 +138,6 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
-
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-it-taranto-la-città-dei-due-mari-e-delle-antiche-rovine-greche.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-de-taranto-die-stadt-der-zwei-meere-und-antiker-griechischer-ruinen.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-fr-taranto-la-ville-des-deux-mers-et-des-ruines-grecques-anciennes.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-en-taranto-unveiling-the-mysteries-of-the-city-of-two-seas.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-it-monopoli-il-borgo-marinaro-autentico-della-puglia.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-de-monopoli-der-authentische-hafenort-apuliens.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-fr-monopoli-le-port-authentique-de-la-région-des-pouilles.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://maremediterraneo.com/blog/2026-05-26-en-discovering-monopoli-the-authentic-harbour-town-of-puglia.html</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
