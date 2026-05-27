@@ -311,6 +311,13 @@ function getTodayCleans(){
       result[suite].checkinTomorrow = b.guest || b.suite;
       result[suite].nextCheckin = b.checkin;
     }
+
+    // checkin today — suite must be ready (guest arriving today)
+    if(b.checkin === today){
+      if(!result[suite]) result[suite] = {};
+      result[suite].checkinToday = b.guest || b.suite;
+      result[suite].nextCheckin = b.checkin;
+    }
   });
 
   return result;
@@ -350,6 +357,7 @@ function renderToday(){
     var reason = '';
     if(info.checkout)       reason = lang==='it' ? 'Check-out: '+info.checkout : 'Check-out: '+info.checkout;
     if(info.checkinTomorrow) reason += (reason?'  ·  ':'') + (lang==='it'?'Check-in domani: '+info.checkinTomorrow:'Check-in tomorrow: '+info.checkinTomorrow);
+    if(info.checkinToday)    reason += (reason?'  ·  ':'') + (lang==='it'?'Check-in OGGI: '+info.checkinToday:'Check-in TODAY: '+info.checkinToday);
     if(info.nextCheckin)    reason += (reason?' · ':'')+tx('nextGuest')+': '+fmtDate(info.nextCheckin)+' 15:00';
     h += '<div class="clean-info">'+reason+'</div>';
 
