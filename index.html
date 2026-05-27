@@ -3292,7 +3292,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   }
 
   // ── SEND MESSAGE ──
-  window.sendMessage = function() {
+  window.sendMessage = async function() {
     const input = document.getElementById('tokiInput');
     const text  = input.value.trim();
     if (!text || isTyping) return;
@@ -3317,7 +3317,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   };
 
   // ── QUICK REPLIES ──
-  function handleQuickReply(reply) {
+  async function handleQuickReply(reply) {
     addMessage('user', reply);
 
     const r = reply.toLowerCase();
@@ -3417,7 +3417,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
     return null;
   }
 
-  function routeMessage(msg) {
+  async function routeMessage(msg) {
     const lower = msg.toLowerCase();
 
     // ── NEW BOOKING INTENT → redirect to booking section ──
