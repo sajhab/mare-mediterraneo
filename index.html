@@ -3395,36 +3395,26 @@ if(!localStorage.getItem('mm_lang_chosen')){
   function routeMessage(msg) {
     const lower = msg.toLowerCase();
 
-    // ── NEW BOOKING INTENT → structured flow, never AI ──
+    // ── NEW BOOKING INTENT → redirect to booking section ──
     const bookIntentKw = ['i want to book','i\'d like to book','book for me','book it','can you book',
       'make a booking','make a reservation','reserve','voglio prenotare','prenota per me',
       'ich möchte buchen','je voudrais réserver','buchen'];
     const hasBookIntent = bookIntentKw.some(k => lower.includes(k));
 
-    if (hasBookIntent || tokiBooking) {
-      // Extract suite if mentioned
-      let suiteKey = null;
-      if (lower.includes('pietra'))                            suiteKey = 'pietra';
-      else if (lower.includes('cielo'))                        suiteKey = 'cielo';
-      else if (lower.includes('villa') || lower.includes('completa') || lower.includes('entire') || lower.includes('whole') || lower.includes('both')) suiteKey = 'villa';
-
-      if (hasBookIntent && !tokiBooking) {
-        if (suiteKey) {
-          startTokiBooking(suiteKey);
-        } else {
-          // Ask which suite
-          addMessage('toki',
-            'Perfetto! 🌊 Which suite would you like to book?\n\n• **Suite Pietra** — ground floor, garden, €200/night\n• **Suite Cielo** — first floor, terrace, €200/night\n• **Villa Completa** — entire property, €350/night',
-            ['Suite Pietra', 'Suite Cielo', 'Villa Completa']);
-        }
-        return;
-      }
+    if (hasBookIntent) {
+      const sl = siteLang();
+      const bookRedirect = {
+        en: 'To make a new booking, please use the **Book Direct** section on our website — just scroll up and click "Book Direct". You can check availability, select your dates and suite, and pay securely. 🌊\n\nIf you need help with an existing booking, I can look that up for you!',
+        it: 'Per una nuova prenotazione, usa la sezione **Prenota Diretto** sul sito — scorri su e clicca "Prenota Diretto". Puoi controllare la disponibilità, scegliere le date e la suite e pagare in sicurezza. 🌊\n\nSe hai bisogno di aiuto con una prenotazione esistente, posso cercarla per te!',
+        de: 'Für eine neue Buchung nutzen Sie bitte den Bereich **Direkt buchen** auf unserer Website — scrollen Sie nach oben und klicken Sie auf "Direkt buchen". Sie können Verfügbarkeit prüfen, Daten und Suite wählen und sicher bezahlen. 🌊\n\nBei Fragen zu einer bestehenden Buchung helfe ich Ihnen gerne weiter!',
+        fr: 'Pour une nouvelle reservation, utilisez la section **Reserver** sur notre site — faites defiler vers le haut et cliquez sur "Reserver". Vous pouvez verifier les disponibilites et payer en toute securite. 🌊\n\nPour une reservation existante, je peux vous aider!',
+      };
+      addMessage('toki', bookRedirect[sl] || bookRedirect.en, ['Check availability', 'My booking']);
+      return;
     }
 
-    // ── Suite quick-reply selection when waiting for suite choice ──
-    if (!tokiBooking && (lower === 'suite pietra' || lower === 'pietra')) { startTokiBooking('pietra'); return; }
-    if (!tokiBooking && (lower === 'suite cielo'  || lower === 'cielo'))  { startTokiBooking('cielo');  return; }
-    if (!tokiBooking && (lower === 'villa completa' || lower === 'villa')) { startTokiBooking('villa');  return; }
+    // ── tokiBooking in progress (legacy safety) — redirect ──
+    if (tokiBooking) { tokiBooking = null; }
 
     // ── Verified booking query → verify first ──
     if (isBookingQuery(msg) && !verifiedGuest) {
@@ -4432,7 +4422,7 @@ PERSONALITY:
 - LANGUAGE: The guest has selected **${LANG_NAMES[sl] || 'English'}** as their language. Respond ENTIRELY in that language unless they write in a different one.
 
 BOOKING FLOW:
-- New bookings: you collect suite, dates, guests, name, email, phone step by step. At the end the system generates a secure Stripe payment link. Booking is ONLY confirmed after payment. Never say booking is confirmed before payment.
+- New bookings: you DO NOT handle bookings. If someone wants to book, always direct them to the Book Direct section on the website. Be warm and helpful about it.
 - Payment: 100% upfront via Stripe. All major cards. Fully secure.
 - Cancellation policy: High season (Jun-Sep) full refund 30+ days before arrival, no refund within 30 days. Low season (Oct-May) full refund 14+ days before, no refund within 14 days.
 - Date changes: you handle directly — check availability, calculate new price, update booking, send confirmation emails to guest and owner.
