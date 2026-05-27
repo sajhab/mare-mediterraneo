@@ -3855,6 +3855,29 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     showTyping();
     try {
+      // 0. Enforce one-free-change-per-booking policy
+      var _evUrl = SB_URL + '/rest/v1/booking_events?booking_ref=eq.' + encodeURIComponent(ref) + '&event_type=eq.changed&select=id&apikey=' + SB_KEY;
+      var _evRes = await fetch(_evUrl, { headers: sbHdrs() });
+      var _evRows = await _evRes.json();
+      var _changesMade = Array.isArray(_evRows) ? _evRows.length : 0;
+      if (_changesMade >= 1) {
+        hideTyping();
+        var _sl_lim = siteLang();
+        var _limitMsg = ({
+          en: 'Mi dispiace! 😔 You have already used your **one free date change** for booking ' + ref + '.\n\nAs per our policy, only one date change is allowed per booking. If you need further assistance, please contact us directly.',
+          it: 'Mi dispiace! 😔 Hai già utilizzato la tua **modifica gratuita delle date** per la prenotazione ' + ref + '.\n\nCome da nostra politica, è consentita una sola modifica per prenotazione. Per ulteriore assistenza, contattaci direttamente.',
+          de: 'Mi dispiace! 😔 Sie haben Ihre **kostenlose Datumsänderung** für Buchung ' + ref + ' bereits genutzt.\n\nGemäß unserer Richtlinie ist pro Buchung nur eine Änderung erlaubt. Für weitere Hilfe kontaktieren Sie uns bitte direkt.',
+          fr: 'Mi dispiace! 😔 Vous avez déjà utilisé votre **modification gratuite** pour la réservation ' + ref + '.\n\nConformément à notre politique, une seule modification est autorisée par réservation. Pour toute aide, contactez-nous directement.',
+        })[_sl_lim] || 'Mi dispiace! 😔 You have already used your one free date change for booking ' + ref + '. Please contact us directly.';
+        pendingDateChange = null;
+        addMessage('toki', _limitMsg, [
+          {en:'Contact us', it:'Contattaci', de:'Kontakt', fr:'Nous contacter'}[_sl_lim] || 'Contact us',
+          {en:'I have a question', it:'Ho una domanda', de:'Ich habe eine Frage', fr:"J'ai une question"}[_sl_lim] || 'I have a question'
+        ]);
+        return;
+      }
+      // ── END ONE-CHANGE POLICY ──
+
       // 1. Check availability for new dates — use newSuite if changed
       var newSuite   = pendingDateChange.newSuite || b.suite;
       var suiteToCheck = newSuite || b.suite;
