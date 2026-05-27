@@ -3063,6 +3063,30 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   const LANG_NAMES = { en:'English', it:'Italian', de:'German', fr:'French' };
 
+  // ── AI TRANSLATION HELPER ─────────────────────────────────────
+  // Translates a UI message to the current chat language via Toki proxy
+  // Falls back to the original English text if the call fails
+  async function translateMsg(text) {
+    const sl = siteLang();
+    if (!sl || sl === 'en') return text; // no need to translate
+    const langName = LANG_NAMES[sl] || sl;
+    try {
+      const res = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: 'You are a translation assistant. Translate the exact text given by the user into ' + langName + '. Output ONLY the translated text — no explanations, no quotes, no extra content. Preserve markdown formatting like **bold** and *italic*.',
+          messages: [{ role: 'user', content: text }]
+        })
+      });
+      const data = await res.json();
+      if (data.choices && data.choices[0]) return data.choices[0].message.content.trim();
+    } catch(e) {
+      console.warn('[translateMsg] failed:', e.message);
+    }
+    return text; // fallback to English
+  }
+
   // Translations for Toki UI strings
   const T = {
     en: {
@@ -3344,7 +3368,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
       awaitingSuiteChange = false;
       if (pendingDateChange) pendingDateChange.newSuite = null;
       awaitingDateChange = true;
-      addMessage('toki', 'No problem! Tell me the new dates:\n\n*"1 September to 8 September"*');
+      const noProb = await translateMsg('No problem! Tell me the new dates:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
+      addMessage('toki', noProb);
       return;
     }
     if ((reply === 'Suite Pietra' || reply === 'Suite Cielo' || reply === 'Villa Completa') && awaitingSuiteChange) {
@@ -3627,51 +3652,33 @@ if(!localStorage.getItem('mm_lang_chosen')){
   // ── awaitingSuiteChange: waiting for guest to pick a new suite ──
   let awaitingSuiteChange = false;
 
-  function startDateChange(preselectedSuite) {
+  async function startDateChange(preselectedSuite) {
     if (!verifiedGuest || !verifiedGuest.bookings.length) return;
     const booking = verifiedGuest.bookings.find(b => !b.linked_to_villa) || verifiedGuest.bookings[0];
     pendingDateChange = { booking, newSuite: preselectedSuite || null };
-    const _sl = siteLang();
-    const justeBtn = { en:'Just the dates', it:'Solo le date', de:'Nur die Daten', fr:'Juste les dates' }[_sl] || 'Just the dates';
-    const dateHint = {
-      en: 'Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*',
-      it: 'Dimmi le nuove date — scrivi naturalmente:\n\n*"1 settembre all 8 settembre"* o *"2026-09-01 al 2026-09-08"*',
-      de: 'Nennen Sie mir die neuen Daten — schreiben Sie natürlich:\n\n*"1. September bis 8. September"* oder *"2026-09-01 bis 2026-09-08"*',
-      fr: 'Indiquez-moi les nouvelles dates — ecrivez naturellement:\n\n*"1er septembre au 8 septembre"* ou *"2026-09-01 au 2026-09-08"*',
-    }[_sl] || 'Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"*';
+    const dateHint = await translateMsg('Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
     if (!preselectedSuite) {
       awaitingSuiteChange = true;
-      const askSuite = {
-        en: 'Of course! 🌊 Do you also want to change the suite, or just the dates?',
-        it: 'Certo! 🌊 Vuoi anche cambiare la suite, o solo le date?',
-        de: 'Natürlich! 🌊 Möchten Sie auch die Suite wechseln oder nur die Daten?',
-        fr: 'Bien sur! 🌊 Voulez-vous aussi changer de suite, ou juste les dates?',
-      }[_sl] || 'Of course! 🌊 Do you also want to change the suite, or just the dates?';
+      const askSuite = await translateMsg('Of course! 🌊 Do you also want to change the suite, or just the dates?');
+      const justeBtn = await translateMsg('Just the dates');
       addMessage('toki', askSuite, [justeBtn, 'Suite Pietra', 'Suite Cielo', 'Villa Completa']);
     } else {
       awaitingDateChange = true;
-      const great = { en:'Great!', it:'Perfetto!', de:'Super!', fr:'Parfait!' }[_sl] || 'Great!';
-      addMessage('toki', great + ' ' + dateHint);
+      addMessage('toki', dateHint);
     }
   }
 
-  function handleSuiteChoice(suiteKey) {
+  async function handleSuiteChoice(suiteKey) {
     awaitingSuiteChange = false;
     if (pendingDateChange) {
       pendingDateChange.newSuite = suiteKey;
     }
     awaitingDateChange = true;
-    const _sl2 = siteLang();
-    const dateHint2 = {
-      en: 'Perfect! Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*',
-      it: 'Perfetto! Dimmi le nuove date — scrivi naturalmente:\n\n*"1 settembre all 8 settembre"* o *"2026-09-01 al 2026-09-08"*',
-      de: 'Super! Nennen Sie mir die neuen Daten — schreiben Sie natürlich:\n\n*"1. September bis 8. September"*',
-      fr: 'Parfait! Indiquez-moi les nouvelles dates — ecrivez naturellement:\n\n*"1er septembre au 8 septembre"*',
-    }[_sl2] || 'Perfect! Now tell me the new dates.';
-    addMessage('toki', dateHint2);
+    const msg = await translateMsg('Perfect! Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
+    addMessage('toki', msg);
   }
 
-  function handleSuiteTextInput(text) {
+  async function handleSuiteTextInput(text) {
     const lower = text.toLowerCase();
     let suiteKey = null;
     if (lower.includes('pietra') || lower.includes('garden') || lower.includes('ground')) suiteKey = 'pietra';
@@ -3681,9 +3688,10 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     if (suiteKey === undefined) {
       // Couldn't parse — ask again with buttons
-      const _sl3 = siteLang();
-      const whichSuite = { en:'Which suite would you like?', it:'Quale suite preferisci?', de:'Welche Suite möchten Sie?', fr:'Quelle suite souhaitez-vous?' }[_sl3]||'Which suite would you like?';
-      const justDates  = { en:'Just the dates', it:'Solo le date', de:'Nur die Daten', fr:'Juste les dates' }[_sl3]||'Just the dates';
+      const [whichSuite, justDates] = await Promise.all([
+        translateMsg('Which suite would you like?'),
+        translateMsg('Just the dates')
+      ]);
       addMessage('toki', whichSuite, ['Suite Pietra', 'Suite Cielo', 'Villa Completa', justDates]);
       awaitingSuiteChange = true;
       return;
@@ -3921,8 +3929,8 @@ if(!localStorage.getItem('mm_lang_chosen')){
         + eRowOld('Total', '€' + origTotal)
         + '<tr><td colspan="2" style="padding:14px 0 6px;color:#27ae60;font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #1a1a2e">Updated Booking</td></tr>'
         + (suiteChanged ? eRowNew('Suite', displaySuite) : eRow('Suite', displaySuite))
-        + eRowNew('Check-in', newCi + ' · from 15:00')
-        + eRowNew('Check-out', newCo + ' · by 10:00')
+        + eRowNew({en:'Check-in',it:'Check-in',de:'Anreise',fr:'Arrivee'}[siteLang()]||'Check-in', newCi + ' · '+({en:'from 15:00',it:'dalle 15:00',de:'ab 15:00',fr:'a partir de 15h'}[siteLang()]||'from 15:00'))
+        + eRowNew({en:'Check-out',it:'Check-out',de:'Abreise',fr:'Depart'}[siteLang()]||'Check-out', newCo + ' · '+({en:'by 10:00',it:'entro le 10:00',de:'bis 10:00',fr:'avant 10h'}[siteLang()]||'by 10:00'))
         + eRowNew('Nights', newNights)
         + eRow('Nightly rate', '€' + sr.price + ' × ' + newNights + ' = €' + newNightlyTotal)
         + eRow('Cleaning fee', '€' + sr.cleaning)
@@ -3933,9 +3941,9 @@ if(!localStorage.getItem('mm_lang_chosen')){
       var guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto">'
         + '<p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p>'
         + '<p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p>'
-        + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#C8963E;margin:0 0 4px">Date Change Request Received ✅</h2>'
-        + '<p style="color:#666;margin:0 0 22px;font-size:13px">Reference: ' + ref + '</p>'
-        + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">Original booking</p>'
+        + '<h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#C8963E;margin:0 0 4px">'+({en:'Date Change Request Received ✅',it:'Richiesta Modifica Date Ricevuta ✅',de:'Datumsänderungsanfrage Erhalten ✅',fr:'Demande de Modification Recue ✅'}[siteLang()]||'Date Change Request Received ✅')+'</h2>'
+        + '<p style="color:#666;margin:0 0 22px;font-size:13px">'+({en:'Reference',it:'Riferimento',de:'Referenz',fr:'Reference'}[siteLang()]||'Reference')+': ' + ref + '</p>'
+        + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">'+({en:'Original booking',it:'Prenotazione originale',de:'Ursprüngliche Buchung',fr:'Reservation originale'}[siteLang()]||'Original booking')+'</p>'
         + '<table style="border-collapse:collapse;width:100%;margin-bottom:20px">'
         + eRowOld('Suite', origSuiteName)
         + eRowOld('Check-in', b.checkin)
@@ -3943,7 +3951,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
         + eRowOld('Nights', origNights)
         + eRowOld('Total', '€' + origTotal)
         + '</table>'
-        + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#27ae60;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">Updated booking</p>'
+        + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#27ae60;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">'+({en:'Updated booking',it:'Prenotazione aggiornata',de:'Aktualisierte Buchung',fr:'Reservation mise a jour'}[siteLang()]||'Updated booking')+'</p>'
         + '<table style="border-collapse:collapse;width:100%">'
         + (suiteChanged ? eRowNew('Suite', displaySuite) : eRow('Suite', displaySuite))
         + eRowNew('Check-in', newCi + ' · from 15:00')
@@ -3954,9 +3962,9 @@ if(!localStorage.getItem('mm_lang_chosen')){
         + '<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">New total</td><td style="padding:12px 0 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€' + newTotal + '</td></tr>'
         + '</table>'
         + '<div style="margin:16px 0;padding:16px;background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);border-radius:4px"><p style="margin:0;font-size:13px;color:#E8DDD0;line-height:1.7">'
-        + (priceDiff > 0 ? '💳 The owner will send you a <strong>payment link for €' + priceDiff + '</strong> shortly. Your new dates are held — first come, first served.' : priceDiff < 0 ? '💰 The owner will arrange a <strong>refund of €' + Math.abs(priceDiff) + '</strong> to your original payment method.' : '✓ No payment difference — your dates are confirmed.')
+        + (priceDiff > 0 ? ({en:'💳 The owner will send you a payment link for <strong>€'+priceDiff+'</strong> shortly. New dates held — first come, first served.',it:'💳 Il proprietario ti invierà un link di pagamento per <strong>€'+priceDiff+'</strong> a breve. Date riservate.',de:'💳 Der Eigentümer sendet Ihnen einen Zahlungslink über <strong>€'+priceDiff+'</strong>. Daten reserviert.',fr:'💳 Lien de paiement de <strong>€'+priceDiff+'</strong> arrive prochainement.'})[siteLang()]||'💳 Payment link for €'+priceDiff+' coming shortly.' : priceDiff < 0 ? '💰 The owner will arrange a <strong>refund of €' + Math.abs(priceDiff) + '</strong> to your original payment method.' : '✓ No payment difference — your dates are confirmed.')
         + '</p></div>'
-        + '<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Questions? Ask Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Our AI concierge <strong style="color:#C8B99A">Toki</strong> is available 24/7 on our website for any further changes, questions or local tips.</p><a href="https://maremediterraneo.com/?lang=en#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chat with Toki →</a></div>'
+        + '<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">'+({en:'Questions? Ask Toki',it:'Domande? Chiedi a Toki',de:'Fragen? Frag Toki',fr:'Questions? Contactez Toki'}[siteLang()]||'Questions? Ask Toki')+'</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">'+({en:'Our AI concierge',it:'Il nostro concierge AI',de:'Unser KI-Concierge',fr:'Notre concierge IA'}[siteLang()]||'Our AI concierge')+' <strong style="color:#C8B99A">Toki</strong> '+({en:'is available 24/7 for questions or changes.',it:'è disponibile 24/7 per domande o modifiche.',de:'ist 24/7 für Fragen oder Änderungen verfügbar.',fr:'est disponible 24h/24 pour toute question.'}[siteLang()]||'is available 24/7.')+'<br></p><a href="https://maremediterraneo.com/?lang=en#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chat with Toki →</a></div>'
         + '<p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
 
       await sendEmail([
@@ -3971,34 +3979,19 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       var suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
-      var diffLine = priceDiff > 0
-        ? ({
-          en: '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link. Once paid, your new dates are confirmed.',
-          it: '\n💳 Differenza di prezzo: **+€' + priceDiff + '** — il proprietario ti invierà un link di pagamento. Una volta pagato, le nuove date sono confermate.',
-          de: '\n💳 Preisunterschied: **+€' + priceDiff + '** — der Eigentümer sendet Ihnen einen Zahlungslink. Nach Zahlung sind die neuen Daten bestätigt.',
-          fr: '\n💳 Difference de prix: **+€' + priceDiff + '** — le proprietaire vous enverra un lien de paiement. Une fois paye, les nouvelles dates seront confirmees.'
-        })[siteLang()] || '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link.'
-        : priceDiff < 0
-          ? ({
-          en: '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.',
-          it: '\n💰 Differenza di prezzo: **-€' + Math.abs(priceDiff) + '** — il proprietario organizzerà un rimborso.',
-          de: '\n💰 Preisunterschied: **-€' + Math.abs(priceDiff) + '** — der Eigentümer wird eine Rückerstattung veranlassen.',
-          fr: '\n💰 Difference de prix: **-€' + Math.abs(priceDiff) + '** — le proprietaire organisera un remboursement.'
-        })[siteLang()] || '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.'
-          : '';
-      addMessage('toki',
+            var diffLine = '';
+      if (priceDiff > 0) {
+        diffLine = await translateMsg('💳 Price difference: +€' + priceDiff + ' — the owner will send you a payment link. Once paid, your new dates are confirmed.');
+      } else if (priceDiff < 0) {
+        diffLine = await translateMsg('💰 Price difference: -€' + Math.abs(priceDiff) + ' — the owner will arrange a refund.');
+      }      addMessage('toki',
         ({
         en: '✅ We have received your date change request.\n\n**New dates are being held for you:**',
         it: '✅ Abbiamo ricevuto la tua richiesta di modifica date.\n\n**Le nuove date sono riservate per te:**',
         de: '✅ Wir haben Ihre Datumsänderungsanfrage erhalten.\n\n**Die neuen Daten sind für Sie reserviert:**',
         fr: '✅ Nous avons recu votre demande de modification.\n\n**Les nouvelles dates sont reservees pour vous:**'
-      })[siteLang()] || '✅ We have received your date change request.\n\n**New dates are being held for you:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\nNew total: **€' + newTotal + '**' + diffLine + ({
-        en: '\n\nYou will receive a confirmation email shortly. Note: dates are held on a first-come, first-served basis — they will be secured once any outstanding payment is completed.',
-        it: '\n\nRiceverai un\'email di conferma a breve. Nota: le date sono riservate in ordine di arrivo — saranno garantite una volta completato il pagamento.',
-        de: '\n\nSie erhalten in Kürze eine Bestätigungs-E-Mail. Hinweis: Die Daten werden nach dem Prinzip "Wer zuerst kommt, mahlt zuerst" vergeben.',
-        fr: '\n\nVous recevrez un email de confirmation prochainement. Note: les dates sont reservees selon le principe premier arrive, premier servi.'
-      })[siteLang()] || '\n\nYou will receive a confirmation email shortly.',
-        ['I have another question', 'Check-in info']);
+      })[siteLang()] || '✅ We have received your date change request.\n\n**New dates are being held for you:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\nNew total: **€' + newTotal + '**' + diffLine + noteMsg,
+        [qrAnother, qrCheckin]);
 
     } catch(e) {
       hideTyping();
@@ -4012,7 +4005,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   }
 
   // ── CANCELLATION FLOW ──────────────────────────────────────────
-  function startCancellation() {
+  async function startCancellation() {
     if (!verifiedGuest || !verifiedGuest.bookings.length) {
       addMessage('toki', 'I need to verify your booking first. Could you share your reference number and email?');
       return;
@@ -4034,28 +4027,14 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const eligible  = daysOut >= threshold;
     const total     = parseFloat(b.total_price) || 0;
 
-    const _rsl = siteLang();
     let refundMsg, refundAmount;
     if (eligible) {
       refundAmount = total;
-      const refundEligMsg = {
-        en: 'You are eligible for a **full refund of €' + total + '**. You will receive an email with the details.',
-        it: 'Hai diritto a un **rimborso completo di €' + total + '**. Riceverai un\'email con i dettagli.',
-        de: 'Sie haben Anspruch auf eine **vollständige Rückerstattung von €' + total + '**. Sie erhalten eine E-Mail mit den Details.',
-        fr: 'Vous avez droit à un **remboursement complet de €' + total + '**. Vous recevrez un email avec les détails.',
-      };
-      refundMsg = refundEligMsg[_rsl] || refundEligMsg.en;
+      refundMsg = await translateMsg('You are eligible for a full refund of \u20ac' + total + '. You will receive an email with all the details.');
     } else {
       refundAmount = 0;
-      const season = isHigh ? { en:'high season', it:'alta stagione', de:'Hochsaison', fr:'haute saison' }[_rsl]||'high season'
-                             : { en:'low season',  it:'bassa stagione', de:'Nebensaison', fr:'basse saison' }[_rsl]||'low season';
-      const noRefundMsg = {
-        en: 'Your check-in is in **' + daysOut + ' days**, within our ' + threshold + '-day no-refund window for ' + season + '. **No refund applies.**',
-        it: 'Il tuo check-in è tra **' + daysOut + ' giorni**, nella finestra di ' + threshold + ' giorni senza rimborso per ' + season + '. **Nessun rimborso applicabile.**',
-        de: 'Ihre Anreise ist in **' + daysOut + ' Tagen**, innerhalb des ' + threshold + '-Tage-Stornofensters für die ' + season + '. **Keine Rückerstattung.**',
-        fr: 'Votre arrivée est dans **' + daysOut + ' jours**, dans la fenêtre de ' + threshold + ' jours sans remboursement pour la ' + season + '. **Aucun remboursement applicable.**',
-      };
-      refundMsg = noRefundMsg[_rsl] || noRefundMsg.en;
+      const season = isHigh ? 'high season' : 'low season';
+      refundMsg = await translateMsg('Your check-in is in ' + daysOut + ' days, within our ' + threshold + '-day no-refund window for ' + season + '. No refund applies.');
     }
 
     pendingCancellation = { booking: b, ref, refundAmount, eligible };
@@ -4395,7 +4374,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       function row(k,v){ return '<tr><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#888;font-size:11px;text-transform:uppercase">' + k + '</td><td style="padding:7px 0;border-bottom:1px solid #1a1a2e;color:#E8DDD0;text-align:right">' + v + '</td></tr>'; }
       const ownerHtml = '<div style="background:#0A0A12;padding:28px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:500px"><h2 style="font-family:Georgia,serif;color:#C8963E;margin:0 0 16px">🌊 New Toki Booking — ' + ref + '</h2><table style="border-collapse:collapse;width:100%">' + row('Suite',bk.suiteName) + row('Check-in',bk.checkin) + row('Check-out',bk.checkout) + row('Nights',bk.nights) + row('Guests',bk.guests) + row('Total','€'+bk.total) + row('Name',bk.name) + row('Email',bk.email) + row('Phone',bk.phone) + '</table></div>';
       const tokiEmailBlock = '<div style="margin:16px 0;padding:16px;background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);border-radius:4px"><p style="margin:0;font-size:13px;color:#E8DDD0;line-height:1.7">'
-        + (priceDiff > 0 ? '💳 The owner will send you a <strong>payment link for €' + priceDiff + '</strong> shortly. Your new dates are held — first come, first served.' : priceDiff < 0 ? '💰 The owner will arrange a <strong>refund of €' + Math.abs(priceDiff) + '</strong> to your original payment method.' : '✓ No payment difference — your dates are confirmed.')
+        + (priceDiff > 0 ? ({en:'💳 The owner will send you a payment link for <strong>€'+priceDiff+'</strong> shortly. New dates held — first come, first served.',it:'💳 Il proprietario ti invierà un link di pagamento per <strong>€'+priceDiff+'</strong> a breve. Date riservate.',de:'💳 Der Eigentümer sendet Ihnen einen Zahlungslink über <strong>€'+priceDiff+'</strong>. Daten reserviert.',fr:'💳 Lien de paiement de <strong>€'+priceDiff+'</strong> arrive prochainement.'})[siteLang()]||'💳 Payment link for €'+priceDiff+' coming shortly.' : priceDiff < 0 ? '💰 The owner will arrange a <strong>refund of €' + Math.abs(priceDiff) + '</strong> to your original payment method.' : '✓ No payment difference — your dates are confirmed.')
         + '</p></div>'
         + '<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">Questions? Ask Toki</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">Our AI concierge <strong style="color:#C8B99A">Toki</strong> is available 24/7 on our website and can help you with bookings, check-in &amp; check-out, suite changes, cancellations, local recommendations and more.</p><a href="https://maremediterraneo.com/?lang=en#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chat with Toki →</a></div>';
       const guestHtml = '<div style="background:#0A0A12;padding:32px;font-family:Arial,sans-serif;color:#E8DDD0;max-width:520px;margin:0 auto"><p style="font-family:Georgia,serif;font-style:italic;font-size:26px;color:#C8B99A;margin:0 0 2px">Mare Mediterraneo</p><p style="font-size:9px;letter-spacing:3px;color:#555;margin:0 0 24px">Torre Chianca · Salento · Puglia</p><h2 style="font-family:Georgia,serif;font-weight:300;font-size:22px;color:#F5EFE6;margin:0 0 4px">Booking request received</h2><p style="color:#666;margin:0 0 22px;font-size:13px">Reference: ' + ref + '</p><table style="border-collapse:collapse;width:100%">' + row('Suite',bk.suiteName) + row('Check-in',bk.checkin+' · from 15:00') + row('Check-out',bk.checkout+' · by 10:00') + row('Nights',bk.nights) + row('Guests',bk.guests) + row('Total','€'+bk.total) + '</table>' + tokiEmailBlock + '<p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
