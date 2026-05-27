@@ -138,6 +138,31 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-27-it-snorkelling-e-diving-in-salento-i-migliori-luoghi-per-scoprire-i-fondali-puglies.html</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-27-de-schnorcheln-und-tauchen-in-salento-die-besten-spots-im-jahresverlauf.html</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-27-fr-plongée-et-snorkeling-à-salento-les-meilleurs-spots.html</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-05-27-en-diving-deep-exploring-the-best-snorkelling-and-diving-spots-in-salento.html</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
