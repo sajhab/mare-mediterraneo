@@ -287,36 +287,38 @@ function getSession(suite, date){
 //   - there is a checkin on D+1 (clean day before so it's ready)
 // Both cases: clean window = D
 function getTodayCleans(){
-  var today    = dStr(new Date());
-  var tomorrow = addDays(today, 1);
-  var result   = {}; // keyed by suite, value = { reason, nextCheckin }
+  var today = dStr(new Date());
+  var d1    = addDays(today, 1);
+  var d2    = addDays(today, 2);
+  var result = {};
 
   bookings.forEach(function(b){
     if(b.linked_to_villa) return;
     var suite = b.suite;
+    if(result[suite]) return; // already registered for this suite
 
-    // checkout today
+    // checkout today → clean today
     if(b.checkout === today){
-      if(!result[suite]) result[suite] = {};
-      result[suite].checkout = b.guest || b.suite;
-      // find next checkin
+      result[suite] = {
+        type: 'checkout',
+        nextCheckin: null
+      };
+      // find next guest
       var next = bookings.filter(function(x){ return x.suite===suite && x.checkin>=today && x.id!==b.id; })
         .sort(function(a,c){ return a.checkin>c.checkin?1:-1; })[0];
-      result[suite].nextCheckin = next ? next.checkin : null;
+      if(next) result[suite].nextCheckin = next.checkin;
+      return;
     }
 
-    // checkin tomorrow — need to clean today
-    if(b.checkin === tomorrow){
-      if(!result[suite]) result[suite] = {};
-      result[suite].checkinTomorrow = b.guest || b.suite;
-      result[suite].nextCheckin = b.checkin;
-    }
-
-    // checkin today — suite must be ready (guest arriving today)
-    if(b.checkin === today){
-      if(!result[suite]) result[suite] = {};
-      result[suite].checkinToday = b.guest || b.suite;
-      result[suite].nextCheckin = b.checkin;
+    // checkin today, tomorrow or day after → clean now
+    if(b.checkin === today || b.checkin === d1 || b.checkin === d2){
+      var daysUntil = Math.round((new Date(b.checkin+'T00:00:00') - new Date(today+'T00:00:00')) / 86400000);
+      result[suite] = {
+        type: 'checkin',
+        daysUntil: daysUntil,
+        nextCheckin: b.checkin
+      };
+      return;
     }
   });
 
@@ -353,13 +355,18 @@ function renderToday(){
     // Body
     h += '<div class="clean-card-body">';
 
-    // Reason
-    var reason = '';
-    if(info.checkout)       reason = lang==='it' ? 'Check-out: '+info.checkout : 'Check-out: '+info.checkout;
-    if(info.checkinTomorrow) reason += (reason?'  ·  ':'') + (lang==='it'?'Check-in domani: '+info.checkinTomorrow:'Check-in tomorrow: '+info.checkinTomorrow);
-    if(info.checkinToday)    reason += (reason?'  ·  ':'') + (lang==='it'?'Check-in OGGI: '+info.checkinToday:'Check-in TODAY: '+info.checkinToday);
-    if(info.nextCheckin)    reason += (reason?' · ':'')+tx('nextGuest')+': '+fmtDate(info.nextCheckin)+' 15:00';
-    h += '<div class="clean-info">'+reason+'</div>';
+    var reasonTxt;
+    if(info.type==='checkout'){
+      reasonTxt = lang==='it' ? 'Check-out stamattina · Pulire prima delle 15:00' : 'Check-out this morning · Clean before 15:00';
+    } else {
+      if(info.daysUntil===0)      reasonTxt = lang==='it' ? 'Ospite in arrivo OGGI alle 15:00' : 'Guest arriving TODAY at 15:00';
+      else if(info.daysUntil===1) reasonTxt = lang==='it' ? 'Ospite in arrivo domani alle 15:00' : 'Guest arriving tomorrow at 15:00';
+      else                        reasonTxt = lang==='it' ? 'Ospite in arrivo dopodomani alle 15:00' : 'Guest arriving in 2 days at 15:00';
+    }
+    h += '<div class="clean-info">'+reasonTxt+'</div>';
+    if(info.nextCheckin){
+      h += '<div class="clean-sub" style="font-size:10px;color:var(--gold);margin-top:2px">'+tx('nextGuest')+': '+fmtDate(info.nextCheckin)+' 15:00</div>';
+    }
 
     // Timestamps
     if(sess && sess.num_cleaners){
