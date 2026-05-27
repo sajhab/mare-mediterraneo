@@ -3986,21 +3986,21 @@ if(!localStorage.getItem('mm_lang_chosen')){
         + '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#27ae60;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid #1a1a2e">'+({en:'Updated booking',it:'Prenotazione aggiornata',de:'Aktualisierte Buchung',fr:'Reservation mise a jour'}[siteLang()]||'Updated booking')+'</p>'
         + '<table style="border-collapse:collapse;width:100%">'
         + (suiteChanged ? eRowNew('Suite', displaySuite) : eRow('Suite', displaySuite))
-        + eRowNew('Check-in', newCi + ' · from 15:00')
-        + eRowNew('Check-out', newCo + ' · by 10:00')
-        + eRowNew('Nights', newNights)
-        + eRow('Nightly rate', '€' + sr.price + ' × ' + newNights + ' = €' + newNightlyTotal)
-        + eRow('Cleaning fee', '€' + sr.cleaning)
-        + '<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">New total</td><td style="padding:12px 0 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€' + newTotal + '</td></tr>'
+        + eRowNew(({en:'Check-in',it:'Check-in',de:'Anreise',fr:'Arrivée'})[siteLang()]||'Check-in', newCi + ' · ' + ({en:'from 15:00',it:'dalle 15:00',de:'ab 15:00',fr:'à partir de 15h'})[siteLang()]||'from 15:00')
+        + eRowNew(({en:'Check-out',it:'Check-out',de:'Abreise',fr:'Départ'})[siteLang()]||'Check-out', newCo + ' · ' + ({en:'by 10:00',it:'entro le 10:00',de:'bis 10:00',fr:'avant 10h'})[siteLang()]||'by 10:00')
+        + eRowNew(({en:'Nights',it:'Notti',de:'Nächte',fr:'Nuits'})[siteLang()]||'Nights', newNights)
+        + eRow(({en:'Nightly rate',it:'Tariffa per notte',de:'Nachtpreis',fr:'Tarif par nuit'})[siteLang()]||'Nightly rate', '€' + sr.price + ' × ' + newNights + ' = €' + newNightlyTotal)
+        + eRow(({en:'Cleaning fee',it:'Pulizia',de:'Reinigungsgebühr',fr:'Frais de ménage'})[siteLang()]||'Cleaning fee', '€' + sr.cleaning)
+        + '<tr><td style="padding:12px 0 0;color:#C8963E;font-size:11px;text-transform:uppercase;letter-spacing:2px">' + (({en:'New total',it:'Nuovo totale',de:'Neuer Gesamtpreis',fr:'Nouveau total'})[siteLang()]||'New total') + '</td><td style="padding:12px 0 0;color:#C8963E;font-size:22px;font-family:Georgia,serif;text-align:right">€' + newTotal + '</td></tr>'
         + '</table>'
         + '<div style="margin:16px 0;padding:16px;background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);border-radius:4px"><p style="margin:0;font-size:13px;color:#E8DDD0;line-height:1.7">'
-        + (priceDiff > 0 ? ({en:'💳 The owner will send you a payment link for <strong>€'+priceDiff+'</strong> shortly. New dates held — first come, first served.',it:'💳 Il proprietario ti invierà un link di pagamento per <strong>€'+priceDiff+'</strong> a breve. Date riservate.',de:'💳 Der Eigentümer sendet Ihnen einen Zahlungslink über <strong>€'+priceDiff+'</strong>. Daten reserviert.',fr:'💳 Lien de paiement de <strong>€'+priceDiff+'</strong> arrive prochainement.'})[siteLang()]||'💳 Payment link for €'+priceDiff+' coming shortly.' : priceDiff < 0 ? '💰 The owner will arrange a <strong>refund of €' + Math.abs(priceDiff) + '</strong> to your original payment method.' : '✓ No payment difference — your dates are confirmed.')
+        + (priceDiff > 0 ? ({en:'💳 The owner will send you a payment link for <strong>€'+priceDiff+'</strong> shortly. New dates held — first come, first served.',it:'💳 Il proprietario ti invierà un link di pagamento per <strong>€'+priceDiff+'</strong> a breve. Date riservate.',de:'💳 Der Eigentümer sendet Ihnen einen Zahlungslink über <strong>€'+priceDiff+'</strong>. Daten reserviert.',fr:'💳 Lien de paiement de <strong>€'+priceDiff+'</strong> arrive prochainement.'})[siteLang()]||'💳 Payment link for €'+priceDiff+' coming shortly.' : priceDiff < 0 ? '✓ ' + ({en:'No price adjustment — your dates are confirmed.',it:'Nessuna differenza di prezzo — le tue date sono confermate.',de:'Kein Preisunterschied — Ihre Daten sind bestätigt.',fr:'Aucun ajustement de prix — vos dates sont confirmées.'})[siteLang()]||'No price adjustment — your dates are confirmed.' : '✓ No payment difference — your dates are confirmed.')
         + '</p></div>'
         + '<div style="margin:24px 0;padding:20px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.2);border-radius:6px"><p style="margin:0 0 8px;color:#C8963E;font-size:11px;letter-spacing:2px;text-transform:uppercase">'+({en:'Questions? Ask Toki',it:'Domande? Chiedi a Toki',de:'Fragen? Frag Toki',fr:'Questions? Contactez Toki'}[siteLang()]||'Questions? Ask Toki')+'</p><p style="margin:0;color:#aaa;font-size:13px;font-style:italic;line-height:1.7">'+({en:'Our AI concierge',it:'Il nostro concierge AI',de:'Unser KI-Concierge',fr:'Notre concierge IA'}[siteLang()]||'Our AI concierge')+' <strong style="color:#C8B99A">Toki</strong> '+({en:'is available 24/7 for questions or changes.',it:'è disponibile 24/7 per domande o modifiche.',de:'ist 24/7 für Fragen oder Änderungen verfügbar.',fr:'est disponible 24h/24 pour toute question.'}[siteLang()]||'is available 24/7.')+'<br></p><a href="https://maremediterraneo.com/?lang=en#booking" style="display:inline-block;margin-top:12px;background:#C8963E;color:#0A0A12;text-decoration:none;padding:10px 20px;font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:3px">Chat with Toki →</a></div>'
         + '<p style="font-size:9px;letter-spacing:1px;color:#444;margin:0">© 2025 Mare Mediterraneo · <a href="https://maremediterraneo.com" style="color:#C8963E">maremediterraneo.com</a></p></div>';
 
       await sendEmail([
-        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL, subject: '[Mare Med] Date Change Request — '+ref+' — '+b.guest+(priceDiff>0?' — ACTION: Send payment link €'+priceDiff:priceDiff<0?' — ACTION: Refund €'+Math.abs(priceDiff):''), html: ownerHtml, reply_to: b.email },
+        { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: OWNER_EMAIL, subject: '[Mare Med] Date Change Request — '+ref+' — '+b.guest+(priceDiff>0?' — ACTION: Send payment link €'+priceDiff:''), html: ownerHtml, reply_to: b.email },
         { from:'Mare Mediterraneo <'+FROM_EMAIL+'>', to: b.email, subject: ({
             en:'Date Change Request Received — '+ref,
             it:'Richiesta Modifica Date Ricevuta — '+ref,
@@ -4020,27 +4020,42 @@ if(!localStorage.getItem('mm_lang_chosen')){
         })[siteLang()] || '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link.'
         : priceDiff < 0
           ? ({
-          en: '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.',
-          it: '\n💰 Differenza di prezzo: **-€' + Math.abs(priceDiff) + '** — il proprietario organizzerà un rimborso.',
-          de: '\n💰 Preisunterschied: **-€' + Math.abs(priceDiff) + '** — der Eigentümer wird eine Rückerstattung veranlassen.',
-          fr: '\n💰 Difference de prix: **-€' + Math.abs(priceDiff) + '** — le proprietaire organisera un remboursement.'
-        })[siteLang()] || '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.'
+          en: '\n✓ No price adjustment — your new dates are confirmed.',
+          it: '\n✓ Nessuna differenza di prezzo — le tue nuove date sono confermate.',
+          de: '\n✓ Kein Preisunterschied — Ihre neuen Daten sind bestätigt.',
+          fr: '\n✓ Aucun ajustement de prix — vos nouvelles dates sont confirmées.'
+        })[siteLang()] || '\n✓ No price adjustment — your new dates are confirmed.'
           : '';
-      addMessage('toki',
-        ({
+      const _sl_conf = siteLang();
+      const _headline = ({
         en: '✅ We have received your date change request.\n\n**New dates are being held for you:**',
         it: '✅ Abbiamo ricevuto la tua richiesta di modifica date.\n\n**Le nuove date sono riservate per te:**',
         de: '✅ Wir haben Ihre Datumsänderungsanfrage erhalten.\n\n**Die neuen Daten sind für Sie reserviert:**',
         fr: '✅ Nous avons recu votre demande de modification.\n\n**Les nouvelles dates sont reservees pour vous:**'
-      })[siteLang()] || '✅ We have received your date change request.\n\n**New dates are being held for you:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\nNew total: **€' + newTotal + '**' + diffLine + ({
+      })[_sl_conf] || '✅ We have received your date change request.\n\n**New dates are being held for you:**';
+      const _ciLabel  = {en:'Check-in',  it:'Check-in',  de:'Anreise',  fr:'Arrivée' }[_sl_conf] || 'Check-in';
+      const _coLabel  = {en:'Check-out', it:'Check-out', de:'Abreise',  fr:'Départ'  }[_sl_conf] || 'Check-out';
+      const _nLabel   = {en:'Nights',    it:'Notti',     de:'Nächte',   fr:'Nuits'   }[_sl_conf] || 'Nights';
+      const _totLabel = {en:'New total', it:'Nuovo totale', de:'Neuer Gesamtpreis', fr:'Nouveau total'}[_sl_conf] || 'New total';
+      const _ciTime   = {en:'from 15:00', it:'dalle 15:00', de:'ab 15:00', fr:'à partir de 15h'}[_sl_conf] || 'from 15:00';
+      const _coTime   = {en:'by 10:00',   it:'entro le 10:00', de:'bis 10:00', fr:'avant 10h'}[_sl_conf] || 'by 10:00';
+      const _closing  = ({
         en: '\n\nYou will receive a confirmation email shortly. Note: dates are held on a first-come, first-served basis — they will be secured once any outstanding payment is completed.',
         it: '\n\nRiceverai un\'email di conferma a breve. Nota: le date sono riservate in ordine di arrivo — saranno garantite una volta completato il pagamento.',
         de: '\n\nSie erhalten in Kürze eine Bestätigungs-E-Mail. Hinweis: Die Daten werden nach dem Prinzip "Wer zuerst kommt, mahlt zuerst" vergeben.',
         fr: '\n\nVous recevrez un email de confirmation prochainement. Note: les dates sont reservees selon le principe premier arrive, premier servi.'
-      })[siteLang()] || '\n\nYou will receive a confirmation email shortly.',
+      })[_sl_conf] || '\n\nYou will receive a confirmation email shortly.';
+      addMessage('toki',
+        _headline + suiteConfirmLine
+        + '\n' + _ciLabel + ': ' + newCi + ' (' + _ciTime + ')'
+        + '\n' + _coLabel + ': ' + newCo + ' (' + _coTime + ')'
+        + '\n' + _nLabel + ': ' + newNights
+        + '\n' + _totLabel + ': **€' + newTotal + '**'
+        + diffLine
+        + _closing,
         [
-          {en:'I have another question',it:'Ho un altra domanda',de:'Ich habe eine weitere Frage',fr:'J ai une autre question'}[siteLang()]||'I have another question',
-          {en:'Check-in info',it:'Info check-in',de:'Check-in Info',fr:'Info arrivee'}[siteLang()]||'Check-in info'
+          {en:'I have another question',it:'Ho un\'altra domanda',de:'Ich habe eine weitere Frage',fr:'J\'ai une autre question'}[_sl_conf]||'I have another question',
+          {en:'Check-in info',it:'Info check-in',de:'Check-in Info',fr:'Info arrivée'}[_sl_conf]||'Check-in info'
         ]);
 
     } catch(e) {
@@ -4528,7 +4543,7 @@ BOOKING FLOW:
 - New bookings: you DO NOT handle bookings. If someone wants to book, always direct them to the Book Direct section on the website. Be warm and helpful about it.
 - Payment: 100% upfront via Stripe. All major cards. Fully secure.
 - Cancellation policy: High season (Jun-Sep) full refund 30+ days before arrival, no refund within 30 days. Low season (Oct-May) full refund 14+ days before, no refund within 14 days.
-- Date changes: you handle directly — check availability, calculate new price, update booking, send confirmation emails to guest and owner.
+- Date changes: you handle directly — check availability, calculate new price, update booking, send confirmation emails to guest and owner. Policy: Low season (Oct–May) changes must be requested 7+ days before arrival; High season (Jun–Sep) 21+ days before arrival. One free change per booking. If new dates cost more, the owner will send a payment link for the difference. If new dates cost less, no refund is given.
 - Cancellations: you handle directly — check policy, tell guest their refund amount, ask to confirm. Keep it brief. Never mention Stripe or how refunds are processed technically.
 - Coupon codes: collected during booking form steps only. Never pretend to apply discounts yourself.
 - NEVER confirm or finalize any booking in your text unless the system has done it.
