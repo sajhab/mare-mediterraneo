@@ -264,7 +264,7 @@ function loadData(cb){
   var today = dStr(new Date());
   var far   = addDays(today, 365);
   Promise.all([
-    sbGet('bookings',  'order=checkin.asc&checkout=gte.'+addDays(today,-1)+'&checkin=lte.'+far),
+    sbGet('bookings',  'order=checkin.asc&checkout=gte.'+addDays(today,-1)+'&checkin=lte.'+far+'&status=eq.confirmed'),
     sbGet('cleaning_sessions', 'order=date.desc')
   ]).then(function(res){
     bookings = res[0];
