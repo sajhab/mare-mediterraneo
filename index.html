@@ -3063,6 +3063,30 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
   const LANG_NAMES = { en:'English', it:'Italian', de:'German', fr:'French' };
 
+  // ── AI TRANSLATION HELPER ─────────────────────────────────────
+  // Translates a UI message to the current chat language via Toki proxy
+  // Falls back to the original English text if the call fails
+  async function translateMsg(text) {
+    const sl = siteLang();
+    if (!sl || sl === 'en') return text; // no need to translate
+    const langName = LANG_NAMES[sl] || sl;
+    try {
+      const res = await fetch('https://toki-proxy.online-mmarts.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: 'You are a translation assistant. Translate the exact text given by the user into ' + langName + '. Output ONLY the translated text — no explanations, no quotes, no extra content. Preserve markdown formatting like **bold** and *italic*.',
+          messages: [{ role: 'user', content: text }]
+        })
+      });
+      const data = await res.json();
+      if (data.choices && data.choices[0]) return data.choices[0].message.content.trim();
+    } catch(e) {
+      console.warn('[translateMsg] failed:', e.message);
+    }
+    return text; // fallback to English
+  }
+
   // Translations for Toki UI strings
   const T = {
     en: {
@@ -3344,13 +3368,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
       awaitingSuiteChange = false;
       if (pendingDateChange) pendingDateChange.newSuite = null;
       awaitingDateChange = true;
-      const _jsl = siteLang();
-      const noProb = {
-        en: 'No problem! Tell me the new dates:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*',
-        it: 'Perfetto! Dimmi le nuove date:\n\n*"1 settembre all 8 settembre"* o *"2026-09-01 al 2026-09-08"*',
-        de: 'Kein Problem! Nennen Sie mir die neuen Daten:\n\n*"1. September bis 8. September"* oder *"2026-09-01 bis 2026-09-08"*',
-        fr: 'Pas de probleme! Indiquez les nouvelles dates:\n\n*"1er septembre au 8 septembre"* ou *"2026-09-01 au 2026-09-08"*',
-      }[_jsl] || 'No problem! Tell me the new dates.';
+      const noProb = await translateMsg('No problem! Tell me the new dates:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
       addMessage('toki', noProb);
       return;
     }
@@ -3634,51 +3652,33 @@ if(!localStorage.getItem('mm_lang_chosen')){
   // ── awaitingSuiteChange: waiting for guest to pick a new suite ──
   let awaitingSuiteChange = false;
 
-  function startDateChange(preselectedSuite) {
+  async function startDateChange(preselectedSuite) {
     if (!verifiedGuest || !verifiedGuest.bookings.length) return;
     const booking = verifiedGuest.bookings.find(b => !b.linked_to_villa) || verifiedGuest.bookings[0];
     pendingDateChange = { booking, newSuite: preselectedSuite || null };
-    const _sl = siteLang();
-    const justeBtn = { en:'Just the dates', it:'Solo le date', de:'Nur die Daten', fr:'Juste les dates' }[_sl] || 'Just the dates';
-    const dateHint = {
-      en: 'Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*',
-      it: 'Dimmi le nuove date — scrivi naturalmente:\n\n*"1 settembre all 8 settembre"* o *"2026-09-01 al 2026-09-08"*',
-      de: 'Nennen Sie mir die neuen Daten — schreiben Sie natürlich:\n\n*"1. September bis 8. September"* oder *"2026-09-01 bis 2026-09-08"*',
-      fr: 'Indiquez-moi les nouvelles dates — ecrivez naturellement:\n\n*"1er septembre au 8 septembre"* ou *"2026-09-01 au 2026-09-08"*',
-    }[_sl] || 'Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"*';
+    const dateHint = await translateMsg('Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
     if (!preselectedSuite) {
       awaitingSuiteChange = true;
-      const askSuite = {
-        en: 'Of course! 🌊 Do you also want to change the suite, or just the dates?',
-        it: 'Certo! 🌊 Vuoi anche cambiare la suite, o solo le date?',
-        de: 'Natürlich! 🌊 Möchten Sie auch die Suite wechseln oder nur die Daten?',
-        fr: 'Bien sur! 🌊 Voulez-vous aussi changer de suite, ou juste les dates?',
-      }[_sl] || 'Of course! 🌊 Do you also want to change the suite, or just the dates?';
+      const askSuite = await translateMsg('Of course! 🌊 Do you also want to change the suite, or just the dates?');
+      const justeBtn = await translateMsg('Just the dates');
       addMessage('toki', askSuite, [justeBtn, 'Suite Pietra', 'Suite Cielo', 'Villa Completa']);
     } else {
       awaitingDateChange = true;
-      const great = { en:'Great!', it:'Perfetto!', de:'Super!', fr:'Parfait!' }[_sl] || 'Great!';
-      addMessage('toki', great + ' ' + dateHint);
+      addMessage('toki', dateHint);
     }
   }
 
-  function handleSuiteChoice(suiteKey) {
+  async function handleSuiteChoice(suiteKey) {
     awaitingSuiteChange = false;
     if (pendingDateChange) {
       pendingDateChange.newSuite = suiteKey;
     }
     awaitingDateChange = true;
-    const _sl2 = siteLang();
-    const dateHint2 = {
-      en: 'Perfect! Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*',
-      it: 'Perfetto! Dimmi le nuove date — scrivi naturalmente:\n\n*"1 settembre all 8 settembre"* o *"2026-09-01 al 2026-09-08"*',
-      de: 'Super! Nennen Sie mir die neuen Daten — schreiben Sie natürlich:\n\n*"1. September bis 8. September"*',
-      fr: 'Parfait! Indiquez-moi les nouvelles dates — ecrivez naturellement:\n\n*"1er septembre au 8 septembre"*',
-    }[_sl2] || 'Perfect! Now tell me the new dates.';
-    addMessage('toki', dateHint2);
+    const msg = await translateMsg('Perfect! Now tell me the new dates — write naturally:\n\n*"1 September to 8 September"* or *"2026-09-01 to 2026-09-08"*');
+    addMessage('toki', msg);
   }
 
-  function handleSuiteTextInput(text) {
+  async function handleSuiteTextInput(text) {
     const lower = text.toLowerCase();
     let suiteKey = null;
     if (lower.includes('pietra') || lower.includes('garden') || lower.includes('ground')) suiteKey = 'pietra';
@@ -3688,9 +3688,10 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
     if (suiteKey === undefined) {
       // Couldn't parse — ask again with buttons
-      const _sl3 = siteLang();
-      const whichSuite = { en:'Which suite would you like?', it:'Quale suite preferisci?', de:'Welche Suite möchten Sie?', fr:'Quelle suite souhaitez-vous?' }[_sl3]||'Which suite would you like?';
-      const justDates  = { en:'Just the dates', it:'Solo le date', de:'Nur die Daten', fr:'Juste les dates' }[_sl3]||'Just the dates';
+      const [whichSuite, justDates] = await Promise.all([
+        translateMsg('Which suite would you like?'),
+        translateMsg('Just the dates')
+      ]);
       addMessage('toki', whichSuite, ['Suite Pietra', 'Suite Cielo', 'Villa Completa', justDates]);
       awaitingSuiteChange = true;
       return;
@@ -3978,37 +3979,19 @@ if(!localStorage.getItem('mm_lang_chosen')){
 
       hideTyping();
       var suiteConfirmLine = suiteChanged ? '\nSuite: **' + displaySuite + '**' : '';
-      var diffLine = priceDiff > 0
-        ? ({
-          en: '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link. Once paid, your new dates are confirmed.',
-          it: '\n💳 Differenza di prezzo: **+€' + priceDiff + '** — il proprietario ti invierà un link di pagamento. Una volta pagato, le nuove date sono confermate.',
-          de: '\n💳 Preisunterschied: **+€' + priceDiff + '** — der Eigentümer sendet Ihnen einen Zahlungslink. Nach Zahlung sind die neuen Daten bestätigt.',
-          fr: '\n💳 Difference de prix: **+€' + priceDiff + '** — le proprietaire vous enverra un lien de paiement. Une fois paye, les nouvelles dates seront confirmees.'
-        })[siteLang()] || '\n💳 Price difference: **+€' + priceDiff + '** — the owner will send you a payment link.'
-        : priceDiff < 0
-          ? ({
-          en: '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.',
-          it: '\n💰 Differenza di prezzo: **-€' + Math.abs(priceDiff) + '** — il proprietario organizzerà un rimborso.',
-          de: '\n💰 Preisunterschied: **-€' + Math.abs(priceDiff) + '** — der Eigentümer wird eine Rückerstattung veranlassen.',
-          fr: '\n💰 Difference de prix: **-€' + Math.abs(priceDiff) + '** — le proprietaire organisera un remboursement.'
-        })[siteLang()] || '\n💰 Price difference: **-€' + Math.abs(priceDiff) + '** — the owner will arrange a refund.'
-          : '';
-      addMessage('toki',
+            var diffLine = '';
+      if (priceDiff > 0) {
+        diffLine = await translateMsg('💳 Price difference: +€' + priceDiff + ' — the owner will send you a payment link. Once paid, your new dates are confirmed.');
+      } else if (priceDiff < 0) {
+        diffLine = await translateMsg('💰 Price difference: -€' + Math.abs(priceDiff) + ' — the owner will arrange a refund.');
+      }      addMessage('toki',
         ({
         en: '✅ We have received your date change request.\n\n**New dates are being held for you:**',
         it: '✅ Abbiamo ricevuto la tua richiesta di modifica date.\n\n**Le nuove date sono riservate per te:**',
         de: '✅ Wir haben Ihre Datumsänderungsanfrage erhalten.\n\n**Die neuen Daten sind für Sie reserviert:**',
         fr: '✅ Nous avons recu votre demande de modification.\n\n**Les nouvelles dates sont reservees pour vous:**'
-      })[siteLang()] || '✅ We have received your date change request.\n\n**New dates are being held for you:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\nNew total: **€' + newTotal + '**' + diffLine + ({
-        en: '\n\nYou will receive a confirmation email shortly. Note: dates are held on a first-come, first-served basis — they will be secured once any outstanding payment is completed.',
-        it: '\n\nRiceverai un\'email di conferma a breve. Nota: le date sono riservate in ordine di arrivo — saranno garantite una volta completato il pagamento.',
-        de: '\n\nSie erhalten in Kürze eine Bestätigungs-E-Mail. Hinweis: Die Daten werden nach dem Prinzip "Wer zuerst kommt, mahlt zuerst" vergeben.',
-        fr: '\n\nVous recevrez un email de confirmation prochainement. Note: les dates sont reservees selon le principe premier arrive, premier servi.'
-      })[siteLang()] || '\n\nYou will receive a confirmation email shortly.',
-        [
-          {en:'I have another question',it:'Ho un altra domanda',de:'Ich habe eine weitere Frage',fr:'J ai une autre question'}[siteLang()]||'I have another question',
-          {en:'Check-in info',it:'Info check-in',de:'Check-in Info',fr:'Info arrivee'}[siteLang()]||'Check-in info'
-        ]);
+      })[siteLang()] || '✅ We have received your date change request.\n\n**New dates are being held for you:**' + suiteConfirmLine + '\nCheck-in: ' + newCi + ' (from 15:00)\nCheck-out: ' + newCo + ' (by 10:00)\nNights: ' + newNights + '\nNew total: **€' + newTotal + '**' + diffLine + noteMsg,
+        [qrAnother, qrCheckin]);
 
     } catch(e) {
       hideTyping();
@@ -4022,7 +4005,7 @@ if(!localStorage.getItem('mm_lang_chosen')){
   }
 
   // ── CANCELLATION FLOW ──────────────────────────────────────────
-  function startCancellation() {
+  async function startCancellation() {
     if (!verifiedGuest || !verifiedGuest.bookings.length) {
       addMessage('toki', 'I need to verify your booking first. Could you share your reference number and email?');
       return;
@@ -4044,28 +4027,14 @@ if(!localStorage.getItem('mm_lang_chosen')){
     const eligible  = daysOut >= threshold;
     const total     = parseFloat(b.total_price) || 0;
 
-    const _rsl = siteLang();
     let refundMsg, refundAmount;
     if (eligible) {
       refundAmount = total;
-      const refundEligMsg = {
-        en: 'You are eligible for a **full refund of €' + total + '**. You will receive an email with the details.',
-        it: 'Hai diritto a un **rimborso completo di €' + total + '**. Riceverai un\'email con i dettagli.',
-        de: 'Sie haben Anspruch auf eine **vollständige Rückerstattung von €' + total + '**. Sie erhalten eine E-Mail mit den Details.',
-        fr: 'Vous avez droit à un **remboursement complet de €' + total + '**. Vous recevrez un email avec les détails.',
-      };
-      refundMsg = refundEligMsg[_rsl] || refundEligMsg.en;
+      refundMsg = await translateMsg('You are eligible for a full refund of \u20ac' + total + '. You will receive an email with all the details.');
     } else {
       refundAmount = 0;
-      const season = isHigh ? { en:'high season', it:'alta stagione', de:'Hochsaison', fr:'haute saison' }[_rsl]||'high season'
-                             : { en:'low season',  it:'bassa stagione', de:'Nebensaison', fr:'basse saison' }[_rsl]||'low season';
-      const noRefundMsg = {
-        en: 'Your check-in is in **' + daysOut + ' days**, within our ' + threshold + '-day no-refund window for ' + season + '. **No refund applies.**',
-        it: 'Il tuo check-in è tra **' + daysOut + ' giorni**, nella finestra di ' + threshold + ' giorni senza rimborso per ' + season + '. **Nessun rimborso applicabile.**',
-        de: 'Ihre Anreise ist in **' + daysOut + ' Tagen**, innerhalb des ' + threshold + '-Tage-Stornofensters für die ' + season + '. **Keine Rückerstattung.**',
-        fr: 'Votre arrivée est dans **' + daysOut + ' jours**, dans la fenêtre de ' + threshold + ' jours sans remboursement pour la ' + season + '. **Aucun remboursement applicable.**',
-      };
-      refundMsg = noRefundMsg[_rsl] || noRefundMsg.en;
+      const season = isHigh ? 'high season' : 'low season';
+      refundMsg = await translateMsg('Your check-in is in ' + daysOut + ' days, within our ' + threshold + '-day no-refund window for ' + season + '. No refund applies.');
     }
 
     pendingCancellation = { booking: b, ref, refundAmount, eligible };
