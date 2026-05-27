@@ -364,8 +364,17 @@ function renderToday(){
       else                        reasonTxt = lang==='it' ? 'Ospite in arrivo dopodomani alle 15:00' : 'Guest arriving in 2 days at 15:00';
     }
     h += '<div class="clean-info">'+reasonTxt+'</div>';
-    if(info.nextCheckin){
-      h += '<div class="clean-sub" style="font-size:10px;color:var(--gold);margin-top:2px">'+tx('nextGuest')+': '+fmtDate(info.nextCheckin)+' 15:00</div>';
+    // Only show next guest date for checkout scenario — and only if there's a gap worth showing
+    if(info.type==='checkout' && info.nextCheckin){
+      var today2 = dStr(new Date());
+      var daysGap = Math.round((new Date(info.nextCheckin+'T00:00:00') - new Date(today2+'T00:00:00')) / 86400000);
+      var urgency = daysGap === 0 ? 'color:#e74c3c' : daysGap <= 2 ? 'color:var(--gold)' : 'color:var(--muted)';
+      var gapLabel = daysGap === 0 ? (lang==='it'?'Ospite in arrivo OGGI':'Guest arriving TODAY')
+                   : daysGap === 1 ? (lang==='it'?'Ospite domani':'Guest tomorrow')
+                   : (lang==='it'?'Prossimo ospite: ':'Next guest: ') + fmtDate(info.nextCheckin);
+      h += '<div class="clean-sub" style="font-size:10px;margin-top:4px;'+urgency+'">'+gapLabel+' · 15:00</div>';
+    } else if(info.type==='checkout' && !info.nextCheckin){
+      h += '<div class="clean-sub" style="font-size:10px;color:var(--muted);margin-top:4px">'+(lang==='it'?'Nessun ospite successivo previsto':'No next guest scheduled')+'</div>';
     }
 
     // Timestamps
