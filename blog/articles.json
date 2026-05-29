@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-05-29-en-the-notte-della-taranta-a-rhythmic-journey-into-puglias-folk-heart",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "The Notte della Taranta: A Rhythmic Journey into Puglia's Folk Heart",
+    "excerpt": "Embark on a cultural voyage with the Notte della Taranta, the captivating folk festival that lights up Salento each August. Discover its roots and why Torre Chi",
+    "date": "May 29, 2026",
+    "date_iso": "2026-05-29",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1586729248061-54ccdf26c66b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxOb3R0ZSUyMGRlbGxhJTIwVGFyYW50YXxlbnwxfDB8fHwxNzc5OTY1OTc2fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-05-29-fr-la-notte-della-taranta-le-plus-grand-festival-folklorique-des-pouilles",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "La Notte della Taranta — Le plus grand festival folklorique des Pouilles",
+    "excerpt": "Plongez dans l'âme du Salento avec la Notte della Taranta, un festival unique de musique et de danse. Séjournez à Mare Mediterraneo pour explorer les richesses ",
+    "date": "May 29, 2026",
+    "date_iso": "2026-05-29",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1586729248061-54ccdf26c66b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxOb3R0ZSUyMGRlbGxhJTIwVGFyYW50YXxlbnwxfDB8fHwxNzc5OTY1OTc2fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-05-29-de-die-notte-della-taranta-puglias-größtes-volksfest-hautnah-erleben",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Die Notte della Taranta: Puglias größtes Volksfest hautnah erleben",
+    "excerpt": "Tauchen Sie ein in die faszinierende Welt der Notte della Taranta, Puglias größtes Volksfest in Salento. Lassen Sie sich von der mitreißenden Pizzica verzaubern",
+    "date": "May 29, 2026",
+    "date_iso": "2026-05-29",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1586729248061-54ccdf26c66b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxOb3R0ZSUyMGRlbGxhJTIwVGFyYW50YXxlbnwxfDB8fHwxNzc5OTY1OTc2fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-05-29-it-la-notte-della-taranta-il-festival-folk-imperdibile-del-salento",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "La Notte della Taranta: Il Festival Folk Imperdibile del Salento",
+    "excerpt": "Partecipa alla Notte della Taranta, un festival di musica e danza che celebra la tradizione della Pizzica nel cuore del Salento. Un'esperienza imperdibile per c",
+    "date": "May 29, 2026",
+    "date_iso": "2026-05-29",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1586729248061-54ccdf26c66b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxOb3R0ZSUyMGRlbGxhJTIwVGFyYW50YXxlbnwxfDB8fHwxNzc5OTY1OTc2fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
     "slug": "2026-05-28-en-summer-celebrations-unveiling-puglias-vibrant-festival-scene",
     "lang": "EN",
     "lang_label": "English",
