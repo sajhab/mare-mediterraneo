@@ -81,7 +81,9 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--notte2);border:1px solid var(--gold);color:var(--sabbia);padding:12px 24px;border-radius:4px;font-size:12px;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .toast.show{opacity:1}
-@media(min-width:600px){.stats-row{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:1fr 1fr 1fr}}
+
+/* ── MINSTAY WARNING ── */
+.minstay-warning{display:none;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.4);border-radius:3px;padding:8px 12px;margin-top:6px;font-size:11px;color:#e74c3c}
 
 /* ── PHOTO MANAGER ── */
 .photo-suite-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
@@ -115,6 +117,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
 .suite-section{margin-bottom:40px}
 .suite-section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--sabbia);margin-bottom:4px;display:flex;align-items:center;gap:10px}
 .suite-section-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(200,150,62,0.3);padding:3px 8px;border-radius:2px}
+@media(min-width:600px){.stats-row{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:1fr 1fr 1fr}}
 </style>
 </head>
 <body>
@@ -287,7 +290,6 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
       <div class="sec-sub">Manage all reservations · click a booking to see its full journey</div>
       <div style="margin-bottom:20px"><button class="btn btn-gold" id="openAddBtn2">+ Add Booking</button></div>
       <div id="allBookingsList"></div>
-      <!-- FUNNEL DRAWER -->
       <div id="funnelDrawer" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;padding:20px">
         <div style="background:var(--notte2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:28px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
@@ -322,7 +324,6 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
         </div>
         <div id="anList"><div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div></div>
       </div>
-      <!-- CHAT DETAIL DRAWER -->
       <div id="chatDrawer" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;padding:20px">
         <div style="background:var(--notte2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:28px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
@@ -338,11 +339,8 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div id="panel-finances" class="tab-panel">
       <div class="sec-title">Finances</div>
       <div class="sec-sub">Revenue overview · cleaning costs · net income</div>
-      <!-- FILTER -->
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
-        <select class="form-select" id="finYear" style="width:100px" onchange="loadFinances()">
-          <option value="all">All time</option>
-        </select>
+        <select class="form-select" id="finYear" style="width:100px" onchange="loadFinances()"><option value="all">All time</option></select>
         <select class="form-select" id="finMonth" style="width:120px" onchange="loadFinances()">
           <option value="all">All months</option>
           <option value="1">January</option><option value="2">February</option><option value="3">March</option>
@@ -357,32 +355,27 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
           <option value="villa">Villa Completa</option>
         </select>
       </div>
-      <!-- SUMMARY CARDS -->
       <div class="stats-row" style="grid-template-columns:repeat(2,1fr)" id="finCards">
-        <div class="stat-card"><div class="stat-num" id="finRevenue">—</div><div class="stat-label">Reservation Revenue</div><div style="font-size:9px;color:var(--muted);margin-top:4px">nightly totals from bookings</div></div>
-        <div class="stat-card"><div class="stat-num" id="finCleaningIn">—</div><div class="stat-label">Cleaning Fees Charged</div><div style="font-size:9px;color:var(--muted);margin-top:4px">cleaning fees paid by guests</div></div>
-        <div class="stat-card"><div class="stat-num" id="finCleaningOut">—</div><div class="stat-label">Cleaning Costs Paid</div><div style="font-size:9px;color:var(--muted);margin-top:4px">your actual cleaning expenses</div></div>
-        <div class="stat-card" style="border-color:rgba(200,150,62,0.3)"><div class="stat-num" style="color:var(--gold)" id="finNet">—</div><div class="stat-label">Net Income</div><div style="font-size:9px;color:var(--muted);margin-top:4px">revenue + cleaning fees − costs</div></div>
+        <div class="stat-card"><div class="stat-num" id="finRevenue">—</div><div class="stat-label">Reservation Revenue</div></div>
+        <div class="stat-card"><div class="stat-num" id="finCleaningIn">—</div><div class="stat-label">Cleaning Fees Charged</div></div>
+        <div class="stat-card"><div class="stat-num" id="finCleaningOut">—</div><div class="stat-label">Cleaning Costs Paid</div></div>
+        <div class="stat-card" style="border-color:rgba(200,150,62,0.3)"><div class="stat-num" style="color:var(--gold)" id="finNet">—</div><div class="stat-label">Net Income</div></div>
       </div>
-      <!-- ADD CLEANING COST -->
       <div class="card" style="margin-top:20px">
         <div class="card-title">Add Cleaning Cost</div>
         <div class="form-grid">
           <div class="form-group"><label class="form-label">Suite</label>
             <select class="form-select" id="fcSuite">
-              <option value="pietra">Suite Pietra</option>
-              <option value="cielo">Suite Cielo</option>
-              <option value="villa">Villa Completa</option>
-              <option value="all">All / General</option>
+              <option value="pietra">Suite Pietra</option><option value="cielo">Suite Cielo</option>
+              <option value="villa">Villa Completa</option><option value="all">All / General</option>
             </select>
           </div>
           <div class="form-group"><label class="form-label">Amount (€)</label><input type="number" class="form-input" id="fcAmount" placeholder="0"></div>
           <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="fcDate"></div>
-          <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-input" id="fcNotes" placeholder="Cleaner name, extra items…"></div>
+          <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-input" id="fcNotes" placeholder="Cleaner name…"></div>
         </div>
         <button class="btn btn-gold" style="margin-top:12px" onclick="addCleaningCost()">Add Cost</button>
       </div>
-      <!-- CLEANING COSTS LIST -->
       <div class="card">
         <div class="card-title" style="display:flex;justify-content:space-between">
           <span>Cleaning Cost Entries</span>
@@ -417,92 +410,39 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <!-- PHOTOS -->
     <div id="panel-photos" class="tab-panel">
       <div class="sec-title">Photo Manager</div>
-      <div class="sec-sub">Upload, caption and order photos per suite · All changes are live instantly</div>
-
-      <!-- SUITE PIETRA -->
-      <div class="suite-section" id="photoSection-pietra">
-        <div class="suite-section-title">
-          Suite Pietra
-          <span class="suite-section-badge">Ground Floor · Garden</span>
-          <span class="photo-count" id="photoCount-pietra">0 photos</span>
-        </div>
+      <div class="sec-sub">Upload, caption and order photos · All changes are live instantly</div>
+      <div class="suite-section">
+        <div class="suite-section-title">Suite Pietra <span class="suite-section-badge">Ground Floor · Garden</span><span class="photo-count" id="photoCount-pietra">0 photos</span></div>
         <div class="upload-zone" id="uploadZone-pietra" ondragover="uploadDrag(event,'pietra')" ondragleave="uploadDragEnd('pietra')" ondrop="uploadDrop(event,'pietra')">
           <input type="file" accept="image/*" multiple onchange="uploadFiles(this.files,'pietra')">
           <div class="upload-zone-icon">📷</div>
           <div class="upload-zone-text">Click or drag photos here</div>
-          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each · Multiple files OK</div>
+          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each</div>
         </div>
-        <div class="upload-progress" id="uploadProgress-pietra">
-          <div style="font-size:11px;color:var(--muted)" id="uploadProgressText-pietra">Uploading...</div>
-          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-pietra"></div></div>
-        </div>
+        <div class="upload-progress" id="uploadProgress-pietra"><div style="font-size:11px;color:var(--muted)" id="uploadProgressText-pietra">Uploading...</div><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-pietra"></div></div></div>
         <div class="photo-grid-admin" id="photoGrid-pietra"></div>
       </div>
-
-      <!-- SUITE CIELO -->
-      <div class="suite-section" id="photoSection-cielo">
-        <div class="suite-section-title">
-          Suite Cielo
-          <span class="suite-section-badge">First Floor · Terrace</span>
-          <span class="photo-count" id="photoCount-cielo">0 photos</span>
-        </div>
+      <div class="suite-section">
+        <div class="suite-section-title">Suite Cielo <span class="suite-section-badge">First Floor · Terrace</span><span class="photo-count" id="photoCount-cielo">0 photos</span></div>
         <div class="upload-zone" id="uploadZone-cielo" ondragover="uploadDrag(event,'cielo')" ondragleave="uploadDragEnd('cielo')" ondrop="uploadDrop(event,'cielo')">
           <input type="file" accept="image/*" multiple onchange="uploadFiles(this.files,'cielo')">
           <div class="upload-zone-icon">📷</div>
           <div class="upload-zone-text">Click or drag photos here</div>
-          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each · Multiple files OK</div>
+          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each</div>
         </div>
-        <div class="upload-progress" id="uploadProgress-cielo">
-          <div style="font-size:11px;color:var(--muted)" id="uploadProgressText-cielo">Uploading...</div>
-          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-cielo"></div></div>
-        </div>
+        <div class="upload-progress" id="uploadProgress-cielo"><div style="font-size:11px;color:var(--muted)" id="uploadProgressText-cielo">Uploading...</div><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-cielo"></div></div></div>
         <div class="photo-grid-admin" id="photoGrid-cielo"></div>
       </div>
-
-      <!-- VILLA COMPLETA -->
-      <div class="suite-section" id="photoSection-villa">
-        <div class="suite-section-title">
-          Villa Completa
-          <span class="suite-section-badge">Entire Property</span>
-          <span class="photo-count" id="photoCount-villa">0 photos</span>
-        </div>
+      <div class="suite-section">
+        <div class="suite-section-title">Villa Completa <span class="suite-section-badge">Entire Property</span><span class="photo-count" id="photoCount-villa">0 photos</span></div>
         <div class="upload-zone" id="uploadZone-villa" ondragover="uploadDrag(event,'villa')" ondragleave="uploadDragEnd('villa')" ondrop="uploadDrop(event,'villa')">
           <input type="file" accept="image/*" multiple onchange="uploadFiles(this.files,'villa')">
           <div class="upload-zone-icon">📷</div>
           <div class="upload-zone-text">Click or drag photos here</div>
-          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each · Multiple files OK</div>
+          <div class="upload-zone-sub">JPG, PNG, WEBP · Max 5MB each</div>
         </div>
-        <div class="upload-progress" id="uploadProgress-villa">
-          <div style="font-size:11px;color:var(--muted)" id="uploadProgressText-villa">Uploading...</div>
-          <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-villa"></div></div>
-        </div>
+        <div class="upload-progress" id="uploadProgress-villa"><div style="font-size:11px;color:var(--muted)" id="uploadProgressText-villa">Uploading...</div><div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill-villa"></div></div></div>
         <div class="photo-grid-admin" id="photoGrid-villa"></div>
-      </div>
-
-      <!-- CAPTION DICTIONARY INFO -->
-      <div class="card" style="margin-top:8px">
-        <div class="card-title">Auto-translation Dictionary</div>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:12px">
-          Type captions in English — the website auto-translates them into Italian, German and French.
-          These words are recognized automatically:
-        </p>
-        <div style="display:flex;flex-wrap:wrap;gap:6px">
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Living Room</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Bedroom</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Main Bedroom</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Second Bedroom</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Kitchen</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Bathroom</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Garden</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Terrace</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Outdoor Dining</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">View</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Sunset</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Exterior</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Pool</span>
-          <span style="background:rgba(200,150,62,0.1);border:1px solid rgba(200,150,62,0.2);border-radius:2px;padding:3px 8px;font-size:10px;color:var(--gold)">Parking</span>
-        </div>
-        <p style="font-size:10px;color:rgba(200,185,154,0.3);margin-top:10px;font-family:'Cormorant Garamond',serif;font-style:italic">Anything not in the list shows your English text in all languages.</p>
       </div>
     </div>
 
@@ -524,53 +464,34 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
       <div id="revList"><div style="color:var(--muted);font-size:13px;padding:20px 0">Loading reviews...</div></div>
     </div>
 
-    <!-- SETTINGS -->
     <!-- COUPONS -->
     <div id="panel-coupons" class="tab-panel">
       <div class="sec-title">Coupon System</div>
       <div class="sec-sub">Manage discount codes for new subscribers</div>
-
-      <!-- CONTROLS -->
       <div class="card">
         <div class="card-title">Controls</div>
         <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">System Active</label>
+          <div class="form-group"><label class="form-label">System Active</label>
             <select class="form-select" id="cpActive">
-              <option value="true">✓ Active — accepting signups & validating codes</option>
-              <option value="false">✗ Inactive — feature completely off</option>
+              <option value="true">✓ Active</option><option value="false">✗ Inactive</option>
             </select>
           </div>
-          <div class="form-group">
-            <label class="form-label">Show Banner on Website</label>
+          <div class="form-group"><label class="form-label">Show Banner</label>
             <select class="form-select" id="cpBanner">
-              <option value="true">✓ Show banner</option>
-              <option value="false">✗ Hide banner</option>
+              <option value="true">✓ Show banner</option><option value="false">✗ Hide banner</option>
             </select>
           </div>
-          <div class="form-group">
-            <label class="form-label">Discount %</label>
-            <input type="number" class="form-input" id="cpPct" min="1" max="50" value="10" style="max-width:120px">
-          </div>
-          <div class="form-group full">
-            <label class="form-label">Banner Text (shown on website)</label>
-            <input type="text" class="form-input" id="cpBannerText" placeholder="Subscribe & get 10% off your booking">
-          </div>
+          <div class="form-group"><label class="form-label">Discount %</label><input type="number" class="form-input" id="cpPct" min="1" max="50" value="10" style="max-width:120px"></div>
+          <div class="form-group full"><label class="form-label">Banner Text</label><input type="text" class="form-input" id="cpBannerText" placeholder="Subscribe & get 10% off your booking"></div>
         </div>
-        <div style="margin-top:16px;display:flex;gap:10px">
-          <button class="btn btn-gold" onclick="saveCouponSettings()">Save Settings</button>
-        </div>
+        <div style="margin-top:16px"><button class="btn btn-gold" onclick="saveCouponSettings()">Save Settings</button></div>
       </div>
-
-      <!-- STATS -->
       <div class="stats-row" id="cpStats">
         <div class="stat-card"><div class="stat-num" id="cpTotal">—</div><div class="stat-label">Total Signups</div></div>
         <div class="stat-card"><div class="stat-num" id="cpVerified">—</div><div class="stat-label">Verified</div></div>
         <div class="stat-card"><div class="stat-num" id="cpUsed">—</div><div class="stat-label">Codes Used</div></div>
-        <div class="stat-card"><div class="stat-num" id="cpPending">—</div><div class="stat-label">Pending Verification</div></div>
+        <div class="stat-card"><div class="stat-num" id="cpPending">—</div><div class="stat-label">Pending</div></div>
       </div>
-
-      <!-- SIGNUPS LIST -->
       <div class="card">
         <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
           <span>All Signups</span>
@@ -584,1617 +505,369 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <div id="panel-settings" class="tab-panel">
       <div class="sec-title">Settings</div>
       <div class="sec-sub">Property configuration</div>
+
+      <!-- ── PRICING CARD ── -->
       <div class="card">
         <div class="card-title">Pricing</div>
         <div class="form-grid">
-          <div class="form-group"><label class="form-label">Suite Pietra / night</label><input type="number" class="form-input" id="pricePietra" value="200"></div>
-          <div class="form-group"><label class="form-label">Suite Cielo / night</label><input type="number" class="form-input" id="priceCielo" value="180"></div>
-          <div class="form-group"><label class="form-label">Villa Completa / night</label><input type="number" class="form-input" id="priceVilla" value="350"></div>
-          <div class="form-group"><label class="form-label">Cleaning Pietra/Cielo</label><input type="number" class="form-input" id="cleaningPietra" value="150"></div>
-          <div class="form-group"><label class="form-label">Cleaning Villa</label><input type="number" class="form-input" id="cleaningVilla" value="250"></div>
-          <div class="form-group"><label class="form-label">Min stay (nights)</label><input type="number" class="form-input" id="minStay" value="4"></div>
+          <div class="form-group"><label class="form-label">Suite Pietra / night (€)</label><input type="number" class="form-input" id="pricePietra" value="200" min="1"></div>
+          <div class="form-group"><label class="form-label">Suite Cielo / night (€)</label><input type="number" class="form-input" id="priceCielo" value="200" min="1"></div>
+          <div class="form-group"><label class="form-label">Villa Completa / night (€)</label><input type="number" class="form-input" id="priceVilla" value="350" min="1"></div>
+          <div class="form-group"><label class="form-label">Cleaning Fee — Pietra &amp; Cielo (€)</label><input type="number" class="form-input" id="cleaningPietra" value="150" min="0"></div>
+          <div class="form-group"><label class="form-label">Cleaning Fee — Villa (€)</label><input type="number" class="form-input" id="cleaningVilla" value="250" min="0"></div>
+
+          <!-- ── MIN STAY — protected field ── -->
+          <div class="form-group">
+            <label class="form-label">
+              Min Stay (nights)
+              <span style="color:rgba(231,76,60,0.8);font-size:9px;letter-spacing:1px;margin-left:6px">⚠ max 30</span>
+            </label>
+            <input type="number" class="form-input" id="minStay" value="4" min="1" max="30"
+              oninput="validateMinStay(this)">
+            <div class="minstay-warning" id="minStayWarning">
+              ⚠ Min stay must be between 1 and 30 nights. Values outside this range break the booking calendar on the website.
+            </div>
+          </div>
         </div>
+
+        <!-- Live preview of what the website will show -->
+        <div style="margin-top:14px;padding:12px;background:rgba(200,150,62,0.06);border:1px solid rgba(200,150,62,0.15);border-radius:4px;font-size:11px;color:var(--muted)">
+          <strong style="color:var(--gold)">Website preview:</strong>
+          Suite Pietra from <strong style="color:var(--sabbia)" id="prevPietra">€200</strong>/night ·
+          Suite Cielo from <strong style="color:var(--sabbia)" id="prevCielo">€200</strong>/night ·
+          Villa from <strong style="color:var(--sabbia)" id="prevVilla">€350</strong>/night ·
+          Min <strong style="color:var(--sabbia)" id="prevMinStay">4</strong> nights
+        </div>
+
         <button class="btn btn-gold" id="savePricingBtn" style="margin-top:16px">Save Pricing</button>
       </div>
+
       <div class="card">
         <div class="card-title">iCal Links</div>
-        <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb - Suite Pietra</label><input type="text" class="form-input" id="icalPietraAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
-        <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb - Suite Cielo</label><input type="text" class="form-input" id="icalCieloAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
-        <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com - Suite Pietra</label><input type="text" class="form-input" id="icalPietraBooking" placeholder="https://ical.booking.com/..."></div>
-        <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com - Suite Cielo</label><input type="text" class="form-input" id="icalCieloBooking" placeholder="https://ical.booking.com/..."></div>
+        <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb — Suite Pietra</label><input type="text" class="form-input" id="icalPietraAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
+        <div class="form-group" style="margin-bottom:10px"><label class="form-label">Airbnb — Suite Cielo</label><input type="text" class="form-input" id="icalCieloAirbnb" placeholder="https://airbnb.com/calendar/ical/..."></div>
+        <div class="form-group" style="margin-bottom:10px"><label class="form-label">Booking.com — Suite Pietra</label><input type="text" class="form-input" id="icalPietraBooking" placeholder="https://ical.booking.com/..."></div>
+        <div class="form-group" style="margin-bottom:16px"><label class="form-label">Booking.com — Suite Cielo</label><input type="text" class="form-input" id="icalCieloBooking" placeholder="https://ical.booking.com/..."></div>
         <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-gold" id="saveIcalBtn">Save iCal Links</button>
           <button class="btn btn-outline" id="syncIcalBtn" onclick="syncIcal()">↻ Sync Now</button>
         </div>
         <div id="icalSyncResult" style="display:none;margin-top:14px;padding:12px 14px;border-radius:4px;font-size:11px;line-height:1.7;border:1px solid rgba(200,185,154,0.15);background:rgba(200,185,154,0.04);color:var(--muted)"></div>
       </div>
+
       <div class="card">
         <div class="card-title">Contact</div>
         <div class="form-group" style="margin-bottom:12px"><label class="form-label">WhatsApp Number</label><input type="text" class="form-input" id="waNumber" value="+35699699184"></div>
         <button class="btn btn-gold" id="saveContactBtn">Save Contact</button>
       </div>
     </div>
-  </div>
-</div>
+  </div><!-- end .content -->
+</div><!-- end #app -->
 
 <script>
-// Password stored in Supabase — not in code
 var SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
 
 var bookings = [];
 var blockedDates = [];
-var prices = {pietra:200, cielo:180, villa:350, cleaningPietra:150, cleaningCielo:150, cleaningVilla:250, minStay:4};
+var prices = {pietra:200, cielo:200, villa:350, cleaningPietra:150, cleaningCielo:150, cleaningVilla:250, minStay:4};
 var currentSuite = 'pietra';
 var currentMonth = new Date().getMonth();
 var currentYear = new Date().getFullYear();
+var SUITES = {pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa'};
 
-// SUITE NAMES
-var SUITES = {
-  pietra: 'Suite Pietra',
-  cielo: 'Suite Cielo',
-  villa: 'Villa Completa'
-};
+// ── HELPERS ──
+function dStr(d){return d.toISOString().split('T')[0];}
+function addDays(s,n){var d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return dStr(d);}
+function fmtDate(s){return new Date(s+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+function setSyncStatus(ok){document.getElementById('syncDot').style.background=ok?'#27ae60':'#e74c3c';document.getElementById('syncLabel').textContent=ok?'Live':'Offline';}
 
-// HELPERS
-function dStr(d) { return d.toISOString().split('T')[0]; }
-function addDays(s, n) {
-  var d = new Date(s + 'T00:00:00');
-  d.setDate(d.getDate() + n);
-  return dStr(d);
-}
-function fmtDate(s) {
-  return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
-}
-function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2500);
-}
-function setSyncStatus(ok) {
-  document.getElementById('syncDot').style.background = ok ? '#27ae60' : '#e74c3c';
-  document.getElementById('syncLabel').textContent = ok ? 'Live' : 'Offline';
-}
-
-// SUPABASE API
-function sbHeaders() {
-  return {
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + SB_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  };
+// ── MINSTAY VALIDATION ── (the key fix)
+function validateMinStay(el) {
+  var v = parseInt(el.value);
+  var warn = document.getElementById('minStayWarning');
+  var saveBtn = document.getElementById('savePricingBtn');
+  if (isNaN(v) || v < 1 || v > 30) {
+    warn.style.display = 'block';
+    saveBtn.disabled = true;
+    saveBtn.style.opacity = '0.4';
+  } else {
+    warn.style.display = 'none';
+    saveBtn.disabled = false;
+    saveBtn.style.opacity = '1';
+  }
+  // Update live preview
+  var p = document.getElementById('prevPietra');
+  var c = document.getElementById('prevCielo');
+  var vi = document.getElementById('prevVilla');
+  var ms = document.getElementById('prevMinStay');
+  if (p) p.textContent = '€' + (document.getElementById('pricePietra').value || '—');
+  if (c) c.textContent = '€' + (document.getElementById('priceCielo').value || '—');
+  if (vi) vi.textContent = '€' + (document.getElementById('priceVilla').value || '—');
+  if (ms) ms.textContent = (!isNaN(v) && v >= 1 && v <= 30) ? v : '⚠';
 }
 
-function sbGet(table, params) {
-  var orderCol = table === 'settings' ? 'key' : table === 'blocked_dates' ? 'from_date' : 'checkin';
-  var url = SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY + '&order=' + orderCol + '.asc';
-  if (params) url += '&' + params;
-  return fetch(url, {headers: sbHeaders()})
-    .then(function(r) { return r.json(); });
-}
+// Also update preview when other price fields change
+['pricePietra','priceCielo','priceVilla'].forEach(function(id) {
+  setTimeout(function() {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() { validateMinStay(document.getElementById('minStay')); });
+  }, 0);
+});
 
-function sbInsert(table, obj) {
-  return fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY, {
-    method: 'POST',
-    headers: sbHeaders(),
-    body: JSON.stringify(obj)
-  }).then(function(r) { return r.json(); });
-}
+// ── SUPABASE ──
+function sbHeaders(){return{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};}
+function sbGet(table,params){var orderCol=table==='settings'?'key':table==='blocked_dates'?'from_date':'checkin';var url=SB_URL+'/rest/v1/'+table+'?apikey='+SB_KEY+'&order='+orderCol+'.asc';if(params)url+='&'+params;return fetch(url,{headers:sbHeaders()}).then(function(r){return r.json();});}
+function sbInsert(table,obj){return fetch(SB_URL+'/rest/v1/'+table+'?apikey='+SB_KEY,{method:'POST',headers:sbHeaders(),body:JSON.stringify(obj)}).then(function(r){return r.json();});}
+function sbDelete(table,id){return fetch(SB_URL+'/rest/v1/'+table+'?apikey='+SB_KEY+'&id=eq.'+id,{method:'DELETE',headers:sbHeaders()});}
+function sbUpsert(table,obj){return fetch(SB_URL+'/rest/v1/'+table+'?apikey='+SB_KEY+'&on_conflict=key',{method:'POST',headers:Object.assign({},sbHeaders(),{'Prefer':'resolution=merge-duplicates,return=representation'}),body:JSON.stringify(obj)});}
 
-function sbDelete(table, id) {
-  return fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY + '&id=eq.' + id, {
-    method: 'DELETE',
-    headers: sbHeaders()
-  });
-}
-
-function sbUpsert(table, obj) {
-  return fetch(SB_URL + '/rest/v1/' + table + '?apikey=' + SB_KEY + '&on_conflict=key', {
-    method: 'POST',
-    headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates,return=representation'}),
-    body: JSON.stringify(obj)
-  });
-}
-
-// LOAD ALL DATA
-function loadAll(callback) {
-  sbGet('bookings')
-    .then(function(result) {
-      bookings = Array.isArray(result) ? result : [];
-      return sbGet('blocked_dates');
-    })
-    .then(function(result) {
-      blockedDates = Array.isArray(result) ? result : [];
-      return sbGet('settings');
-    })
-    .then(function(result) {
-      var settingsArr = Array.isArray(result) ? result : [];
-      for (var i = 0; i < settingsArr.length; i++) {
-        var row = settingsArr[i];
-        if (!row || !row.key) continue;
-        if (row.key === 'prices' && row.value) {
-          var p = row.value;
-          document.getElementById('pricePietra').value = p.pietra || 200;
-          document.getElementById('priceCielo').value = p.cielo || 180;
-          document.getElementById('priceVilla').value = p.villa || 350;
-          document.getElementById('cleaningPietra').value = p.cleaningPietra || 150;
-          document.getElementById('cleaningVilla').value = p.cleaningVilla || 250;
-          document.getElementById('minStay').value = p.minStay || 4;
-          prices = p;
+// ── LOAD ALL DATA ──
+function loadAll(callback){
+  sbGet('bookings').then(function(r){bookings=Array.isArray(r)?r:[];return sbGet('blocked_dates');})
+  .then(function(r){blockedDates=Array.isArray(r)?r:[];return sbGet('settings');})
+  .then(function(result){
+    var settingsArr=Array.isArray(result)?result:[];
+    for(var i=0;i<settingsArr.length;i++){
+      var row=settingsArr[i];if(!row||!row.key)continue;
+      if(row.key==='prices'&&row.value){
+        var p=row.value;
+        document.getElementById('pricePietra').value=p.pietra||200;
+        document.getElementById('priceCielo').value=p.cielo||200;
+        document.getElementById('priceVilla').value=p.villa||350;
+        document.getElementById('cleaningPietra').value=p.cleaningPietra||150;
+        document.getElementById('cleaningVilla').value=p.cleaningVilla||250;
+        // ── SAFE minStay load: clamp to 1–30 before populating field ──
+        var ms = parseInt(p.minStay);
+        if (isNaN(ms) || ms < 1 || ms > 30) {
+          ms = 4; // reset to safe default
+          showToast('⚠ minStay was ' + p.minStay + ' (invalid) — reset to 4. Please Save Pricing.');
         }
-        if (row.key === 'toki' && row.value) {
-          document.getElementById('tokiAnnouncement').value = row.value.announcement || '';
-          document.getElementById('tokiUpdates').value = row.value.updates || '';
-          document.getElementById('tokiLocal').value = row.value.localTips || '';
-        }
-        if (row.key === 'property' && row.value) {
-          document.getElementById('waNumber').value = row.value.whatsapp || '+35699699184';
-        }
-        if (row.key === 'ical' && row.value) {
-          var ic = row.value;
-          document.getElementById('icalPietraAirbnb').value  = (ic.pietra && ic.pietra.airbnb)      || '';
-          document.getElementById('icalCieloAirbnb').value   = (ic.cielo  && ic.cielo.airbnb)       || '';
-          document.getElementById('icalPietraBooking').value = (ic.pietra && ic.pietra.bookingCom)   || '';
-          document.getElementById('icalCieloBooking').value  = (ic.cielo  && ic.cielo.bookingCom)    || '';
-        }
+        document.getElementById('minStay').value = ms;
+        prices=p; prices.minStay = ms;
+        validateMinStay(document.getElementById('minStay'));
       }
-      setSyncStatus(true);
-      if (callback) callback();
-    })
-    .catch(function(e) {
-      setSyncStatus(false);
-      showToast('Connection error - check console');
-      console.error('Supabase error:', e);
-      if (callback) callback();
-    });
-}
-
-// GET DATE STATUS FOR CALENDAR
-function getStatus(suite, date) {
-  var i, b;
-  for (i = 0; i < bookings.length; i++) {
-    b = bookings[i];
-    if ((b.suite === suite || (suite === 'villa' && (b.suite === 'pietra' || b.suite === 'cielo')) || (suite !== 'villa' && b.suite === 'villa')) && date >= b.checkin && date < b.checkout) {
-      return 'booked-' + (b.source || 'direct');
+      if(row.key==='toki'&&row.value){document.getElementById('tokiAnnouncement').value=row.value.announcement||'';document.getElementById('tokiUpdates').value=row.value.updates||'';document.getElementById('tokiLocal').value=row.value.localTips||'';}
+      if(row.key==='property'&&row.value){document.getElementById('waNumber').value=row.value.whatsapp||'+35699699184';}
+      if(row.key==='ical'&&row.value){var ic=row.value;document.getElementById('icalPietraAirbnb').value=(ic.pietra&&ic.pietra.airbnb)||'';document.getElementById('icalCieloAirbnb').value=(ic.cielo&&ic.cielo.airbnb)||'';document.getElementById('icalPietraBooking').value=(ic.pietra&&ic.pietra.bookingCom)||'';document.getElementById('icalCieloBooking').value=(ic.cielo&&ic.cielo.bookingCom)||'';}
     }
-  }
-  for (i = 0; i < blockedDates.length; i++) {
-    b = blockedDates[i];
-    var applies = b.suite === 'all' || b.suite === suite || (suite === 'villa' && (b.suite === 'pietra' || b.suite === 'cielo'));
-    if (applies && date >= b.from_date && date < b.to_date) return 'blocked';
-  }
-  return 'available';
+    setSyncStatus(true);if(callback)callback();
+  }).catch(function(e){setSyncStatus(false);showToast('Connection error');console.error(e);if(callback)callback();});
 }
 
-// RENDER DASHBOARD
-function renderDashboard() {
-  var today = dStr(new Date());
-  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  var total = 0, arriving = 0, checkouts = 0, i, b;
-  for (i = 0; i < bookings.length; i++) {
-    b = bookings[i];
-    if (b.linked_to_villa) continue;
-    if (b.checkout > today) total++;
-    if (b.checkin > today && b.checkin <= addDays(today, 7)) arriving++;
-    if (b.checkout === today) checkouts++;
-  }
-  document.getElementById('statsRow').innerHTML =
-    '<div class="stat-card"><div class="stat-num">' + total + '</div><div class="stat-label">Active Bookings</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + arriving + '</div><div class="stat-label">Arriving This Week</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + checkouts + '</div><div class="stat-label">Check-outs Today</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + blockedDates.length + '</div><div class="stat-label">Blocked Periods</div></div>';
-
-  var upcoming = bookings.filter(function(b) { return b.checkout >= today && !b.linked_to_villa; })
-    .sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; }).slice(0, 5);
-  var upEl = document.getElementById('upcomingList');
-  if (upcoming.length === 0) { upEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No upcoming bookings</p>'; }
-  else {
-    upEl.innerHTML = upcoming.map(function(b) {
-      return '<div class="booking-item"><div><div class="booking-suite">' + (SUITES[b.suite]||b.suite) + '</div><div class="booking-dates">' + fmtDate(b.checkin) + ' to ' + fmtDate(b.checkout) + '</div><div class="booking-guest">' + b.guest + ' - ' + daysBetween(b.checkin, b.checkout) + ' nights</div></div><span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span></div>';
-    }).join('');
-  }
-
-  var cleaning = bookings.filter(function(b) { return b.checkout >= today && b.checkout <= addDays(today, 7) && !b.linked_to_villa; });
-  var clEl = document.getElementById('cleaningList');
-  if (cleaning.length === 0) { clEl.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">No cleaning needed this week</p>'; }
-  else {
-    clEl.innerHTML = cleaning.map(function(b) {
-      var urgency = b.checkout === today ? 'TODAY' : b.checkout === addDays(today, 1) ? 'TOMORROW' : fmtDate(b.checkout);
-      return '<div class="booking-item"><div><div class="booking-suite">' + urgency + '</div><div class="booking-dates">' + (SUITES[b.suite]||b.suite) + ' - clean after 10:00 AM</div><div class="booking-guest">Guest: ' + b.guest + '</div></div></div>';
-    }).join('');
-  }
+// ── CALENDAR STATUS ──
+function getStatus(suite,date){
+  var i,b;
+  for(i=0;i<bookings.length;i++){b=bookings[i];if((b.suite===suite||(suite==='villa'&&(b.suite==='pietra'||b.suite==='cielo'))||(suite!=='villa'&&b.suite==='villa'))&&date>=b.checkin&&date<b.checkout)return'booked-'+(b.source||'direct');}
+  for(i=0;i<blockedDates.length;i++){b=blockedDates[i];var applies=b.suite==='all'||b.suite===suite||(suite==='villa'&&(b.suite==='pietra'||b.suite==='cielo'));if(applies&&date>=b.from_date&&date<b.to_date)return'blocked';}
+  return'available';
 }
 
-// RENDER CALENDAR
-function renderCalendar() {
-  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('calMonth').textContent = months[currentMonth] + ' ' + currentYear;
-  var grid = document.getElementById('calGrid');
-  grid.innerHTML = '';
-  var days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
-  var i, el;
-  for (i = 0; i < days.length; i++) {
-    el = document.createElement('div');
-    el.className = 'cal-day-label';
-    el.textContent = days[i];
-    grid.appendChild(el);
-  }
-  var firstDay = new Date(currentYear, currentMonth, 1);
-  var lastDay = new Date(currentYear, currentMonth + 1, 0);
-  var startPad = (firstDay.getDay() + 6) % 7;
-  for (i = 0; i < startPad; i++) {
-    el = document.createElement('div'); el.className = 'cal-day'; grid.appendChild(el);
-  }
-  var today = dStr(new Date());
-  for (var d = 1; d <= lastDay.getDate(); d++) {
-    var m = currentMonth + 1;
-    var dateS = currentYear + '-' + (m < 10 ? '0' : '') + m + '-' + (d < 10 ? '0' : '') + d;
-    var status = getStatus(currentSuite, dateS);
-    el = document.createElement('div');
-    el.className = 'cal-day ' + status + (dateS < today ? ' past' : '') + (dateS === today ? ' today' : '');
-    el.textContent = d;
-    grid.appendChild(el);
-  }
+// ── DASHBOARD ──
+function renderDashboard(){
+  var today=dStr(new Date());document.getElementById('todayDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  var total=0,arriving=0,checkouts=0,i,b;
+  for(i=0;i<bookings.length;i++){b=bookings[i];if(b.linked_to_villa)continue;if(b.checkout>today)total++;if(b.checkin>today&&b.checkin<=addDays(today,7))arriving++;if(b.checkout===today)checkouts++;}
+  document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-num">'+total+'</div><div class="stat-label">Active Bookings</div></div><div class="stat-card"><div class="stat-num">'+arriving+'</div><div class="stat-label">Arriving This Week</div></div><div class="stat-card"><div class="stat-num">'+checkouts+'</div><div class="stat-label">Check-outs Today</div></div><div class="stat-card"><div class="stat-num">'+blockedDates.length+'</div><div class="stat-label">Blocked Periods</div></div>';
+  var upcoming=bookings.filter(function(b){return b.checkout>=today&&!b.linked_to_villa;}).sort(function(a,b){return a.checkin>b.checkin?1:-1;}).slice(0,5);
+  var upEl=document.getElementById('upcomingList');
+  if(!upcoming.length){upEl.innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">No upcoming bookings</p>';}
+  else{upEl.innerHTML=upcoming.map(function(b){return'<div class="booking-item"><div><div class="booking-suite">'+(SUITES[b.suite]||b.suite)+'</div><div class="booking-dates">'+fmtDate(b.checkin)+' to '+fmtDate(b.checkout)+'</div><div class="booking-guest">'+b.guest+' · '+daysBetween(b.checkin,b.checkout)+' nights</div></div><span class="booking-source source-'+(b.source||'direct')+'">'+(b.source||'direct')+'</span></div>';}).join('');}
+  var cleaning=bookings.filter(function(b){return b.checkout>=today&&b.checkout<=addDays(today,7)&&!b.linked_to_villa;});
+  var clEl=document.getElementById('cleaningList');
+  if(!cleaning.length){clEl.innerHTML='<p style="color:var(--muted);font-size:13px;padding:8px 0">No cleaning needed this week</p>';}
+  else{clEl.innerHTML=cleaning.map(function(b){var urgency=b.checkout===today?'TODAY':b.checkout===addDays(today,1)?'TOMORROW':fmtDate(b.checkout);return'<div class="booking-item"><div><div class="booking-suite">'+urgency+'</div><div class="booking-dates">'+(SUITES[b.suite]||b.suite)+' — clean after 10:00</div><div class="booking-guest">'+b.guest+'</div></div></div>';}).join('');}
 }
 
-// RENDER ALL BOOKINGS
-function renderAllBookings() {
-  var el = document.getElementById('allBookingsList');
-  var all = bookings.filter(function(b) { return !b.linked_to_villa; })
-    .concat(blockedDates.map(function(b) { return {id:b.id, suite:b.suite, checkin:b.from_date, checkout:b.to_date, guest:b.reason||'Blocked', source:'blocked', isBlock:true}; }))
-    .sort(function(a, b) { return a.checkin > b.checkin ? 1 : -1; });
-  if (all.length === 0) { el.innerHTML = '<p style="color:var(--muted);padding:20px 0">No bookings yet.</p>'; return; }
-  el.innerHTML = all.map(function(b) {
-    return '<div class="booking-item" style="flex-wrap:wrap;gap:8px">'
-      + '<div style="flex:1;min-width:180px">'
-      + '<div class="booking-suite">' + (SUITES[b.suite]||b.suite) + '</div>'
-      + '<div class="booking-dates">' + fmtDate(b.checkin) + ' → ' + fmtDate(b.checkout) + '</div>'
-      + '<div class="booking-guest">' + (b.guest||'') + (b.total_price ? ' · €'+b.total_price : '') + (b.notes ? ' · ' + b.notes : '') + '</div>'
-      + '</div>'
-      + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">'
-      + '<span class="booking-source source-' + (b.source||'direct') + '">' + (b.source||'direct') + '</span>'
-      + (b.reference_id ? '<button class="btn btn-outline" style="font-size:8px;padding:4px 8px" onclick="openFunnel(\'' + b.reference_id + '\',\'' + (b.guest||'').replace(/'/g,'') + '\')">Journey</button>' : '')
-      + '<button class="btn btn-red" onclick="deleteEntry(' + b.id + ',\'' + (b.isBlock ? 'block' : 'booking') + '\')">X</button>'
-      + '</div></div>';
-  }).join('');
+// ── CALENDAR ──
+function renderCalendar(){
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonth').textContent=months[currentMonth]+' '+currentYear;
+  var grid=document.getElementById('calGrid');grid.innerHTML='';
+  var days=['Mo','Tu','We','Th','Fr','Sa','Su'];var i,el;
+  for(i=0;i<days.length;i++){el=document.createElement('div');el.className='cal-day-label';el.textContent=days[i];grid.appendChild(el);}
+  var firstDay=new Date(currentYear,currentMonth,1);var lastDay=new Date(currentYear,currentMonth+1,0);
+  var startPad=(firstDay.getDay()+6)%7;
+  for(i=0;i<startPad;i++){el=document.createElement('div');el.className='cal-day';grid.appendChild(el);}
+  var today=dStr(new Date());
+  for(var d=1;d<=lastDay.getDate();d++){var m=currentMonth+1;var dateS=currentYear+'-'+(m<10?'0':'')+m+'-'+(d<10?'0':'')+d;var status=getStatus(currentSuite,dateS);el=document.createElement('div');el.className='cal-day '+status+(dateS<today?' past':'')+(dateS===today?' today':'');el.textContent=d;grid.appendChild(el);}
 }
 
-// ── BOOKING PRICE AUTO-CALC ───────────────────────────────────
-function updateBookingCalc() {
-  var suite    = document.getElementById('newSuite').value;
-  var checkin  = document.getElementById('newCheckin').value;
-  var checkout = document.getElementById('newCheckout').value;
-  var nightsEl = document.getElementById('newNightsDisplay');
-  var priceEl  = document.getElementById('newTotalPrice');
-  if (!checkin || !checkout || checkin >= checkout) {
-    nightsEl.textContent = '—';
-    return;
-  }
-  var nights = daysBetween(checkin, checkout);
-  nightsEl.textContent = nights;
-  // Only auto-fill price if user hasn't typed their own value
-  if (!priceEl.dataset.userEdited) {
-    var nightlyRates = { pietra: prices.pietra||200, cielo: prices.cielo||180, villa: prices.villa||350 };
-    var cleaningFees = { pietra: prices.cleaningPietra||150, cielo: prices.cleaningCielo||150, villa: prices.cleaningVilla||250 };
-    var total = (nightlyRates[suite]||200) * nights + (cleaningFees[suite]||150);
-    priceEl.value = total;
-  }
-}
-// Auto-calc wiring handled by event listeners below
-
-// ── EMAIL TEMPLATE (same as website booking flow) ─────────────
-// ── BK_LABELS (same as index.html) ──────────────────────────
-var BK_LABELS={
-  en:{
-    suite:'Suite', checkin:'Check-in', checkout:'Check-out',
-    nights:'Nights', guests:'Guests', nightlyRate:'Nightly rate',
-    cleaningFee:'Cleaning fee', total:'Total',
-    bookingReceived:'Your booking request is received',
-    bookingConfirmed:'Your booking is confirmed',
-    reference:'Reference',
-    toki:'Questions? Ask Toki',
-    tokiDesc:'Our AI concierge <b>Toki</b> is available 24/7 on our website and can help you with bookings, check-in &amp; check-out, suite changes, cancellations, local recommendations and more.',
-    tokiBtn:'Chat with Toki &rarr;',
-    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
-    from:'from', by:'by',
-  },
-  it:{
-    suite:'Suite', checkin:'Check-in', checkout:'Check-out',
-    nights:'Notti', guests:'Ospiti', nightlyRate:'Tariffa per notte',
-    cleaningFee:'Pulizie', total:'Totale',
-    bookingReceived:'La tua richiesta di prenotazione è stata ricevuta',
-    bookingConfirmed:'La tua prenotazione è confermata',
-    reference:'Riferimento',
-    toki:'Domande? Chiedi a Toki',
-    tokiDesc:'Il nostro concierge AI <b>Toki</b> è disponibile 24/7 sul nostro sito e può aiutarti con prenotazioni, check-in &amp; check-out, cambi di suite, cancellazioni, consigli locali e altro.',
-    tokiBtn:'Chatta con Toki &rarr;',
-    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
-    from:'dalle', by:'entro le',
-  },
-  de:{
-    suite:'Suite', checkin:'Anreise', checkout:'Abreise',
-    nights:'Nächte', guests:'Gäste', nightlyRate:'Nachtpreis',
-    cleaningFee:'Reinigungsgebühr', total:'Gesamt',
-    bookingReceived:'Ihre Buchungsanfrage ist eingegangen',
-    bookingConfirmed:'Ihre Buchung ist bestätigt',
-    reference:'Referenz',
-    toki:'Fragen? Frag Toki',
-    tokiDesc:'Unser KI-Concierge <b>Toki</b> ist 24/7 auf unserer Website verfügbar und hilft bei Buchungen, Check-in &amp; Check-out, Suite-Wechseln, Stornierungen, lokalen Empfehlungen und mehr.',
-    tokiBtn:'Mit Toki chatten &rarr;',
-    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
-    from:'ab', by:'bis',
-  },
-  fr:{
-    suite:'Suite', checkin:'Arrivée', checkout:'Départ',
-    nights:'Nuits', guests:'Voyageurs', nightlyRate:'Tarif par nuit',
-    cleaningFee:'Frais de ménage', total:'Total',
-    bookingReceived:'Votre demande de réservation est reçue',
-    bookingConfirmed:'Votre réservation est confirmée',
-    reference:'Référence',
-    toki:'Questions ? Demandez à Toki',
-    tokiDesc:'Notre concierge IA <b>Toki</b> est disponible 24h/24 sur notre site et peut vous aider avec les réservations, check-in &amp; check-out, changements de suite, annulations, recommandations locales et plus.',
-    tokiBtn:'Discuter avec Toki &rarr;',
-    footer:'&copy; 2025 Mare Mediterraneo &mdash; maremediterraneo.com',
-    from:'à partir de', by:'avant',
-  }
-};
-function bkEmailL(key, lang) {
-  var l = BK_LABELS[lang] || BK_LABELS.en;
-  return l[key] || BK_LABELS.en[key] || key;
+// ── ALL BOOKINGS ──
+function renderAllBookings(){
+  var el=document.getElementById('allBookingsList');
+  var all=bookings.filter(function(b){return!b.linked_to_villa;}).concat(blockedDates.map(function(b){return{id:b.id,suite:b.suite,checkin:b.from_date,checkout:b.to_date,guest:b.reason||'Blocked',source:'blocked',isBlock:true};})).sort(function(a,b){return a.checkin>b.checkin?1:-1;});
+  if(!all.length){el.innerHTML='<p style="color:var(--muted);padding:20px 0">No bookings yet.</p>';return;}
+  el.innerHTML=all.map(function(b){return'<div class="booking-item" style="flex-wrap:wrap;gap:8px"><div style="flex:1;min-width:180px"><div class="booking-suite">'+(SUITES[b.suite]||b.suite)+'</div><div class="booking-dates">'+fmtDate(b.checkin)+' → '+fmtDate(b.checkout)+'</div><div class="booking-guest">'+(b.guest||'')+(b.total_price?' · €'+b.total_price:'')+'</div></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="booking-source source-'+(b.source||'direct')+'">'+(b.source||'direct')+'</span>'+(b.reference_id?'<button class="btn btn-outline" style="font-size:8px;padding:4px 8px" onclick="openFunnel(\''+b.reference_id+'\',\''+(b.guest||'').replace(/'/g,'')+'\')"">Journey</button>':'')+'<button class="btn btn-red" onclick="deleteEntry('+b.id+',\''+(b.isBlock?'block':'booking')+'\')">X</button></div></div>';}).join('');
 }
 
-function buildBookingEmailHtml(data) {
-  // data: { guest, suite, checkin, checkout, nights, guests, nightlyRate, totalPrice, status, referenceId, lang }
-  var lang       = data.lang || 'en';
-  var L          = function(k) { return bkEmailL(k, lang); };
-  var suiteLabel = { pietra: 'Suite Pietra', cielo: 'Suite Cielo', villa: 'Villa Completa' }[data.suite] || data.suite;
+// ── BOOKING PRICE CALC ──
+function updateBookingCalc(){
+  var suite=document.getElementById('newSuite').value;var checkin=document.getElementById('newCheckin').value;var checkout=document.getElementById('newCheckout').value;
+  var nightsEl=document.getElementById('newNightsDisplay');var priceEl=document.getElementById('newTotalPrice');
+  if(!checkin||!checkout||checkin>=checkout){nightsEl.textContent='—';return;}
+  var nights=daysBetween(checkin,checkout);nightsEl.textContent=nights;
+  if(!priceEl.dataset.userEdited){var nightlyRates={pietra:prices.pietra||200,cielo:prices.cielo||200,villa:prices.villa||350};var cleaningFees={pietra:prices.cleaningPietra||150,cielo:prices.cleaningCielo||150,villa:prices.cleaningVilla||250};priceEl.value=(nightlyRates[suite]||200)*nights+(cleaningFees[suite]||150);}
+}
 
-  // Nightly rate: derive from totalPrice and nights if not passed explicitly
-  var nightlyRate = data.nightlyRate || (data.nights > 0 ? Math.round((parseFloat(data.totalPrice) - (data.cleaningFee || 0)) / data.nights) : 0);
-  var cleaningFee = data.cleaningFee || ({ pietra:150, cielo:150, villa:250 }[data.suite] || 150);
+// ── SAVE BOOKING ──
+async function saveBooking(){
+  var suite=document.getElementById('newSuite').value;var source=document.getElementById('newSource').value;var checkin=document.getElementById('newCheckin').value;var checkout=document.getElementById('newCheckout').value;var guest=document.getElementById('newGuest').value.trim();var email=document.getElementById('newEmail').value.trim();var phone=document.getElementById('newPhone').value.trim();var guestsNum=parseInt(document.getElementById('newGuests').value)||2;var status=document.getElementById('newStatus').value;var totalPrice=document.getElementById('newTotalPrice').value||'0';var notes=document.getElementById('newNotes').value;var sendEmail=document.getElementById('newSendEmail').checked;var emailLang=document.getElementById('newLang').value||'en';
+  if(!checkin||!checkout||!guest){showToast('Please fill all required fields');return;}
+  if(checkin>=checkout){showToast('Check-out must be after check-in');return;}
+  var nights=daysBetween(checkin,checkout);var id=Date.now();var refId='MM-'+Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8);
+  var baseRow={id:id,suite:suite,source:source,checkin:checkin,checkout:checkout,guest:guest,email:email,phone:phone,guests:guestsNum,nights:nights,total_price:totalPrice,status:status,notes:notes,linked_to_villa:false,reference_id:refId};
+  var rows=[baseRow];
+  if(suite==='villa'){rows.push(Object.assign({},baseRow,{id:id+1,suite:'pietra',linked_to_villa:true}));rows.push(Object.assign({},baseRow,{id:id+2,suite:'cielo',linked_to_villa:true}));}
+  var btn=document.getElementById('saveBookingBtn');btn.textContent='Saving…';btn.disabled=true;
+  try{
+    await sbInsert('bookings',rows);
+    if(sendEmail&&email){await sendBookingEmailFn({guest:guest,email:email,suite:suite,checkin:checkin,checkout:checkout,nights:nights,guests:guestsNum,totalPrice:totalPrice,status:status,referenceId:refId,lang:emailLang});}
+    ['newGuest','newEmail','newPhone','newNotes','newCheckin','newCheckout','newTotalPrice'].forEach(function(fid){var el=document.getElementById(fid);if(el){el.value='';if(el.dataset)el.dataset.userEdited='';}});
+    document.getElementById('newGuests').value=2;document.getElementById('newStatus').value='confirmed';document.getElementById('newNightsDisplay').textContent='—';document.getElementById('newSendEmail').checked=true;document.getElementById('newLang').value='en';document.getElementById('addModal').classList.remove('open');
+    await loadAll(function(){renderDashboard();renderCalendar();renderAllBookings();});showToast(sendEmail&&email?'Booking saved · email sent ✓':'Booking saved ✓');
+  }catch(e){showToast('Error: '+e.message);}
+  btn.textContent='Save Booking';btn.disabled=false;
+}
 
-  var headline = data.status === 'confirmed' ? L('bookingConfirmed') : L('bookingReceived');
+// ── SEND EMAIL ──
+async function sendBookingEmailFn(data){
+  if(!data.email)return;
+  try{
+    var suiteLabel={pietra:'Suite Pietra',cielo:'Suite Cielo',villa:'Villa Completa'}[data.suite]||data.suite;
+    var cleaningFee={pietra:150,cielo:150,villa:250}[data.suite]||150;
+    var nightlyRate=data.nights>0?Math.round((parseFloat(data.totalPrice)-cleaningFee)/data.nights):0;
+    var html='<!DOCTYPE html><html><body style="background:#111118;font-family:Arial,sans-serif;padding:32px 16px"><div style="max-width:560px;margin:0 auto;background:#16161F;border:1px solid rgba(200,185,154,0.1);border-radius:4px;overflow:hidden"><div style="padding:32px;border-bottom:1px solid rgba(200,185,154,0.08)"><div style="font-family:Georgia,serif;font-style:italic;font-size:28px;color:#C8B99A">Mare Mediterraneo</div><div style="font-size:9px;letter-spacing:3px;color:rgba(200,185,154,0.4)">TORRE CHIANCA · SALENTO · PUGLIA</div></div><div style="padding:28px"><h2 style="font-size:20px;color:#E8DDD0;margin:0 0 8px">'+(data.status==='confirmed'?'Your booking is confirmed':'Booking request received')+'</h2><p style="color:rgba(200,185,154,0.5);font-size:11px;margin:0 0 20px">Reference: '+data.referenceId+'</p><table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Suite</td><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);color:#E8DDD0;text-align:right">'+suiteLabel+'</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Check-in</td><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);color:#E8DDD0;text-align:right">'+data.checkin+' from 15:00</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Check-out</td><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);color:#E8DDD0;text-align:right">'+data.checkout+' by 10:00</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Nights</td><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);color:#E8DDD0;text-align:right">'+data.nights+'</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Nightly rate</td><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);color:#E8DDD0;text-align:right">€'+nightlyRate+' × '+data.nights+'</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Cleaning fee</td><td style="padding:10px 0;border-bottom:1px solid rgba(200,185,154,0.08);color:#E8DDD0;text-align:right">€'+cleaningFee+'</td></tr></table><div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px"><span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5)">Total</span><span style="font-size:26px;color:#C8963E;font-family:Georgia,serif">€'+data.totalPrice+'</span></div></div><div style="padding:16px 28px;border-top:1px solid rgba(200,185,154,0.08);text-align:center;font-size:10px;color:rgba(200,185,154,0.3)">© 2025 Mare Mediterraneo · maremediterraneo.com</div></div></body></html>';
+    await fetch(SB_URL+'/functions/v1/send-booking-email',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY},body:JSON.stringify({emails:[{from:'Mare Mediterraneo <hello@maremediterraneo.com>',to:data.email,subject:(data.status==='confirmed'?'Booking Confirmed':'Booking Request Received')+' — '+suiteLabel,html:html,reply_to:'hello@maremediterraneo.com'}]})});
+  }catch(e){console.error('[Email]',e.message);}
+}
 
-  // Date formatter — short numeric for email table rows (matches screenshot)
-  var fmtShort = function(s) { return s; }; // keep YYYY-MM-DD, looks clean
-  var fmtLong  = function(s) {
-    try { return new Date(s + 'T00:00:00').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'}); }
-    catch(e) { return s; }
+// ── SAVE BLOCK ──
+function saveBlock(){var suite=document.getElementById('blockSuite').value;var from=document.getElementById('blockFrom').value;var to=document.getElementById('blockTo').value;var reason=document.getElementById('blockReason').value||'Blocked';if(!from||!to){showToast('Please select dates');return;}sbInsert('blocked_dates',{id:Date.now(),suite:suite,from_date:from,to_date:to,reason:reason}).then(function(){document.getElementById('blockModal').classList.remove('open');return loadAll(function(){renderCalendar();renderDashboard();});}).then(function(){showToast('Dates blocked');}).catch(function(e){showToast('Error: '+e.message);});}
+
+// ── DELETE ──
+function deleteEntry(id,type){if(!confirm('Delete this entry?'))return;var table=type==='block'?'blocked_dates':'bookings';sbDelete(table,id).then(function(){if(type==='booking'){return sbDelete('bookings',id+1).then(function(){return sbDelete('bookings',id+2);});}}).then(function(){return loadAll(function(){renderDashboard();renderCalendar();renderAllBookings();});}).then(function(){showToast('Deleted');}).catch(function(e){showToast('Error: '+e.message);});}
+
+// ── SAVE PRICING — with minStay validation ──
+function savePricing(){
+  var ms=parseInt(document.getElementById('minStay').value);
+  if(isNaN(ms)||ms<1||ms>30){showToast('⚠ Min stay must be 1–30 nights. Not saved.');return;}
+  var p={
+    pietra:parseInt(document.getElementById('pricePietra').value)||200,
+    cielo:parseInt(document.getElementById('priceCielo').value)||200,
+    villa:parseInt(document.getElementById('priceVilla').value)||350,
+    cleaningPietra:parseInt(document.getElementById('cleaningPietra').value)||150,
+    cleaningCielo:parseInt(document.getElementById('cleaningPietra').value)||150,
+    cleaningVilla:parseInt(document.getElementById('cleaningVilla').value)||250,
+    minStay:ms
   };
-
-  var ROW = function(label, value, gold) {
-    return '<tr style="border-bottom:1px solid rgba(200,185,154,0.08)">' +
-      '<td style="padding:12px 32px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5);width:40%">' + label + '</td>' +
-      '<td style="padding:12px 32px;font-size:13px;color:' + (gold ? '#C8963E' : '#E8DDD0') + ';text-align:right;font-family:\'Cormorant Garamond\',Georgia,serif;font-size:15px">' + value + '</td>' +
-      '</tr>';
-  };
-
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
-  '<body style="margin:0;padding:0;background:#111118;font-family:Arial,sans-serif">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="background:#111118;padding:32px 16px">' +
-  '<tr><td align="center">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;background:#16161F;border:1px solid rgba(200,185,154,0.1);border-radius:4px;overflow:hidden">' +
-
-  // ── Header ──
-  '<tr><td style="padding:36px 32px 28px;border-bottom:1px solid rgba(200,185,154,0.08)">' +
-  '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:30px;color:#C8B99A;letter-spacing:1px;margin-bottom:4px">Mare Mediterraneo</div>' +
-  '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,185,154,0.4)">TORRE CHIANCA &middot; SALENTO &middot; PUGLIA</div>' +
-  '</td></tr>' +
-
-  // ── Headline + Reference ──
-  '<tr><td style="padding:28px 32px 8px">' +
-  '<div style="font-size:22px;color:#E8DDD0;font-weight:400;margin-bottom:8px">' + headline + '</div>' +
-  (data.referenceId
-    ? '<div style="font-size:11px;color:rgba(200,185,154,0.45);letter-spacing:1px">' + L('reference') + ': <span style="color:rgba(200,185,154,0.7)">' + data.referenceId + '</span></div>'
-    : '') +
-  '</td></tr>' +
-
-  // ── Booking table ──
-  '<tr><td style="padding:16px 0 0">' +
-  '<table width="100%" cellpadding="0" cellspacing="0">' +
-  ROW(L('suite'),    suiteLabel) +
-  ROW(L('checkin'),  fmtShort(data.checkin)  + ' &middot; ' + L('from') + ' 15:00') +
-  ROW(L('checkout'), fmtShort(data.checkout) + ' &middot; ' + L('by')   + ' 10:00') +
-  ROW(L('nights'),   data.nights) +
-  ROW(L('guests'),   data.guests) +
-  ROW(L('nightlyRate'), '&euro;' + nightlyRate + ' &times; ' + data.nights) +
-  ROW(L('cleaningFee'), '&euro;' + cleaningFee) +
-  // Total row — bigger, gold
-  '<tr><td style="padding:16px 32px" colspan="2">' +
-  '<table width="100%" cellpadding="0" cellspacing="0"><tr>' +
-  '<td style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,185,154,0.5)">' + L('total') + '</td>' +
-  '<td style="text-align:right;font-family:\'Cormorant Garamond\',Georgia,serif;font-size:26px;color:#C8963E">&euro;' + data.totalPrice + '</td>' +
-  '</tr></table></td></tr>' +
-  '</table>' +
-  '</td></tr>' +
-
-  // ── Toki CTA ──
-  '<tr><td style="padding:8px 32px 28px">' +
-  '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0F0F18;border:1px solid rgba(200,150,62,0.2);border-radius:3px">' +
-  '<tr><td style="padding:20px 24px">' +
-  '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C8963E;margin-bottom:8px">' + L('toki') + '</div>' +
-  '<div style="font-size:12px;color:rgba(200,185,154,0.55);line-height:1.7;margin-bottom:14px">' + L('tokiDesc') + '</div>' +
-  '<a href="https://maremediterraneo.com/?toki=1" style="display:inline-block;padding:9px 20px;background:rgba(200,150,62,0.15);border:1px solid rgba(200,150,62,0.4);border-radius:2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C8963E;text-decoration:none">' + L('tokiBtn') + '</a>' +
-  '</td></tr></table>' +
-  '</td></tr>' +
-
-  // ── Footer ──
-  '<tr><td style="padding:16px 32px;border-top:1px solid rgba(200,185,154,0.08);text-align:center">' +
-  '<div style="font-size:10px;color:rgba(200,185,154,0.3)">' + L('footer') + '</div>' +
-  '</td></tr>' +
-
-  '</table></td></tr></table></body></html>';
+  prices=p;
+  sbUpsert('settings',{key:'prices',value:p}).then(function(){showToast('Pricing saved ✓');}).catch(function(e){showToast('Error: '+e.message);});
 }
 
-// ── SEND EMAIL VIA EDGE FUNCTION ─────────────────────────────
-async function sendBookingEmail(bookingData) {
-  if (!bookingData.email) return; // No email — skip silently
-  try {
-    var html = buildBookingEmailHtml(bookingData);
-    var suiteLabel = { pietra: 'Suite Pietra', cielo: 'Suite Cielo', villa: 'Villa Completa' }[bookingData.suite] || bookingData.suite;
-    var subjectLang = bookingData.lang || 'en';
-    var subjectMap = {
-      en: { confirmed: 'Booking Confirmed', pending: 'Booking Request Received' },
-      it: { confirmed: 'Prenotazione Confermata', pending: 'Richiesta di Prenotazione Ricevuta' },
-      de: { confirmed: 'Buchung Bestätigt', pending: 'Buchungsanfrage Erhalten' },
-      fr: { confirmed: 'Réservation Confirmée', pending: 'Demande de Réservation Reçue' }
-    };
-    var subjectPrefix = (subjectMap[subjectLang] || subjectMap.en)[bookingData.status] || 'Booking Request Received';
-    var payload = {
-      emails: [
-        // Guest email
-        {
-          from: 'Mare Mediterraneo <hello@maremediterraneo.com>',
-          to: bookingData.email,
-          subject: subjectPrefix + ' — ' + suiteLabel + ' · ' + fmtDate(bookingData.checkin) + ' – ' + fmtDate(bookingData.checkout),
-          html: html,
-          reply_to: 'info@maremediterraneo.it'
-        }
-      ]
-    };
-    var r = await fetch(SB_URL + '/functions/v1/send-booking-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY,
-        'apikey': SB_KEY
-      },
-      body: JSON.stringify(payload)
-    });
-    var result = await r.json();
-    if (!r.ok) {
-      console.error('[Email] edge function error', r.status, JSON.stringify(result));
-      showToast('Booking saved — email failed (' + r.status + '), check console');
-      return null;
-    }
-    console.log('[Email] sent to', bookingData.email, result);
-    return result;
-  } catch(e) {
-    console.error('[Email] failed:', e.message);
-    showToast('Booking saved — email error: ' + e.message);
-    return null;
-  }
-}
+function saveIcal(){var v={pietra:{airbnb:document.getElementById('icalPietraAirbnb').value,bookingCom:document.getElementById('icalPietraBooking').value},cielo:{airbnb:document.getElementById('icalCieloAirbnb').value,bookingCom:document.getElementById('icalCieloBooking').value}};sbUpsert('settings',{key:'ical',value:v}).then(function(){showToast('iCal links saved');}).catch(function(e){showToast('Error: '+e.message);});}
+function saveContact(){sbUpsert('settings',{key:'property',value:{whatsapp:document.getElementById('waNumber').value}}).then(function(){showToast('Contact saved');}).catch(function(e){showToast('Error: '+e.message);});}
+function saveToki(){sbUpsert('settings',{key:'toki',value:{announcement:document.getElementById('tokiAnnouncement').value,updates:document.getElementById('tokiUpdates').value,localTips:document.getElementById('tokiLocal').value}}).then(function(){showToast('Toki settings saved');}).catch(function(e){showToast('Error: '+e.message);});}
 
-// SAVE BOOKING
-async function saveBooking() {
-  var suite      = document.getElementById('newSuite').value;
-  var source     = document.getElementById('newSource').value;
-  var checkin    = document.getElementById('newCheckin').value;
-  var checkout   = document.getElementById('newCheckout').value;
-  var guest      = document.getElementById('newGuest').value.trim();
-  var email      = document.getElementById('newEmail').value.trim();
-  var phone      = document.getElementById('newPhone').value.trim();
-  var guestsNum  = parseInt(document.getElementById('newGuests').value) || 2;
-  var status     = document.getElementById('newStatus').value;
-  var totalPrice = document.getElementById('newTotalPrice').value || '0';
-  var notes      = document.getElementById('newNotes').value;
-  var sendEmail  = document.getElementById('newSendEmail').checked;
-  var emailLang  = document.getElementById('newLang').value || 'en';
-
-  if (!checkin || !checkout || !guest) { showToast('Please fill all required fields'); return; }
-  if (checkin >= checkout) { showToast('Check-out must be after check-in'); return; }
-
-  var nights = daysBetween(checkin, checkout);
-  var id = Date.now();
-
-  // Generate reference ID for direct bookings (same format as website)
-  var refId = 'MM-' + Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'').substring(0,8);
-
-  var baseRow = {
-    id: id,
-    suite: suite,
-    source: source,
-    checkin: checkin,
-    checkout: checkout,
-    guest: guest,
-    email: email,
-    phone: phone,
-    guests: guestsNum,
-    nights: nights,
-    total_price: totalPrice,
-    status: status,
-    notes: notes,
-    linked_to_villa: false,
-    reference_id: refId
-  };
-
-  var rows = [baseRow];
-
-  // If villa — also add linked rows for pietra and cielo
-  if (suite === 'villa') {
-    rows.push(Object.assign({}, baseRow, {id:id+1, suite:'pietra', linked_to_villa:true}));
-    rows.push(Object.assign({}, baseRow, {id:id+2, suite:'cielo',  linked_to_villa:true}));
-  }
-
-  var btn = document.getElementById('saveBookingBtn');
-  btn.textContent = 'Saving…';
-  btn.disabled = true;
-
-  try {
-    await sbInsert('bookings', rows);
-
-    // Fire confirmation email if checkbox is ticked and email is present
-    if (sendEmail && email) {
-      showToast('Booking saved — sending email…');
-      await sendBookingEmail({
-        guest: guest,
-        email: email,
-        suite: suite,
-        checkin: checkin,
-        checkout: checkout,
-        nights: nights,
-        guests: guestsNum,
-        totalPrice: totalPrice,
-        status: status,
-        referenceId: refId,
-        lang: emailLang
-      });
-    }
-
-    // Reset modal fields
-    ['newGuest','newEmail','newPhone','newNotes','newCheckin','newCheckout','newTotalPrice'].forEach(function(fid) {
-      var el = document.getElementById(fid);
-      if (el) { el.value = ''; if (el.dataset) el.dataset.userEdited = ''; }
-    });
-    document.getElementById('newGuests').value = 2;
-    document.getElementById('newStatus').value = 'confirmed';
-    document.getElementById('newNightsDisplay').textContent = '—';
-    document.getElementById('newSendEmail').checked = true;
-    document.getElementById('newLang').value = 'en';
-    document.getElementById('addModal').classList.remove('open');
-
-    await loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
-    showToast(sendEmail && email ? 'Booking saved · email sent ✓' : 'Booking saved ✓');
-  } catch(e) {
-    showToast('Error: ' + e.message);
-  }
-
-  btn.textContent = 'Save Booking';
-  btn.disabled = false;
-}
-
-// SAVE BLOCK
-function saveBlock() {
-  var suite = document.getElementById('blockSuite').value;
-  var from = document.getElementById('blockFrom').value;
-  var to = document.getElementById('blockTo').value;
-  var reason = document.getElementById('blockReason').value || 'Blocked';
-  if (!from || !to) { showToast('Please select dates'); return; }
-
-  sbInsert('blocked_dates', {id:Date.now(), suite:suite, from_date:from, to_date:to, reason:reason})
-    .then(function() {
-      document.getElementById('blockModal').classList.remove('open');
-      return loadAll(function() { renderCalendar(); renderDashboard(); });
-    })
-    .then(function() { showToast('Dates blocked'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-// DELETE
-function deleteEntry(id, type) {
-  if (!confirm('Delete this entry?')) return;
-  var table = type === 'block' ? 'blocked_dates' : 'bookings';
-  sbDelete(table, id)
-    .then(function() {
-      // Also delete linked villa rows
-      if (type === 'booking') {
-        return sbDelete('bookings', id + 1).then(function() { return sbDelete('bookings', id + 2); });
-      }
-    })
-    .then(function() {
-      return loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
-    })
-    .then(function() { showToast('Deleted'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-// SAVE SETTINGS
-function savePricing() {
-  var p = {
-    pietra: parseInt(document.getElementById('pricePietra').value),
-    cielo: parseInt(document.getElementById('priceCielo').value),
-    villa: parseInt(document.getElementById('priceVilla').value),
-    cleaningPietra: parseInt(document.getElementById('cleaningPietra').value),
-    cleaningCielo: parseInt(document.getElementById('cleaningPietra').value),
-    cleaningVilla: parseInt(document.getElementById('cleaningVilla').value),
-    minStay: parseInt(document.getElementById('minStay').value)
-  };
-  prices = p;
-  sbUpsert('settings', {key:'prices', value:p})
-    .then(function() { showToast('Pricing saved'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-function saveIcal() {
-  var v = {
-    pietra: {airbnb:document.getElementById('icalPietraAirbnb').value, bookingCom:document.getElementById('icalPietraBooking').value},
-    cielo:  {airbnb:document.getElementById('icalCieloAirbnb').value,  bookingCom:document.getElementById('icalCieloBooking').value}
-  };
-  sbUpsert('settings', {key:'ical', value:v})
-    .then(function() { showToast('iCal links saved'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-function saveContact() {
-  var v = {whatsapp: document.getElementById('waNumber').value};
-  sbUpsert('settings', {key:'property', value:v})
-    .then(function() { showToast('Contact saved'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-function saveToki() {
-  var v = {
-    announcement: document.getElementById('tokiAnnouncement').value,
-    updates: document.getElementById('tokiUpdates').value,
-    localTips: document.getElementById('tokiLocal').value,
-    specialOffer: ''
-  };
-  sbUpsert('settings', {key:'toki', value:v})
-    .then(function() { showToast('Toki settings saved'); })
-    .catch(function(e) { showToast('Error: ' + e.message); });
-}
-
-function testConnection(callback) {
-  var box = document.getElementById('dbTestResult');
-  box.style.display = 'block';
-  box.textContent = 'Connecting to database...';
-  fetch(SB_URL + '/rest/v1/bookings?apikey=' + SB_KEY + '&limit=1', {headers: sbHeaders()})
-    .then(function(r) {
-      if (r.ok) {
-        box.textContent = 'Database connected (' + r.status + ')';
-        box.style.borderColor = 'rgba(39,174,96,0.3)';
-        box.style.color = '#27ae60';
-        setTimeout(function() { box.style.display = 'none'; }, 3000);
-      } else {
-        r.text().then(function(txt) {
-          box.textContent = 'DB Error ' + r.status + ': ' + txt.substring(0, 200);
-          box.style.borderColor = 'rgba(231,76,60,0.3)';
-          box.style.color = '#e74c3c';
-        });
-      }
-      if (callback) callback();
-    })
-    .catch(function(e) {
-      box.textContent = 'Connection failed: ' + e.message;
-      box.style.borderColor = 'rgba(231,76,60,0.3)';
-      box.style.color = '#e74c3c';
-      if (callback) callback();
-    });
-}
-
+// ── CONNECTION TEST ──
+function testConnection(callback){var box=document.getElementById('dbTestResult');box.style.display='block';box.textContent='Connecting...';fetch(SB_URL+'/rest/v1/bookings?apikey='+SB_KEY+'&limit=1',{headers:sbHeaders()}).then(function(r){if(r.ok){box.textContent='Database connected';box.style.color='#27ae60';setTimeout(function(){box.style.display='none';},2500);}else{box.textContent='DB Error '+r.status;box.style.color='#e74c3c';}if(callback)callback();}).catch(function(e){box.textContent='Failed: '+e.message;box.style.color='#e74c3c';if(callback)callback();});}
 
 // ═══════════════════════════════════════════════════════════
 // PHOTO MANAGER
 // ═══════════════════════════════════════════════════════════
-var BUCKET = 'mare-photos';
-var allPhotos = { pietra: [], cielo: [], villa: [] };
-
-// Caption auto-translation dictionary
-var captionDict = {
-  'living room':    {it:'Soggiorno',       de:'Wohnzimmer',          fr:'Salon'},
-  'bedroom':        {it:'Camera da Letto', de:'Schlafzimmer',        fr:'Chambre'},
-  'main bedroom':   {it:'Camera Principale',de:'Hauptschlafzimmer',  fr:'Chambre Principale'},
-  'second bedroom': {it:'Seconda Camera',  de:'Zweites Schlafzimmer',fr:'Deuxième Chambre'},
-  'kitchen':        {it:'Cucina',          de:'Küche',               fr:'Cuisine'},
-  'bathroom':       {it:'Bagno',           de:'Badezimmer',          fr:'Salle de bain'},
-  'garden':         {it:'Giardino',        de:'Garten',              fr:'Jardin'},
-  'terrace':        {it:'Terrazza',        de:'Terrasse',            fr:'Terrasse'},
-  'outdoor dining': {it:'Pranzo Esterno',  de:'Außenessen',          fr:'Repas Extérieur'},
-  'view':           {it:'Vista',           de:'Aussicht',            fr:'Vue'},
-  'sunset':         {it:'Tramonto',        de:'Sonnenuntergang',     fr:'Coucher de soleil'},
-  'exterior':       {it:'Esterno',         de:'Außenansicht',        fr:'Extérieur'},
-  'pool':           {it:'Piscina',         de:'Pool',                fr:'Piscine'},
-  'parking':        {it:'Parcheggio',      de:'Parkplatz',           fr:'Parking'},
-  'sun beds':       {it:'Lettini',         de:'Sonnenliegen',        fr:'Bains de Soleil'},
-  'outdoor shower': {it:'Doccia Esterna',  de:'Außendusche',         fr:'Douche Extérieure'},
-  'living area':    {it:'Area Living',     de:'Wohnbereich',         fr:'Espace Vie'},
-  'dining area':    {it:'Zona Pranzo',     de:'Essbereich',          fr:'Salle à Manger'},
-};
-
-function translateCaption(en, lang) {
-  if (!en || !lang || lang === 'en') return en || '';
-  var key = en.toLowerCase().trim();
-  var entry = captionDict[key];
-  if (entry && entry[lang]) return entry[lang];
-  return en; // fallback: show English
-}
-
-// Load all photos from Supabase
-function loadPhotos(callback) {
-  fetch(SB_URL + '/rest/v1/photos?order=suite.asc,sort_order.asc,created_at.asc&apikey=' + SB_KEY, {
-    headers: sbHeaders()
-  }).then(function(r) { return r.json(); })
-    .then(function(rows) {
-      allPhotos = { pietra: [], cielo: [], villa: [] };
-      if (Array.isArray(rows)) {
-        rows.forEach(function(p) {
-          if (allPhotos[p.suite]) allPhotos[p.suite].push(p);
-        });
-      }
-      _indexPhotos();
-      renderPhotoGrids();
-      if (callback) callback();
-    }).catch(function(e) {
-      showToast('Error loading photos: ' + e.message);
-    });
-}
-
-function renderPhotoGrids() {
-  ['pietra', 'cielo', 'villa'].forEach(function(suite) {
-    var grid = document.getElementById('photoGrid-' + suite);
-    var count = document.getElementById('photoCount-' + suite);
-    var ps = allPhotos[suite] || [];
-    count.textContent = ps.length + ' photo' + (ps.length !== 1 ? 's' : '');
-    grid.innerHTML = '';
-    if (!ps.length) {
-      var empty = document.createElement('p');
-      empty.style.cssText = 'color:var(--muted);font-size:13px;padding:12px 0;grid-column:1/-1';
-      empty.textContent = 'No photos yet. Upload above.';
-      grid.appendChild(empty);
-      return;
-    }
-    ps.forEach(function(p) {
-      var card = document.createElement('div');
-      card.className = 'photo-card';
-      card.id = 'photoCard-' + p.id;
-
-      var img = document.createElement('img');
-      img.className = 'photo-card-img';
-      img.src = p.url;
-      img.alt = p.caption_en || '';
-      img.loading = 'lazy';
-      img.onerror = function() { this.style.opacity = '0.3'; };
-      card.appendChild(img);
-
-      var body = document.createElement('div');
-      body.className = 'photo-card-body';
-
-      // Order row
-      var orderRow = document.createElement('div');
-      orderRow.className = 'photo-order-row';
-      var orderLabel = document.createElement('span');
-      orderLabel.className = 'photo-order-label';
-      orderLabel.textContent = 'Order';
-      var orderInput = document.createElement('input');
-      orderInput.type = 'number';
-      orderInput.className = 'photo-order-input';
-      orderInput.value = p.sort_order || 99;
-      orderInput.min = 1; orderInput.max = 99;
-      orderInput.id = 'order-' + p.id;
-      orderRow.appendChild(orderLabel);
-      orderRow.appendChild(orderInput);
-      body.appendChild(orderRow);
-
-      // Caption input
-      var capInput = document.createElement('input');
-      capInput.type = 'text';
-      capInput.className = 'photo-caption-input';
-      capInput.placeholder = 'Caption (English)...';
-      capInput.value = p.caption_en || '';
-      capInput.id = 'caption-' + p.id;
-      body.appendChild(capInput);
-
-      // Hint
-      var hint = document.createElement('div');
-      hint.className = 'photo-caption-hint';
-      hint.textContent = 'Auto-translates on website ↗';
-      body.appendChild(hint);
-
-      // Save button
-      var saveBtn = document.createElement('button');
-      saveBtn.className = 'photo-save-btn';
-      saveBtn.textContent = 'Save';
-      (function(pid) {
-        saveBtn.onclick = function() { savePhotoMeta(pid); };
-      })(p.id);
-      body.appendChild(saveBtn);
-
-      // Delete button
-      var delBtn = document.createElement('button');
-      delBtn.className = 'photo-delete-btn';
-      delBtn.textContent = 'Delete';
-      (function(pid) {
-        delBtn.onclick = function() { deletePhotoById(pid); };
-      })(p.id);
-      body.appendChild(delBtn);
-
-      card.appendChild(body);
-      grid.appendChild(card);
-    });
-  });
-}
-
-// Store photo data by id for delete lookup
-var photoDataById = {};
-function _indexPhotos() {
-  ['pietra','cielo','villa'].forEach(function(s) {
-    (allPhotos[s]||[]).forEach(function(p) { photoDataById[p.id] = p; });
-  });
-}
-
-function deletePhotoById(id) {
-  var p = photoDataById[id];
-  if (!p) return;
-  deletePhoto(id, p.filename, p.suite);
-}
-
-// Save caption + order
-function savePhotoMeta(id) {
-  var caption = document.getElementById('caption-' + id);
-  var order = document.getElementById('order-' + id);
-  if (!caption || !order) return;
-  fetch(SB_URL + '/rest/v1/photos?id=eq.' + id + '&apikey=' + SB_KEY, {
-    method: 'PATCH',
-    headers: Object.assign({}, sbHeaders(), {'Prefer': 'return=minimal'}),
-    body: JSON.stringify({ caption_en: caption.value.trim(), sort_order: parseInt(order.value) || 99 })
-  }).then(function(r) {
-    if (r.ok) {
-      showToast('Saved ✓');
-      // Update local cache
-      ['pietra','cielo','villa'].forEach(function(s) {
-        allPhotos[s] = allPhotos[s].map(function(p) {
-          if (p.id !== id) return p;
-          return Object.assign({}, p, { caption_en: caption.value.trim(), sort_order: parseInt(order.value) || 99 });
-        });
-      });
-    } else { showToast('Save failed'); }
-  });
-}
-
-// Delete photo
-function deletePhoto(id, filename, suite) {
-  if (!confirm('Delete this photo permanently?')) return;
-  // Delete from storage
-  fetch(SB_URL + '/storage/v1/object/' + BUCKET + '/' + suite + '/' + filename + '?apikey=' + SB_KEY, {
-    method: 'DELETE',
-    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-  }).then(function() {
-    // Delete from DB regardless of storage result
-    return fetch(SB_URL + '/rest/v1/photos?id=eq.' + id + '&apikey=' + SB_KEY, {
-      method: 'DELETE', headers: sbHeaders()
-    });
-  }).then(function() {
-    allPhotos[suite] = allPhotos[suite].filter(function(p) { return p.id !== id; });
-    renderPhotoGrids();
-    showToast('Photo deleted');
-  }).catch(function(e) { showToast('Delete error: ' + e.message); });
-}
-
-// Upload files
-function uploadFiles(files, suite) {
-  if (!files || !files.length) return;
-  var filesArr = Array.from(files);
-  var MAX_SIZE = 5 * 1024 * 1024; // 5MB
-  var toUpload = filesArr.filter(function(f) {
-    if (f.size > MAX_SIZE) { showToast(f.name + ' is too large (max 5MB)'); return false; }
-    return true;
-  });
-  if (!toUpload.length) return;
-
-  var prog = document.getElementById('uploadProgress-' + suite);
-  var progText = document.getElementById('uploadProgressText-' + suite);
-  var progFill = document.getElementById('uploadProgressFill-' + suite);
-  prog.style.display = 'block';
-  var done = 0;
-
-  function uploadNext(i) {
-    if (i >= toUpload.length) {
-      prog.style.display = 'none';
-      progFill.style.width = '0%';
-      loadPhotos(function() { showToast('Uploaded ' + toUpload.length + ' photo' + (toUpload.length > 1 ? 's' : '') + ' ✓'); });
-      return;
-    }
-    var file = toUpload[i];
-    // Clean filename: replace spaces with hyphens, lowercase
-    var cleanName = file.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_.]/g, '');
-    var timestamp = Date.now();
-    var storagePath = suite + '/' + timestamp + '-' + cleanName;
-    progText.textContent = 'Uploading ' + (i + 1) + ' of ' + toUpload.length + ': ' + file.name;
-    progFill.style.width = Math.round((i / toUpload.length) * 100) + '%';
-
-    // Upload to Supabase Storage
-    fetch(SB_URL + '/storage/v1/object/' + BUCKET + '/' + storagePath, {
-      method: 'POST',
-      headers: {
-        'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + SB_KEY,
-        'Content-Type': file.type || 'image/jpeg',
-        'x-upsert': 'true'
-      },
-      body: file
-    }).then(function(r) {
-      if (!r.ok) { return r.text().then(function(t) { throw new Error(t); }); }
-      // Build public URL
-      var publicUrl = SB_URL + '/storage/v1/object/public/' + BUCKET + '/' + storagePath;
-      // Insert metadata row
-      return fetch(SB_URL + '/rest/v1/photos?apikey=' + SB_KEY, {
-        method: 'POST',
-        headers: sbHeaders(),
-        body: JSON.stringify({
-          suite: suite,
-          filename: storagePath,
-          url: publicUrl,
-          caption_en: '',
-          sort_order: 99
-        })
-      });
-    }).then(function() {
-      done++;
-      uploadNext(i + 1);
-    }).catch(function(e) {
-      showToast('Upload failed: ' + e.message);
-      uploadNext(i + 1);
-    });
-  }
-  uploadNext(0);
-}
-
-// Drag & drop
-function uploadDrag(e, suite) {
-  e.preventDefault();
-  document.getElementById('uploadZone-' + suite).classList.add('drag');
-}
-function uploadDragEnd(suite) {
-  document.getElementById('uploadZone-' + suite).classList.remove('drag');
-}
-function uploadDrop(e, suite) {
-  e.preventDefault();
-  uploadDragEnd(suite);
-  uploadFiles(e.dataTransfer.files, suite);
-}
+var BUCKET='mare-photos';var allPhotos={pietra:[],cielo:[],villa:[]};var photoDataById={};
+function _indexPhotos(){['pietra','cielo','villa'].forEach(function(s){(allPhotos[s]||[]).forEach(function(p){photoDataById[p.id]=p;});});}
+function loadPhotos(callback){fetch(SB_URL+'/rest/v1/photos?order=suite.asc,sort_order.asc,created_at.asc&apikey='+SB_KEY,{headers:sbHeaders()}).then(function(r){return r.json();}).then(function(rows){allPhotos={pietra:[],cielo:[],villa:[]};if(Array.isArray(rows)){rows.forEach(function(p){if(allPhotos[p.suite])allPhotos[p.suite].push(p);});}  _indexPhotos();renderPhotoGrids();if(callback)callback();}).catch(function(e){showToast('Error loading photos: '+e.message);});}
+function renderPhotoGrids(){['pietra','cielo','villa'].forEach(function(suite){var grid=document.getElementById('photoGrid-'+suite);var count=document.getElementById('photoCount-'+suite);var ps=allPhotos[suite]||[];count.textContent=ps.length+' photo'+(ps.length!==1?'s':'');grid.innerHTML='';if(!ps.length){var empty=document.createElement('p');empty.style.cssText='color:var(--muted);font-size:13px;padding:12px 0;grid-column:1/-1';empty.textContent='No photos yet.';grid.appendChild(empty);return;}ps.forEach(function(p){var card=document.createElement('div');card.className='photo-card';var img=document.createElement('img');img.className='photo-card-img';img.src=p.url;img.alt=p.caption_en||'';img.loading='lazy';img.onerror=function(){this.style.opacity='0.3';};card.appendChild(img);var body=document.createElement('div');body.className='photo-card-body';var orderRow=document.createElement('div');orderRow.className='photo-order-row';var orderLabel=document.createElement('span');orderLabel.className='photo-order-label';orderLabel.textContent='Order';var orderInput=document.createElement('input');orderInput.type='number';orderInput.className='photo-order-input';orderInput.value=p.sort_order||99;orderInput.min=1;orderInput.max=99;orderInput.id='order-'+p.id;orderRow.appendChild(orderLabel);orderRow.appendChild(orderInput);body.appendChild(orderRow);var capInput=document.createElement('input');capInput.type='text';capInput.className='photo-caption-input';capInput.placeholder='Caption (English)...';capInput.value=p.caption_en||'';capInput.id='caption-'+p.id;body.appendChild(capInput);var hint=document.createElement('div');hint.className='photo-caption-hint';hint.textContent='Auto-translates on website ↗';body.appendChild(hint);var saveBtn=document.createElement('button');saveBtn.className='photo-save-btn';saveBtn.textContent='Save';(function(pid){saveBtn.onclick=function(){savePhotoMeta(pid);};})(p.id);body.appendChild(saveBtn);var delBtn=document.createElement('button');delBtn.className='photo-delete-btn';delBtn.textContent='Delete';(function(pid){delBtn.onclick=function(){deletePhotoById(pid);};})(p.id);body.appendChild(delBtn);card.appendChild(body);grid.appendChild(card);});});}
+function deletePhotoById(id){var p=photoDataById[id];if(!p)return;deletePhoto(id,p.filename,p.suite);}
+function savePhotoMeta(id){var caption=document.getElementById('caption-'+id);var order=document.getElementById('order-'+id);if(!caption||!order)return;fetch(SB_URL+'/rest/v1/photos?id=eq.'+id+'&apikey='+SB_KEY,{method:'PATCH',headers:Object.assign({},sbHeaders(),{'Prefer':'return=minimal'}),body:JSON.stringify({caption_en:caption.value.trim(),sort_order:parseInt(order.value)||99})}).then(function(r){if(r.ok){showToast('Saved ✓');}else{showToast('Save failed');}});}
+function deletePhoto(id,filename,suite){if(!confirm('Delete this photo permanently?'))return;fetch(SB_URL+'/storage/v1/object/'+BUCKET+'/'+filename+'?apikey='+SB_KEY,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}).then(function(){return fetch(SB_URL+'/rest/v1/photos?id=eq.'+id+'&apikey='+SB_KEY,{method:'DELETE',headers:sbHeaders()});}).then(function(){allPhotos[suite]=allPhotos[suite].filter(function(p){return p.id!==id;});renderPhotoGrids();showToast('Photo deleted');}).catch(function(e){showToast('Delete error: '+e.message);});}
+function uploadFiles(files,suite){if(!files||!files.length)return;var filesArr=Array.from(files);var MAX_SIZE=5*1024*1024;var toUpload=filesArr.filter(function(f){if(f.size>MAX_SIZE){showToast(f.name+' too large (max 5MB)');return false;}return true;});if(!toUpload.length)return;var prog=document.getElementById('uploadProgress-'+suite);var progText=document.getElementById('uploadProgressText-'+suite);var progFill=document.getElementById('uploadProgressFill-'+suite);prog.style.display='block';function uploadNext(i){if(i>=toUpload.length){prog.style.display='none';progFill.style.width='0%';loadPhotos(function(){showToast('Uploaded '+toUpload.length+' photo'+(toUpload.length>1?'s':'')+' ✓');});return;}var file=toUpload[i];var cleanName=file.name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-_.]/g,'');var timestamp=Date.now();var storagePath=suite+'/'+timestamp+'-'+cleanName;progText.textContent='Uploading '+(i+1)+' of '+toUpload.length+': '+file.name;progFill.style.width=Math.round((i/toUpload.length)*100)+'%';fetch(SB_URL+'/storage/v1/object/'+BUCKET+'/'+storagePath,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':file.type||'image/jpeg','x-upsert':'true'},body:file}).then(function(r){if(!r.ok){return r.text().then(function(t){throw new Error(t);});}var publicUrl=SB_URL+'/storage/v1/object/public/'+BUCKET+'/'+storagePath;return fetch(SB_URL+'/rest/v1/photos?apikey='+SB_KEY,{method:'POST',headers:sbHeaders(),body:JSON.stringify({suite:suite,filename:storagePath,url:publicUrl,caption_en:'',sort_order:99})});}).then(function(){uploadNext(i+1);}).catch(function(e){showToast('Upload failed: '+e.message);uploadNext(i+1);});}uploadNext(0);}
+function uploadDrag(e,suite){e.preventDefault();document.getElementById('uploadZone-'+suite).classList.add('drag');}
+function uploadDragEnd(suite){document.getElementById('uploadZone-'+suite).classList.remove('drag');}
+function uploadDrop(e,suite){e.preventDefault();uploadDragEnd(suite);uploadFiles(e.dataTransfer.files,suite);}
 
 // ═══════════════════════════════════════════════════════════
 // REVIEWS
 // ═══════════════════════════════════════════════════════════
-var allReviews = [];
-var revCurrentFilter = 'pending';
+var allReviews=[];var revCurrentFilter='pending';
+function loadReviews(){fetch(SB_URL+'/rest/v1/reviews?select=*&order=created_at.desc&apikey='+SB_KEY,{headers:sbHeaders()}).then(function(r){return r.json();}).then(function(rows){allReviews=Array.isArray(rows)?rows:[];renderReviews();}).catch(function(){document.getElementById('revList').innerHTML='<p style="color:#e74c3c">Error loading reviews</p>';});}
+function renderReviews(){var pending=allReviews.filter(function(r){return r.status==='pending';}).length;var approved=allReviews.filter(function(r){return r.status==='approved';}).length;var rejected=allReviews.filter(function(r){return r.status==='rejected';}).length;document.getElementById('revPending').textContent=pending;document.getElementById('revApproved').textContent=approved;document.getElementById('revRejected').textContent=rejected;var filtered=revCurrentFilter==='all'?allReviews:allReviews.filter(function(r){return r.status===revCurrentFilter;});var el=document.getElementById('revList');el.innerHTML='';if(!filtered.length){el.innerHTML='<p style="color:var(--muted);font-size:13px;padding:20px 0">No '+revCurrentFilter+' reviews.</p>';return;}var sn={pietra:'Suite Pietra',cielo:'Suite Cielo',villa:'Villa Completa'};var sc={pending:'#C8963E',approved:'#27ae60',rejected:'#e74c3c'};filtered.forEach(function(rv){var date=rv.created_at?new Date(rv.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';var stars='';for(var s=0;s<(rv.rating||5);s++)stars+='★';var card=document.createElement('div');card.className='card';card.style.marginBottom='12px';var hdr=document.createElement('div');hdr.style.cssText='display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px';var info=document.createElement('div');info.innerHTML='<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:'+(sc[rv.status]||'#888')+'">'+rv.status.toUpperCase()+'</div><div style="font-family:Cormorant Garamond,serif;font-size:17px;color:var(--sabbia)">'+(rv.guest_name||'')+'</div><div style="font-size:10px;color:var(--muted)">'+(sn[rv.suite]||rv.suite)+(rv.stay_month?' · '+rv.stay_month:'')+' · '+date+'</div>';var starsEl=document.createElement('div');starsEl.style.cssText='font-size:14px;color:#C8963E';starsEl.textContent=stars;hdr.appendChild(info);hdr.appendChild(starsEl);card.appendChild(hdr);var body=document.createElement('p');body.style.cssText='font-family:Cormorant Garamond,serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px';body.textContent='"'+(rv.text||'')+'"';card.appendChild(body);var actions=document.createElement('div');actions.style.cssText='display:flex;gap:8px;flex-wrap:wrap';function makeBtn(label,color,border,fn){var btn=document.createElement('button');btn.className='btn btn-outline';btn.style.cssText='border-color:'+border+';color:'+color;btn.textContent=label;btn.onclick=fn;return btn;}if(rv.status!=='approved')actions.appendChild(makeBtn('✓ Approve','#27ae60','rgba(39,174,96,0.4)',function(){revUpdateStatus(rv.id,'approved');}));if(rv.status!=='rejected')actions.appendChild(makeBtn('✕ Reject','#e74c3c','rgba(231,76,60,0.3)',function(){revUpdateStatus(rv.id,'rejected');}));if(rv.status!=='pending')actions.appendChild(makeBtn('↩ Reset','var(--pietra)','var(--border)',function(){revUpdateStatus(rv.id,'pending');}));var delBtn=document.createElement('button');delBtn.className='btn btn-red';delBtn.textContent='Delete';delBtn.onclick=function(){revDelete(rv.id);};actions.appendChild(delBtn);card.appendChild(actions);el.appendChild(card);});}
+function revSetFilter(f){revCurrentFilter=f;['pending','approved','rejected','all'].forEach(function(x){var b=document.getElementById('revFilter'+x.charAt(0).toUpperCase()+x.slice(1));if(b){b.style.color=x===f?'var(--gold)':'';b.style.borderColor=x===f?'rgba(200,150,62,0.5)':'';}});renderReviews();}
+function revUpdateStatus(id,status){fetch(SB_URL+'/rest/v1/reviews?id=eq.'+id+'&apikey='+SB_KEY,{method:'PATCH',headers:Object.assign({},sbHeaders(),{'Prefer':'return=minimal'}),body:JSON.stringify({status:status})}).then(function(r){if(r.ok){allReviews=allReviews.map(function(rv){return rv.id===id?Object.assign({},rv,{status:status}):rv;});renderReviews();showToast('Review '+status);}});}
+function revDelete(id){if(!confirm('Permanently delete?'))return;fetch(SB_URL+'/rest/v1/reviews?id=eq.'+id+'&apikey='+SB_KEY,{method:'DELETE',headers:sbHeaders()}).then(function(){allReviews=allReviews.filter(function(rv){return rv.id!==id;});renderReviews();showToast('Review deleted');});}
 
-function loadReviews() {
-  fetch(SB_URL + '/rest/v1/reviews?select=*&order=created_at.desc&apikey=' + SB_KEY, { headers: sbHeaders() })
-    .then(function(r) { return r.json(); })
-    .then(function(rows) {
-      allReviews = Array.isArray(rows) ? rows : [];
-      renderReviews();
-    }).catch(function() {
-      document.getElementById('revList').innerHTML = '<p style="color:#e74c3c;font-size:13px">Error loading reviews</p>';
-    });
-}
+// ── FUNNEL ──
+async function openFunnel(ref,guest){document.getElementById('funnelRef').textContent=ref;document.getElementById('funnelGuest').textContent=guest;document.getElementById('funnelTimeline').innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div>';document.getElementById('funnelDrawer').style.display='flex';try{var r=await fetch(SB_URL+'/rest/v1/booking_events?booking_ref=eq.'+encodeURIComponent(ref)+'&order=created_at.asc&select=*',{headers:sbHeaders()});var events=await r.json();if(!events||!events.length){document.getElementById('funnelTimeline').innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">No events recorded.</div>';return;}var icons={created:'🌊',changed:'✏️',cancelled:'❌',coupon_applied:'🎟️'};var colors={created:'var(--gold)',changed:'#5BC4D8',cancelled:'#e74c3c',coupon_applied:'#27ae60'};document.getElementById('funnelTimeline').innerHTML=events.map(function(ev){var d=new Date(ev.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});var color=colors[ev.event_type]||'var(--muted)';var icon=icons[ev.event_type]||'•';var body='';if(ev.new_data){var n=ev.new_data;if(n.suite)body+='<div style="font-size:11px;color:var(--text);margin-top:4px">Suite: '+(SUITES[n.suite]||n.suite)+'</div>';if(n.checkin)body+='<div style="font-size:11px;color:var(--text)">Dates: '+n.checkin+' → '+n.checkout+' ('+n.nights+' nights)</div>';if(n.total)body+='<div style="font-size:11px;color:var(--gold)">Total: €'+n.total+'</div>';}if(ev.old_data&&ev.event_type==='changed'){var o=ev.old_data;body+='<div style="font-size:10px;color:var(--muted);margin-top:4px;text-decoration:line-through">Was: '+(o.checkin||'')+' → '+(o.checkout||'')+' · €'+(o.total||'—')+'</div>';}if(ev.notes)body+='<div style="font-size:10px;color:var(--muted)">'+ev.notes+'</div>';return'<div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)"><div style="font-size:20px;flex-shrink:0;width:28px;text-align:center">'+icon+'</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:'+color+'">'+ev.event_type.replace('_',' ')+'</span><span style="font-size:10px;color:var(--muted)">'+d+'</span></div>'+body+'</div></div>';}).join('');}catch(e){document.getElementById('funnelTimeline').innerHTML='<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading journey.</div>';}}
 
-function renderReviews() {
-  var pending  = allReviews.filter(function(r) { return r.status === 'pending'; }).length;
-  var approved = allReviews.filter(function(r) { return r.status === 'approved'; }).length;
-  var rejected = allReviews.filter(function(r) { return r.status === 'rejected'; }).length;
-  document.getElementById('revPending').textContent  = pending;
-  document.getElementById('revApproved').textContent = approved;
-  document.getElementById('revRejected').textContent = rejected;
+// ── ANALYTICS ──
+async function loadAnalytics(){try{var r=await fetch(SB_URL+'/rest/v1/toki_chats?order=created_at.desc&select=*',{headers:sbHeaders()});var chats=await r.json();document.getElementById('anTotal').textContent=chats.length;document.getElementById('anBooked').textContent=chats.filter(function(c){return c.booked;}).length;document.getElementById('anAnon').textContent=chats.filter(function(c){return!c.email;}).length;var langs={};chats.forEach(function(c){langs[c.lang||'en']=(langs[c.lang||'en']||0)+1;});document.getElementById('anLangs').textContent=Object.keys(langs).map(function(l){return l.toUpperCase()+':'+langs[l];}).join(' ');var search=(document.getElementById('anSearch').value||'').toLowerCase();var filtered=search?chats.filter(function(c){return JSON.stringify(c.messages||[]).toLowerCase().includes(search);}):chats;if(!filtered.length){document.getElementById('anList').innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">No conversations found.</div>';return;}document.getElementById('anList').innerHTML=filtered.map(function(c){var date=new Date(c.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});var msgs=c.messages||[];var preview=msgs.filter(function(m){return m.role==='user';}).map(function(m){return m.content;}).slice(0,2).join(' · ').substring(0,120);return'<div class="booking-item" style="flex-wrap:wrap;gap:8px;cursor:pointer" onclick="openChat(\''+c.id+'\')"><div style="flex:1;min-width:200px"><div style="font-size:10px;color:var(--gold);margin-bottom:2px">'+(c.email||'Anonymous')+' · '+(c.lang||'en').toUpperCase()+(c.booked?' · ✅ Booked':'')+' · '+date+'</div><div style="font-size:12px;color:var(--text)">'+(preview||'No messages')+'</div></div><div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 8px;border:1px solid var(--border);border-radius:2px">View →</div></div>';}).join('');}catch(e){document.getElementById('anList').innerHTML='<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading chats.</div>';}}
+function openChat(id){var drawer=document.getElementById('chatDrawer');var msgsEl=document.getElementById('chatDrawerMessages');msgsEl.innerHTML='<div style="color:var(--muted);font-size:12px">Loading…</div>';drawer.style.display='flex';fetch(SB_URL+'/rest/v1/toki_chats?id=eq.'+id+'&select=*',{headers:sbHeaders()}).then(function(r){return r.json();}).then(function(rows){if(!rows||!rows[0])return;var c=rows[0];document.getElementById('chatDrawerTitle').textContent=(c.email||'Anonymous')+' · '+new Date(c.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});var msgs=c.messages||[];msgsEl.innerHTML=msgs.map(function(m){var isUser=m.role==='user';return'<div style="margin-bottom:12px;text-align:'+(isUser?'right':'left')+'"><div style="display:inline-block;max-width:80%;background:'+(isUser?'rgba(200,150,62,0.15)':'rgba(200,185,154,0.06)')+';border:1px solid '+(isUser?'rgba(200,150,62,0.3)':'var(--border)')+';border-radius:6px;padding:10px 14px"><div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">'+(isUser?'Guest':'Toki')+'</div><div style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">'+(m.content||'').substring(0,500)+'</div></div></div>';}).join('');});}
+document.getElementById('anSearch').addEventListener('input',function(){clearTimeout(this._t);this._t=setTimeout(loadAnalytics,400);});
 
-  var filtered = revCurrentFilter === 'all' ? allReviews :
-    allReviews.filter(function(r) { return r.status === revCurrentFilter; });
+// ── FINANCES ──
+async function loadFinances(){var year=document.getElementById('finYear').value;var month=document.getElementById('finMonth').value;var suite=document.getElementById('finSuite').value;try{var allBookings=bookings.filter(function(b){return!b.linked_to_villa;});var years=[...new Set(allBookings.map(function(b){return(b.checkin||'').substring(0,4);}).filter(Boolean))].sort();var yrSel=document.getElementById('finYear');if(yrSel.options.length<=1&&years.length){years.forEach(function(y){var o=document.createElement('option');o.value=y;o.textContent=y;yrSel.appendChild(o);});}var filtered=allBookings.filter(function(b){if(!b.total_price)return false;if(suite!=='all'&&b.suite!==suite)return false;if(year!=='all'&&(b.checkin||'').substring(0,4)!==year)return false;if(month!=='all'&&parseInt((b.checkin||'').substring(5,7))!==parseInt(month))return false;return true;});var cleaningByS={pietra:150,cielo:150,villa:250};var revenue=0,cleaningIn=0;filtered.forEach(function(b){var cl=cleaningByS[b.suite]||0;cleaningIn+=cl;revenue+=(b.total_price-cl);});var cUrl=SB_URL+'/rest/v1/cleaning_costs?select=*&order=date.desc';if(suite!=='all')cUrl+='&or=(suite.eq.'+suite+',suite.eq.all)';if(year!=='all')cUrl+='&date=gte.'+year+'-01-01&date=lte.'+year+'-12-31';if(month!=='all'){var m=parseInt(month);var y2=year==='all'?new Date().getFullYear():parseInt(year);var lastDay2=new Date(y2,m,0).getDate();cUrl+='&date=gte.'+y2+'-'+(m<10?'0'+m:m)+'-01&date=lte.'+y2+'-'+(m<10?'0'+m:m)+'-'+lastDay2;}var cr=await fetch(cUrl+'&apikey='+SB_KEY,{headers:sbHeaders()});var costs=await cr.json();var cleaningOut=costs.reduce(function(s,c){return s+(parseFloat(c.amount)||0);},0);document.getElementById('finRevenue').textContent='€'+revenue.toLocaleString();document.getElementById('finCleaningIn').textContent='€'+cleaningIn.toLocaleString();document.getElementById('finCleaningOut').textContent='€'+cleaningOut.toLocaleString();document.getElementById('finNet').textContent='€'+(revenue+cleaningIn-cleaningOut).toLocaleString();if(!costs.length){document.getElementById('finCostList').innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">No cleaning costs recorded.</div>';}else{document.getElementById('finCostList').innerHTML=costs.map(function(c){return'<div class="booking-item" style="flex-wrap:wrap;gap:8px"><div style="flex:1"><div style="font-size:10px;color:var(--gold)">'+(SUITES[c.suite]||c.suite||'General')+' · '+c.date+'</div><div style="font-size:13px;color:var(--sabbia)">€'+parseFloat(c.amount).toFixed(2)+'</div>'+(c.notes?'<div style="font-size:10px;color:var(--muted)">'+c.notes+'</div>':'')+'</div><button class="btn btn-red" onclick="deleteCleaningCost(\''+c.id+'\')">X</button></div>';}).join('');}}catch(e){console.error('[Finances]',e);}}
+async function addCleaningCost(){var suite=document.getElementById('fcSuite').value;var amount=parseFloat(document.getElementById('fcAmount').value);var date=document.getElementById('fcDate').value;var notes=document.getElementById('fcNotes').value.trim();if(!amount||!date){showToast('Please enter amount and date');return;}try{await fetch(SB_URL+'/rest/v1/cleaning_costs?apikey='+SB_KEY,{method:'POST',headers:Object.assign({},sbHeaders(),{'Prefer':'return=minimal'}),body:JSON.stringify({suite:suite,amount:amount,date:date,notes:notes})});document.getElementById('fcAmount').value='';document.getElementById('fcNotes').value='';showToast('Cleaning cost added ✓');loadFinances();}catch(e){showToast('Error: '+e.message);}}
+async function deleteCleaningCost(id){if(!confirm('Delete this entry?'))return;await fetch(SB_URL+'/rest/v1/cleaning_costs?id=eq.'+id+'&apikey='+SB_KEY,{method:'DELETE',headers:sbHeaders()});showToast('Deleted ✓');loadFinances();}
+document.getElementById('fcDate').value=new Date().toISOString().split('T')[0];
 
-  var el = document.getElementById('revList');
-  el.innerHTML = '';
+// ── COUPONS ──
+async function loadCouponSettings(){try{var r=await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1&select=*',{headers:sbHeaders()});var rows=await r.json();if(!rows||!rows[0])return;var s=rows[0];document.getElementById('cpActive').value=s.active?'true':'false';document.getElementById('cpBanner').value=s.show_banner?'true':'false';document.getElementById('cpPct').value=s.discount_pct;document.getElementById('cpBannerText').value=s.banner_text||'';}catch(e){console.log('[Coupon]',e);}}
+async function loadCouponSignups(){var listEl=document.getElementById('cpList');listEl.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div>';try{var r=await fetch(SB_URL+'/rest/v1/coupon_signups?select=*&order=created_at.desc',{headers:sbHeaders()});var rows=await r.json();var total=rows.length;var verified=rows.filter(function(r){return r.verified;}).length;var used=rows.filter(function(r){return r.used;}).length;var pending=rows.filter(function(r){return!r.verified;}).length;document.getElementById('cpTotal').textContent=total;document.getElementById('cpVerified').textContent=verified;document.getElementById('cpUsed').textContent=used;document.getElementById('cpPending').textContent=pending;if(!rows.length){listEl.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">No signups yet.</div>';return;}listEl.innerHTML=rows.map(function(r){var sc=r.used?'#27ae60':r.verified?'var(--gold)':'var(--muted)';var sl=r.used?'Used':r.verified?'Active':'Pending';var date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});return'<div class="booking-item" style="flex-wrap:wrap;gap:8px"><div style="flex:1;min-width:200px"><div style="font-size:10px;letter-spacing:1px;color:var(--gold);margin-bottom:2px">'+r.email+'</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:var(--sabbia);letter-spacing:2px">'+r.code+'</div><div style="font-size:10px;color:var(--muted)">'+date+'</div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid '+sc+';color:'+sc+'">'+sl+'</span><button class="btn btn-red" onclick="deleteCoupon(\''+r.id+'\')">Delete</button></div></div>';}).join('');}catch(e){listEl.innerHTML='<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading signups.</div>';}}
+async function saveCouponSettings(){var active=document.getElementById('cpActive').value==='true';var banner=document.getElementById('cpBanner').value==='true';var pct=parseInt(document.getElementById('cpPct').value)||10;var text=document.getElementById('cpBannerText').value.trim()||'Subscribe & get '+pct+'% off your booking';try{var r=await fetch(SB_URL+'/rest/v1/coupon_settings',{method:'POST',headers:Object.assign({},sbHeaders(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({id:1,active:active,show_banner:banner,discount_pct:pct,banner_text:text,updated_at:new Date().toISOString()})});if(r.ok||r.status===204||r.status===200){showToast('Coupon settings saved ✓');}else{showToast('Error saving coupons — check console');}}catch(e){showToast('Error: '+e.message);}}
+async function deleteCoupon(id){if(!confirm('Delete this signup?'))return;try{await fetch(SB_URL+'/rest/v1/coupon_signups?id=eq.'+id,{method:'DELETE',headers:sbHeaders()});showToast('Deleted ✓');loadCouponSignups();}catch(e){showToast('Error deleting');}}
 
-  if (!filtered.length) {
-    var msg = document.createElement('p');
-    msg.style.cssText = 'color:var(--muted);font-size:13px;padding:20px 0';
-    msg.textContent = 'No ' + revCurrentFilter + ' reviews.';
-    el.appendChild(msg);
-    return;
-  }
+// ── ICAL SYNC ──
+async function syncIcal(){var btn=document.getElementById('syncIcalBtn');var resultEl=document.getElementById('icalSyncResult');btn.textContent='↻ Syncing…';btn.disabled=true;resultEl.style.display='none';try{var r=await fetch(SB_URL+'/rest/v1/settings?key=eq.ical&select=value&apikey='+SB_KEY,{headers:sbHeaders()});var rows=await r.json();var ical=rows&&rows[0]&&rows[0].value?rows[0].value:null;if(!ical){showResult('No iCal URLs saved.','warn');return;}var feeds=[];if(ical.pietra&&ical.pietra.airbnb)feeds.push({url:ical.pietra.airbnb,suite:'pietra',source:'airbnb'});if(ical.cielo&&ical.cielo.airbnb)feeds.push({url:ical.cielo.airbnb,suite:'cielo',source:'airbnb'});if(ical.pietra&&ical.pietra.bookingCom)feeds.push({url:ical.pietra.bookingCom,suite:'pietra',source:'booking'});if(ical.cielo&&ical.cielo.bookingCom)feeds.push({url:ical.cielo.bookingCom,suite:'cielo',source:'booking'});if(!feeds.length){showResult('No iCal URLs configured.','warn');return;}var resp=await fetch(SB_URL+'/functions/v1/sync-ical',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY,'apikey':SB_KEY},body:JSON.stringify({feeds:feeds})});var result=await resp.json();if(!resp.ok){showResult('Error ('+resp.status+'): '+JSON.stringify(result),'error');return;}var lines=[];if(result.results){result.results.forEach(function(r){lines.push((r.error?'✕':'✓')+' '+r.suite+' ('+r.source+'): '+(r.error?r.error:r.inserted+' new · '+r.skipped+' existed'));});}if(result.total_inserted!==undefined)lines.push('','Total new: '+result.total_inserted);showResult(lines.join('<br>'),result.total_inserted>0?'ok':'info');await loadAll(function(){renderDashboard();renderCalendar();renderAllBookings();});}catch(e){showResult('Error: '+e.message,'error');}btn.textContent='↻ Sync Now';btn.disabled=false;function showResult(msg,type){var colors={ok:'#27ae60',error:'#e74c3c',warn:'#C8963E',info:'var(--muted)'};resultEl.style.color=colors[type]||'var(--muted)';resultEl.innerHTML=msg;resultEl.style.display='block';}}
 
-  var sn = { pietra:'Suite Pietra', cielo:'Suite Cielo', villa:'Villa Completa' };
-  var sc = { pending:'#C8963E', approved:'#27ae60', rejected:'#e74c3c' };
-
-  filtered.forEach(function(rv) {
-    var date = rv.created_at ? new Date(rv.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : '';
-    var stars = '';
-    for (var s = 0; s < (rv.rating || 5); s++) stars += '★';
-
-    var card = document.createElement('div');
-    card.className = 'card';
-    card.style.marginBottom = '12px';
-
-    // Header row
-    var hdr = document.createElement('div');
-    hdr.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px';
-
-    var info = document.createElement('div');
-    var statusEl = document.createElement('div');
-    statusEl.style.cssText = 'font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + (sc[rv.status]||'#888') + ';margin-bottom:4px';
-    statusEl.textContent = rv.status.toUpperCase();
-    var nameEl = document.createElement('div');
-    nameEl.style.cssText = 'font-family:Cormorant Garamond,serif;font-size:17px;color:var(--sabbia)';
-    nameEl.textContent = rv.guest_name || '';
-    var metaEl = document.createElement('div');
-    metaEl.style.cssText = 'font-size:10px;color:var(--muted);margin-top:2px';
-    metaEl.textContent = (sn[rv.suite]||rv.suite) + (rv.stay_month ? ' · ' + rv.stay_month : '') + ' · ' + date;
-    info.appendChild(statusEl); info.appendChild(nameEl); info.appendChild(metaEl);
-
-    var starsEl = document.createElement('div');
-    starsEl.style.cssText = 'font-size:14px;color:#C8963E';
-    starsEl.textContent = stars;
-    hdr.appendChild(info); hdr.appendChild(starsEl);
-    card.appendChild(hdr);
-
-    // Review text
-    var body = document.createElement('p');
-    body.style.cssText = 'font-family:Cormorant Garamond,serif;font-style:italic;font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:14px;border-left:2px solid rgba(200,150,62,0.2);padding-left:12px';
-    body.textContent = '“' + (rv.text || rv.text || '') + '”';
-    card.appendChild(body);
-
-    // Action buttons
-    var actions = document.createElement('div');
-    actions.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap';
-
-    function makeRevBtn(label, color, borderColor, fn) {
-      var btn = document.createElement('button');
-      btn.className = 'btn btn-outline';
-      btn.style.cssText = 'border-color:' + borderColor + ';color:' + color;
-      btn.textContent = label;
-      btn.onclick = fn;
-      return btn;
-    }
-
-    if (rv.status !== 'approved') actions.appendChild(makeRevBtn('✓ Approve', '#27ae60', 'rgba(39,174,96,0.4)', function() { revUpdateStatus(rv.id, 'approved'); }));
-    if (rv.status !== 'rejected') actions.appendChild(makeRevBtn('✕ Reject', '#e74c3c', 'rgba(231,76,60,0.3)', function() { revUpdateStatus(rv.id, 'rejected'); }));
-    if (rv.status !== 'pending')  actions.appendChild(makeRevBtn('↩ Reset', 'var(--pietra)', 'var(--border)', function() { revUpdateStatus(rv.id, 'pending'); }));
-
-    var delBtn = document.createElement('button');
-    delBtn.className = 'btn btn-red';
-    delBtn.textContent = 'Delete';
-    delBtn.onclick = function() { revDelete(rv.id); };
-    actions.appendChild(delBtn);
-    card.appendChild(actions);
-    el.appendChild(card);
-  });
-}
-
-function revSetFilter(f) {
-  revCurrentFilter = f;
-  ['pending','approved','rejected','all'].forEach(function(x) {
-    var b = document.getElementById('revFilter' + x.charAt(0).toUpperCase() + x.slice(1));
-    if (b) { b.style.color = x===f?'var(--gold)':''; b.style.borderColor = x===f?'rgba(200,150,62,0.5)':''; }
-  });
-  renderReviews();
-}
-
-function revUpdateStatus(id, status) {
-  fetch(SB_URL + '/rest/v1/reviews?id=eq.' + id + '&apikey=' + SB_KEY, {
-    method: 'PATCH',
-    headers: Object.assign({}, sbHeaders(), {'Prefer':'return=minimal'}),
-    body: JSON.stringify({ status: status })
-  }).then(function(r) {
-    if (r.ok) {
-      allReviews = allReviews.map(function(rv) { return rv.id===id ? Object.assign({},rv,{status:status}) : rv; });
-      renderReviews();
-      showToast('Review ' + status);
-    } else { showToast('Error updating review'); }
-  });
-}
-
-function revDelete(id) {
-  if (!confirm('Permanently delete this review?')) return;
-  fetch(SB_URL + '/rest/v1/reviews?id=eq.' + id + '&apikey=' + SB_KEY, {
-    method: 'DELETE', headers: sbHeaders()
-  }).then(function() {
-    allReviews = allReviews.filter(function(rv) { return rv.id !== id; });
-    renderReviews();
-    showToast('Review deleted');
-  });
-}
-
-// EVENT LISTENERS
-document.getElementById('loginPass').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+// ── EVENT LISTENERS ──
+document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginBtn').click();});
+document.getElementById('loginBtn').addEventListener('click',async function(){
+  var pass=document.getElementById('loginPass').value;if(!pass)return;
+  var btn=document.getElementById('loginBtn');var errEl=document.getElementById('loginError');btn.textContent='...';btn.disabled=true;errEl.style.display='none';
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/settings?key=eq.admin_password&select=value&apikey='+SB_KEY);
+    var rows=await res.json();var stored=rows&&rows[0]&&rows[0].value?rows[0].value.hash:null;
+    if(!stored){errEl.textContent='Admin password not set in Supabase';errEl.style.display='block';}
+    else{var encoder=new TextEncoder();var data=encoder.encode(pass);var hashBuffer=await crypto.subtle.digest('SHA-256',data);var hashArray=Array.from(new Uint8Array(hashBuffer));var hashHex=hashArray.map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      if(hashHex===stored){document.getElementById('loginPass').value='';document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';testConnection(function(){loadAll(function(){renderDashboard();});});}
+      else{errEl.textContent='Incorrect password';errEl.style.display='block';}}
+  }catch(e){errEl.textContent='Connection error';errEl.style.display='block';}
+  btn.textContent='Enter';btn.disabled=false;
 });
-document.getElementById('loginBtn').addEventListener('click', async function() {
-  var pass = document.getElementById('loginPass').value;
-  if (!pass) return;
-  var btn = document.getElementById('loginBtn');
-  var errEl = document.getElementById('loginError');
-  btn.textContent = '...';
-  btn.disabled = true;
-  errEl.style.display = 'none';
-  try {
-    // Fetch password hash from Supabase settings table
-    var res = await fetch(SB_URL + '/rest/v1/settings?key=eq.admin_password&select=value&apikey=' + SB_KEY);
-    var rows = await res.json();
-    var stored = rows && rows[0] && rows[0].value ? rows[0].value.hash : null;
-    if (!stored) {
-      errEl.textContent = 'Admin password not set in Supabase';
-      errEl.style.display = 'block';
-    } else {
-      // Compare using SHA-256 hash
-      var encoder = new TextEncoder();
-      var data = encoder.encode(pass);
-      var hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      var hashArray = Array.from(new Uint8Array(hashBuffer));
-      var hashHex = hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
-      if (hashHex === stored) {
-        document.getElementById('loginPass').value = '';
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        testConnection(function() {
-          loadAll(function() { renderDashboard(); });
-        });
-      } else {
-        errEl.textContent = 'Incorrect password';
-        errEl.style.display = 'block';
-      }
-    }
-  } catch(e) {
-    errEl.textContent = 'Connection error — try again';
-    errEl.style.display = 'block';
-  }
-  btn.textContent = 'Enter';
-  btn.disabled = false;
-});
-document.getElementById('logoutBtn').addEventListener('click', function() {
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('loginPass').value = '';
-});
+document.getElementById('logoutBtn').addEventListener('click',function(){document.getElementById('loginScreen').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('loginPass').value='';});
 
-// Tabs
-var tabBtns = document.querySelectorAll('.tab-btn');
-for (var ti = 0; ti < tabBtns.length; ti++) {
-  tabBtns[ti].addEventListener('click', function() {
-    var tab = this.getAttribute('data-tab');
-    var allBtns = document.querySelectorAll('.tab-btn');
-    var allPanels = document.querySelectorAll('.tab-panel');
-    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('active');
-    for (var i = 0; i < allPanels.length; i++) allPanels[i].classList.remove('active');
-    this.classList.add('active');
-    document.getElementById('panel-' + tab).classList.add('active');
-    if (tab === 'calendar') renderCalendar();
-    if (tab === 'bookings') renderAllBookings();
-    if (tab === 'photos') loadPhotos();
-    if (tab === 'reviews') loadReviews();
-    if (tab === 'coupons') { loadCouponSettings(); loadCouponSignups(); }
-    if (tab === 'analytics') loadAnalytics();
-    if (tab === 'finances')  loadFinances();
-  });
-}
+var tabBtns=document.querySelectorAll('.tab-btn');
+for(var ti=0;ti<tabBtns.length;ti++){tabBtns[ti].addEventListener('click',function(){var tab=this.getAttribute('data-tab');document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});this.classList.add('active');document.getElementById('panel-'+tab).classList.add('active');if(tab==='calendar')renderCalendar();if(tab==='bookings')renderAllBookings();if(tab==='photos')loadPhotos();if(tab==='reviews')loadReviews();if(tab==='coupons'){loadCouponSettings();loadCouponSignups();}if(tab==='analytics')loadAnalytics();if(tab==='finances')loadFinances();});}
 
-// Suite tabs
-var suiteTabs = document.querySelectorAll('.suite-tab');
-for (var si = 0; si < suiteTabs.length; si++) {
-  suiteTabs[si].addEventListener('click', function() {
-    var allSt = document.querySelectorAll('.suite-tab');
-    for (var i = 0; i < allSt.length; i++) allSt[i].classList.remove('active');
-    this.classList.add('active');
-    currentSuite = this.getAttribute('data-suite');
-    renderCalendar();
-  });
-}
+var suiteTabs=document.querySelectorAll('.suite-tab');
+for(var si=0;si<suiteTabs.length;si++){suiteTabs[si].addEventListener('click',function(){document.querySelectorAll('.suite-tab').forEach(function(t){t.classList.remove('active');});this.classList.add('active');currentSuite=this.getAttribute('data-suite');renderCalendar();});}
 
-// Calendar nav
-document.getElementById('prevMonth').addEventListener('click', function() {
-  currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar();
-});
-document.getElementById('nextMonth').addEventListener('click', function() {
-  currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar();
-});
+document.getElementById('prevMonth').addEventListener('click',function(){currentMonth--;if(currentMonth<0){currentMonth=11;currentYear--;}renderCalendar();});
+document.getElementById('nextMonth').addEventListener('click',function(){currentMonth++;if(currentMonth>11){currentMonth=0;currentYear++;}renderCalendar();});
 
-// Modals
-document.getElementById('openAddBtn').addEventListener('click', function() { document.getElementById('addModal').classList.add('open'); });
-document.getElementById('openAddBtn2').addEventListener('click', function() { document.getElementById('addModal').classList.add('open'); });
-document.getElementById('openBlockBtn').addEventListener('click', function() { document.getElementById('blockModal').classList.add('open'); });
-document.getElementById('cancelAddBtn').addEventListener('click', function() { document.getElementById('addModal').classList.remove('open'); });
-document.getElementById('cancelBlockBtn').addEventListener('click', function() { document.getElementById('blockModal').classList.remove('open'); });
-document.getElementById('saveBookingBtn').addEventListener('click', saveBooking);
-document.getElementById('saveBlockBtn').addEventListener('click', saveBlock);
-document.getElementById('savePricingBtn').addEventListener('click', savePricing);
-document.getElementById('saveIcalBtn').addEventListener('click', saveIcal);
-document.getElementById('saveContactBtn').addEventListener('click', saveContact);
-document.getElementById('saveTokiBtn').addEventListener('click', saveToki);
+document.getElementById('openAddBtn').addEventListener('click',function(){document.getElementById('addModal').classList.add('open');});
+document.getElementById('openAddBtn2').addEventListener('click',function(){document.getElementById('addModal').classList.add('open');});
+document.getElementById('openBlockBtn').addEventListener('click',function(){document.getElementById('blockModal').classList.add('open');});
+document.getElementById('cancelAddBtn').addEventListener('click',function(){document.getElementById('addModal').classList.remove('open');});
+document.getElementById('cancelBlockBtn').addEventListener('click',function(){document.getElementById('blockModal').classList.remove('open');});
+document.getElementById('saveBookingBtn').addEventListener('click',saveBooking);
+document.getElementById('saveBlockBtn').addEventListener('click',saveBlock);
+document.getElementById('savePricingBtn').addEventListener('click',savePricing);
+document.getElementById('saveIcalBtn').addEventListener('click',saveIcal);
+document.getElementById('saveContactBtn').addEventListener('click',saveContact);
+document.getElementById('saveTokiBtn').addEventListener('click',saveToki);
 
-// Date constraints
-var todayStr = dStr(new Date());
-document.getElementById('newCheckin').min = todayStr;
-document.getElementById('blockFrom').min = todayStr;
-document.getElementById('newCheckin').addEventListener('change', function() {
-  document.getElementById('newCheckout').min = addDays(this.value, 4);
-  updateBookingCalc();
-});
-document.getElementById('newCheckout').addEventListener('change', updateBookingCalc);
-document.getElementById('newSuite').addEventListener('change', updateBookingCalc);
-document.getElementById('newTotalPrice').addEventListener('input', function() { this.dataset.userEdited = '1'; });
-document.getElementById('blockFrom').addEventListener('change', function() {
-  document.getElementById('blockTo').min = addDays(this.value, 1);
-});
-
-// ── FUNNEL ──────────────────────────────────────────────────
-async function openFunnel(ref, guest) {
-  document.getElementById('funnelRef').textContent = ref;
-  document.getElementById('funnelGuest').textContent = guest;
-  document.getElementById('funnelTimeline').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div>';
-  document.getElementById('funnelDrawer').style.display = 'flex';
-  try {
-    var r = await fetch(SB_URL + '/rest/v1/booking_events?booking_ref=eq.' + encodeURIComponent(ref) + '&order=created_at.asc&select=*', {headers: sbHeaders()});
-    var events = await r.json();
-    if (!events || !events.length) {
-      document.getElementById('funnelTimeline').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">No events recorded for this booking.</div>';
-      return;
-    }
-    var icons = {created:'🌊', changed:'✏️', cancelled:'❌', coupon_applied:'🎟️'};
-    var colors = {created:'var(--gold)', changed:'#5BC4D8', cancelled:'#e74c3c', coupon_applied:'#27ae60'};
-    document.getElementById('funnelTimeline').innerHTML = events.map(function(ev) {
-      var d = new Date(ev.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-      var color = colors[ev.event_type] || 'var(--muted)';
-      var icon  = icons[ev.event_type]  || '•';
-      var body  = '';
-      if (ev.new_data) {
-        var n = ev.new_data;
-        if (n.suite)    body += '<div style="font-size:11px;color:var(--text);margin-top:4px">Suite: ' + (SUITES[n.suite]||n.suite) + '</div>';
-        if (n.checkin)  body += '<div style="font-size:11px;color:var(--text)">Dates: ' + n.checkin + ' → ' + n.checkout + ' (' + n.nights + ' nights)</div>';
-        if (n.total)    body += '<div style="font-size:11px;color:var(--gold)">Total: €' + n.total + '</div>';
-        if (n.coupon)   body += '<div style="font-size:11px;color:#27ae60">Coupon: ' + n.coupon.code + ' (−' + n.coupon.pct + '%)</div>';
-      }
-      if (ev.old_data && ev.event_type === 'changed') {
-        var o = ev.old_data;
-        body += '<div style="font-size:10px;color:var(--muted);margin-top:4px;text-decoration:line-through">Was: ' + (o.checkin||'') + ' → ' + (o.checkout||'') + ' · €' + (o.total||'—') + '</div>';
-      }
-      if (ev.notes) body += '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + ev.notes + '</div>';
-      return '<div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)">'
-        + '<div style="font-size:20px;flex-shrink:0;width:28px;text-align:center">' + icon + '</div>'
-        + '<div style="flex:1">'
-        + '<div style="display:flex;justify-content:space-between;align-items:center">'
-        + '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + color + '">' + ev.event_type.replace('_',' ') + '</span>'
-        + '<span style="font-size:10px;color:var(--muted)">' + d + '</span>'
-        + '</div>' + body + '</div></div>';
-    }).join('');
-  } catch(e) {
-    document.getElementById('funnelTimeline').innerHTML = '<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading journey.</div>';
-  }
-}
-
-// ── ANALYTICS ───────────────────────────────────────────────
-async function loadAnalytics() {
-  try {
-    var r = await fetch(SB_URL + '/rest/v1/toki_chats?order=created_at.desc&select=*', {headers: sbHeaders()});
-    var chats = await r.json();
-    document.getElementById('anTotal').textContent   = chats.length;
-    document.getElementById('anBooked').textContent  = chats.filter(function(c){return c.booked;}).length;
-    document.getElementById('anAnon').textContent    = chats.filter(function(c){return !c.email;}).length;
-    var langs = {};
-    chats.forEach(function(c){ langs[c.lang||'en'] = (langs[c.lang||'en']||0)+1; });
-    document.getElementById('anLangs').textContent  = Object.keys(langs).map(function(l){ return l.toUpperCase()+':'+langs[l]; }).join(' ');
-
-    var search = (document.getElementById('anSearch').value||'').toLowerCase();
-    var filtered = search ? chats.filter(function(c){
-      return JSON.stringify(c.messages||[]).toLowerCase().includes(search);
-    }) : chats;
-
-    if (!filtered.length) { document.getElementById('anList').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">No conversations found.</div>'; return; }
-
-    document.getElementById('anList').innerHTML = filtered.map(function(c) {
-      var date = new Date(c.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-      var msgs = c.messages || [];
-      var preview = msgs.filter(function(m){return m.role==='user';}).map(function(m){return m.content;}).slice(0,2).join(' · ').substring(0,120);
-      return '<div class="booking-item" style="flex-wrap:wrap;gap:8px;cursor:pointer" onclick="openChat(\'' + c.id + '\')">'
-        + '<div style="flex:1;min-width:200px">'
-        + '<div style="font-size:10px;color:var(--gold);margin-bottom:2px">' + (c.email||'Anonymous') + ' · ' + (c.lang||'en').toUpperCase() + (c.booked?' · ✅ Booked':'') + '</div>'
-        + '<div style="font-size:12px;color:var(--text);line-height:1.5">' + (preview||'No messages') + '</div>'
-        + '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + date + ' · ' + msgs.length + ' messages</div>'
-        + '</div>'
-        + '<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 8px;border:1px solid var(--border);border-radius:2px">View →</div>'
-        + '</div>';
-    }).join('');
-  } catch(e) { document.getElementById('anList').innerHTML = '<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading chats.</div>'; }
-}
-
-function openChat(id) {
-  var drawer = document.getElementById('chatDrawer');
-  var msgsEl = document.getElementById('chatDrawerMessages');
-  msgsEl.innerHTML = '<div style="color:var(--muted);font-size:12px">Loading…</div>';
-  drawer.style.display = 'flex';
-  fetch(SB_URL + '/rest/v1/toki_chats?id=eq.' + id + '&select=*', {headers: sbHeaders()})
-    .then(function(r){return r.json();})
-    .then(function(rows){
-      if (!rows||!rows[0]) return;
-      var c = rows[0];
-      document.getElementById('chatDrawerTitle').textContent = (c.email||'Anonymous') + ' · ' + new Date(c.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-      var msgs = c.messages||[];
-      msgsEl.innerHTML = msgs.map(function(m){
-        var isUser = m.role==='user';
-        return '<div style="margin-bottom:12px;text-align:' + (isUser?'right':'left') + '">'
-          + '<div style="display:inline-block;max-width:80%;background:' + (isUser?'rgba(200,150,62,0.15)':'rgba(200,185,154,0.06)') + ';border:1px solid ' + (isUser?'rgba(200,150,62,0.3)':'var(--border)') + ';border-radius:6px;padding:10px 14px">'
-          + '<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">' + (isUser?'Guest':'Toki') + '</div>'
-          + '<div style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">' + (m.content||'').substring(0,500) + '</div>'
-          + '</div></div>';
-      }).join('');
-    });
-}
-
-document.getElementById('anSearch').addEventListener('input', function(){ clearTimeout(this._t); this._t = setTimeout(loadAnalytics, 400); });
-
-// ── FINANCES ────────────────────────────────────────────────
-async function loadFinances() {
-  var year  = document.getElementById('finYear').value;
-  var month = document.getElementById('finMonth').value;
-  var suite = document.getElementById('finSuite').value;
-
-  try {
-    // Populate year filter from bookings
-    var allBookings = bookings.filter(function(b){ return !b.linked_to_villa; });
-    var years = [...new Set(allBookings.map(function(b){ return (b.checkin||'').substring(0,4); }).filter(Boolean))].sort();
-    var yrSel = document.getElementById('finYear');
-    if (yrSel.options.length <= 1 && years.length) {
-      years.forEach(function(y){ var o=document.createElement('option'); o.value=y; o.textContent=y; yrSel.appendChild(o); });
-    }
-
-    // Filter bookings
-    var filtered = allBookings.filter(function(b){
-      if (!b.total_price) return false;
-      if (suite !== 'all' && b.suite !== suite) return false;
-      if (year !== 'all'  && (b.checkin||'').substring(0,4) !== year) return false;
-      if (month !== 'all' && parseInt((b.checkin||'').substring(5,7)) !== parseInt(month)) return false;
-      return true;
-    });
-
-    // Calculate nightly revenue (total - cleaning)
-    var cleaningByS = {pietra:150,cielo:150,villa:250};
-    var revenue = 0, cleaningIn = 0;
-    filtered.forEach(function(b){
-      var cl = cleaningByS[b.suite]||0;
-      cleaningIn += cl;
-      revenue += (b.total_price - cl);
-    });
-
-    // Cleaning costs from DB
-    var cUrl = SB_URL + '/rest/v1/cleaning_costs?select=*&order=date.desc';
-    if (suite !== 'all') cUrl += '&or=(suite.eq.' + suite + ',suite.eq.all)';
-    if (year  !== 'all') cUrl += '&date=gte.' + year + '-01-01&date=lte.' + year + '-12-31';
-    if (month !== 'all') {
-      var m = parseInt(month); var y2 = year==='all'?new Date().getFullYear():parseInt(year);
-      var lastDay = new Date(y2, m, 0).getDate();
-      cUrl += '&date=gte.' + y2+'-'+(m<10?'0'+m:m)+'-01&date=lte.' + y2+'-'+(m<10?'0'+m:m)+'-'+lastDay;
-    }
-    var cr = await fetch(cUrl + '&apikey=' + SB_KEY, {headers: sbHeaders()});
-    var costs = await cr.json();
-    var cleaningOut = costs.reduce(function(s,c){ return s+(parseFloat(c.amount)||0); }, 0);
-
-    document.getElementById('finRevenue').textContent    = '€' + revenue.toLocaleString();
-    document.getElementById('finCleaningIn').textContent = '€' + cleaningIn.toLocaleString();
-    document.getElementById('finCleaningOut').textContent= '€' + cleaningOut.toLocaleString();
-    document.getElementById('finNet').textContent        = '€' + (revenue + cleaningIn - cleaningOut).toLocaleString();
-
-    // Render cost list
-    if (!costs.length) {
-      document.getElementById('finCostList').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">No cleaning costs recorded.</div>';
-    } else {
-      document.getElementById('finCostList').innerHTML = costs.map(function(c){
-        return '<div class="booking-item" style="flex-wrap:wrap;gap:8px">'
-          + '<div style="flex:1"><div style="font-size:10px;color:var(--gold)">' + (SUITES[c.suite]||c.suite||'General') + ' · ' + c.date + '</div>'
-          + '<div style="font-size:13px;color:var(--sabbia)">€' + parseFloat(c.amount).toFixed(2) + '</div>'
-          + (c.notes?'<div style="font-size:10px;color:var(--muted)">'+c.notes+'</div>':'') + '</div>'
-          + '<button class="btn btn-red" onclick="deleteCleaningCost(\''+c.id+'\')">X</button>'
-          + '</div>';
-      }).join('');
-    }
-  } catch(e) { console.error('[Finances]', e); }
-}
-
-async function addCleaningCost() {
-  var suite  = document.getElementById('fcSuite').value;
-  var amount = parseFloat(document.getElementById('fcAmount').value);
-  var date   = document.getElementById('fcDate').value;
-  var notes  = document.getElementById('fcNotes').value.trim();
-  if (!amount || !date) { showToast('Please enter amount and date'); return; }
-  try {
-    await fetch(SB_URL + '/rest/v1/cleaning_costs?apikey=' + SB_KEY, {
-      method: 'POST', headers: Object.assign({}, sbHeaders(), {'Prefer':'return=minimal'}),
-      body: JSON.stringify({suite:suite, amount:amount, date:date, notes:notes})
-    });
-    document.getElementById('fcAmount').value = '';
-    document.getElementById('fcNotes').value  = '';
-    showToast('Cleaning cost added ✓');
-    loadFinances();
-  } catch(e) { showToast('Error: ' + e.message); }
-}
-
-async function deleteCleaningCost(id) {
-  if (!confirm('Delete this entry?')) return;
-  await fetch(SB_URL + '/rest/v1/cleaning_costs?id=eq.' + id + '&apikey=' + SB_KEY, {
-    method: 'DELETE', headers: sbHeaders()
-  });
-  showToast('Deleted ✓');
-  loadFinances();
-}
-
-// Set today as default cleaning date
-document.getElementById('fcDate').value = new Date().toISOString().split('T')[0];
-
-// ══════════════════════════════════════════════════════
-// COUPON ADMIN
-// ══════════════════════════════════════════════════════
-async function loadCouponSettings() {
-  try {
-    var r = await fetch(SB_URL+'/rest/v1/coupon_settings?id=eq.1&select=*', {headers: sbHeaders()});
-    var rows = await r.json();
-    if(!rows||!rows[0]) return;
-    var s = rows[0];
-    document.getElementById('cpActive').value     = s.active ? 'true' : 'false';
-    document.getElementById('cpBanner').value     = s.show_banner ? 'true' : 'false';
-    document.getElementById('cpPct').value        = s.discount_pct;
-    document.getElementById('cpBannerText').value = s.banner_text || '';
-  } catch(e) { console.log('[Coupon] load settings error', e); }
-}
-
-async function loadCouponSignups() {
-  var listEl = document.getElementById('cpList');
-  listEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:12px">Loading…</div>';
-  try {
-    var r = await fetch(SB_URL+'/rest/v1/coupon_signups?select=*&order=created_at.desc', {headers: sbHeaders()});
-    var rows = await r.json();
-    // Stats
-    var total    = rows.length;
-    var verified = rows.filter(function(r){ return r.verified; }).length;
-    var used     = rows.filter(function(r){ return r.used; }).length;
-    var pending  = rows.filter(function(r){ return !r.verified; }).length;
-    document.getElementById('cpTotal').textContent    = total;
-    document.getElementById('cpVerified').textContent = verified;
-    document.getElementById('cpUsed').textContent     = used;
-    document.getElementById('cpPending').textContent  = pending;
-
-    if(!rows.length){ listEl.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px">No signups yet.</div>'; return; }
-
-    listEl.innerHTML = rows.map(function(r) {
-      var statusColor = r.used ? '#27ae60' : r.verified ? 'var(--gold)' : 'var(--muted)';
-      var statusLabel = r.used ? 'Used' : r.verified ? 'Active' : 'Pending';
-      var date = new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-      return '<div class="booking-item" style="flex-wrap:wrap;gap:8px">'+
-        '<div style="flex:1;min-width:200px">'+
-          '<div style="font-size:10px;letter-spacing:1px;color:var(--gold);margin-bottom:2px">'+r.email+'</div>'+
-          '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:var(--sabbia);letter-spacing:2px">'+r.code+'</div>'+
-          '<div style="font-size:10px;color:var(--muted);margin-top:2px">'+date+'</div>'+
-        '</div>'+
-        '<div style="display:flex;align-items:center;gap:8px">'+
-          '<span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid '+statusColor+';color:'+statusColor+'">'+statusLabel+'</span>'+
-          '<button class="btn btn-red" onclick="deleteCoupon(\''+r.id+'\')">Delete</button>'+
-        '</div>'+
-      '</div>';
-    }).join('');
-  } catch(e) { listEl.innerHTML='<div style="color:#e74c3c;font-size:12px;padding:12px">Error loading signups.</div>'; }
-}
-
-async function saveCouponSettings() {
-  var active  = document.getElementById('cpActive').value === 'true';
-  var banner  = document.getElementById('cpBanner').value === 'true';
-  var pct     = parseInt(document.getElementById('cpPct').value) || 10;
-  var text    = document.getElementById('cpBannerText').value.trim() || 'Subscribe & get '+pct+'% off your booking';
-  try {
-    // Use UPSERT so it works even if row doesn't exist
-    var r = await fetch(SB_URL+'/rest/v1/coupon_settings', {
-      method:'POST',
-      headers: Object.assign({}, sbHeaders(), {'Prefer': 'resolution=merge-duplicates,return=minimal'}),
-      body: JSON.stringify({id:1, active:active, show_banner:banner, discount_pct:pct, banner_text:text, updated_at:new Date().toISOString()})
-    });
-    if(r.ok || r.status===204 || r.status===200) {
-      showToast('Coupon settings saved ✓');
-    } else {
-      var errBody = await r.text();
-      console.error('[Coupon] save error:', r.status, errBody);
-      showToast('Error saving — check console (status '+r.status+')');
-    }
-  } catch(e) { showToast('Error: '+e.message); }
-}
-
-async function deleteCoupon(id) {
-  if(!confirm('Delete this signup and code? This cannot be undone.')) return;
-  try {
-    await fetch(SB_URL+'/rest/v1/coupon_signups?id=eq.'+id, {method:'DELETE', headers:sbHeaders()});
-    showToast('Deleted ✓');
-    loadCouponSignups();
-  } catch(e) { showToast('Error deleting'); }
-}
-
-
-// ══════════════════════════════════════════════════════════════
-// ICAL SYNC
-// ══════════════════════════════════════════════════════════════
-async function syncIcal() {
-  var btn = document.getElementById('syncIcalBtn');
-  var resultEl = document.getElementById('icalSyncResult');
-  btn.textContent = '↻ Syncing…';
-  btn.disabled = true;
-  resultEl.style.display = 'none';
-
-  // Read saved iCal URLs from settings in Supabase
-  try {
-    var r = await fetch(SB_URL + '/rest/v1/settings?key=eq.ical&select=value&apikey=' + SB_KEY, {headers: sbHeaders()});
-    var rows = await r.json();
-    var ical = rows && rows[0] && rows[0].value ? rows[0].value : null;
-
-    if (!ical || (!ical.pietra?.airbnb && !ical.cielo?.airbnb && !ical.pietra?.bookingCom && !ical.cielo?.bookingCom)) {
-      showResult('No iCal URLs saved. Add them above and click Save iCal Links first.', 'warn');
-      return;
-    }
-
-    // Build feeds list: { url, suite, source }
-    var feeds = [];
-    if (ical.pietra?.airbnb)    feeds.push({ url: ical.pietra.airbnb,    suite: 'pietra', source: 'airbnb' });
-    if (ical.cielo?.airbnb)     feeds.push({ url: ical.cielo.airbnb,     suite: 'cielo',  source: 'airbnb' });
-    if (ical.pietra?.bookingCom) feeds.push({ url: ical.pietra.bookingCom, suite: 'pietra', source: 'booking' });
-    if (ical.cielo?.bookingCom)  feeds.push({ url: ical.cielo.bookingCom,  suite: 'cielo',  source: 'booking' });
-
-    // Call edge function with all feeds
-    var resp = await fetch(SB_URL + '/functions/v1/sync-ical', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY,
-        'apikey': SB_KEY
-      },
-      body: JSON.stringify({ feeds: feeds })
-    });
-
-    var result = await resp.json();
-
-    if (!resp.ok) {
-      showResult('Edge function error (' + resp.status + '): ' + JSON.stringify(result), 'error');
-      return;
-    }
-
-    // Display per-feed results
-    var lines = [];
-    if (result.results) {
-      result.results.forEach(function(r) {
-        var icon = r.error ? '✕' : '✓';
-        var msg  = r.error ? r.error : (r.inserted + ' new · ' + r.skipped + ' already existed');
-        lines.push(icon + ' ' + r.suite + ' (' + r.source + '): ' + msg);
-      });
-    }
-    if (result.total_inserted !== undefined) {
-      lines.push('');
-      lines.push('Total new bookings added: ' + result.total_inserted);
-    }
-    showResult(lines.join('<br>'), result.total_inserted > 0 ? 'ok' : 'info');
-
-    // Reload bookings so calendar reflects changes
-    await loadAll(function() { renderDashboard(); renderCalendar(); renderAllBookings(); });
-
-  } catch(e) {
-    showResult('Error: ' + e.message, 'error');
-  }
-
-  btn.textContent = '↻ Sync Now';
-  btn.disabled = false;
-
-  function showResult(msg, type) {
-    var colors = { ok: '#27ae60', error: '#e74c3c', warn: '#C8963E', info: 'var(--muted)' };
-    resultEl.style.borderColor = 'rgba(200,185,154,0.15)';
-    resultEl.style.color = colors[type] || 'var(--muted)';
-    resultEl.innerHTML = msg;
-    resultEl.style.display = 'block';
-  }
-}
-
-// End of admin script</script>
+var todayStr=dStr(new Date());
+document.getElementById('newCheckin').min=todayStr;
+document.getElementById('blockFrom').min=todayStr;
+document.getElementById('newCheckin').addEventListener('change',function(){document.getElementById('newCheckout').min=addDays(this.value,4);updateBookingCalc();});
+document.getElementById('newCheckout').addEventListener('change',updateBookingCalc);
+document.getElementById('newSuite').addEventListener('change',updateBookingCalc);
+document.getElementById('newTotalPrice').addEventListener('input',function(){this.dataset.userEdited='1';});
+document.getElementById('blockFrom').addEventListener('change',function(){document.getElementById('blockTo').min=addDays(this.value,1);});
+</script>
 </body>
 </html>
