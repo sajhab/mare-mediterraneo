@@ -313,6 +313,31 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-06-09-it-7-motivi-per-cui-la-primavera-in-puglia-è-il-momento-ideale-per-una-vacanza.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-06-09-de-warum-puglia-im-frühling-ein-geheimtipp-ist-7-gründe-salento-im-april-und-mai-zu.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-06-09-fr-découvrez-puglia-au-printemps-7-raisons-de-visiter-en-avril-et-mai.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-06-09-en-7-underrated-reasons-to-visit-puglia-in-spring.html</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
