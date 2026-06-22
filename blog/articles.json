@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-06-22-en-a-coastal-journey-discovering-puglias-adriatic-charm-from-brindisi-to-otranto",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "A Coastal Journey: Discovering Puglia's Adriatic Charm from Brindisi to Otranto",
+    "excerpt": "Join me as we explore Puglia's stunning Adriatic coast from Brindisi to Otranto. With hidden beaches, charming towns, and Mare Mediterraneo as your base, Salent",
+    "date": "June 22, 2026",
+    "date_iso": "2026-06-22",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1634625828197-d738147871dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxUaGUlMjBBZHJpYXRpYyUyMGNvYXN0JTIwb2YlMjBQdWdsaWElMjBJdGFseXxlbnwxfDB8fHwxNzgyMTMyODYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-06-22-fr-découverte-de-la-côte-adriatique-de-la-pouilles-de-brindisi-à-otranto",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "Découverte de la côte adriatique de la Pouilles : De Brindisi à Otranto",
+    "excerpt": "Partez à la découverte de la magnifique côte adriatique de la Pouilles, de Brindisi à Otranto. Entre plages envoûtantes et richesses culturelles, laissez-vous s",
+    "date": "June 22, 2026",
+    "date_iso": "2026-06-22",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1634625828197-d738147871dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxUaGUlMjBBZHJpYXRpYyUyMGNvYXN0JTIwb2YlMjBQdWdsaWElMjBJdGFseXxlbnwxfDB8fHwxNzgyMTMyODYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-06-22-de-die-adriaküste-apuliens-von-brindisi-bis-otranto",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Die Adriaküste Apuliens: Von Brindisi bis Otranto",
+    "excerpt": "Entdecken Sie die magische Landschaft der Adriaküste Apuliens von Brindisi bis Otranto. Ein Reiseführer voller Tipps und Empfehlungen für Ihren Urlaub im Salent",
+    "date": "June 22, 2026",
+    "date_iso": "2026-06-22",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1634625828197-d738147871dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxUaGUlMjBBZHJpYXRpYyUyMGNvYXN0JTIwb2YlMjBQdWdsaWElMjBJdGFseXxlbnwxfDB8fHwxNzgyMTMyODYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-06-22-it-scopri-la-costa-adriatica-di-puglia-da-brindisi-a-otranto",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "Scopri la Costa Adriatica di Puglia: Da Brindisi a Otranto",
+    "excerpt": "Un viaggio incantevole lungo la costa adriatica di Puglia, da Brindisi a Otranto, con consigli da un esperto locale su dove alloggiare e cosa vedere.",
+    "date": "June 22, 2026",
+    "date_iso": "2026-06-22",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1634625828197-d738147871dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxUaGUlMjBBZHJpYXRpYyUyMGNvYXN0JTIwb2YlMjBQdWdsaWElMjBJdGFseXxlbnwxfDB8fHwxNzgyMTMyODYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
     "slug": "2026-06-20-en-10-ways-to-enjoy-puglia-on-a-budget",
     "lang": "EN",
     "lang_label": "English",
