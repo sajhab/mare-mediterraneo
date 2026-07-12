@@ -645,7 +645,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
             <input type="date" class="form-input" id="grCheckout">
           </div>
           <div class="form-group full">
-            <label class="form-label">Guest Email (for confirmation)</label>
+            <label class="form-label">Guest Email (optional)</label>
             <input type="email" class="form-input" id="grEmail" placeholder="guest@example.com">
           </div>
         </div>
@@ -2261,10 +2261,10 @@ async function generateRegistrationLink() {
   const checkout = document.getElementById('grCheckout').value;
   const email = document.getElementById('grEmail').value.trim();
 
-  if (!guestName || !suite || !checkin || !checkout || !email) {
-    showToast('Please fill in all fields');
-    return;
-  }
+  if (!guestName || !suite || !checkin || !checkout) {
+      showToast('Please fill in all fields');
+      return;
+    }
 
   // Generate unique token
   const token = 'reg_' + Math.random().toString(36).substr(2, 16) + '_' + Date.now();
