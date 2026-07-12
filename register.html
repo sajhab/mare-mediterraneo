@@ -31,7 +31,7 @@
     
     .container {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       background: var(--notte2);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -40,7 +40,14 @@
     
     .header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header-left {
+      flex: 1;
     }
     
     .logo {
@@ -58,6 +65,31 @@
       color: var(--muted);
     }
     
+    .lang-toggle {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Tenor Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    
+    .lang-btn.active {
+      background: var(--gold);
+      color: var(--notte);
+      border-color: var(--gold);
+    }
+    
     .info-box {
       background: rgba(200, 150, 62, 0.08);
       border: 1px solid var(--border);
@@ -69,10 +101,39 @@
       color: var(--muted);
     }
     
+    .suite-info {
+      background: rgba(200, 185, 154, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 11px;
+    }
+    
+    .suite-info-label {
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    
+    .suite-info-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      color: var(--sabbia);
+    }
+    
     .form-group {
       margin-bottom: 16px;
       display: flex;
       flex-direction: column;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
     
     .form-label {
@@ -83,7 +144,7 @@
       margin-bottom: 6px;
     }
     
-    .form-input {
+    .form-input, .form-select {
       background: rgba(200, 185, 154, 0.06);
       border: 1px solid var(--border);
       border-radius: 3px;
@@ -94,7 +155,7 @@
       outline: none;
     }
     
-    .form-input:focus {
+    .form-input:focus, .form-select:focus {
       border-color: var(--gold);
       background: rgba(200, 185, 154, 0.1);
     }
@@ -127,6 +188,62 @@
       background: var(--muted);
       cursor: not-allowed;
       opacity: 0.6;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--pietra);
+      border: 1px solid var(--border);
+      margin-top: 8px;
+      width: auto;
+      padding: 8px 16px;
+    }
+    
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    
+    .guest-card {
+      background: rgba(200, 185, 154, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    .guest-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .guest-card-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    
+    .remove-guest-btn {
+      background: rgba(192, 57, 43, 0.15);
+      color: #e74c3c;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Tenor Sans', sans-serif;
+    }
+    
+    .remove-guest-btn:hover {
+      background: rgba(192, 57, 43, 0.25);
     }
     
     .error {
@@ -166,76 +283,56 @@
       to { transform: rotate(360deg); }
     }
     
-    .suite-info {
-      background: rgba(200, 185, 154, 0.06);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 20px;
-      font-size: 11px;
+    .add-guest-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
     }
     
-    .suite-info-label {
+    .guest-count {
+      font-size: 10px;
       color: var(--muted);
-      font-size: 8px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    
-    .suite-info-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 16px;
-      color: var(--sabbia);
+      margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">Mare Mediterraneo</div>
-      <div class="subtitle">Guest Registration</div>
+      <div class="header-left">
+        <div class="logo">Mare Mediterraneo</div>
+        <div class="subtitle" id="subtitle">Guest Registration</div>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLanguage('en')" id="langEN">EN</button>
+        <button class="lang-btn" onclick="setLanguage('it')" id="langIT">IT</button>
+      </div>
     </div>
 
     <div class="error" id="errorBox"></div>
-    <div class="success" id="successBox">
-      ✓ Your information has been received. We'll verify your documents at check-in. Thank you!
-    </div>
+    <div class="success" id="successBox"></div>
 
     <div id="formContent">
-      <div class="info-box">
-        This information is required by Italian law for police registration. We'll verify your original passport/ID at check-in.
+      <div class="info-box" id="infoBox">
+        This information is required by Italian law for police registration. We'll verify your original documents at check-in.
       </div>
 
       <div id="suiteInfo" class="suite-info" style="display:none">
-        <div class="suite-info-label">Checking into</div>
+        <div class="suite-info-label" id="checkingIntoLabel">Checking into</div>
         <div class="suite-info-value" id="suiteName"></div>
-        <div class="suite-info-label" style="margin-top:8px">Dates</div>
+        <div class="suite-info-label" style="margin-top:8px" id="datesLabel">Dates</div>
         <div style="font-size:11px;color:var(--text)"><span id="checkinDate"></span> → <span id="checkoutDate"></span></div>
       </div>
 
       <form id="registrationForm" onsubmit="submitForm(event)">
-        <div class="form-group">
-          <label class="form-label">Full Name *</label>
-          <input type="text" class="form-input" id="fullName" required placeholder="As shown on passport/ID">
+        <div id="guestsContainer"></div>
+
+        <div class="add-guest-section">
+          <div class="guest-count" id="guestCountText">Guest 1 of 4</div>
+          <button type="button" class="btn btn-secondary" id="addGuestBtn" onclick="addGuestField()">+ Add Another Guest</button>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Date of Birth *</label>
-          <input type="date" class="form-input" id="dateOfBirth" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Nationality *</label>
-          <input type="text" class="form-input" id="nationality" required placeholder="e.g., Italian, German, French">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Passport or ID Number *</label>
-          <input type="text" class="form-input" id="passportId" required placeholder="e.g., AB12345678">
-        </div>
-
-        <button type="submit" class="btn" id="submitBtn">Submit Registration</button>
+        <button type="submit" class="btn" id="submitBtn" style="margin-top:20px">Submit Registration</button>
       </form>
     </div>
   </div>
@@ -245,6 +342,96 @@
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
 
     let currentRegistration = null;
+    let currentLanguage = 'en';
+    let guests = [];
+
+    const translations = {
+      en: {
+        subtitle: 'Guest Registration',
+        infoBox: 'This information is required by Italian law for police registration. We\'ll verify your original documents at check-in.',
+        checkingInto: 'Checking into',
+        dates: 'Dates',
+        guestTitle: 'Guest',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        dateOfBirth: 'Date of Birth',
+        placeOfBirth: 'Place of Birth',
+        gender: 'Gender',
+        male: 'Male',
+        female: 'Female',
+        other: 'Other',
+        nationality: 'Nationality',
+        documentType: 'Document Type',
+        passport: 'Passport',
+        idCard: 'ID Card',
+        driverLicense: 'Driver License',
+        documentNumber: 'Document Number',
+        issuingAuthority: 'Issuing Authority',
+        placeOfIssue: 'Place of Issue',
+        addGuest: '+ Add Another Guest',
+        submit: 'Submit Registration',
+        success: '✓ Your information has been received. We\'ll verify your documents at check-in. Thank you!',
+        guestCount: 'Guest {n} of 4',
+        remove: 'Remove',
+        required: 'Required field',
+        maxGuests: 'Maximum 4 guests allowed'
+      },
+      it: {
+        subtitle: 'Registrazione Ospiti',
+        infoBox: 'Queste informazioni sono richieste dalla legge italiana per la registrazione di polizia. Verificheremo i tuoi documenti originali al check-in.',
+        checkingInto: 'Ospiti in',
+        dates: 'Date',
+        guestTitle: 'Ospite',
+        firstName: 'Nome',
+        lastName: 'Cognome',
+        dateOfBirth: 'Data di Nascita',
+        placeOfBirth: 'Luogo di Nascita',
+        gender: 'Genere',
+        male: 'Maschio',
+        female: 'Femmina',
+        other: 'Altro',
+        nationality: 'Nazionalità',
+        documentType: 'Tipo di Documento',
+        passport: 'Passaporto',
+        idCard: 'Carta d\'Identità',
+        driverLicense: 'Patente di Guida',
+        documentNumber: 'Numero Documento',
+        issuingAuthority: 'Autorità Rilasciante',
+        placeOfIssue: 'Luogo di Rilascio',
+        addGuest: '+ Aggiungi Altro Ospite',
+        submit: 'Invia Registrazione',
+        success: '✓ Le tue informazioni sono state ricevute. Verificheremo i tuoi documenti al check-in. Grazie!',
+        guestCount: 'Ospite {n} di 4',
+        remove: 'Rimuovi',
+        required: 'Campo obbligatorio',
+        maxGuests: 'Massimo 4 ospiti consentiti'
+      }
+    };
+
+    function t(key, params = {}) {
+      let text = translations[currentLanguage][key] || translations['en'][key];
+      for (let [k, v] of Object.entries(params)) {
+        text = text.replace('{' + k + '}', v);
+      }
+      return text;
+    }
+
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      document.getElementById('langEN').classList.toggle('active', lang === 'en');
+      document.getElementById('langIT').classList.toggle('active', lang === 'it');
+      updateTranslations();
+    }
+
+    function updateTranslations() {
+      document.getElementById('subtitle').textContent = t('subtitle');
+      document.getElementById('infoBox').textContent = t('infoBox');
+      document.getElementById('checkingIntoLabel').textContent = t('checkingInto');
+      document.getElementById('datesLabel').textContent = t('dates');
+      document.getElementById('addGuestBtn').textContent = t('addGuest');
+      document.getElementById('submitBtn').textContent = t('submit');
+      renderGuestFields();
+    }
 
     function getQueryParam(name) {
       const params = new URLSearchParams(window.location.search);
@@ -282,11 +469,126 @@
         document.getElementById('checkoutDate').textContent = currentRegistration.checkout;
         document.getElementById('suiteInfo').style.display = 'block';
 
+        // Initialize with one guest field
+        addGuestField();
+
       } catch (e) {
         console.error('Load error:', e);
         showError('Error loading registration: ' + e.message);
         document.getElementById('registrationForm').style.display = 'none';
       }
+    }
+
+    function addGuestField() {
+      if (guests.length >= 4) {
+        showError(t('maxGuests'));
+        return;
+      }
+      guests.push({
+        firstName: '',
+        lastName: '',
+        dateOfBirth: '',
+        placeOfBirth: '',
+        gender: '',
+        nationality: '',
+        documentType: '',
+        documentNumber: '',
+        issuingAuthority: '',
+        placeOfIssue: ''
+      });
+      renderGuestFields();
+    }
+
+    function removeGuest(index) {
+      guests.splice(index, 1);
+      renderGuestFields();
+    }
+
+    function renderGuestFields() {
+      const container = document.getElementById('guestsContainer');
+      container.innerHTML = '';
+
+      guests.forEach((guest, index) => {
+        const card = document.createElement('div');
+        card.className = 'guest-card';
+        
+        card.innerHTML = `
+          <div class="guest-card-header">
+            <div class="guest-card-title">${t('guestTitle')} ${index + 1}</div>
+            ${guests.length > 1 ? `<button type="button" class="remove-guest-btn" onclick="removeGuest(${index})">${t('remove')}</button>` : ''}
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">${t('firstName')} *</label>
+              <input type="text" class="form-input" placeholder="John" value="${guest.firstName}" onchange="guests[${index}].firstName = this.value" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('lastName')} *</label>
+              <input type="text" class="form-input" placeholder="Doe" value="${guest.lastName}" onchange="guests[${index}].lastName = this.value" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">${t('dateOfBirth')} *</label>
+              <input type="date" class="form-input" value="${guest.dateOfBirth}" onchange="guests[${index}].dateOfBirth = this.value" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('placeOfBirth')} *</label>
+              <input type="text" class="form-input" placeholder="London, UK" value="${guest.placeOfBirth}" onchange="guests[${index}].placeOfBirth = this.value" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">${t('gender')} *</label>
+              <select class="form-select" onchange="guests[${index}].gender = this.value" required>
+                <option value="">Select...</option>
+                <option value="M" ${guest.gender === 'M' ? 'selected' : ''}>${t('male')}</option>
+                <option value="F" ${guest.gender === 'F' ? 'selected' : ''}>${t('female')}</option>
+                <option value="O" ${guest.gender === 'O' ? 'selected' : ''}>${t('other')}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('nationality')} *</label>
+              <input type="text" class="form-input" placeholder="Italian" value="${guest.nationality}" onchange="guests[${index}].nationality = this.value" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">${t('documentType')} *</label>
+              <select class="form-select" onchange="guests[${index}].documentType = this.value" required>
+                <option value="">Select...</option>
+                <option value="passport" ${guest.documentType === 'passport' ? 'selected' : ''}>${t('passport')}</option>
+                <option value="idCard" ${guest.documentType === 'idCard' ? 'selected' : ''}>${t('idCard')}</option>
+                <option value="driverLicense" ${guest.documentType === 'driverLicense' ? 'selected' : ''}>${t('driverLicense')}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('documentNumber')} *</label>
+              <input type="text" class="form-input" placeholder="AB123456" value="${guest.documentNumber}" onchange="guests[${index}].documentNumber = this.value" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">${t('issuingAuthority')} *</label>
+              <input type="text" class="form-input" placeholder="UK Home Office" value="${guest.issuingAuthority}" onchange="guests[${index}].issuingAuthority = this.value" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">${t('placeOfIssue')} *</label>
+              <input type="text" class="form-input" placeholder="London" value="${guest.placeOfIssue}" onchange="guests[${index}].placeOfIssue = this.value" required>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      document.getElementById('guestCountText').textContent = t('guestCount', { n: guests.length });
+      document.getElementById('addGuestBtn').disabled = guests.length >= 4;
     }
 
     async function submitForm(event) {
@@ -297,14 +599,19 @@
         return;
       }
 
-      const fullName = document.getElementById('fullName').value.trim();
-      const dob = document.getElementById('dateOfBirth').value;
-      const nationality = document.getElementById('nationality').value.trim();
-      const passportId = document.getElementById('passportId').value.trim();
-
-      if (!fullName || !dob || !nationality || !passportId) {
-        showError('Please fill in all fields');
+      if (guests.length === 0) {
+        showError('Please add at least one guest.');
         return;
+      }
+
+      // Validate all guests
+      for (let guest of guests) {
+        if (!guest.firstName || !guest.lastName || !guest.dateOfBirth || !guest.placeOfBirth ||
+            !guest.gender || !guest.nationality || !guest.documentType || !guest.documentNumber ||
+            !guest.issuingAuthority || !guest.placeOfIssue) {
+          showError('Please fill in all required fields for all guests.');
+          return;
+        }
       }
 
       const submitBtn = document.getElementById('submitBtn');
@@ -320,10 +627,7 @@
             'Authorization': 'Bearer ' + SB_KEY
           },
           body: JSON.stringify({
-            guest_name: fullName,
-            guest_dob: dob,
-            nationality: nationality,
-            passport_id: passportId,
+            guests: guests,
             submitted_at: new Date().toISOString()
           })
         });
@@ -333,60 +637,47 @@
           console.error('Submit error:', r.status, errText);
           showError('Error submitting registration (status ' + r.status + ')');
           submitBtn.disabled = false;
-          submitBtn.innerHTML = 'Submit Registration';
+          submitBtn.innerHTML = t('submit');
           return;
         }
 
         // Success!
         document.getElementById('registrationForm').style.display = 'none';
         document.getElementById('errorBox').style.display = 'none';
+        document.getElementById('successBox').textContent = t('success');
         document.getElementById('successBox').style.display = 'block';
 
         // Send notification email
-        sendNotificationEmail(fullName, dob, nationality, passportId);
+        sendNotificationEmail();
 
       } catch (e) {
         console.error('Error:', e);
         showError('Error: ' + e.message);
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit Registration';
+        submitBtn.innerHTML = t('submit');
       }
     }
 
-async function sendNotificationEmail(fullName, dob, nationality, passportId) {
-  console.log('Email function called with:', fullName, dob, nationality, passportId);
-  
-  try {
-    const payload = {
-      suite: currentRegistration.suite,
-      guest_name: fullName,
-      guest_dob: dob,
-      nationality: nationality,
-      passport_id: passportId,
-      checkin: currentRegistration.checkin,
-      checkout: currentRegistration.checkout,
-      owner_email: 'online.mmarts@gmail.com'
-    };
-    
-    console.log('Sending payload:', payload);
-    
-    const response = await fetch(SB_URL + '/functions/v1/send-guest-registration-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY
-      },
-      body: JSON.stringify(payload)
-    });
-    
-    console.log('Response status:', response.status);
-    const text = await response.text();
-    console.log('Response body:', text);
-    
-  } catch (e) {
-    console.error('Email send failed:', e);
-  }
-}
+    async function sendNotificationEmail() {
+      try {
+        await fetch(SB_URL + '/functions/v1/send-guest-registration-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + SB_KEY
+          },
+          body: JSON.stringify({
+            suite: currentRegistration.suite,
+            guests: guests,
+            checkin: currentRegistration.checkin,
+            checkout: currentRegistration.checkout,
+            owner_email: 'online.mmarts@gmail.com'
+          })
+        });
+      } catch (e) {
+        console.error('Email send error:', e);
+      }
+    }
 
     function showError(msg) {
       const errorBox = document.getElementById('errorBox');
