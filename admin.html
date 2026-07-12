@@ -239,7 +239,7 @@ body{background:var(--notte);color:var(--text);font-family:'Tenor Sans',sans-ser
     <button class="tab-btn" data-tab="analytics">Analytics</button>
     <button class="tab-btn" data-tab="finances">Finances</button>
     <button class="tab-btn" data-tab="settings">Settings</button>
-    <button class="tab-btn" data-tab="panel-guest-registration">🛎 Guest Registration</button>
+    <button class="tab-btn" data-tab="guest-registration">🛎 Guest Registration</button>
   </div>
 
   <div class="content">
@@ -1831,6 +1831,7 @@ for (var ti = 0; ti < tabBtns.length; ti++) {
     if (tab === 'coupons') { loadCouponSettings(); loadCouponSignups(); }
     if (tab === 'analytics') loadAnalytics();
     if (tab === 'finances')  loadFinances();
+    if (tab === 'guest-registration') { initGuestRegistration(); }
   });
 }
 
