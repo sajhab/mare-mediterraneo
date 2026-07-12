@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guest Registration - Mare Mediterraneo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #C8963E;
+      --pietra: #C8B99A;
+      --notte: #0A0A12;
+      --notte2: #0F0F1A;
+      --sabbia: #F5EFE6;
+      --text: #E8DDD0;
+      --muted: rgba(232, 221, 208, 0.5);
+      --border: rgba(200, 185, 154, 0.15);
+    }
+    
+    body {
+      background: var(--notte);
+      color: var(--text);
+      font-family: 'Tenor Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: var(--notte2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 24px;
+      color: var(--pietra);
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    
+    .info-box {
+      background: rgba(200, 150, 62, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-label {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    
+    .form-input {
+      background: rgba(200, 185, 154, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 12px;
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+    }
+    
+    .form-input:focus {
+      border-color: var(--gold);
+      background: rgba(200, 185, 154, 0.1);
+    }
+    
+    .form-input::placeholder {
+      color: rgba(200, 185, 154, 0.3);
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--gold);
+      color: var(--notte);
+      border: none;
+      border-radius: 3px;
+      font-family: 'Tenor Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      background: #b8853a;
+    }
+    
+    .btn:disabled {
+      background: var(--muted);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    
+    .error {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      color: #e74c3c;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    
+    .success {
+      background: rgba(39, 174, 96, 0.15);
+      border: 1px solid rgba(39, 174, 96, 0.3);
+      color: #27ae60;
+      padding: 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+      display: none;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(232, 221, 208, 0.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .suite-info {
+      background: rgba(200, 185, 154, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 11px;
+    }
+    
+    .suite-info-label {
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    
+    .suite-info-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      color: var(--sabbia);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">Mare Mediterraneo</div>
+      <div class="subtitle">Guest Registration</div>
+    </div>
+
+    <div class="error" id="errorBox"></div>
+    <div class="success" id="successBox">
+      ✓ Your information has been received. We'll verify your documents at check-in. Thank you!
+    </div>
+
+    <div id="formContent">
+      <div class="info-box">
+        This information is required by Italian law for police registration. We'll verify your original passport/ID at check-in.
+      </div>
+
+      <div id="suiteInfo" class="suite-info" style="display:none">
+        <div class="suite-info-label">Checking into</div>
+        <div class="suite-info-value" id="suiteName"></div>
+        <div class="suite-info-label" style="margin-top:8px">Dates</div>
+        <div style="font-size:11px;color:var(--text)"><span id="checkinDate"></span> → <span id="checkoutDate"></span></div>
+      </div>
+
+      <form id="registrationForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="fullName" required placeholder="As shown on passport/ID">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Date of Birth *</label>
+          <input type="date" class="form-input" id="dateOfBirth" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nationality *</label>
+          <input type="text" class="form-input" id="nationality" required placeholder="e.g., Italian, German, French">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Passport or ID Number *</label>
+          <input type="text" class="form-input" id="passportId" required placeholder="e.g., AB12345678">
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">Submit Registration</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const SB_URL = 'https://wbosfegdgizkygxjxjiz.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indib3NmZWdkZ2l6a3lneGp4aml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0OTQ5NjksImV4cCI6MjA5NDA3MDk2OX0.aQxHyA8NJmY0LAbRNo6EibF5zN5shQey-JNyI0t-GCg';
+
+    let currentRegistration = null;
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    async function loadRegistration() {
+      const token = getQueryParam('token');
+      if (!token) {
+        showError('Invalid or missing registration link');
+        document.getElementById('registrationForm').style.display = 'none';
+        return;
+      }
+
+      try {
+        const r = await fetch(SB_URL + '/rest/v1/guest_registrations?registration_token=eq.' + encodeURIComponent(token) + '&apikey=' + SB_KEY);
+        if (!r.ok) {
+          showError('Unable to load registration');
+          document.getElementById('registrationForm').style.display = 'none';
+          return;
+        }
+
+        const regs = await r.json();
+        if (!regs || regs.length === 0) {
+          showError('Registration not found. Please check your link.');
+          document.getElementById('registrationForm').style.display = 'none';
+          return;
+        }
+
+        currentRegistration = regs[0];
+
+        // Show suite info
+        document.getElementById('suiteName').textContent = currentRegistration.suite;
+        document.getElementById('checkinDate').textContent = currentRegistration.checkin;
+        document.getElementById('checkoutDate').textContent = currentRegistration.checkout;
+        document.getElementById('suiteInfo').style.display = 'block';
+
+      } catch (e) {
+        console.error('Load error:', e);
+        showError('Error loading registration: ' + e.message);
+        document.getElementById('registrationForm').style.display = 'none';
+      }
+    }
+
+    async function submitForm(event) {
+      event.preventDefault();
+
+      if (!currentRegistration) {
+        showError('Registration data lost. Please reload the page.');
+        return;
+      }
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const dob = document.getElementById('dateOfBirth').value;
+      const nationality = document.getElementById('nationality').value.trim();
+      const passportId = document.getElementById('passportId').value.trim();
+
+      if (!fullName || !dob || !nationality || !passportId) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading"></span>Submitting...';
+
+      try {
+        const r = await fetch(SB_URL + '/rest/v1/guest_registrations?registration_token=eq.' + encodeURIComponent(currentRegistration.registration_token), {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY
+          },
+          body: JSON.stringify({
+            guest_name: fullName,
+            guest_dob: dob,
+            nationality: nationality,
+            passport_id: passportId,
+            submitted_at: new Date().toISOString()
+          })
+        });
+
+        if (!r.ok) {
+          const errText = await r.text();
+          console.error('Submit error:', r.status, errText);
+          showError('Error submitting registration (status ' + r.status + ')');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Submit Registration';
+          return;
+        }
+
+        // Success!
+        document.getElementById('registrationForm').style.display = 'none';
+        document.getElementById('errorBox').style.display = 'none';
+        document.getElementById('successBox').style.display = 'block';
+
+        // Send notification email
+        sendNotificationEmail(fullName, dob, nationality, passportId);
+
+      } catch (e) {
+        console.error('Error:', e);
+        showError('Error: ' + e.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Registration';
+      }
+    }
+
+    async function sendNotificationEmail(fullName, dob, nationality, passportId) {
+      try {
+        await fetch(SB_URL + '/functions/v1/send-guest-registration-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + SB_KEY,
+            'apikey': SB_KEY
+          },
+          body: JSON.stringify({
+            suite: currentRegistration.suite,
+            guest_name: fullName,
+            guest_dob: dob,
+            nationality: nationality,
+            passport_id: passportId,
+            checkin: currentRegistration.checkin,
+            checkout: currentRegistration.checkout,
+            owner_email: 'online.mmarts@gmail.com'
+          })
+        });
+      } catch (e) {
+        console.error('Email send failed (non-critical):', e);
+      }
+    }
+
+    function showError(msg) {
+      const errorBox = document.getElementById('errorBox');
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+    }
+
+    // Initialize on page load
+    loadRegistration();
+  </script>
+</body>
+</html>
