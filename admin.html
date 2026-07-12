@@ -2262,15 +2262,15 @@ async function generateRegistrationLink() {
   const email = document.getElementById('grEmail').value.trim();
 
   if (!guestName || !suite || !checkin || !checkout) {
-      showToast('Please fill in all fields');
-      return;
-    }
+    showToast('Please fill in all fields');
+    return;
+  }
 
   // Generate unique token
   const token = 'reg_' + Math.random().toString(36).substr(2, 16) + '_' + Date.now();
 
   try {
-    // Insert into guest_registrations table
+    // Insert into guest_registrations table with expiration date
     const r = await fetch(SB_URL + '/rest/v1/guest_registrations', {
       method: 'POST',
       headers: Object.assign({}, sbHeaders(), { 'Prefer': 'return=minimal' }),
@@ -2281,6 +2281,7 @@ async function generateRegistrationLink() {
         checkin: checkin,
         checkout: checkout,
         owner_email: 'online.mmarts@gmail.com',
+        expires_at: checkin,
         guest_dob: null,
         nationality: null,
         passport_id: null
@@ -2306,7 +2307,7 @@ async function generateRegistrationLink() {
     document.getElementById('grCheckout').value = '';
     document.getElementById('grEmail').value = '';
 
-    showToast('Registration link generated ✓');
+    showToast('Registration link generated ✓ (expires on check-in date)');
     loadGuestRegistrations();
   } catch (e) {
     showToast('Error: ' + e.message);
