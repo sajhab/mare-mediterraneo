@@ -2390,8 +2390,18 @@ async function viewRegistrationDetails(regId) {
 
     // Show in modal
     const modal = document.getElementById('myModal');
+    if (!modal) {
+      showToast('Modal element not found');
+      return;
+    }
+    
     const modalTitle = document.querySelector('.modal-title');
-    const modalContent = modal.querySelector('.modal');
+    const modalContent = document.getElementById('modalContent');
+
+    if (!modalContent) {
+      showToast('Modal content not found');
+      return;
+    }
 
     modalTitle.textContent = 'Guest Registration Details';
 
@@ -2425,7 +2435,6 @@ async function viewRegistrationDetails(regId) {
     `;
 
     modalContent.innerHTML = `
-      <div class="modal-title">Guest Registration Details</div>
       <div>${detailsHtml}</div>
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="closeModal()">Close</button>
@@ -2439,11 +2448,26 @@ async function viewRegistrationDetails(regId) {
   }
 }
 
-// Call this when the tab loads
+function closeModal() {
+  var modal = document.getElementById('myModal');
+  if (modal) {
+    modal.classList.remove('open');
+  }
+}
+
 function initGuestRegistration() {
   loadGuestRegistrations();
 }
 
 // End of admin script</script>
+
+<!-- MODAL -->
+<div id="myModal" class="modal-bg">
+  <div class="modal">
+    <div class="modal-title"></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
 </body>
 </html>
