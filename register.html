@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Guest Registration - Mare Mediterraneo</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     :root {
       --gold: #C8963E;
       --pietra: #C8B99A;
@@ -18,48 +19,89 @@
       --border: rgba(200, 185, 154, 0.15);
     }
     
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+    
     body {
       background: var(--notte);
       color: var(--text);
       font-family: 'Tenor Sans', sans-serif;
-      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
     }
     
     .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       width: 100%;
-      max-width: 600px;
+      padding: 16px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    @media (min-width: 600px) {
+      .container {
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+    }
+    
+    .form-wrapper {
+      width: 100%;
       background: var(--notte2);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 40px;
+      padding: 20px;
+    }
+    
+    @media (min-width: 600px) {
+      .form-wrapper {
+        max-width: 600px;
+        padding: 40px;
+      }
     }
     
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 12px;
     }
     
     .header-left {
       flex: 1;
+      text-align: left;
+    }
+    
+    .logo-link {
+      text-decoration: none;
+      display: block;
+      margin-bottom: 8px;
     }
     
     .logo {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 24px;
+      font-size: 22px;
       color: var(--pietra);
-      margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+    
+    .logo-link:hover .logo {
+      color: var(--gold);
     }
     
     .subtitle {
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--muted);
@@ -67,21 +109,22 @@
     
     .lang-toggle {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     
     .lang-btn {
-      padding: 6px 12px;
+      padding: 6px 10px;
       border: 1px solid var(--border);
       background: transparent;
       color: var(--muted);
       border-radius: 3px;
       cursor: pointer;
-      font-size: 9px;
+      font-size: 8px;
       letter-spacing: 1px;
       text-transform: uppercase;
       font-family: 'Tenor Sans', sans-serif;
       transition: all 0.2s;
+      font-weight: 600;
     }
     
     .lang-btn.active {
@@ -90,14 +133,18 @@
       border-color: var(--gold);
     }
     
+    .lang-btn:active {
+      transform: scale(0.95);
+    }
+    
     .info-box {
       background: rgba(200, 150, 62, 0.08);
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 12px;
-      margin-bottom: 20px;
-      font-size: 11px;
-      line-height: 1.6;
+      margin-bottom: 16px;
+      font-size: 12px;
+      line-height: 1.5;
       color: var(--muted);
     }
     
@@ -106,7 +153,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       font-size: 11px;
     }
     
@@ -116,16 +163,18 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       margin-bottom: 4px;
+      font-weight: 600;
     }
     
     .suite-info-value {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 16px;
+      font-size: 18px;
       color: var(--sabbia);
+      margin-bottom: 8px;
     }
     
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: flex;
       flex-direction: column;
     }
@@ -133,7 +182,11 @@
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
+    }
+    
+    .form-row.full {
+      grid-template-columns: 1fr;
     }
     
     .form-label {
@@ -142,17 +195,21 @@
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 6px;
+      font-weight: 600;
     }
     
     .form-input, .form-select {
       background: rgba(200, 185, 154, 0.06);
       border: 1px solid var(--border);
-      border-radius: 3px;
+      border-radius: 4px;
       padding: 12px;
       font-family: 'Tenor Sans', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text);
       outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: all 0.2s;
     }
     
     .form-input:focus, .form-select:focus {
@@ -164,24 +221,33 @@
       color: rgba(200, 185, 154, 0.3);
     }
     
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23E8DDD0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+    
     .btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: var(--gold);
       color: var(--notte);
       border: none;
-      border-radius: 3px;
+      border-radius: 4px;
       font-family: 'Tenor Sans', sans-serif;
-      font-size: 10px;
+      font-size: 11px;
       letter-spacing: 2px;
       text-transform: uppercase;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
     }
     
-    .btn:hover {
-      background: #b8853a;
+    .btn:active {
+      transform: scale(0.98);
     }
     
     .btn:disabled {
@@ -194,12 +260,12 @@
       background: transparent;
       color: var(--pietra);
       border: 1px solid var(--border);
-      margin-top: 8px;
-      width: auto;
-      padding: 8px 16px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      font-size: 10px;
     }
     
-    .btn-secondary:hover {
+    .btn-secondary:active {
       border-color: var(--gold);
       color: var(--gold);
     }
@@ -208,7 +274,7 @@
       background: rgba(200, 185, 154, 0.04);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 16px;
+      padding: 14px;
       margin-bottom: 12px;
       position: relative;
     }
@@ -218,8 +284,9 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border);
+      gap: 10px;
     }
     
     .guest-card-title {
@@ -227,22 +294,25 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--gold);
+      font-weight: 600;
     }
     
     .remove-guest-btn {
       background: rgba(192, 57, 43, 0.15);
       color: #e74c3c;
       border: none;
-      padding: 4px 8px;
+      padding: 5px 10px;
       border-radius: 2px;
       cursor: pointer;
       font-size: 8px;
       letter-spacing: 1px;
       text-transform: uppercase;
       font-family: 'Tenor Sans', sans-serif;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     
-    .remove-guest-btn:hover {
+    .remove-guest-btn:active {
       background: rgba(192, 57, 43, 0.25);
     }
     
@@ -252,9 +322,10 @@
       color: #e74c3c;
       padding: 12px;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 12px;
       margin-bottom: 16px;
       display: none;
+      line-height: 1.5;
     }
     
     .success {
@@ -263,9 +334,10 @@
       color: #27ae60;
       padding: 16px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 13px;
       text-align: center;
       display: none;
+      line-height: 1.6;
     }
     
     .loading {
@@ -284,56 +356,84 @@
     }
     
     .add-guest-section {
-      margin-top: 20px;
-      padding-top: 20px;
+      margin-top: 16px;
+      padding-top: 16px;
       border-top: 1px solid var(--border);
     }
     
     .guest-count {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .footer-link {
+      font-size: 9px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      letter-spacing: 1px;
+    }
+    
+    .footer-link:active {
+      color: var(--gold);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <div class="header-left">
-        <div class="logo">Mare Mediterraneo</div>
-        <div class="subtitle" id="subtitle">Guest Registration</div>
-      </div>
-      <div class="lang-toggle">
-        <button class="lang-btn active" onclick="setLanguage('en')" id="langEN">EN</button>
-        <button class="lang-btn" onclick="setLanguage('it')" id="langIT">IT</button>
-      </div>
-    </div>
-
-    <div class="error" id="errorBox"></div>
-    <div class="success" id="successBox"></div>
-
-    <div id="formContent">
-      <div class="info-box" id="infoBox">
-        This information is required by Italian law for police registration. We'll verify your original documents at check-in.
+    <div class="form-wrapper">
+      <div class="header">
+        <div class="header-left">
+          <a href="https://www.maremediterraneo.com" class="logo-link" target="_blank" rel="noopener noreferrer">
+            <div class="logo">Mare Mediterraneo</div>
+          </a>
+          <div class="subtitle" id="subtitle">Guest Registration</div>
+        </div>
+        <div class="lang-toggle">
+          <button class="lang-btn active" onclick="setLanguage('en')" id="langEN">EN</button>
+          <button class="lang-btn" onclick="setLanguage('it')" id="langIT">IT</button>
+        </div>
       </div>
 
-      <div id="suiteInfo" class="suite-info" style="display:none">
-        <div class="suite-info-label" id="checkingIntoLabel">Checking into</div>
-        <div class="suite-info-value" id="suiteName"></div>
-        <div class="suite-info-label" style="margin-top:8px" id="datesLabel">Dates</div>
-        <div style="font-size:11px;color:var(--text)"><span id="checkinDate"></span> → <span id="checkoutDate"></span></div>
-      </div>
+      <div class="error" id="errorBox"></div>
+      <div class="success" id="successBox"></div>
 
-      <form id="registrationForm" onsubmit="submitForm(event)">
-        <div id="guestsContainer"></div>
-
-        <div class="add-guest-section">
-          <div class="guest-count" id="guestCountText">Guest 1 of 4</div>
-          <button type="button" class="btn btn-secondary" id="addGuestBtn" onclick="addGuestField()">+ Add Another Guest</button>
+      <div id="formContent">
+        <div class="info-box" id="infoBox">
+          This information is required by Italian law for police registration. We'll verify your original documents at check-in.
         </div>
 
-        <button type="submit" class="btn" id="submitBtn" style="margin-top:20px">Submit Registration</button>
-      </form>
+        <div id="suiteInfo" class="suite-info" style="display:none">
+          <div class="suite-info-label" id="checkingIntoLabel">Checking into</div>
+          <div class="suite-info-value" id="suiteName"></div>
+          <div class="suite-info-label" style="margin-top:10px" id="datesLabel">Dates</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6"><span id="checkinDate"></span> → <span id="checkoutDate"></span></div>
+        </div>
+
+        <form id="registrationForm" onsubmit="submitForm(event)">
+          <div id="guestsContainer"></div>
+
+          <div class="add-guest-section">
+            <div class="guest-count" id="guestCountText">Guest 1 of 4</div>
+            <button type="button" class="btn btn-secondary" id="addGuestBtn" onclick="addGuestField()">+ Add Another Guest</button>
+          </div>
+
+          <button type="submit" class="btn" id="submitBtn" style="margin-top:20px">Submit Registration</button>
+        </form>
+
+        <div class="footer">
+          <a href="https://www.maremediterraneo.com" class="footer-link" target="_blank" rel="noopener noreferrer">Visit our website →</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -463,13 +563,11 @@
 
         currentRegistration = regs[0];
 
-        // Show suite info
         document.getElementById('suiteName').textContent = currentRegistration.suite;
         document.getElementById('checkinDate').textContent = currentRegistration.checkin;
         document.getElementById('checkoutDate').textContent = currentRegistration.checkout;
         document.getElementById('suiteInfo').style.display = 'block';
 
-        // Initialize with one guest field
         addGuestField();
 
       } catch (e) {
@@ -604,7 +702,6 @@
         return;
       }
 
-      // Validate all guests
       for (let guest of guests) {
         if (!guest.firstName || !guest.lastName || !guest.dateOfBirth || !guest.placeOfBirth ||
             !guest.gender || !guest.nationality || !guest.documentType || !guest.documentNumber ||
@@ -641,13 +738,11 @@
           return;
         }
 
-        // Success!
         document.getElementById('registrationForm').style.display = 'none';
         document.getElementById('errorBox').style.display = 'none';
         document.getElementById('successBox').textContent = t('success');
         document.getElementById('successBox').style.display = 'block';
 
-        // Send notification email
         sendNotificationEmail();
 
       } catch (e) {
@@ -683,9 +778,9 @@
       const errorBox = document.getElementById('errorBox');
       errorBox.textContent = msg;
       errorBox.style.display = 'block';
+      window.scrollTo(0, 0);
     }
 
-    // Initialize on page load
     loadRegistration();
   </script>
 </body>
