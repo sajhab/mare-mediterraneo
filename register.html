@@ -374,8 +374,7 @@ async function sendNotificationEmail(fullName, dob, nationality, passportId) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SB_KEY,
-        'apikey': SB_KEY
+        'Authorization': 'Bearer ' + SB_KEY
       },
       body: JSON.stringify(payload)
     });
