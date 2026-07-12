@@ -354,7 +354,22 @@
     }
 
 async function sendNotificationEmail(fullName, dob, nationality, passportId) {
+  console.log('Email function called with:', fullName, dob, nationality, passportId);
+  
   try {
+    const payload = {
+      suite: currentRegistration.suite,
+      guest_name: fullName,
+      guest_dob: dob,
+      nationality: nationality,
+      passport_id: passportId,
+      checkin: currentRegistration.checkin,
+      checkout: currentRegistration.checkout,
+      owner_email: 'online.mmarts@gmail.com'
+    };
+    
+    console.log('Sending payload:', payload);
+    
     const response = await fetch(SB_URL + '/functions/v1/send-guest-registration-email', {
       method: 'POST',
       headers: {
@@ -362,20 +377,15 @@ async function sendNotificationEmail(fullName, dob, nationality, passportId) {
         'Authorization': 'Bearer ' + SB_KEY,
         'apikey': SB_KEY
       },
-      body: JSON.stringify({
-        suite: currentRegistration.suite,
-        guest_name: fullName,
-        checkin: currentRegistration.checkin,
-        checkout: currentRegistration.checkout,
-        owner_email: 'online.mmarts@gmail.com'
-      })
+      body: JSON.stringify(payload)
     });
     
-    if (!response.ok) {
-      console.error('Email error:', response.status);
-    }
+    console.log('Response status:', response.status);
+    const text = await response.text();
+    console.log('Response body:', text);
+    
   } catch (e) {
-    console.error('Email send error:', e);
+    console.error('Email send failed:', e);
   }
 }
 
