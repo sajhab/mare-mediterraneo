@@ -2405,32 +2405,83 @@ async function viewRegistrationDetails(regId) {
 
     modalTitle.textContent = 'Guest Registration Details';
 
+    // Build guests HTML
+    let guestsHtml = '';
+    if (reg.guests && reg.guests.length > 0) {
+      reg.guests.forEach((guest, index) => {
+        guestsHtml += `
+          <div style="background:rgba(200,185,154,0.04);border:1px solid rgba(200,185,154,0.15);border-radius:6px;padding:12px;margin-bottom:12px">
+            <div style="color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Guest ${index + 1}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px">
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Name</div>
+                <div>${guest.firstName} ${guest.lastName}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Date of Birth</div>
+                <div>${guest.dateOfBirth}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Place of Birth</div>
+                <div>${guest.placeOfBirth}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Gender</div>
+                <div>${guest.gender === 'M' ? 'Male' : guest.gender === 'F' ? 'Female' : 'Other'}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Nationality</div>
+                <div>${guest.nationality}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Document Type</div>
+                <div>${guest.documentType}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Document Number</div>
+                <div>${guest.documentNumber}</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Issuing Authority</div>
+                <div>${guest.issuingAuthority}</div>
+              </div>
+              <div style="grid-column:1/-1">
+                <div style="color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">Place of Issue</div>
+                <div>${guest.placeOfIssue}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
     const detailsHtml = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px">
-        <div>
-          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Name</div>
-          <div>${reg.guest_name}</div>
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;margin-bottom:16px">
         <div>
           <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Suite</div>
           <div>${reg.suite}</div>
         </div>
         <div>
-          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Date of Birth</div>
-          <div>${reg.guest_dob || '—'}</div>
+          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Number of Guests</div>
+          <div>${reg.guests ? reg.guests.length : 0}</div>
         </div>
         <div>
-          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Nationality</div>
-          <div>${reg.nationality || '—'}</div>
+          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Check-in</div>
+          <div>${reg.checkin}</div>
         </div>
-        <div style="grid-column:1/-1">
-          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Passport/ID Number</div>
-          <div>${reg.passport_id || '—'}</div>
+        <div>
+          <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Check-out</div>
+          <div>${reg.checkout}</div>
         </div>
         <div style="grid-column:1/-1">
           <div style="color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Submitted</div>
           <div>${reg.submitted_at ? new Date(reg.submitted_at).toLocaleString() : 'Not yet submitted'}</div>
         </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(200,185,154,0.15);padding-top:16px">
+        <div style="color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Guest Details</div>
+        ${guestsHtml}
       </div>
     `;
 
