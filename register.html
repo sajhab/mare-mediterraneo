@@ -698,9 +698,8 @@ async function loadRegistration() {
               <label class="form-label">${t('documentType')} *</label>
               <select class="form-select" onchange="guests[${index}].documentType = this.value" required>
                 <option value="">Select...</option>
-                <option value="passport" ${guest.documentType === 'passport' ? 'selected' : ''}>${t('passport')}</option>
-                <option value="idCard" ${guest.documentType === 'idCard' ? 'selected' : ''}>${t('idCard')}</option>
-                <option value="driverLicense" ${guest.documentType === 'driverLicense' ? 'selected' : ''}>${t('driverLicense')}</option>
+              <option value="passport" ${guest.documentType === 'passport' ? 'selected' : ''}>${t('passport')}</option>
+              <option value="idCard" ${guest.documentType === 'idCard' ? 'selected' : ''}>${t('idCard')}</option>
               </select>
             </div>
             <div class="form-group">
