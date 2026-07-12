@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Guest Registration - Mare Mediterraneo</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Tenor+Sans&display=swap" rel="stylesheet">
   <style>
@@ -564,44 +564,62 @@
       return params.get(name);
     }
 
-    async function loadRegistration() {
-      const token = getQueryParam('token');
-      if (!token) {
-        showError('Invalid or missing registration link');
+async function loadRegistration() {
+  const token = getQueryParam('token');
+  if (!token) {
+    showError('Invalid or missing registration link');
+    document.getElementById('registrationForm').style.display = 'none';
+    return;
+  }
+
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/guest_registrations?registration_token=eq.' + encodeURIComponent(token) + '&apikey=' + SB_KEY);
+    if (!r.ok) {
+      showError('Unable to load registration');
+      document.getElementById('registrationForm').style.display = 'none';
+      return;
+    }
+
+    const regs = await r.json();
+    if (!regs || regs.length === 0) {
+      showError('Registration not found. Please check your link.');
+      document.getElementById('registrationForm').style.display = 'none';
+      return;
+    }
+
+    currentRegistration = regs[0];
+
+    // Check if link has expired
+    if (currentRegistration.expires_at) {
+      const expiresAt = new Date(currentRegistration.expires_at);
+      const now = new Date();
+      if (now > expiresAt) {
+        showError('This registration link has expired. Please contact the property to register your guests.');
         document.getElementById('registrationForm').style.display = 'none';
         return;
       }
-
-      try {
-        const r = await fetch(SB_URL + '/rest/v1/guest_registrations?registration_token=eq.' + encodeURIComponent(token) + '&apikey=' + SB_KEY);
-        if (!r.ok) {
-          showError('Unable to load registration');
-          document.getElementById('registrationForm').style.display = 'none';
-          return;
-        }
-
-        const regs = await r.json();
-        if (!regs || regs.length === 0) {
-          showError('Registration not found. Please check your link.');
-          document.getElementById('registrationForm').style.display = 'none';
-          return;
-        }
-
-        currentRegistration = regs[0];
-
-        document.getElementById('suiteName').textContent = currentRegistration.suite;
-        document.getElementById('checkinDate').textContent = currentRegistration.checkin;
-        document.getElementById('checkoutDate').textContent = currentRegistration.checkout;
-        document.getElementById('suiteInfo').style.display = 'block';
-
-        addGuestField();
-
-      } catch (e) {
-        console.error('Load error:', e);
-        showError('Error loading registration: ' + e.message);
-        document.getElementById('registrationForm').style.display = 'none';
-      }
     }
+
+    // Check if already submitted
+    if (currentRegistration.submitted_at) {
+      showError('This registration has already been submitted. Thank you!');
+      document.getElementById('registrationForm').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('suiteName').textContent = currentRegistration.suite;
+    document.getElementById('checkinDate').textContent = currentRegistration.checkin;
+    document.getElementById('checkoutDate').textContent = currentRegistration.checkout;
+    document.getElementById('suiteInfo').style.display = 'block';
+
+    addGuestField();
+
+  } catch (e) {
+    console.error('Load error:', e);
+    showError('Error loading registration: ' + e.message);
+    document.getElementById('registrationForm').style.display = 'none';
+  }
+}
 
     function addGuestField() {
       if (guests.length >= 4) {
