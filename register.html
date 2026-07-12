@@ -343,7 +343,7 @@
         document.getElementById('successBox').style.display = 'block';
 
         // Send notification email
-        //sendNotificationEmail(fullName, dob, nationality, passportId);
+        sendNotificationEmail(fullName, dob, nationality, passportId);
 
       } catch (e) {
         console.error('Error:', e);
@@ -353,30 +353,31 @@
       }
     }
 
-    async function sendNotificationEmail(fullName, dob, nationality, passportId) {
-      try {
-        await fetch(SB_URL + '/functions/v1/send-guest-registration-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + SB_KEY,
-            'apikey': SB_KEY
-          },
-          body: JSON.stringify({
-            suite: currentRegistration.suite,
-            guest_name: fullName,
-            guest_dob: dob,
-            nationality: nationality,
-            passport_id: passportId,
-            checkin: currentRegistration.checkin,
-            checkout: currentRegistration.checkout,
-            owner_email: 'online.mmarts@gmail.com'
-          })
-        });
-      } catch (e) {
-        console.error('Email send failed (non-critical):', e);
-      }
+async function sendNotificationEmail(fullName, dob, nationality, passportId) {
+  try {
+    const response = await fetch(SB_URL + '/functions/v1/send-guest-registration-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SB_KEY,
+        'apikey': SB_KEY
+      },
+      body: JSON.stringify({
+        suite: currentRegistration.suite,
+        guest_name: fullName,
+        checkin: currentRegistration.checkin,
+        checkout: currentRegistration.checkout,
+        owner_email: 'online.mmarts@gmail.com'
+      })
+    });
+    
+    if (!response.ok) {
+      console.error('Email error:', response.status);
     }
+  } catch (e) {
+    console.error('Email send error:', e);
+  }
+}
 
     function showError(msg) {
       const errorBox = document.getElementById('errorBox');
