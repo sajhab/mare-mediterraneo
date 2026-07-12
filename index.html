@@ -2302,7 +2302,7 @@ function loadLivePrices(){
       if(p.cleaningPietra) SUITES.pietra.cleaning =p.cleaningPietra;
       if(p.cleaningCielo)  SUITES.cielo.cleaning  =p.cleaningCielo;
       if(p.cleaningVilla)  SUITES.villa.cleaning  =p.cleaningVilla;
-      if(p.minStay && parseInt(p.minStay) >= 1 && parseInt(p.minStay) <= 30) CFG.MIN_NIGHTS = parseInt(p.minStay);
+      if(p.minStay)        CFG.MIN_NIGHTS         =p.minStay;
       // Discount: set discountPietra / discountCielo / discountVilla (0-100) in Supabase settings
       if(p.discountPietra) SUITES.pietra.discount =p.discountPietra;
       if(p.discountCielo)  SUITES.cielo.discount  =p.discountCielo;
@@ -2517,16 +2517,7 @@ window.mmCloseOverlay=function(){var el=document.getElementById('mm-po');if(el)e
 })();
 
 var todayStr=dStr(new Date());qs('checkin').min=todayStr;
-qs('checkin').addEventListener('change',function(){
-BK.checkin=this.value;
-var safeMin=Math.max(1,Math.min(30,CFG.MIN_NIGHTS||4));
-var m=new Date(this.value+'T00:00:00');
-m.setDate(m.getDate()+safeMin);
-var ms=dStr(m);
-qs('checkout').min=ms;
-if(qs('checkout').value&&qs('checkout').value<ms)qs('checkout').value='';
-bkCalcTotal();
-});
+qs('checkin').addEventListener('change',function(){BK.checkin=this.value;var m=new Date(this.value+'T00:00:00');m.setDate(m.getDate()+CFG.MIN_NIGHTS);var ms=dStr(m);qs('checkout').min=ms;if(qs('checkout').value&&qs('checkout').value<ms)qs('checkout').value='';bkCalcTotal();});
 qs('checkout').addEventListener('change',function(){BK.checkout=this.value;bkCalcTotal();});
 
 // Back-compat aliases
@@ -2568,7 +2559,6 @@ loadAvailability();loadLivePrices();bkDots(2);
 })();
 
 // ── LOAD LIVE SETTINGS & PRICES FROM GITHUB ──
-// ── REPLACEMENT 1: replace the first anonymous async IIFE ──
 (async function() {
   try {
     const [sRes, aRes] = await Promise.all([
@@ -2595,31 +2585,29 @@ loadAvailability();loadLivePrices();bkDots(2);
         document.getElementById('bprice').textContent = '€' + s.prices.pietra;
         document.getElementById('cnote').textContent = '+ €' + (s.prices.cleaningPietra||150) + ' one-time cleaning fee · Minimum 4 nights';
       }
-      // ── Safe minStay from settings.json (lives under s.property) ──
-      if (s.property && s.property.minStay) {
-        var _ms = parseInt(s.property.minStay);
-        if (!isNaN(_ms) && _ms >= 1 && _ms <= 30) {
-          if (typeof CFG !== 'undefined') CFG.MIN_NIGHTS = _ms;
-        }
-      }
       if (s.toki) window.TOKI_EXTRA = s.toki;
     }
     if (aRes.ok) window.LIVE_AVAILABILITY = await aRes.json();
   } catch(e) { /* use hardcoded defaults */ }
 })();
 
-// ── REPLACEMENT 2: replace the named loadLiveSettings IIFE ──
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+window.scrollTo(0,0);
+
+// ── LOAD LIVE SETTINGS FROM GITHUB ──
 (async function loadLiveSettings() {
   try {
     const [settingsRes, availRes] = await Promise.all([
       fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/settings.json?t=' + Date.now()),
       fetch('https://raw.githubusercontent.com/sajhab/mare-mediterraneo/main/availability.json?t=' + Date.now())
     ]);
+
     if (settingsRes.ok) {
       const s = await settingsRes.json();
 
+      // Update prices on page
       if (s.prices) {
-        // Update prices on page
+        // Booking section prices
         document.querySelectorAll('[data-price-pietra]').forEach(el => el.textContent = '€' + s.prices.pietra);
         document.querySelectorAll('[data-price-cielo]').forEach(el => el.textContent = '€' + s.prices.cielo);
         document.querySelectorAll('[data-price-villa]').forEach(el => el.textContent = '€' + s.prices.villa);
@@ -2633,7 +2621,7 @@ loadAvailability();loadLivePrices();bkDots(2);
         window.LIVE_PRICES = {
           pietra: { price: s.prices.pietra, cleaning: s.prices.cleaningPietra },
           cielo:  { price: s.prices.cielo,  cleaning: s.prices.cleaningCielo  },
-          villa:  { price: s.prices.villa,  cleaning: s.prices.cleaningVilla  },
+          villa:  { price: s.prices.villa,   cleaning: s.prices.cleaningVilla  },
         };
 
         // Reset booking tab with live price
@@ -2641,14 +2629,6 @@ loadAvailability();loadLivePrices();bkDots(2);
         cc = s.prices.cleaningPietra;
         document.getElementById('bprice').textContent = '€' + s.prices.pietra;
         document.getElementById('cnote').textContent = '+ €' + s.prices.cleaningPietra + ' one-time cleaning fee · Minimum 4 nights';
-      }
-
-      // ── Safe minStay from settings.json (lives under s.property) ──
-      if (s.property && s.property.minStay) {
-        var _ms2 = parseInt(s.property.minStay);
-        if (!isNaN(_ms2) && _ms2 >= 1 && _ms2 <= 30) {
-          if (typeof CFG !== 'undefined') CFG.MIN_NIGHTS = _ms2;
-        }
       }
 
       // Update Toki announcements
