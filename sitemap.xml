@@ -138,6 +138,31 @@
        BLOG ARTICLES — added automatically
        by blog-generator.py on each publish
        ═══════════════════════════════════════ -->
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-07-13-it-matera-la-città-dei-sassi-vs-il-soggiorno-a-torre-chianca.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-07-13-de-matera-erkunden-tagesausflug-oder-längerer-aufenthalt.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-07-13-fr-matera-la-ville-de-roches-ancienne-de-basilicata-une-excursion-inoubliable-depui.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-07-13-en-materas-timeless-charm-exploring-the-sassi-and-beyond.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
