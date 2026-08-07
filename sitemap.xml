@@ -663,6 +663,31 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-08-07-it-festivals-ed-eventi-estivi-in-puglia-un-tuffo-nella-cultura-salentina.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-08-07-de-sommerfestivals-in-apulien-ein-highlight-für-kulturbegeisterte.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-08-07-fr-festivals-et-événements-en-puglia-un-été-en-fête-dans-le-salento.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-08-07-en-discover-vibrant-puglia-summer-festivals-and-events-in-salento.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
