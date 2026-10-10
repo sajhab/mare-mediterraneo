@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-10-10-en-exploring-puglias-finest-wines-primitivo-and-negroamaro-in-salento",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "Exploring Puglia's Finest Wines: Primitivo and Negroamaro in Salento",
+    "excerpt": "Explore the soul of Puglia through its robust wines, Primitivo and Negroamaro. Begin your journey in Salento, just 15 minutes from Lecce, from your base at Mare",
+    "date": "October 10, 2026",
+    "date_iso": "2026-10-10",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1603314927119-a18b9559530b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjB2aW5leWFyZHxlbnwxfDB8fHwxNzkxNjM4OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-10-10-fr-découverte-des-vins-de-puglia-primitivo-et-negroamaro",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "Découverte des Vins de Puglia : Primitivo et Negroamaro",
+    "excerpt": "Découvrez les trésors viticoles de Puglia avec une excursion autour du Primitivo de Manduria et du Negroamaro de Salento. Une expérience inoubliable depuis le M",
+    "date": "October 10, 2026",
+    "date_iso": "2026-10-10",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1603314927119-a18b9559530b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjB2aW5leWFyZHxlbnwxfDB8fHwxNzkxNjM4OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-10-10-de-puglia-entdecken-die-weine-primitivo-und-negroamaro-im-malerischen-salento",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Puglia entdecken: Die Weine Primitivo und Negroamaro im malerischen Salento",
+    "excerpt": "Erleben Sie die faszinierende Weinwelt von Puglia mit Primitivo und Negroamaro. Entdecken Sie lokale Weingüter und genießen Sie ihren Aufenthalt im Mare Mediter",
+    "date": "October 10, 2026",
+    "date_iso": "2026-10-10",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1603314927119-a18b9559530b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjB2aW5leWFyZHxlbnwxfDB8fHwxNzkxNjM4OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-10-10-it-alla-scoperta-dei-vini-di-puglia-primitivo-e-negroamaro",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "Alla Scoperta dei Vini di Puglia: Primitivo e Negroamaro",
+    "excerpt": "Salento è la culla di due vini straordinari: Primitivo e Negroamaro. Scopri dove degustare questi gioielli enologici e vivere un'esperienza autentica.",
+    "date": "October 10, 2026",
+    "date_iso": "2026-10-10",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1603314927119-a18b9559530b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxQdWdsaWElMjB2aW5leWFyZHxlbnwxfDB8fHwxNzkxNjM4OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
     "slug": "2026-10-09-en-discover-the-charms-of-locorotondo-and-alberobello-on-a-valle-ditria-road-trip",
     "lang": "EN",
     "lang_label": "English",
