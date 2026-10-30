@@ -2438,6 +2438,31 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-10-30-it-esplorando-laltopiano-delle-murge-e-castel-del-monte-unescursione-nellentroterra.html</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-10-30-de-die-murgia-hochebene-und-castel-del-monte-ein-roadtrip-ins-landesinnere-von-apul.html</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-10-30-fr-découverte-du-plateau-des-murges-et-de-castel-del-monte-en-pouilles-intérieures.html</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-10-30-en-exploring-the-murgia-plateau-and-castel-del-monte-a-journey-through-inland-pugli.html</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
