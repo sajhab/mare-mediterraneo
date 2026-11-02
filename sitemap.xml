@@ -2488,6 +2488,31 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-02-it-7-motivi-per-visitare-le-saline-di-margherita-di-savoia-e-ammirare-i-fenicotteri.html</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-02-de-7-gründe-warum-sie-die-salinen-von-margherita-di-savoia-und-die-flamingos-in-pug.html</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-02-fr-6-raisons-de-découvrir-les-salines-de-margherita-di-savoia-et-ses-flamants-roses.html</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-02-en-6-must-see-highlights-of-the-margherita-di-savoia-salt-flats-and-flamingos-in-pu.html</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
