@@ -1,5 +1,49 @@
 [
   {
+    "slug": "2026-11-07-en-exploring-torre-chianca-and-the-coastal-villages-of-lecce-a-seasonal-guide",
+    "lang": "EN",
+    "lang_label": "English",
+    "title": "Exploring Torre Chianca and the Coastal Villages of Lecce: A Seasonal Guide",
+    "excerpt": "Explore the beauty of Torre Chianca and Lecce's coastal villages year-round. Discover what each season offers, from sandy beaches to local festivals.",
+    "date": "November 07, 2026",
+    "date_iso": "2026-11-07",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1657262352344-21b093e842be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxTYWxlbnRvJTIwYmVhY2h8ZW58MXwwfHx8MTc5NDA1OTQ0N3ww&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-11-07-fr-découvrir-torre-chianca-et-la-côte-de-lecce-au-fil-des-saisons",
+    "lang": "FR",
+    "lang_label": "Français",
+    "title": "Découvrir Torre Chianca et la Côte de Lecce au fil des Saisons",
+    "excerpt": "Découvrez Torre Chianca et les villages de la côte de Lecce tout au long de l'année. Profitez d'un séjour exceptionnel en Salento grâce à nos conseils de voyage",
+    "date": "November 07, 2026",
+    "date_iso": "2026-11-07",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1657262352344-21b093e842be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxTYWxlbnRvJTIwYmVhY2h8ZW58MXwwfHx8MTc5NDA1OTQ0N3ww&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-11-07-de-entdecken-sie-die-schönheiten-der-lecce-küste-ein-reiseleitfaden-für-torre-chian",
+    "lang": "DE",
+    "lang_label": "Deutsch",
+    "title": "Entdecken Sie die Schönheiten der Lecce-Küste: Ein Reiseleitfaden für Torre Chianca und Umgebung",
+    "excerpt": "Torre Chianca, nur 400 Meter vom glitzernden Meer, ist der ideale Ausgangspunkt für die Entdeckung der bezaubernden Küsten von Salento. Von den Stränden von San",
+    "date": "November 07, 2026",
+    "date_iso": "2026-11-07",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1657262352344-21b093e842be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxTYWxlbnRvJTIwYmVhY2h8ZW58MXwwfHx8MTc5NDA1OTQ0N3ww&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
+    "slug": "2026-11-07-it-esplorare-torre-chianca-e-i-villaggi-costieri-di-lecce-guida-stagionale",
+    "lang": "IT",
+    "lang_label": "Italiano",
+    "title": "Esplorare Torre Chianca e i Villaggi Costieri di Lecce: Guida Stagionale",
+    "excerpt": "Esplora Torre Chianca e la costa di Lecce con il nostro viaggio stagionale. Scopri luoghi nascosti e consigli preziosi per un soggiorno perfetto al Mare Mediter",
+    "date": "November 07, 2026",
+    "date_iso": "2026-11-07",
+    "reading_time": 5,
+    "image_url": "https://images.unsplash.com/photo-1657262352344-21b093e842be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NTM4OTB8MHwxfHNlYXJjaHwxfHxTYWxlbnRvJTIwYmVhY2h8ZW58MXwwfHx8MTc5NDA1OTQ0N3ww&ixlib=rb-4.1.0&q=80&w=1080"
+  },
+  {
     "slug": "2026-11-06-en-a-weekend-in-lecce-48-hours-in-the-baroque-capital",
     "lang": "EN",
     "lang_label": "English",
