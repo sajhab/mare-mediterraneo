@@ -2688,6 +2688,31 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-11-it-7-motivi-per-esplorare-la-costa-adriatica-della-puglia-da-brindisi-a-otranto.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-11-de-5-gründe-die-adriaküste-von-puglia-von-brindisi-bis-otranto-zu-erkunden.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-11-fr-7-merveilles-de-la-côte-adriatique-de-la-puglia-à-découvrir-de-brindisi-à-otrant.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maremediterraneo.com/blog/2026-11-11-en-discover-the-adriatic-coast-of-puglia-from-brindisi-to-otranto.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <!-- BLOG_ARTICLES_PLACEHOLDER -->
 
 </urlset>
